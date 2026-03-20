@@ -1,0 +1,5 @@
+[console_scripts]
+ovos-ocp-build-dataset = ovos_media_classifier.train.build_dataset:main
+ovos-ocp-explore = ovos_media_classifier.train.explore_dataset:main
+ovos-ocp-gen-features = ovos_media_classifier.train.generate_categorical_features:main
+ovos-ocp-train-guided = ovos_media_classifier.train.train_guided_embeddings:main

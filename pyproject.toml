@@ -59,6 +59,12 @@ all = [
     "ovos-media-classifier[guided,sklearn,ner,padatious,m2v,media_servers,huggingface]",
 ]
 
+[project.scripts]
+ovos-ocp-build-dataset = "ovos_media_classifier.train.build_dataset:main"
+ovos-ocp-train-guided  = "ovos_media_classifier.train.train_guided_embeddings:main"
+ovos-ocp-explore       = "ovos_media_classifier.train.explore_dataset:main"
+ovos-ocp-gen-features  = "ovos_media_classifier.train.generate_categorical_features:main"
+
 [tool.setuptools.dynamic]
 version = { attr = "ovos_media_classifier.version.__version__" }
 
