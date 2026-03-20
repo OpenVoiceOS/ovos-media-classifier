@@ -1,0 +1,70 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ovos-media-classifier"
+dynamic = ["version"]
+description = "Pluggable media-type classification for OCP (Open Conversation Platform)."
+readme = "README.md"
+authors = [
+    { name = "JarbasAI", email = "jarbasai@mailfence.com" }
+]
+license = { text = "Apache-2.0" }
+requires-python = ">=3.10"
+dependencies = [
+    "ovos-utils>=0.0.38",
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+[project.optional-dependencies]
+# ONNX inference with categorical embeddings (no torch required at runtime)
+guided = [
+    "guided-categorical-embeddings[sklearn]",
+    "onnxruntime",
+]
+# Training the guided-embeddings models (adds torch + data deps)
+train = [
+    "guided-categorical-embeddings[train,sklearn]",
+    "pandas",
+    "pyarrow",
+]
+sklearn = [
+    "scikit-learn",
+    "joblib",
+]
+ner = [
+    "ahocorasick-ner>=0.0.1",
+]
+padatious = [
+    "padatious",
+]
+m2v = [
+    "model2vec",
+    "numpy",
+    "onnxruntime",
+]
+media_servers = [
+    "requests",
+]
+huggingface = [
+    "datasets",
+]
+all = [
+    "ovos-media-classifier[guided,sklearn,ner,padatious,m2v,media_servers,huggingface]",
+]
+
+[tool.setuptools.dynamic]
+version = { attr = "ovos_media_classifier.version.__version__" }
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["ovos_media_classifier*"]
+
+[tool.uv.sources]
+guided-categorical-embeddings = { path = "../../Machine Learning Workspace/guided-categorical-embeddings", editable = true }
