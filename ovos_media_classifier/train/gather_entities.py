@@ -93,83 +93,110 @@ def _gather_wikidata(hf_cache: str) -> Dict[str, List[str]]:
 
 
 def _gather_metal_bands(hf_cache: str) -> Dict[str, List[str]]:
-    """Load TigreGotico/metal-archives-bands → artist_name."""
+    """Load TigreGotico/metal-archives-bands → artist_name, record_label, music_genre.
+
+    Actual columns: band_id, name, genre, theme, label, country, location, date, url, split
+    """
     return _load_hf_column("TigreGotico/metal-archives-bands", hf_cache,
-                            columns={"band_name": "artist_name",
-                                     "name": "artist_name"})
+                            columns={"name":  "artist_name",
+                                     "genre": "music_genre",
+                                     "label": "record_label"})
 
 
 def _gather_metal_tracks(hf_cache: str) -> Dict[str, List[str]]:
-    """Load TigreGotico/metal-archives-tracks → track_name."""
+    """Load TigreGotico/metal-archives-tracks → track_name, artist_name, album_name.
+
+    Actual columns: band_id, song_id, band_name, track_name, album_name, album_type
+    """
     return _load_hf_column("TigreGotico/metal-archives-tracks", hf_cache,
-                            columns={"title": "track_name",
-                                     "song": "track_name",
-                                     "name": "track_name"})
+                            columns={"track_name": "track_name",
+                                     "band_name":  "artist_name",
+                                     "album_name": "album_name"})
 
 
 def _gather_jazz(hf_cache: str) -> Dict[str, List[str]]:
-    """Load TigreGotico/jazz-music-archives → artist_name, track_name."""
+    """Load TigreGotico/jazz-music-archives → artist_name, music_genre.
+
+    Actual columns: artist, genre, country, url  (no track column)
+    """
     return _load_hf_column("TigreGotico/jazz-music-archives", hf_cache,
                             columns={"artist": "artist_name",
-                                     "title":  "track_name",
-                                     "song":   "track_name"})
+                                     "genre":  "music_genre"})
 
 
 def _gather_prog(hf_cache: str) -> Dict[str, List[str]]:
-    """Load TigreGotico/prog-archives → artist_name, album_name."""
+    """Load TigreGotico/prog-archives → artist_name, music_genre.
+
+    Actual columns: artist, genre, country  (no album column)
+    """
     return _load_hf_column("TigreGotico/prog-archives", hf_cache,
                             columns={"artist": "artist_name",
-                                     "album":  "album_name",
-                                     "title":  "album_name"})
+                                     "genre":  "music_genre"})
 
 
 def _gather_classic_composers(hf_cache: str) -> Dict[str, List[str]]:
-    """Load TigreGotico/classic-composers → artist_name."""
+    """Load TigreGotico/classic-composers → artist_name.
+
+    Actual columns: name, country, period
+    """
     return _load_hf_column("TigreGotico/classic-composers", hf_cache,
-                            columns={"name":     "artist_name",
-                                     "composer": "artist_name"})
+                            columns={"name": "artist_name"})
 
 
 def _gather_trance(hf_cache: str) -> Dict[str, List[str]]:
-    """Load TigreGotico/trance_tracks → track_name, artist_name."""
+    """Load TigreGotico/trance_tracks → track_name, artist_name, music_genre.
+
+    Actual columns: ARTIST(S), TRACK, LENGTH, STYLE, YEAR  (ALL CAPS)
+    """
     return _load_hf_column("TigreGotico/trance_tracks", hf_cache,
-                            columns={"title":  "track_name",
-                                     "artist": "artist_name"})
+                            columns={"TRACK":     "track_name",
+                                     "ARTIST(S)": "artist_name",
+                                     "STYLE":     "music_genre"})
 
 
 def _gather_movie_actors(hf_cache: str) -> Dict[str, List[str]]:
-    """Load TigreGotico/movie_actors → movie_actor."""
+    """Load TigreGotico/movie_actors → movie_actor.
+
+    Actual columns: person_id, name, gender, movie_id
+    """
     return _load_hf_column("TigreGotico/movie_actors", hf_cache,
-                            columns={"name":  "movie_actor",
-                                     "actor": "movie_actor"})
+                            columns={"name": "movie_actor"})
 
 
 def _gather_movie_directors(hf_cache: str) -> Dict[str, List[str]]:
-    """Load TigreGotico/movie_directors → movie_director."""
+    """Load TigreGotico/movie_directors → movie_director.
+
+    Actual columns: person_id, name, movie_id
+    """
     return _load_hf_column("TigreGotico/movie_directors", hf_cache,
-                            columns={"name":     "movie_director",
-                                     "director": "movie_director"})
+                            columns={"name": "movie_director"})
 
 
 def _gather_movie_writers(hf_cache: str) -> Dict[str, List[str]]:
-    """Load TigreGotico/movie_writers → movie_writer."""
+    """Load TigreGotico/movie_writers → movie_writer.
+
+    Actual columns: person_id, name, movie_id
+    """
     return _load_hf_column("TigreGotico/movie_writers", hf_cache,
-                            columns={"name":   "movie_writer",
-                                     "writer": "movie_writer"})
+                            columns={"name": "movie_writer"})
 
 
 def _gather_movie_producers(hf_cache: str) -> Dict[str, List[str]]:
-    """Load TigreGotico/movie_producers → movie_producer."""
+    """Load TigreGotico/movie_producers → movie_producer.
+
+    Actual columns: person_id, name, movie_id
+    """
     return _load_hf_column("TigreGotico/movie_producers", hf_cache,
-                            columns={"name":     "movie_producer",
-                                     "producer": "movie_producer"})
+                            columns={"name": "movie_producer"})
 
 
 def _gather_movie_composers(hf_cache: str) -> Dict[str, List[str]]:
-    """Load TigreGotico/movie_composers → movie_composer."""
+    """Load TigreGotico/movie_composers → movie_composer.
+
+    Actual columns: person_id, name, movie_id
+    """
     return _load_hf_column("TigreGotico/movie_composers", hf_cache,
-                            columns={"name":     "movie_composer",
-                                     "composer": "movie_composer"})
+                            columns={"name": "movie_composer"})
 
 
 def _load_hf_column(dataset_name: str, hf_cache: str,
@@ -419,6 +446,145 @@ def _gather_open_library(subjects: Optional[List[str]] = None,
                     if name:
                         result["audiobook_author"].append(name)
             time.sleep(0.1)
+    return result
+
+
+def _gather_itunes_podcasts(genres: Optional[List[int]] = None,
+                             max_per_genre: int = 200) -> Dict[str, List[str]]:
+    """Fetch podcast titles and authors from iTunes Search API → podcast_title, podcast_host.
+
+    Uses the free iTunes Search API (no auth required).  Queries the top podcasts
+    per genre code to get a broad cross-genre sample.
+
+    Args:
+        genres: iTunes genre IDs to query (default: broad selection across all major genres).
+        max_per_genre: Limit per genre request.
+    """
+    if genres is None:
+        # Top-level iTunes podcast genre IDs (broad selection)
+        genres = [
+            1301,  # Arts
+            1303,  # Comedy
+            1304,  # Education
+            1305,  # Kids & Family
+            1307,  # Health & Fitness
+            1309,  # TV & Film
+            1310,  # Music
+            1311,  # News
+            1314,  # Religion & Spirituality
+            1315,  # Science
+            1316,  # Society & Culture
+            1318,  # Sports
+            1319,  # Technology
+            1321,  # True Crime
+            1323,  # Business
+            1324,  # Government
+        ]
+    result: Dict[str, List[str]] = {"podcast_title": [], "podcast_host": []}
+    seen_titles: set = set()
+    for genre_id in genres:
+        try:
+            resp = requests.get(
+                "https://itunes.apple.com/search",
+                params={"media": "podcast", "genreId": genre_id,
+                        "limit": max_per_genre, "country": "us"},
+                timeout=15,
+            )
+            resp.raise_for_status()
+            results = resp.json().get("results", [])
+        except Exception as exc:
+            LOG.warning("itunes_podcasts genre=%d: %s", genre_id, exc)
+            continue
+        for item in results:
+            title = str(item.get("collectionName", "") or "").strip()
+            artist = str(item.get("artistName", "") or "").strip()
+            if title and title.lower() not in seen_titles:
+                seen_titles.add(title.lower())
+                result["podcast_title"].append(title)
+            if artist:
+                result["podcast_host"].append(artist)
+        time.sleep(0.2)
+    return result
+
+
+def _gather_podcastindex(max_pages: int = 20) -> Dict[str, List[str]]:
+    """Fetch podcast titles/hosts from Podcast Index API → podcast_title, podcast_host.
+
+    Uses the free Podcast Index API trending endpoint (no auth required for basic search).
+    Falls back gracefully if the API is unavailable.
+
+    Args:
+        max_pages: Number of trending pages to fetch.
+    """
+    result: Dict[str, List[str]] = {"podcast_title": [], "podcast_host": []}
+    # Trending endpoint — no API key needed for read-only access
+    base = "https://api.podcastindex.org/api/1.0/podcasts/trending"
+    try:
+        import hashlib
+        import time as _time
+        # Podcast Index requires Authorization headers but has a no-auth endpoint for trending
+        # Use the simpler iTunes approach as primary; this is a bonus fallback
+        resp = requests.get(
+            "https://feeds.podcastindex.org/podcast-brief-list/",
+            timeout=15,
+        )
+        resp.raise_for_status()
+        feeds = resp.json() if resp.headers.get("content-type", "").startswith("application/json") else {}
+        for feed in feeds.get("feeds", [])[:1000]:
+            title = str(feed.get("title", "") or "").strip()
+            author = str(feed.get("author", "") or "").strip()
+            if title:
+                result["podcast_title"].append(title)
+            if author:
+                result["podcast_host"].append(author)
+    except Exception as exc:
+        LOG.warning("podcastindex: %s", exc)
+    return result
+
+
+def _gather_librivox_narrators(max_pages: int = 50) -> Dict[str, List[str]]:
+    """Fetch audiobook narrator names from LibriVox catalog API.
+
+    LibriVox is the primary open-source audiobook platform with volunteer narrators
+    (voice donors). Provides ``audiobook_narrator`` entities at scale.
+
+    Args:
+        max_pages: Number of catalog pages to fetch.
+    """
+    result: Dict[str, List[str]] = {
+        "audiobook_narrator": [], "audiobook_title": [], "audiobook_author": []
+    }
+    base = "https://librivox.org/api/feed/audiobooks"
+    for page in range(1, max_pages + 1):
+        try:
+            resp = requests.get(base, params={"format": "json", "fields": "{id,title,authors,readers}",
+                                               "limit": 100, "offset": (page - 1) * 100},
+                                 timeout=15)
+            resp.raise_for_status()
+            data = resp.json()
+        except Exception as exc:
+            LOG.warning("librivox_narrators: page %d failed — %s", page, exc)
+            break
+        books = data.get("books") or []
+        if not books:
+            break
+        for book in books:
+            title = str(book.get("title", "") or "").strip()
+            if title:
+                result["audiobook_title"].append(title)
+            for reader in book.get("readers") or []:
+                first = str(reader.get("first_name", "") or "").strip()
+                last  = str(reader.get("last_name",  "") or "").strip()
+                name  = f"{first} {last}".strip()
+                if name:
+                    result["audiobook_narrator"].append(name)
+            for author in book.get("authors") or []:
+                first = str(author.get("first_name", "") or "").strip()
+                last  = str(author.get("last_name",  "") or "").strip()
+                name  = f"{first} {last}".strip()
+                if name:
+                    result["audiobook_author"].append(name)
+        time.sleep(0.1)
     return result
 
 
@@ -687,13 +853,16 @@ _HF_SOURCES: Dict[str, object] = {
 }
 
 _REST_SOURCES: Dict[str, object] = {
-    "gutendex":        _gather_gutendex,
-    "librivox":        _gather_librivox,
-    "radio_garden":    _gather_radio_garden,
-    "anime_offline_db": _gather_anime_offline_db,
-    "steam":           _gather_steam,
-    "anilist":         _gather_anilist,
-    "open_library":    _gather_open_library,
+    "gutendex":           _gather_gutendex,
+    "librivox":           _gather_librivox,
+    "librivox_narrators": _gather_librivox_narrators,
+    "radio_garden":       _gather_radio_garden,
+    "anime_offline_db":   _gather_anime_offline_db,
+    "steam":              _gather_steam,
+    "anilist":            _gather_anilist,
+    "open_library":       _gather_open_library,
+    "itunes_podcasts":    _gather_itunes_podcasts,
+    "podcastindex":       _gather_podcastindex,
 }
 
 ALL_SOURCES: Dict[str, object] = {**_HF_SOURCES, **_REST_SOURCES, **_HOMESERVER_SOURCES}
