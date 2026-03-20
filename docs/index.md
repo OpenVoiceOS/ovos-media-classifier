@@ -60,7 +60,7 @@ EntitiesContainer                   ← runtime entity registry (media server lo
 | `ovos_media_classifier.padatious` | padatious backend |
 | `ovos_media_classifier.m2v` | Model2Vec neural backend |
 | `ovos_media_classifier.models` | `StaticModelForHierarchicalClassification` architecture |
-| `ovos_media_classifier.features` | `CategoricalFeatureExtractor`; defines `_KEYWORD_VOCABS`, `_ENTITY_LABEL_VALUES` |
+| `ovos_media_classifier.features` | `CategoricalFeatureExtractor`; defines `_KEYWORD_VOCABS` (41 entries), `_ENTITY_LABEL_VALUES` |
 | `ovos_media_classifier.constants` | Centralized confidence threshold defaults |
 | `ovos_media_classifier.train` | Dataset generation package (all pipeline steps) |
 | `ovos_media_classifier.train.build_dataset` | Master pipeline orchestrator (`ovos-ocp-build-dataset` CLI) |

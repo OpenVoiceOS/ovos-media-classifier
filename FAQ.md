@@ -135,11 +135,46 @@ Requires `[huggingface]` extra.
 
 ---
 
+## Linguistic Features (Verb / Attribute / Modifier)
+
+**Q: What are the new verb and discourse features added in `_KEYWORD_VOCABS`?**
+
+12 new features — defined in `ovos_media_classifier/features.py:49` and matched via `.voc` files in `ovos_media_classifier/locale/<lang>/`:
+
+| Feature | Voc file | Fires on |
+|---------|----------|----------|
+| `verb_audio` | `VerbAudio.voc` | Listening intent: "listen", "hear" |
+| `verb_video` | `VerbVideo.voc` | Viewing intent: "watch", "view" |
+| `verb_game` | `VerbGame.voc` | Game launch: "launch", "boot the" |
+| `verb_read` | `VerbRead.voc` | Read-aloud intent: "read to me" |
+| `verb_tune` | `VerbTune.voc` | Radio tuning: "tune in", "switch to the" |
+| `attr_topic` | `AttrTopic.voc` | Topic attribute: "about", "regarding" |
+| `attr_starring` | `AttrStarring.voc` | Cast attribute: "starring", "hosted by" |
+| `mod_episode` | `ModEpisode.voc` | Episode modifier: "episode", "chapter" |
+| `mod_season` | `ModSeason.voc` | Season modifier: "season", "seasons" |
+| `mod_live` | `ModLive.voc` | Live modifier: "live stream", "in diretta" |
+| `mod_continue` | `ModContinue.voc` | Resume modifier: "resume", "continue watching" |
+| `mod_latest` | `ModLatest.voc` | Recency modifier: "latest", "most recent" |
+
+**Q: Why are these features separate from the existing `kw_*` keyword features?**
+
+`kw_*` features fire on media-type nouns ("podcast", "documentary"). The new verb/attr/mod features fire on *intent verbs* (`verb_*`), *discourse attributes* (`attr_*`), and *utterance modifiers* (`mod_*`). They capture user intent orthogonally to content type, enabling the guided-embeddings model to separate "watch a documentary about space" (verb_video + kw_documentary + attr_topic) from "listen to a podcast about space" (verb_audio + kw_podcast + attr_topic).
+
+**Q: How many total keyword features exist now?**
+
+41 (was 27). See `_KEYWORD_VOCABS` in `ovos_media_classifier/features.py:49`.
+
+**Q: Which languages have the new linguistic features?**
+
+All 13 supported locales: `en-us`, `pt-pt`, `pt-br`, `fr-fr`, `de-de`, `es-es`, `nl-nl`, `it-it`, `da-dk`, `pl-pl`, `ca-es`, `gl-es`, `eu`.
+
+---
+
 ## Localization
 
 **Q: What languages are supported?**
 
-14 languages: `en-us`, `fr-fr`, `de-de`, `es-es`, `pt-pt`, `it-it`, `nl-nl`, `ca-es`, `da-dk`, `sv-se`, `ru-ru`, `uk-ua`, `zh-zh`, `ja-jp`.
+13 languages: `en-us`, `pt-pt`, `pt-br`, `fr-fr`, `de-de`, `es-es`, `nl-nl`, `it-it`, `da-dk`, `pl-pl`, `ca-es`, `gl-es`, `eu`.
 
 **Q: How do I add a new language?**
 

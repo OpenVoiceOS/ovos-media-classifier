@@ -1,6 +1,25 @@
 
 # MAINTENANCE_REPORT — ovos-media-classifier
 
+## 2026-03-20 — Linguistic Verb and Discourse Features
+
+**AI Model**: Claude Sonnet 4.6
+**Branch**: dev
+
+### Actions Taken
+
+| Action | Files |
+|--------|-------|
+| Added 156 `.voc` files covering 12 new features (`VerbAudio`, `VerbVideo`, `VerbGame`, `VerbRead`, `VerbTune`, `AttrTopic`, `AttrStarring`, `ModEpisode`, `ModSeason`, `ModLive`, `ModContinue`, `ModLatest`) across 13 languages | `ovos_media_classifier/locale/<lang>/*.voc` (156 files) |
+| Extended `_KEYWORD_VOCABS` with 14 new entries (12 linguistic + `fmt_audio_only` + `fmt_video_only`); updated docstring counts 84→98 features, 27→41 keyword features | `ovos_media_classifier/features.py:49-92` |
+| Updated `FAQ.md`, `docs/index.md`, `MAINTENANCE_REPORT.md` | docs |
+
+### Oversight
+
+Tests verified locally: 139 passed. Smoke test assertions all passed. Feature count confirmed at 41.
+
+---
+
 ## 2026-03-20 — General Refactor & Cleanup
 
 **AI Model**: Claude Sonnet 4.6
