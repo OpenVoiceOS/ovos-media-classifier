@@ -1,6 +1,29 @@
 
 # MAINTENANCE_REPORT — ovos-media-classifier
 
+## 2026-03-20 — Massive Training Data Generation Pipeline
+
+**AI Model**: Claude Sonnet 4.6
+**Branch**: dev
+
+### Actions Taken
+
+| Action | Files |
+|--------|-------|
+| Created `gather_entities.py` — gathers entity pools from 18 sources (12 HF datasets + 6 REST APIs) into per-OCPEntityLabel CSVs | `ovos_media_classifier/train/gather_entities.py` |
+| Created `generate_templates.py` — 221 English templates across 25 media intents + 12 languages via verb-substitution stubs | `ovos_media_classifier/train/generate_templates.py` |
+| Created `generate_slot_literal_dataset.py` — slot-literal training rows; `extract_features_from_slot_literal()` fast path | `ovos_media_classifier/train/generate_slot_literal_dataset.py` |
+| Created `generate_slot_filled_dataset.py` — slot-filled rows via random entity sampling; skips templates with missing pools | `ovos_media_classifier/train/generate_slot_filled_dataset.py` |
+| Extended `build_dataset.py` — 4 new pipeline steps, 8 new CLI flags, `_STEP_ORDER` updated to 12 steps | `ovos_media_classifier/train/build_dataset.py` |
+| Extended `generate_categorical_features.py` — `extract_features_from_slot_literal()`, `_is_slot_literal()`, fast path in `_extract_batch()` | `ovos_media_classifier/train/generate_categorical_features.py` |
+| Updated `FAQ.md` with new pipeline steps, slot-literal explanation, entity gathering usage | `FAQ.md` |
+
+### Oversight
+
+139 tests pass. Verified: template generation (221 rows), slot-literal output (221 rows, correct schema), slot-filled output (correct schema). Steam API returned 404 from test network — graceful fallback confirmed.
+
+---
+
 ## 2026-03-20 — Linguistic Verb and Discourse Features
 
 **AI Model**: Claude Sonnet 4.6

@@ -481,16 +481,37 @@ python dataset.py synthesize --langs all --workers 8
 
 **Q: What steps does the pipeline include?**
 
-1. `download` — Download HuggingFace datasets (entities, non-OCP utterances)
-2. `gather` — Combine downloaded data
-3. `templates` — Process template CSVs
-4. `keyword` — Generate keyword vocabulary
-5. `synthesize` — Generate synthetic utterances (multilingual)
-6. `media` — Process media server data
-7. `merge` — Combine all datasets
-8. `metrics` — Generate quality metrics
-9. `explore` — Dataset exploration + train/val/test split
-10. `build` — Run all steps in sequence
+1. `download` — Download HuggingFace datasets and CSVs
+2. `gather` — Normalise downloaded CSVs → `ocp_gathered.csv`
+3. `gather_entities` — Gather entity pools from all sources → `entities/<label>.csv`
+4. `generate_templates` — Generate slot-based sentence templates → `templates_new/<lang>/`
+5. `templates` — Fill Wikidata templates → `ocp_templates.csv`
+6. `keyword` — Offline keyword utterances → `ocp_keyword.csv`
+7. `synthetic` — Template + HF entity synthesis → `ocp_synthetic.csv`
+8. `slot_literal` — Templates with literal slot names → `ocp_slot_literal.csv`
+9. `slot_filled` — Templates filled with real entities → `ocp_slot_filled.csv`
+10. `media` — Pull from local media servers → `ocp_media.csv`
+11. `merge` — Concatenate all CSVs, dedup → `ocp_final.csv`
+12. `metrics` — Per-intent/lang counts + plots
+
+**Q: What are slot-literal rows and why are they useful?**
+
+Slot-literal rows keep ``{slot_name}`` placeholders as literal text (e.g. ``"play {artist_name}"``). At training time, the categorical feature extractor uses the slot name directly as a feature flag — no Aho-Corasick NER lookup needed. This is a deterministic fast path implemented in `extract_features_from_slot_literal()` — `ovos_media_classifier/train/generate_categorical_features.py`.
+
+**Q: How do I gather entity pools for slot-filled generation?**
+
+```bash
+# Gather from all sources (requires network)
+uv run python -m ovos_media_classifier.train.gather_entities
+
+# Gather specific sources only
+uv run python -m ovos_media_classifier.train.gather_entities --sources steam gutendex librivox
+
+# List available sources
+uv run python -m ovos_media_classifier.train.gather_entities --list-sources
+```
+
+Output: `~/.cache/ovos-media-classifier/entities/<label>.csv` (one file per OCPEntityLabel).
 
 **Q: Where are the dataset outputs stored?**
 
