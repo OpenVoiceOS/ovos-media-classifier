@@ -423,8 +423,252 @@ def _gather_open_library(subjects: Optional[List[str]] = None,
 
 
 # ---------------------------------------------------------------------------
+# Homeserver / Arr-stack source functions
+#
+# These thin wrappers delegate entirely to the existing loaders in
+# generate_dataset_from_media.py and convert their row dicts to entity pools.
+# Connection parameters are read from environment variables — the same vars
+# used by build_dataset.py's media step — so no extra config is needed.
+# ---------------------------------------------------------------------------
+
+def _rows_to_pools(rows: List[dict], source_name: str) -> Dict[str, List[str]]:
+    """Convert generate_dataset_from_media row dicts to ``{label: [values]}``.
+
+    Reads the rich multi-column format (title, ocp_label, actor, director,
+    producer, writer, composer, artist, album, author, narrator, studio,
+    genre) and maps each populated column to the corresponding OCPEntityLabel.
+
+    Args:
+        rows: Row dicts as returned by ``load_radarr()``, ``load_lidarr()``, etc.
+        source_name: Human-readable source tag (for logging only).
+
+    Returns:
+        ``{ocp_label: [values]}`` pools.
+    """
+    col_to_label: Dict[str, str] = {
+        "actor":    "movie_actor",
+        "director": "movie_director",
+        "producer": "movie_producer",
+        "writer":   "movie_writer",
+        "composer": "movie_composer",
+        "artist":   "artist_name",
+        "album":    "album_name",
+        "author":   "audiobook_author",
+        "narrator": "audiobook_narrator",
+        "studio":   "movie_studio",
+    }
+    result: Dict[str, List[str]] = {}
+
+    for row in rows:
+        # Primary title → ocp_label from the row
+        ocp_label = str(row.get("ocp_label", "") or "").strip()
+        title = str(row.get("title", "") or "").strip()
+        if title and ocp_label:
+            result.setdefault(ocp_label, []).append(title)
+
+        # Secondary columns → derived entity labels
+        for col, label in col_to_label.items():
+            val = str(row.get(col, "") or "").strip()
+            if not val:
+                continue
+            # Values may be pipe-separated (multiple people in one field)
+            for part in val.split("|"):
+                part = part.strip()
+                if part:
+                    result.setdefault(label, []).append(part)
+
+        # Genre → video_genre / music_genre heuristic
+        genre_val = str(row.get("genre", "") or "").strip()
+        if genre_val:
+            # Use music_genre for music-labelled rows, video_genre otherwise
+            genre_label = "music_genre" if ocp_label in (
+                "artist_name", "track_name", "album_name", "radio_station"
+            ) else "video_genre"
+            for g in genre_val.split("|"):
+                g = g.strip()
+                if g:
+                    result.setdefault(genre_label, []).append(g)
+
+    total = sum(len(v) for v in result.values())
+    LOG.info("%s: converted %d rows → %d entity values across %d labels",
+             source_name, len(rows), total, len(result))
+    return result
+
+
+def _env(key: str) -> str:
+    """Return environment variable value, empty string if unset."""
+    return os.environ.get(key, "")
+
+
+def _gather_radarr() -> Dict[str, List[str]]:
+    """Fetch movies + cast/crew from Radarr (RADARR_URL + RADARR_API_KEY env vars)."""
+    url, key = _env("RADARR_URL"), _env("RADARR_API_KEY")
+    if not url or not key:
+        LOG.info("radarr: RADARR_URL / RADARR_API_KEY not set — skipping")
+        return {}
+    from ovos_media_classifier.train.generate_dataset_from_media import load_radarr
+    return _rows_to_pools(load_radarr(url, key), "radarr")
+
+
+def _gather_sonarr() -> Dict[str, List[str]]:
+    """Fetch TV shows + anime from Sonarr (SONARR_URL + SONARR_API_KEY env vars)."""
+    url, key = _env("SONARR_URL"), _env("SONARR_API_KEY")
+    if not url or not key:
+        LOG.info("sonarr: SONARR_URL / SONARR_API_KEY not set — skipping")
+        return {}
+    from ovos_media_classifier.train.generate_dataset_from_media import load_sonarr
+    return _rows_to_pools(load_sonarr(url, key), "sonarr")
+
+
+def _gather_lidarr() -> Dict[str, List[str]]:
+    """Fetch artists, albums, tracks from Lidarr (LIDARR_URL + LIDARR_API_KEY env vars)."""
+    url, key = _env("LIDARR_URL"), _env("LIDARR_API_KEY")
+    if not url or not key:
+        LOG.info("lidarr: LIDARR_URL / LIDARR_API_KEY not set — skipping")
+        return {}
+    from ovos_media_classifier.train.generate_dataset_from_media import load_lidarr
+    return _rows_to_pools(load_lidarr(url, key), "lidarr")
+
+
+def _gather_readarr() -> Dict[str, List[str]]:
+    """Fetch audiobooks/books from Readarr (READARR_URL + READARR_API_KEY env vars)."""
+    url, key = _env("READARR_URL"), _env("READARR_API_KEY")
+    if not url or not key:
+        LOG.info("readarr: READARR_URL / READARR_API_KEY not set — skipping")
+        return {}
+    try:
+        from ovos_media_classifier.train.generate_dataset_from_media import load_readarr
+        return _rows_to_pools(load_readarr(url, key), "readarr")
+    except ImportError:
+        LOG.warning("readarr: load_readarr not available in this version")
+        return {}
+
+
+def _gather_jellyfin() -> Dict[str, List[str]]:
+    """Fetch all media types from Jellyfin (JELLYFIN_URL + JELLYFIN_API_KEY env vars)."""
+    url, key = _env("JELLYFIN_URL"), _env("JELLYFIN_API_KEY")
+    if not url or not key:
+        LOG.info("jellyfin: JELLYFIN_URL / JELLYFIN_API_KEY not set — skipping")
+        return {}
+    from ovos_media_classifier.train.generate_dataset_from_media import load_jellyfin, JELLYFIN_ALL_TYPES
+    user_id = _env("JELLYFIN_USER_ID") or None
+    return _rows_to_pools(load_jellyfin(url, key, user_id=user_id,
+                                         item_types=JELLYFIN_ALL_TYPES), "jellyfin")
+
+
+def _gather_music_assistant() -> Dict[str, List[str]]:
+    """Fetch artists/albums/tracks/radio from Music Assistant (MUSIC_ASSISTANT_URL env var)."""
+    url = _env("MUSIC_ASSISTANT_URL")
+    if not url:
+        LOG.info("music_assistant: MUSIC_ASSISTANT_URL not set — skipping")
+        return {}
+    token = _env("MUSIC_ASSISTANT_TOKEN") or None
+    from ovos_media_classifier.train.generate_dataset_from_media import load_music_assistant
+    return _rows_to_pools(load_music_assistant(url, token=token), "music_assistant")
+
+
+def _gather_audiobookshelf() -> Dict[str, List[str]]:
+    """Fetch audiobooks/podcasts from Audiobookshelf (AUDIOBOOKSHELF_URL + AUDIOBOOKSHELF_API_KEY)."""
+    url, key = _env("AUDIOBOOKSHELF_URL"), _env("AUDIOBOOKSHELF_API_KEY")
+    if not url or not key:
+        LOG.info("audiobookshelf: AUDIOBOOKSHELF_URL / AUDIOBOOKSHELF_API_KEY not set — skipping")
+        return {}
+    from ovos_media_classifier.train.generate_dataset_from_media import load_audiobookshelf
+    return _rows_to_pools(load_audiobookshelf(url, key), "audiobookshelf")
+
+
+def _gather_podgrab() -> Dict[str, List[str]]:
+    """Fetch podcasts from Podgrab (PODGRAB_URL env var; optional PODGRAB_USERNAME/PASSWORD)."""
+    url = _env("PODGRAB_URL")
+    if not url:
+        LOG.info("podgrab: PODGRAB_URL not set — skipping")
+        return {}
+    from ovos_media_classifier.train.generate_dataset_from_media import load_podgrab
+    return _rows_to_pools(load_podgrab(url, _env("PODGRAB_USERNAME") or None,
+                                        _env("PODGRAB_PASSWORD") or None), "podgrab")
+
+
+def _gather_kapowarr() -> Dict[str, List[str]]:
+    """Fetch comic volumes from Kapowarr (KAPOWARR_URL + KAPOWARR_API_KEY env vars)."""
+    url, key = _env("KAPOWARR_URL"), _env("KAPOWARR_API_KEY")
+    if not url or not key:
+        LOG.info("kapowarr: KAPOWARR_URL / KAPOWARR_API_KEY not set — skipping")
+        return {}
+    from ovos_media_classifier.train.generate_dataset_from_media import load_kapowarr
+    return _rows_to_pools(load_kapowarr(url, key), "kapowarr")
+
+
+def _gather_mylar3() -> Dict[str, List[str]]:
+    """Fetch comic series from Mylar3 (MYLAR3_URL + MYLAR3_API_KEY env vars)."""
+    url, key = _env("MYLAR3_URL"), _env("MYLAR3_API_KEY")
+    if not url or not key:
+        LOG.info("mylar3: MYLAR3_URL / MYLAR3_API_KEY not set — skipping")
+        return {}
+    from ovos_media_classifier.train.generate_dataset_from_media import load_mylar3
+    return _rows_to_pools(load_mylar3(url, key), "mylar3")
+
+
+def _gather_whisparr() -> Dict[str, List[str]]:
+    """Fetch adult titles/performers from Whisparr (WHISPARR_URL + WHISPARR_API_KEY env vars)."""
+    url, key = _env("WHISPARR_URL"), _env("WHISPARR_API_KEY")
+    if not url or not key:
+        LOG.info("whisparr: WHISPARR_URL / WHISPARR_API_KEY not set — skipping")
+        return {}
+    from ovos_media_classifier.train.generate_dataset_from_media import load_whisparr
+    return _rows_to_pools(load_whisparr(url, key), "whisparr")
+
+
+def _gather_stash() -> Dict[str, List[str]]:
+    """Fetch adult scenes/performers from Stash (STASH_URL env var; optional STASH_API_KEY)."""
+    url = _env("STASH_URL")
+    if not url:
+        LOG.info("stash: STASH_URL not set — skipping")
+        return {}
+    from ovos_media_classifier.train.generate_dataset_from_media import load_stash
+    return _rows_to_pools(load_stash(url, api_key=_env("STASH_API_KEY") or None), "stash")
+
+
+def _gather_existing_media_csv() -> Dict[str, List[str]]:
+    """Load entities from the existing ocp_media.csv if present (no network needed).
+
+    Reads ``~/.cache/ovos-media-classifier/output/ocp_media.csv`` (produced by
+    the ``media`` pipeline step) and converts it to entity pools via
+    ``_rows_to_pools()``.  Use this when you have already run the media step and
+    want to rebuild entity pools without re-querying your homeserver.
+    """
+    from ovos_media_classifier.train import get_output_dir
+    path = os.path.join(get_output_dir(), "ocp_media.csv")
+    if not os.path.exists(path):
+        LOG.info("existing_media_csv: %s not found — skipping", path)
+        return {}
+    try:
+        df = pd.read_csv(path, low_memory=False)
+        rows = df.to_dict("records")
+        return _rows_to_pools(rows, "existing_media_csv")
+    except Exception as exc:
+        LOG.warning("existing_media_csv: failed to read %s — %s", path, exc)
+        return {}
+
+
+# ---------------------------------------------------------------------------
 # Source registry
 # ---------------------------------------------------------------------------
+
+_HOMESERVER_SOURCES: Dict[str, object] = {
+    "radarr":              _gather_radarr,
+    "sonarr":              _gather_sonarr,
+    "lidarr":              _gather_lidarr,
+    "readarr":             _gather_readarr,
+    "jellyfin":            _gather_jellyfin,
+    "music_assistant":     _gather_music_assistant,
+    "audiobookshelf":      _gather_audiobookshelf,
+    "podgrab":             _gather_podgrab,
+    "kapowarr":            _gather_kapowarr,
+    "mylar3":              _gather_mylar3,
+    "whisparr":            _gather_whisparr,
+    "stash":               _gather_stash,
+    "existing_media_csv":  _gather_existing_media_csv,
+}
 
 # Maps source name → callable that returns {label: [values]}
 _HF_SOURCES: Dict[str, object] = {
@@ -452,7 +696,7 @@ _REST_SOURCES: Dict[str, object] = {
     "open_library":    _gather_open_library,
 }
 
-ALL_SOURCES: Dict[str, object] = {**_HF_SOURCES, **_REST_SOURCES}
+ALL_SOURCES: Dict[str, object] = {**_HF_SOURCES, **_REST_SOURCES, **_HOMESERVER_SOURCES}
 
 
 # ---------------------------------------------------------------------------
@@ -552,7 +796,12 @@ def main() -> None:
 
     if args.list_sources:
         for name in sorted(ALL_SOURCES):
-            kind = "HF" if name in _HF_SOURCES else "REST"
+            if name in _HF_SOURCES:
+                kind = "HF    "
+            elif name in _HOMESERVER_SOURCES:
+                kind = "HOMESERVER (env var)"
+            else:
+                kind = "REST  "
             print(f"  {name:<25} [{kind}]")
         return
 
