@@ -1,12 +1,12 @@
 """Categorical feature extraction for guided-embeddings inference.
 
-Produces the same 84-column sparse feature dict at runtime that
+Produces the same 98-column sparse feature dict at runtime that
 ``ovos_media_classifier.train.generate_categorical_features`` produces during
 dataset generation.  Absent features are omitted (sparse); present features
 have value ``"1"`` (string, matching ``CategoricalVectorizer`` convention).
 
 Feature sources (mirrors generate_categorical_features.py):
-  - 27 keyword features  — ``kw_*`` columns via ``_VocMatcher.match()``
+  - 41 keyword features  — columns via ``_VocMatcher.match()``
   - 57+ NER entity features — ``OCPEntityLabel`` values via AhocorasickNER
 
 Constants ``_KEYWORD_VOCABS`` and ``_ENTITY_LABEL_VALUES`` defined here are
@@ -74,6 +74,21 @@ _KEYWORD_VOCABS: List[Tuple[str, str]] = [
     ("HentaiKeyword",          "kw_hentai"),
     ("VideoKeyword",           "kw_video"),
     ("AudioKeyword",           "kw_audio"),
+    # Linguistically-motivated verb and discourse features
+    ("VerbAudio",              "verb_audio"),
+    ("VerbVideo",              "verb_video"),
+    ("VerbGame",               "verb_game"),
+    ("VerbRead",               "verb_read"),
+    ("VerbTune",               "verb_tune"),
+    ("AttrTopic",              "attr_topic"),
+    ("AttrStarring",           "attr_starring"),
+    ("ModEpisode",             "mod_episode"),
+    ("ModSeason",              "mod_season"),
+    ("ModLive",                "mod_live"),
+    ("ModContinue",            "mod_continue"),
+    ("ModLatest",              "mod_latest"),
+    ("audio_only",             "fmt_audio_only"),
+    ("video_only",             "fmt_video_only"),
 ]
 
 
