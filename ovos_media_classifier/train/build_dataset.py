@@ -58,7 +58,11 @@ from ovos_media_classifier.train.sources import SCHEMA_COLUMNS
 OUTPUT_DIR = get_output_dir()
 PLOTS_DIR = os.path.join(OUTPUT_DIR, "dataset_plots")
 
-_STEP_ORDER = ["download", "gather", "templates", "keyword", "synthetic", "media", "merge", "metrics"]
+_STEP_ORDER = [
+    "download", "gather", "gather_entities", "generate_templates",
+    "templates", "keyword", "synthetic", "slot_literal", "slot_filled",
+    "media", "merge", "metrics",
+]
 
 
 def _out(name: str) -> str:
@@ -151,6 +155,60 @@ def step_synthetic(args: argparse.Namespace, dedup_csv: Optional[str] = None) ->
     out = _out("ocp_synthetic.csv")
     result.to_csv(out, index=False)
     print(f"  Total: {len(result):,} rows → {out}")
+    return out
+
+
+def step_gather_entities(args: argparse.Namespace) -> None:
+    """Gather entity pools from all sources → per-label CSVs."""
+    print("\n[gather_entities] Gathering entity pools …")
+    from ovos_media_classifier.train.gather_entities import gather_all
+    sources = [s.strip() for s in args.entity_sources.split(",")] if args.entity_sources else None
+    gather_all(sources=sources, output_dir=args.entities_dir or None)
+    print("  Entity gathering complete.")
+
+
+def step_generate_templates(args: argparse.Namespace) -> str:
+    """Generate sentence template CSVs → templates_new/<lang>/<intent>.csv."""
+    print("\n[generate_templates] Generating templates …")
+    from ovos_media_classifier.train.generate_templates import generate_all
+    langs = [l.strip() for l in args.langs.split(",")] if args.langs else None
+    generate_all(langs=langs, output_dir=args.templates_dir or None)
+    from ovos_media_classifier.train.generate_templates import get_templates_dir
+    out = args.templates_dir or get_templates_dir()
+    print(f"  Templates written to {out}")
+    return out
+
+
+def step_slot_literal(args: argparse.Namespace) -> str:
+    """Generate slot-literal dataset → ocp_slot_literal.csv."""
+    print("\n[slot_literal] Generating slot-literal dataset …")
+    from ovos_media_classifier.train.generate_slot_literal_dataset import generate_slot_literal
+    from ovos_media_classifier.train.generate_templates import get_templates_dir
+    langs = [l.strip() for l in args.langs.split(",")] if args.langs else None
+    out = _out("ocp_slot_literal.csv")
+    generate_slot_literal(
+        templates_dir=args.templates_dir or get_templates_dir(),
+        output=out,
+        langs=langs,
+    )
+    return out
+
+
+def step_slot_filled(args: argparse.Namespace) -> str:
+    """Generate slot-filled dataset → ocp_slot_filled.csv."""
+    print("\n[slot_filled] Generating slot-filled dataset …")
+    from ovos_media_classifier.train.generate_slot_filled_dataset import generate_slot_filled
+    from ovos_media_classifier.train.gather_entities import get_entities_dir
+    from ovos_media_classifier.train.generate_templates import get_templates_dir
+    langs = [l.strip() for l in args.langs.split(",")] if args.langs else None
+    out = _out("ocp_slot_filled.csv")
+    generate_slot_filled(
+        entities_dir=args.entities_dir or get_entities_dir(),
+        templates_dir=args.templates_dir or get_templates_dir(),
+        output=out,
+        n=args.slot_filled_n,
+        langs=langs,
+    )
     return out
 
 
@@ -332,12 +390,24 @@ def parse_args() -> argparse.Namespace:
     )
     p.add_argument("--only", choices=_STEP_ORDER, metavar="STEP",
                    help="Run only this one step (skip all others)")
-    p.add_argument("--skip-download",   action="store_true", help="Skip step 1 (download)")
-    p.add_argument("--skip-gather",     action="store_true", help="Skip step 2 (gather)")
-    p.add_argument("--skip-templates",  action="store_true", help="Skip step 3 (templates)")
-    p.add_argument("--skip-keyword",    action="store_true", help="Skip step 4 (keyword)")
-    p.add_argument("--skip-synthetic",  action="store_true", help="Skip step 5 (synthetic)")
-    p.add_argument("--skip-media",      action="store_true", help="Skip step 6 (media servers)")
+    p.add_argument("--skip-download",         action="store_true", help="Skip download step")
+    p.add_argument("--skip-gather",           action="store_true", help="Skip gather step")
+    p.add_argument("--skip-gather-entities",  action="store_true", help="Skip gather_entities step")
+    p.add_argument("--skip-generate-templates", action="store_true", help="Skip generate_templates step")
+    p.add_argument("--skip-templates",        action="store_true", help="Skip templates step (Wikidata)")
+    p.add_argument("--skip-keyword",          action="store_true", help="Skip keyword step")
+    p.add_argument("--skip-synthetic",        action="store_true", help="Skip synthetic step")
+    p.add_argument("--skip-slot-literal",     action="store_true", help="Skip slot_literal step")
+    p.add_argument("--skip-slot-filled",      action="store_true", help="Skip slot_filled step")
+    p.add_argument("--skip-media",            action="store_true", help="Skip media servers step")
+    p.add_argument("--entity-sources",        default=None,
+                   help="Comma-separated entity source names for gather_entities (default: all)")
+    p.add_argument("--entities-dir",          default=None,
+                   help="Entity CSV directory override")
+    p.add_argument("--templates-dir",         default=None,
+                   help="Template CSV root directory override")
+    p.add_argument("--slot-filled-n",         type=int, default=10,
+                   help="Filled utterances per template in slot_filled step (default: 10)")
     p.add_argument("--skip-hf",         action="store_true",
                    help="In synthetic step: skip HuggingFace datasets, use curated lists only")
     p.add_argument("--dry-run",         action="store_true", help="In download step: list files only")
@@ -376,7 +446,17 @@ def main() -> None:
         elif os.path.exists(_out("ocp_gathered.csv")):
             source_csvs.append(_out("ocp_gathered.csv"))
 
-    # ── Step 3: Templates ────────────────────────────────────────────────────
+    # ── Step: Gather entities ────────────────────────────────────────────────
+    if not only or only == "gather_entities":
+        if not args.skip_gather_entities:
+            step_gather_entities(args)
+
+    # ── Step: Generate templates ─────────────────────────────────────────────
+    if not only or only == "generate_templates":
+        if not args.skip_generate_templates:
+            step_generate_templates(args)
+
+    # ── Step 3: Templates (Wikidata) ─────────────────────────────────────────
     if not only or only == "templates":
         if not args.skip_templates:
             dedup = source_csvs[-1] if source_csvs else None
@@ -402,6 +482,22 @@ def main() -> None:
             source_csvs.append(syn)
         elif os.path.exists(_out("ocp_synthetic.csv")):
             source_csvs.append(_out("ocp_synthetic.csv"))
+
+    # ── Step: Slot-literal ───────────────────────────────────────────────────
+    if not only or only == "slot_literal":
+        if not args.skip_slot_literal:
+            sl = step_slot_literal(args)
+            source_csvs.append(sl)
+        elif os.path.exists(_out("ocp_slot_literal.csv")):
+            source_csvs.append(_out("ocp_slot_literal.csv"))
+
+    # ── Step: Slot-filled ────────────────────────────────────────────────────
+    if not only or only == "slot_filled":
+        if not args.skip_slot_filled:
+            sf = step_slot_filled(args)
+            source_csvs.append(sf)
+        elif os.path.exists(_out("ocp_slot_filled.csv")):
+            source_csvs.append(_out("ocp_slot_filled.csv"))
 
     # ── Step 6: Media servers ────────────────────────────────────────────────
     if not only or only == "media":

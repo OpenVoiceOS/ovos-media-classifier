@@ -138,6 +138,35 @@ def _init_worker(wordlists_json: str) -> None:
     _worker_matcher = _VocMatcher(_LOCALE_DIR)
 
 
+def extract_features_from_slot_literal(sentence: str) -> Dict[str, int]:
+    """Extract categorical features from a slot-literal sentence (fast path).
+
+    Slot names like ``{artist_name}`` in the sentence directly set the
+    corresponding NER feature to 1 — no Aho-Corasick lookup is needed.
+    This is used at training time for rows produced by
+    ``generate_slot_literal_dataset.py``.
+
+    Args:
+        sentence: A slot-literal sentence string, e.g. ``"play {artist_name}"``.
+
+    Returns:
+        ``{feature_name: 1}`` for every ``{slot_name}`` found that is a valid
+        ``OCPEntityLabel`` string value.
+    """
+    import re
+    feat: Dict[str, int] = {}
+    for slot_name in re.findall(r"\{(\w+)\}", sentence):
+        if slot_name in _ENTITY_LABEL_VALUES:
+            feat[slot_name] = 1
+    return feat
+
+
+def _is_slot_literal(sentence: str) -> bool:
+    """Return True if *sentence* contains at least one ``{slot_name}`` placeholder."""
+    import re
+    return bool(re.search(r"\{\w+\}", sentence))
+
+
 def _extract_batch(rows: List[Tuple[str, str]]) -> List[Dict[str, int]]:
     """Extract features from a batch of (sentence, lang) tuples.
 
@@ -152,14 +181,18 @@ def _extract_batch(rows: List[Tuple[str, str]]) -> List[Dict[str, int]]:
             if _worker_matcher.match(sentence, vocab_name, lang):
                 feat[col_name] = 1
 
-        # ── NER entity features (real AhocorasickNER.tag) ──────────────────
-        try:
-            for hit in _worker_ner.tag(sentence):
-                label = hit.get("label")
-                if label and label in _ENTITY_LABEL_VALUES:
-                    feat[label] = 1
-        except Exception:
-            pass
+        if _is_slot_literal(sentence):
+            # Fast path: slot names map directly to NER feature columns
+            feat.update(extract_features_from_slot_literal(sentence))
+        else:
+            # ── NER entity features (real AhocorasickNER.tag) ──────────────
+            try:
+                for hit in _worker_ner.tag(sentence):
+                    label = hit.get("label")
+                    if label and label in _ENTITY_LABEL_VALUES:
+                        feat[label] = 1
+            except Exception:
+                pass
 
         results.append(feat)
     return results
