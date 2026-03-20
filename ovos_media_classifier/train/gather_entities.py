@@ -51,7 +51,7 @@ def _gather_wikidata(hf_cache: str) -> Dict[str, List[str]]:
     try:
         import datasets as _ds
         ds = _ds.load_dataset("Jarbas/WikidataMediaEntities", cache_dir=hf_cache,
-                               split="train", trust_remote_code=True)
+                               split="train")
     except Exception as exc:
         LOG.warning("wikidata: failed to load — %s", exc)
         return {}
@@ -93,109 +93,109 @@ def _gather_wikidata(hf_cache: str) -> Dict[str, List[str]]:
 
 
 def _gather_metal_bands(hf_cache: str) -> Dict[str, List[str]]:
-    """Load TigreGotico/metal-archives-bands → artist_name, record_label, music_genre.
+    """Load Jarbas/metal-archives-bands → artist_name, record_label, music_genre.
 
     Actual columns: band_id, name, genre, theme, label, country, location, date, url, split
     """
-    return _load_hf_column("TigreGotico/metal-archives-bands", hf_cache,
+    return _load_hf_column("Jarbas/metal-archives-bands", hf_cache,
                             columns={"name":  "artist_name",
                                      "genre": "music_genre",
                                      "label": "record_label"})
 
 
 def _gather_metal_tracks(hf_cache: str) -> Dict[str, List[str]]:
-    """Load TigreGotico/metal-archives-tracks → track_name, artist_name, album_name.
+    """Load Jarbas/metal-archives-tracks → track_name, artist_name, album_name.
 
     Actual columns: band_id, song_id, band_name, track_name, album_name, album_type
     """
-    return _load_hf_column("TigreGotico/metal-archives-tracks", hf_cache,
+    return _load_hf_column("Jarbas/metal-archives-tracks", hf_cache,
                             columns={"track_name": "track_name",
                                      "band_name":  "artist_name",
                                      "album_name": "album_name"})
 
 
 def _gather_jazz(hf_cache: str) -> Dict[str, List[str]]:
-    """Load TigreGotico/jazz-music-archives → artist_name, music_genre.
+    """Load Jarbas/jazz-music-archives → artist_name, music_genre.
 
     Actual columns: artist, genre, country, url  (no track column)
     """
-    return _load_hf_column("TigreGotico/jazz-music-archives", hf_cache,
+    return _load_hf_column("Jarbas/jazz-music-archives", hf_cache,
                             columns={"artist": "artist_name",
                                      "genre":  "music_genre"})
 
 
 def _gather_prog(hf_cache: str) -> Dict[str, List[str]]:
-    """Load TigreGotico/prog-archives → artist_name, music_genre.
+    """Load Jarbas/prog-archives → artist_name, music_genre.
 
     Actual columns: artist, genre, country  (no album column)
     """
-    return _load_hf_column("TigreGotico/prog-archives", hf_cache,
+    return _load_hf_column("Jarbas/prog-archives", hf_cache,
                             columns={"artist": "artist_name",
                                      "genre":  "music_genre"})
 
 
 def _gather_classic_composers(hf_cache: str) -> Dict[str, List[str]]:
-    """Load TigreGotico/classic-composers → artist_name.
+    """Load Jarbas/classic-composers → artist_name.
 
     Actual columns: name, country, period
     """
-    return _load_hf_column("TigreGotico/classic-composers", hf_cache,
+    return _load_hf_column("Jarbas/classic-composers", hf_cache,
                             columns={"name": "artist_name"})
 
 
 def _gather_trance(hf_cache: str) -> Dict[str, List[str]]:
-    """Load TigreGotico/trance_tracks → track_name, artist_name, music_genre.
+    """Load Jarbas/trance_tracks → track_name, artist_name, music_genre.
 
     Actual columns: ARTIST(S), TRACK, LENGTH, STYLE, YEAR  (ALL CAPS)
     """
-    return _load_hf_column("TigreGotico/trance_tracks", hf_cache,
+    return _load_hf_column("Jarbas/trance_tracks", hf_cache,
                             columns={"TRACK":     "track_name",
                                      "ARTIST(S)": "artist_name",
                                      "STYLE":     "music_genre"})
 
 
 def _gather_movie_actors(hf_cache: str) -> Dict[str, List[str]]:
-    """Load TigreGotico/movie_actors → movie_actor.
+    """Load Jarbas/movie_actors → movie_actor.
 
     Actual columns: person_id, name, gender, movie_id
     """
-    return _load_hf_column("TigreGotico/movie_actors", hf_cache,
+    return _load_hf_column("Jarbas/movie_actors", hf_cache,
                             columns={"name": "movie_actor"})
 
 
 def _gather_movie_directors(hf_cache: str) -> Dict[str, List[str]]:
-    """Load TigreGotico/movie_directors → movie_director.
+    """Load Jarbas/movie_directors → movie_director.
 
     Actual columns: person_id, name, movie_id
     """
-    return _load_hf_column("TigreGotico/movie_directors", hf_cache,
+    return _load_hf_column("Jarbas/movie_directors", hf_cache,
                             columns={"name": "movie_director"})
 
 
 def _gather_movie_writers(hf_cache: str) -> Dict[str, List[str]]:
-    """Load TigreGotico/movie_writers → movie_writer.
+    """Load Jarbas/movie_writers → movie_writer.
 
     Actual columns: person_id, name, movie_id
     """
-    return _load_hf_column("TigreGotico/movie_writers", hf_cache,
+    return _load_hf_column("Jarbas/movie_writers", hf_cache,
                             columns={"name": "movie_writer"})
 
 
 def _gather_movie_producers(hf_cache: str) -> Dict[str, List[str]]:
-    """Load TigreGotico/movie_producers → movie_producer.
+    """Load Jarbas/movie_producers → movie_producer.
 
     Actual columns: person_id, name, movie_id
     """
-    return _load_hf_column("TigreGotico/movie_producers", hf_cache,
+    return _load_hf_column("Jarbas/movie_producers", hf_cache,
                             columns={"name": "movie_producer"})
 
 
 def _gather_movie_composers(hf_cache: str) -> Dict[str, List[str]]:
-    """Load TigreGotico/movie_composers → movie_composer.
+    """Load Jarbas/movie_composers → movie_composer.
 
     Actual columns: person_id, name, movie_id
     """
-    return _load_hf_column("TigreGotico/movie_composers", hf_cache,
+    return _load_hf_column("Jarbas/movie_composers", hf_cache,
                             columns={"name": "movie_composer"})
 
 
@@ -214,7 +214,7 @@ def _load_hf_column(dataset_name: str, hf_cache: str,
     try:
         import datasets as _ds
         ds = _ds.load_dataset(dataset_name, cache_dir=hf_cache,
-                               split="train", trust_remote_code=True)
+                               split="train")
     except Exception as exc:
         LOG.warning("%s: failed to load — %s", dataset_name, exc)
         return {}
