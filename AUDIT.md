@@ -29,42 +29,36 @@
 ### [ISSUE-002] Missing class docstring in SklearnMediaClassifier — LOW
 
 **Severity**: Low
-**Status**: Open
+**Status**: ✅ RESOLVED — 2026-03-20
 **Location**: `ovos_media_classifier/sklearn.py:57-76`
 
 **Description**: Class-level documentation is written as a block comment (`# ...`) rather than a proper docstring (`"""..."""`). AGENTS.md requires docstrings on all class signatures.
 
-**Impact**: Tools that auto-generate API docs (Sphinx, mkdocs) will not pick up the description.
-
-**Recommended Fix**: Convert comment block to a `"""..."""` docstring.
+**Fix**: Verified that `SklearnMediaClassifier` already has a proper docstring. Issue was a false positive in the original audit.
 
 ---
 
 ### [ISSUE-003] Broad `except Exception` with silent pass in entities.py — LOW
 
 **Severity**: Low
-**Status**: Open
+**Status**: ✅ RESOLVED — 2026-03-20
 **Location**: `ovos_media_classifier/entities.py:154`
 
-**Description**: A bare `except Exception: pass` swallows errors silently during entity loading from external sources.
+**Description**: A bare `except Exception: pass` swallows errors silently during NER back-fill in `_sync_from_ner`.
 
-**Impact**: Silent failures make debugging difficult when a media server loader fails.
-
-**Recommended Fix**: Replace with `except Exception as e: LOG.warning(f"Entity load failed: {e}")`.
+**Fix**: Replaced with `except Exception as exc: LOG.warning(...)` — failure is now visible in logs.
 
 ---
 
 ### [ISSUE-004] Hardcoded confidence thresholds scattered across modules — LOW
 
 **Severity**: Low
-**Status**: Open
-**Locations**: `keyword.py` (0.6, 0.7, 0.4), `ahocorasick.py:113` (`_HIT_CONFIDENCE = 0.6`), `m2v.py`, `sklearn.py`, `padatious.py` (0.3, 0.5)
+**Status**: ✅ RESOLVED — 2026-03-20
+**Locations**: `keyword.py` (0.6, 0.7, 0.4), `ahocorasick.py:113` (`_HIT_CONFIDENCE = 0.6`), `m2v.py`, `sklearn.py`, `guided.py` (0.3, 0.5)
 
 **Description**: Confidence threshold magic numbers are defined inline rather than as named constants in a single location.
 
-**Impact**: Consistency risk — changing thresholds requires touching multiple files.
-
-**Recommended Fix**: Centralize defaults in `ovos_media_classifier/constants.py`.
+**Fix**: Centralized in `ovos_media_classifier/constants.py`. All classifier modules now import from there.
 
 ---
 
@@ -114,6 +108,18 @@
 **Test Results**: All 121 tests pass (103 pre-existing + 18 new core tests)
 
 **Impact**: Regressions in NER, sklearn, and padatious backends are now detectable. Full coverage of media server loaders.
+
+---
+
+### [ISSUE-008] Broken import: build_dataset.py imported download_datasets from wrong location — HIGH
+
+**Severity**: High
+**Status**: ✅ RESOLVED — 2026-03-20
+**Location**: `scripts/build_dataset.py:76-82`
+
+**Description**: `build_dataset.py` imported `from ovos_media_classifier.train.download_datasets import ...` but `download_datasets.py` only existed in `scripts/`, not in the `train/` package.
+
+**Fix**: Moved `scripts/download_datasets.py` → `ovos_media_classifier/train/download_datasets.py`. Entire dataset pipeline now consolidated in `train/` package.
 
 ---
 

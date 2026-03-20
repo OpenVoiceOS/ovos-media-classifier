@@ -22,14 +22,14 @@ pip install ovos-media-classifier[all]
 pip install ovos-media-classifier[guided]
 ```
 
-Requires a pre-trained model directory (produced by `scripts/train_guided_embeddings.py`).
+Requires a pre-trained model directory (produced by `ovos-ocp-train-guided` CLI).
 Config key: `media_classifier_guided_model`.
 
 **Q: What install do I need for training a guided-embeddings model?**
 
 ```bash
 pip install ovos-media-classifier[train]
-uv run python scripts/train_guided_embeddings.py \
+ovos-ocp-train-guided \
     --input categorical_features.parquet \
     --output /path/to/models/guided
 ```
@@ -151,7 +151,7 @@ See `docs/LANG_SUPPORT.md`. Add `.voc` and `.intent` files under `ovos_media_cla
 
 **Q: How do I train a new sklearn or m2v model?**
 
-See `docs/TRAINING.md`. Use scripts in `scripts/` to generate datasets, then run training.
+See `docs/TRAINING.md`. Use the CLI entry points installed with the package (`ovos-ocp-build-dataset`, `ovos-ocp-gen-features`, `ovos-ocp-train-guided`) to generate datasets, then run training.
 
 **Q: Where are training templates stored?**
 
@@ -368,6 +368,61 @@ Yes, but pattern matching is English-centric. Non-English utterances are process
 4. Upload to HuggingFace Hub
 5. Add BERT embeddings (optional)
 6. Build baseline ML models
+
+---
+
+## Dataset Generation — Where Is the Logic?
+
+**Q: Where does dataset generation logic live?**
+
+All dataset generation logic lives in `ovos_media_classifier/train/`:
+
+| Module | Role |
+|--------|------|
+| `train/download_datasets.py` | Download CSV + HuggingFace sources to cache |
+| `train/gather_dataset.py` | Normalise CSV sources → `ocp_gathered.csv` |
+| `train/generate_from_ocp_templates.py` | Fill Wikidata templates → `ocp_templates.csv` |
+| `train/generate_keyword_csv.py` | Keyword-based utterances → `ocp_keyword.csv` |
+| `train/generate_synthetic.py` | Multilingual synthetic utterances → `ocp_synthetic.csv` |
+| `train/generate_dataset_from_media.py` | Pull from media servers → `ocp_media.csv` |
+| `train/generate_categorical_features.py` | NER + keyword features → `categorical_features.parquet` |
+| `train/explore_dataset.py` | EDA plots and train/val/test splits |
+| `train/train_guided_embeddings.py` | Train ONNX guided-embeddings models |
+| `train/build_dataset.py` | Master orchestrator — runs all steps in order |
+
+**Q: How do I run a single pipeline step standalone?**
+
+Each module is runnable as `python -m ovos_media_classifier.train.<module>`:
+
+```bash
+# Download only
+python -m ovos_media_classifier.train.download_datasets --dry-run
+
+# Generate keyword data only
+python -m ovos_media_classifier.train.generate_keyword_csv --help
+
+# Generate categorical features only
+python -m ovos_media_classifier.train.generate_categorical_features \
+    --input ~/.cache/ovos-media-classifier/output/ocp_final.csv \
+    --output categorical_features.parquet --workers 8
+```
+
+Or use the installed CLI entry points:
+
+```bash
+ovos-ocp-build-dataset         # full pipeline
+ovos-ocp-gen-features --help   # categorical features
+ovos-ocp-explore --help        # EDA + splits
+ovos-ocp-train-guided --help   # train ONNX models
+```
+
+**Q: Why are constants like `_KEYWORD_VOCABS` defined in `features.py` instead of `generate_categorical_features.py`?**
+
+`features.py` is the single source of truth because these constants are needed at **both** training time (`train/generate_categorical_features.py`) and **inference** time (`CategoricalFeatureExtractor`). Defining them in a training script would break the runtime feature extractor.
+
+**Q: Where are confidence threshold defaults defined?**
+
+`ovos_media_classifier/constants.py` — all classifiers import from there. Do not add magic numbers inline.
 
 ---
 

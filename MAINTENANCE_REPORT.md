@@ -1,6 +1,33 @@
 
 # MAINTENANCE_REPORT — ovos-media-classifier
 
+## 2026-03-20 — General Refactor & Cleanup
+
+**AI Model**: Claude Sonnet 4.6
+**Branch**: dev
+
+### Actions Taken
+
+| Action | Files |
+|--------|-------|
+| Moved `scripts/download_datasets.py` → `train/download_datasets.py` — fixes broken import in `build_dataset.py:76` | `ovos_media_classifier/train/download_datasets.py` |
+| Deleted 5 exact duplicate scripts (gather_dataset, generate_from_ocp_templates, generate_keyword_csv, generate_synthetic, generate_categorical_features) — train/ was already canonical | `scripts/` (5 files deleted) |
+| Moved `scripts/generate_categorical_features.py` → `train/` with `_KEYWORD_VOCABS`/`_ENTITY_LABEL_VALUES` imported from `features.py` (single source of truth) | `ovos_media_classifier/train/generate_categorical_features.py` |
+| Moved `scripts/generate_dataset_from_media.py`, `explore_dataset.py`, `train_guided_embeddings.py` → `train/`; replaced with 3-line shims | `ovos_media_classifier/train/` (3 new files) |
+| Moved `scripts/build_dataset.py` → `train/build_dataset.py`; replaced with 3-line shim; fixed `__file__` path resolution | `ovos_media_classifier/train/build_dataset.py` |
+| Updated `build_dataset.py` subprocess call to use `-m ovos_media_classifier.train.generate_dataset_from_media` | `scripts/build_dataset.py` (then moved) |
+| Created `ovos_media_classifier/constants.py` — centralized confidence thresholds | `ovos_media_classifier/constants.py` |
+| Updated `sklearn.py`, `guided.py`, `m2v.py`, `ahocorasick.py`, `keyword.py` to import thresholds from `constants.py` | 5 files |
+| Fixed `entities.py:153` — silent `except Exception: pass` → `LOG.warning(...)` | `ovos_media_classifier/entities.py` |
+| Added `[project.scripts]` entry points to `pyproject.toml` | `pyproject.toml` |
+| Updated `FAQ.md`, `AUDIT.md`, `docs/` for all changes | docs |
+
+### Oversight
+
+Tests verified locally: 139 passed (all pre-existing).
+
+---
+
 ## 2026-03-20 — GuidedEmbeddings backend + packaging
 
 **AI Model**: Claude Sonnet 4.6
