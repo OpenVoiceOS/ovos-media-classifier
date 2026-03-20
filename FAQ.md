@@ -501,17 +501,47 @@ Slot-literal rows keep ``{slot_name}`` placeholders as literal text (e.g. ``"pla
 **Q: How do I gather entity pools for slot-filled generation?**
 
 ```bash
-# Gather from all sources (requires network)
+# Gather from all sources (requires network + homeserver env vars)
 uv run python -m ovos_media_classifier.train.gather_entities
 
 # Gather specific sources only
 uv run python -m ovos_media_classifier.train.gather_entities --sources steam gutendex librivox
 
-# List available sources
+# Gather from your homeserver stack (Arr + Jellyfin)
+RADARR_URL=http://localhost:7878 RADARR_API_KEY=... \
+SONARR_URL=http://localhost:8989 SONARR_API_KEY=... \
+LIDARR_URL=http://localhost:8686 LIDARR_API_KEY=... \
+JELLYFIN_URL=http://localhost:8096 JELLYFIN_API_KEY=... \
+uv run python -m ovos_media_classifier.train.gather_entities --sources radarr sonarr lidarr jellyfin
+
+# Re-use already-downloaded ocp_media.csv without hitting the homeserver again
+uv run python -m ovos_media_classifier.train.gather_entities --sources existing_media_csv
+
+# List available sources (HF / REST / HOMESERVER)
 uv run python -m ovos_media_classifier.train.gather_entities --list-sources
 ```
 
 Output: `~/.cache/ovos-media-classifier/entities/<label>.csv` (one file per OCPEntityLabel).
+
+**Q: What homeserver sources are supported for entity gathering?**
+
+All sources from the `media` pipeline step are reused — no extra config:
+
+| Source | Env vars | Entities produced |
+|--------|----------|-------------------|
+| `radarr` | `RADARR_URL`, `RADARR_API_KEY` | `movie_title`, `movie_actor`, `movie_director`, `movie_producer`, `movie_writer`, `movie_composer`, `movie_studio`, `video_genre` |
+| `sonarr` | `SONARR_URL`, `SONARR_API_KEY` | `tv_show_title`, `anime_title`, `cartoon_title`, `documentary_title`, `video_genre` |
+| `lidarr` | `LIDARR_URL`, `LIDARR_API_KEY` | `artist_name`, `album_name`, `track_name`, `music_genre` |
+| `readarr` | `READARR_URL`, `READARR_API_KEY` | `audiobook_title`, `audiobook_author` |
+| `jellyfin` | `JELLYFIN_URL`, `JELLYFIN_API_KEY` | all media types |
+| `music_assistant` | `MUSIC_ASSISTANT_URL` | `artist_name`, `album_name`, `track_name`, `radio_station` |
+| `audiobookshelf` | `AUDIOBOOKSHELF_URL`, `AUDIOBOOKSHELF_API_KEY` | `audiobook_title`, `audiobook_author`, `audiobook_narrator`, `podcast_title` |
+| `podgrab` | `PODGRAB_URL` | `podcast_title` |
+| `kapowarr` | `KAPOWARR_URL`, `KAPOWARR_API_KEY` | `comic_title` / `visual_story_title` |
+| `mylar3` | `MYLAR3_URL`, `MYLAR3_API_KEY` | `comic_title` / `visual_story_title` |
+| `whisparr` | `WHISPARR_URL`, `WHISPARR_API_KEY` | `adult_title`, `pornstar` |
+| `stash` | `STASH_URL` (optional `STASH_API_KEY`) | `adult_title`, `pornstar` |
+| `existing_media_csv` | — | reads `ocp_media.csv` already on disk (no network) |
 
 **Q: Where are the dataset outputs stored?**
 
