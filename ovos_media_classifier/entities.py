@@ -150,8 +150,8 @@ class EntitiesContainer:
         try:
             for label, words in ner.get_all_words().items():
                 self._by_label[label].update(words)
-        except Exception:
-            pass  # NER may not expose this; non-fatal
+        except Exception as exc:
+            LOG.warning("EntitiesContainer: could not back-fill from NER (%s); non-fatal", exc)
 
     def _get_or_create_ner(self):
         if self._ner is None:

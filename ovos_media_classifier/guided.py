@@ -36,8 +36,7 @@ if TYPE_CHECKING:
     from guided_categorical_embeddings.inference.embeddings import LabelGuidedEmbeddings
     from ovos_media_classifier.entities import EntitiesContainer
 
-DEFAULT_DOMAIN_THRESHOLD = 0.5
-DEFAULT_PLAY_THRESHOLD = 0.3
+from ovos_media_classifier.constants import DEFAULT_DOMAIN_THRESHOLD, DEFAULT_PLAY_THRESHOLD
 
 
 class GuidedEmbeddingsMediaClassifier(AbstractMediaClassifier):

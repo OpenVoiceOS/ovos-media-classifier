@@ -40,9 +40,7 @@ from ovos_media_classifier.intents import (
 if TYPE_CHECKING:
     from numpy.typing import NDArray
 
-# Default confidence thresholds for Model2Vec classifier
-DEFAULT_DOMAIN_THRESHOLD = 0.5
-DEFAULT_INTENT_THRESHOLD = 0.3
+from ovos_media_classifier.constants import DEFAULT_DOMAIN_THRESHOLD, DEFAULT_PLAY_THRESHOLD as DEFAULT_INTENT_THRESHOLD
 
 
 class Model2VecMediaClassifier(AbstractMediaClassifier):

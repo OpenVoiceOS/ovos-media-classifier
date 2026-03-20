@@ -64,6 +64,8 @@ from ovos_media_classifier.intents import (
 if TYPE_CHECKING:
     from ovos_media_classifier.entities import EntitiesContainer
 
+from ovos_media_classifier.constants import DEFAULT_NER_HIT_CONFIDENCE
+
 # Priority order for resolving multiple entity hits in one utterance.
 # More specific / higher-confidence types rank first.
 _INTENT_PRIORITY: List[OCPPlayIntent] = [
@@ -110,7 +112,7 @@ _INTENT_RANK: Dict[OCPPlayIntent, int] = {
 }
 
 # Confidence returned when an entity hit yields a match
-_HIT_CONFIDENCE = 0.6
+_HIT_CONFIDENCE = DEFAULT_NER_HIT_CONFIDENCE
 
 
 class AhocorasickMediaClassifier(AbstractMediaClassifier):

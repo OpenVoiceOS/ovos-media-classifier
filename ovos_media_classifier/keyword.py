@@ -29,6 +29,11 @@ import os
 from typing import Callable, Dict, List, Optional, Set, Tuple
 
 from ovos_media_classifier.base import AbstractMediaClassifier
+from ovos_media_classifier.constants import (
+    DEFAULT_KEYWORD_CONFIDENCE,
+    DEFAULT_KEYWORD_HIGH_CONFIDENCE,
+    DEFAULT_KEYWORD_LOW_CONFIDENCE,
+)
 from ovos_media_classifier.intents import MediaType
 
 # Bundled locale directory (ported from ovos-ocp-pipeline-plugin)
@@ -132,61 +137,61 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
         q = query
 
         if _ok(MediaType.DOCUMENTARY) and m(q, "DocumentaryKeyword", lang):
-            return MediaType.DOCUMENTARY, 0.6
+            return MediaType.DOCUMENTARY, DEFAULT_KEYWORD_CONFIDENCE
         if _ok(MediaType.AUDIOBOOK) and m(q, "AudioBookKeyword", lang):
-            return MediaType.AUDIOBOOK, 0.6
+            return MediaType.AUDIOBOOK, DEFAULT_KEYWORD_CONFIDENCE
         if _ok(MediaType.NEWS) and m(q, "NewsKeyword", lang):
-            return MediaType.NEWS, 0.6
+            return MediaType.NEWS, DEFAULT_KEYWORD_CONFIDENCE
         if _ok(MediaType.ANIME) and m(q, "AnimeKeyword", lang):
-            return MediaType.ANIME, 0.6
+            return MediaType.ANIME, DEFAULT_KEYWORD_CONFIDENCE
         if _ok(MediaType.CARTOON) and m(q, "CartoonKeyword", lang):
-            return MediaType.CARTOON, 0.6
+            return MediaType.CARTOON, DEFAULT_KEYWORD_CONFIDENCE
         if _ok(MediaType.PODCAST) and m(q, "PodcastKeyword", lang):
-            return MediaType.PODCAST, 0.6
+            return MediaType.PODCAST, DEFAULT_KEYWORD_CONFIDENCE
         if _ok(MediaType.RADIO_THEATRE) and m(q, "AudioDramaKeyword", lang):
             # NOTE: must come before plain RADIO so "radio theatre" wins
-            return MediaType.RADIO_THEATRE, 0.6
+            return MediaType.RADIO_THEATRE, DEFAULT_KEYWORD_CONFIDENCE
         if _ok(MediaType.RADIO) and m(q, "RadioKeyword", lang):
-            return MediaType.RADIO, 0.6
+            return MediaType.RADIO, DEFAULT_KEYWORD_CONFIDENCE
         if _ok(MediaType.MUSIC_VIDEO) and m(q, "MusicVideoKeyword", lang):
             # NOTE: must come before MusicKeyword (music video is more specific)
-            return MediaType.MUSIC_VIDEO, 0.7
+            return MediaType.MUSIC_VIDEO, DEFAULT_KEYWORD_HIGH_CONFIDENCE
         if _ok(MediaType.MUSIC) and m(q, "MusicKeyword", lang):
             # NOTE: must come before MOVIE to handle "{movie} soundtrack"
-            return MediaType.MUSIC, 0.6
+            return MediaType.MUSIC, DEFAULT_KEYWORD_CONFIDENCE
         # IPTVKeyword (live channel/stream) takes priority over generic TVKeyword
         if _ok(MediaType.TV) and m(q, "IPTVKeyword", lang):
-            return MediaType.TV, 0.6
+            return MediaType.TV, DEFAULT_KEYWORD_CONFIDENCE
         if _ok(MediaType.TV) and m(q, "TVKeyword", lang):
-            return MediaType.TV, 0.6
+            return MediaType.TV, DEFAULT_KEYWORD_CONFIDENCE
         if _ok(MediaType.VIDEO_EPISODES) and m(q, "SeriesKeyword", lang):
-            return MediaType.VIDEO_EPISODES, 0.6
+            return MediaType.VIDEO_EPISODES, DEFAULT_KEYWORD_CONFIDENCE
 
         # Movie family
         movie_types = {MediaType.MOVIE, MediaType.SHORT_FILM,
                        MediaType.SILENT_MOVIE, MediaType.BLACK_WHITE_MOVIE}
         if any(_ok(t) for t in movie_types) and m(q, "MovieKeyword", lang):
             if _ok(MediaType.SHORT_FILM) and m(q, "ShortKeyword", lang):
-                return MediaType.SHORT_FILM, 0.7
+                return MediaType.SHORT_FILM, DEFAULT_KEYWORD_HIGH_CONFIDENCE
             if _ok(MediaType.SILENT_MOVIE) and m(q, "SilentKeyword", lang):
-                return MediaType.SILENT_MOVIE, 0.7
+                return MediaType.SILENT_MOVIE, DEFAULT_KEYWORD_HIGH_CONFIDENCE
             if _ok(MediaType.BLACK_WHITE_MOVIE) and m(q, "BWKeyword", lang):
-                return MediaType.BLACK_WHITE_MOVIE, 0.7
+                return MediaType.BLACK_WHITE_MOVIE, DEFAULT_KEYWORD_HIGH_CONFIDENCE
             if _ok(MediaType.MOVIE):
-                return MediaType.MOVIE, 0.6
+                return MediaType.MOVIE, DEFAULT_KEYWORD_CONFIDENCE
         if _ok(MediaType.TRAILER) and m(q, "TrailerKeyword", lang):
-            return MediaType.TRAILER, 0.7
+            return MediaType.TRAILER, DEFAULT_KEYWORD_HIGH_CONFIDENCE
         if _ok(MediaType.BEHIND_THE_SCENES) and m(q, "BehindTheScenesKeyword", lang):
-            return MediaType.BEHIND_THE_SCENES, 0.7
+            return MediaType.BEHIND_THE_SCENES, DEFAULT_KEYWORD_HIGH_CONFIDENCE
 
         if _ok(MediaType.VISUAL_STORY) and m(q, "ComicBookKeyword", lang):
-            return MediaType.VISUAL_STORY, 0.4
+            return MediaType.VISUAL_STORY, DEFAULT_KEYWORD_LOW_CONFIDENCE
         if _ok(MediaType.GAME) and m(q, "GameKeyword", lang):
-            return MediaType.GAME, 0.4
+            return MediaType.GAME, DEFAULT_KEYWORD_LOW_CONFIDENCE
         if _ok(MediaType.AUDIO_DESCRIPTION) and m(q, "ADKeyword", lang):
-            return MediaType.AUDIO_DESCRIPTION, 0.4
+            return MediaType.AUDIO_DESCRIPTION, DEFAULT_KEYWORD_LOW_CONFIDENCE
         if _ok(MediaType.ASMR) and m(q, "ASMRKeyword", lang):
-            return MediaType.ASMR, 0.4
+            return MediaType.ASMR, DEFAULT_KEYWORD_LOW_CONFIDENCE
 
         # Adult family
         adult_types = {MediaType.ADULT, MediaType.HENTAI, MediaType.ADULT_AUDIO}
@@ -195,18 +200,18 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
                     (m(q, "CartoonKeyword", lang) or
                      m(q, "AnimeKeyword", lang) or
                      m(q, "HentaiKeyword", lang))):
-                return MediaType.HENTAI, 0.4
+                return MediaType.HENTAI, DEFAULT_KEYWORD_LOW_CONFIDENCE
             if (_ok(MediaType.ADULT_AUDIO) and
                     (m(q, "AudioKeyword", lang) or m(q, "ASMRKeyword", lang))):
-                return MediaType.ADULT_AUDIO, 0.4
+                return MediaType.ADULT_AUDIO, DEFAULT_KEYWORD_LOW_CONFIDENCE
             if _ok(MediaType.ADULT):
-                return MediaType.ADULT, 0.4
+                return MediaType.ADULT, DEFAULT_KEYWORD_LOW_CONFIDENCE
 
         if _ok(MediaType.HENTAI) and m(q, "HentaiKeyword", lang):
-            return MediaType.HENTAI, 0.4
+            return MediaType.HENTAI, DEFAULT_KEYWORD_LOW_CONFIDENCE
         if _ok(MediaType.VIDEO) and m(q, "VideoKeyword", lang):
-            return MediaType.VIDEO, 0.4
+            return MediaType.VIDEO, DEFAULT_KEYWORD_LOW_CONFIDENCE
         if _ok(MediaType.AUDIO) and m(q, "AudioKeyword", lang):
-            return MediaType.AUDIO, 0.4
+            return MediaType.AUDIO, DEFAULT_KEYWORD_LOW_CONFIDENCE
 
         return MediaType.GENERIC, 0.0

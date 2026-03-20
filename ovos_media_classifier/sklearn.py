@@ -42,15 +42,12 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 from ovos_utils.log import LOG
 
 from ovos_media_classifier.base import AbstractMediaClassifier
+from ovos_media_classifier.constants import DEFAULT_DOMAIN_THRESHOLD, DEFAULT_PLAY_THRESHOLD
 from ovos_media_classifier.intents import MediaType
 from ovos_media_classifier.intents import (
     OCPDomain,
     LABEL_TO_MEDIA_TYPE,
 )
-
-# Default confidence thresholds for sklearn classifier
-DEFAULT_PLAY_THRESHOLD = 0.3
-DEFAULT_DOMAIN_THRESHOLD = 0.5
 
 
 class SklearnMediaClassifier(AbstractMediaClassifier):
