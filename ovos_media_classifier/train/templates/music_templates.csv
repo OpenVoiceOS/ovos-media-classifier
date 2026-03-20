@@ -1,0 +1,771 @@
+category,template
+album_name+music_streaming_service,I need to hear {album_name} from {music_streaming_service}
+album_name+music_streaming_service,I want to listen to the {album_name} album on {music_streaming_service}
+album_name+music_streaming_service,find the record {album_name} on {music_streaming_service}
+album_name+music_streaming_service,find {album_name} on {music_streaming_service}
+album_name+music_streaming_service,let's hear the {album_name} album on {music_streaming_service}
+album_name+music_streaming_service,listen to {album_name} using {music_streaming_service}
+album_name+music_streaming_service,open {music_streaming_service} and play the album {album_name}
+album_name+music_streaming_service,play the album {album_name} on {music_streaming_service}
+album_name+music_streaming_service,play {album_name} on the {music_streaming_service} app
+album_name+music_streaming_service,play {album_name} through {music_streaming_service}
+album_name+music_streaming_service,put on {album_name} via {music_streaming_service}
+album_name+music_streaming_service,queue up {album_name} on {music_streaming_service}
+album_name+music_streaming_service,shuffle the album {album_name} on {music_streaming_service}
+album_name+music_streaming_service,spin the album {album_name} on {music_streaming_service}
+album_name+music_streaming_service,start the {album_name} album on {music_streaming_service}
+album_name+music_streaming_service,start {album_name} from start to finish on {music_streaming_service}
+album_name+music_streaming_service,stream the full {album_name} album on {music_streaming_service}
+album_name+music_streaming_service,stream {album_name} on {music_streaming_service}
+album_name,I need to hear the album {album_name}
+album_name,I want to hear the {album_name} disc
+album_name,I want to listen to the {album_name} album
+album_name,I'm in the mood for the album {album_name}
+album_name,can we listen to {album_name}
+album_name,chuck on {album_name}
+album_name,find the album {album_name}
+album_name,get {album_name} started
+album_name,let's hear the album {album_name}
+album_name,let's vibe with {album_name}
+album_name,play the album {album_name}
+album_name,play the classic album {album_name}
+album_name,play the full LP {album_name}
+album_name,play the newest album {album_name}
+album_name,play the {album_name} EP
+album_name,play the {album_name} LP
+album_name,play tracks from the album {album_name}
+album_name,play {album_name} from start to finish
+album_name,play {album_name} in order
+album_name,play {album_name} on shuffle
+album_name,play {album_name} the whole way through
+album_name,put on the record {album_name}
+album_name,put on {album_name} from the top
+album_name,put on {album_name} record
+album_name,queue the album {album_name}
+album_name,shuffle the album {album_name}
+album_name,shuffle through {album_name}
+album_name,spin the {album_name} album
+album_name,start playing {album_name} from track one
+album_name,start the {album_name} album
+album_name,stick {album_name} on
+album_name,stream the deluxe edition of {album_name}
+album_name,stream the {album_name} record
+album_type,I need an {album_type}
+album_type,I want to listen to an {album_type}
+album_type,find a {album_type}
+album_type,find me an {album_type}
+album_type,find new {album_type} releases
+album_type,find {album_type} albums
+album_type,find {album_type} releases
+album_type,give me an {album_type}
+album_type,play a fresh {album_type}
+album_type,play an {album_type}
+album_type,play an {album_type} please
+album_type,play music from the {album_type}
+album_type,play some {album_type}
+album_type,play the latest {album_type}
+album_type,play the {album_type}
+album_type,play {album_type} music
+album_type,put on a {album_type}
+album_type,put on some fresh {album_type}
+album_type,put on some {album_type}
+album_type,queue an {album_type}
+album_type,search for {album_type} albums
+album_type,start an {album_type}
+album_type,stream an {album_type}
+anime_title,I need to hear the {anime_title} ending song
+anime_title,I want the {anime_title} background music
+anime_title,I want to hear the {anime_title} opening
+anime_title,blast the {anime_title} opening theme
+anime_title,find the {anime_title} soundtrack
+anime_title,let's hear the {anime_title} soundtrack
+anime_title,listen to music from {anime_title}
+anime_title,play music from {anime_title}
+anime_title,play the ending theme from {anime_title}
+anime_title,play the opening theme from {anime_title}
+anime_title,play the theme song from {anime_title}
+anime_title,play the {anime_title} ED
+anime_title,play the {anime_title} OP
+anime_title,play the {anime_title} OP and ED
+anime_title,play the {anime_title} OST
+anime_title,play the {anime_title} ending
+anime_title,play the {anime_title} insert song
+anime_title,play the {anime_title} music collection
+anime_title,play the {anime_title} opening
+anime_title,play the {anime_title} soundtrack
+anime_title,put on the {anime_title} opening track
+anime_title,queue up some {anime_title} tunes
+anime_title,spin the {anime_title} OST
+anime_title,start the {anime_title} OST
+anime_title,stream the opening from {anime_title}
+anime_title,stream the {anime_title} OST
+artist_name+album_name+music_streaming_service,I need to hear {artist_name}'s {album_name} on {music_streaming_service}
+artist_name+album_name+music_streaming_service,I want to listen to the {album_name} album by {artist_name} on {music_streaming_service}
+artist_name+album_name+music_streaming_service,find the album {album_name} by the artist {artist_name} on {music_streaming_service}
+artist_name+album_name+music_streaming_service,find {artist_name}'s album {album_name} on {music_streaming_service}
+artist_name+album_name+music_streaming_service,let's hear the full album {album_name} from {artist_name} on {music_streaming_service}
+artist_name+album_name+music_streaming_service,listen to the {album_name} record by {artist_name} on {music_streaming_service}
+artist_name+album_name+music_streaming_service,listen to {artist_name}'s {album_name} using the {music_streaming_service} app
+artist_name+album_name+music_streaming_service,open {music_streaming_service} and play the album {album_name} by {artist_name}
+artist_name+album_name+music_streaming_service,play {album_name} by {artist_name} through {music_streaming_service}
+artist_name+album_name+music_streaming_service,play {artist_name}'s album {album_name} on {music_streaming_service}
+artist_name+album_name+music_streaming_service,put on the album {album_name} from {artist_name} via {music_streaming_service}
+artist_name+album_name+music_streaming_service,queue up {album_name} from {artist_name} on {music_streaming_service}
+artist_name+album_name+music_streaming_service,shuffle the album {album_name} by {artist_name} on {music_streaming_service}
+artist_name+album_name+music_streaming_service,spin {artist_name}'s {album_name} on {music_streaming_service}
+artist_name+album_name+music_streaming_service,start playing the album {album_name} by {artist_name} on {music_streaming_service}
+artist_name+album_name+music_streaming_service,stream the record {album_name} by {artist_name} via {music_streaming_service}
+artist_name+album_name+music_streaming_service,stream {album_name} by {artist_name} on {music_streaming_service}
+artist_name+album_name,I want to hear the full {album_name} album by {artist_name}
+artist_name+album_name,I want to hear {artist_name}'s album {album_name}
+artist_name+album_name,I'd like to hear {artist_name}'s latest album {album_name}
+artist_name+album_name,can you play the album {album_name} from {artist_name}
+artist_name+album_name,find the album {album_name} from {artist_name}
+artist_name+album_name,give me the album {album_name} by {artist_name}
+artist_name+album_name,let's listen to {album_name} by {artist_name}
+artist_name+album_name,listen to the whole {album_name} album from {artist_name}
+artist_name+album_name,listen to {album_name} by {artist_name}
+artist_name+album_name,play the album {album_name} by {artist_name}
+artist_name+album_name,play the classic {album_name} album by {artist_name}
+artist_name+album_name,play the entire {album_name} album from {artist_name}
+artist_name+album_name,play the new album {album_name} by {artist_name}
+artist_name+album_name,play the {album_name} record by {artist_name}
+artist_name+album_name,play {album_name} from {artist_name}
+artist_name+album_name,play {artist_name}'s album {album_name}
+artist_name+album_name,play {artist_name}'s {album_name} record from start to finish
+artist_name+album_name,put on the album {album_name} from {artist_name}
+artist_name+album_name,put on the {album_name} LP by {artist_name}
+artist_name+album_name,queue up the {album_name} album by {artist_name}
+artist_name+album_name,queue up {album_name} by {artist_name}
+artist_name+album_name,shuffle the album {album_name} by {artist_name}
+artist_name+album_name,shuffle the songs on {album_name} by {artist_name}
+artist_name+album_name,shuffle through {album_name} by {artist_name}
+artist_name+album_name,spin {artist_name}'s {album_name} record
+artist_name+album_name,start playing the album {album_name} by {artist_name}
+artist_name+album_name,start {artist_name}'s {album_name} album
+artist_name+album_name,stream the record {album_name} by {artist_name}
+artist_name+album_name,stream {album_name} by {artist_name}
+artist_name+music_genre,I need that {artist_name} {music_genre} vibe
+artist_name+music_genre,I want to hear {music_genre} tracks by {artist_name}
+artist_name+music_genre,I'm in the mood for {artist_name} {music_genre}
+artist_name+music_genre,blast {artist_name} {music_genre} music
+artist_name+music_genre,find me some {music_genre} from {artist_name} please
+artist_name+music_genre,find {music_genre} music from {artist_name}
+artist_name+music_genre,give me some {artist_name} {music_genre} tunes
+artist_name+music_genre,let's hear {music_genre} hits by {artist_name}
+artist_name+music_genre,play some {music_genre} from {artist_name}
+artist_name+music_genre,play some {music_genre} songs from {artist_name}
+artist_name+music_genre,play {artist_name} {music_genre}
+artist_name+music_genre,play {artist_name}'s {music_genre} radio
+artist_name+music_genre,play {music_genre} music by {artist_name}
+artist_name+music_genre,play {music_genre} music from the artist {artist_name}
+artist_name+music_genre,put on some {music_genre} by {artist_name}
+artist_name+music_genre,queue up {music_genre} tracks by {artist_name}
+artist_name+music_genre,shuffle {artist_name}'s {music_genre} catalog
+artist_name+music_genre,shuffle {music_genre} songs by {artist_name}
+artist_name+music_genre,spin some {artist_name} {music_genre}
+artist_name+music_genre,start a {music_genre} station featuring {artist_name}
+artist_name+music_genre,stream {music_genre} by {artist_name}
+artist_name+music_streaming_service,I need some {artist_name} from {music_streaming_service}
+artist_name+music_streaming_service,I want to hear {artist_name} using {music_streaming_service}
+artist_name+music_streaming_service,I want to listen to {artist_name} on {music_streaming_service}
+artist_name+music_streaming_service,connect to {music_streaming_service} for {artist_name}
+artist_name+music_streaming_service,find me {artist_name} tracks on {music_streaming_service}
+artist_name+music_streaming_service,find {artist_name} on {music_streaming_service}
+artist_name+music_streaming_service,launch {music_streaming_service} and play {artist_name}
+artist_name+music_streaming_service,let's hear {artist_name} on {music_streaming_service}
+artist_name+music_streaming_service,listen to {artist_name} on the {music_streaming_service} app
+artist_name+music_streaming_service,open {music_streaming_service} to hear {artist_name}
+artist_name+music_streaming_service,play some {artist_name} from {music_streaming_service}
+artist_name+music_streaming_service,play the latest from {artist_name} on {music_streaming_service}
+artist_name+music_streaming_service,play {artist_name} on {music_streaming_service}
+artist_name+music_streaming_service,put on {artist_name} radio on {music_streaming_service}
+artist_name+music_streaming_service,put on {artist_name} via {music_streaming_service}
+artist_name+music_streaming_service,queue up {artist_name} on {music_streaming_service}
+artist_name+music_streaming_service,shuffle {artist_name} on {music_streaming_service}
+artist_name+music_streaming_service,spin {artist_name} on {music_streaming_service}
+artist_name+music_streaming_service,start a {artist_name} station on {music_streaming_service}
+artist_name+music_streaming_service,stream {artist_name} music through {music_streaming_service}
+artist_name+music_streaming_service,stream {artist_name} on {music_streaming_service}
+artist_name+track_name+music_streaming_service,I need to hear {track_name} by {artist_name} on {music_streaming_service}
+artist_name+track_name+music_streaming_service,I want to hear {track_name} from {artist_name} via {music_streaming_service}
+artist_name+track_name+music_streaming_service,blast {track_name} by {artist_name} on {music_streaming_service}
+artist_name+track_name+music_streaming_service,can you play {track_name} from {artist_name} on {music_streaming_service}
+artist_name+track_name+music_streaming_service,find and play {track_name} by {artist_name} on {music_streaming_service}
+artist_name+track_name+music_streaming_service,find me {artist_name}'s song {track_name} on {music_streaming_service}
+artist_name+track_name+music_streaming_service,find {track_name} from {artist_name} on {music_streaming_service}
+artist_name+track_name+music_streaming_service,let's hear the song {track_name} from {artist_name} on {music_streaming_service}
+artist_name+track_name+music_streaming_service,listen to {track_name} by {artist_name} through {music_streaming_service}
+artist_name+track_name+music_streaming_service,open {music_streaming_service} and play {track_name} by {artist_name}
+artist_name+track_name+music_streaming_service,play the song {track_name} by {artist_name} on {music_streaming_service}
+artist_name+track_name+music_streaming_service,play {track_name} by {artist_name} on {music_streaming_service}
+artist_name+track_name+music_streaming_service,put on {artist_name}'s {track_name} on {music_streaming_service}
+artist_name+track_name+music_streaming_service,queue up {track_name} by {artist_name} on {music_streaming_service}
+artist_name+track_name+music_streaming_service,start playing {track_name} by {artist_name} on {music_streaming_service}
+artist_name+track_name+music_streaming_service,stream the track {track_name} from {artist_name} using {music_streaming_service}
+artist_name+track_name+music_streaming_service,stream {track_name} by {artist_name} on {music_streaming_service}
+artist_name+track_name,I need {track_name} from {artist_name}
+artist_name+track_name,I want to hear the song {track_name} by {artist_name}
+artist_name+track_name,I want to hear {artist_name} play {track_name}
+artist_name+track_name,I'd like to hear {track_name} from {artist_name}
+artist_name+track_name,I'm in the mood for {artist_name}'s {track_name}
+artist_name+track_name,blast {track_name} by {artist_name}
+artist_name+track_name,can we listen to {artist_name} and {track_name}
+artist_name+track_name,can you put on {track_name} by {artist_name}
+artist_name+track_name,chuck on {track_name} from {artist_name}
+artist_name+track_name,find me {artist_name}'s {track_name}
+artist_name+track_name,find the song {track_name} by {artist_name}
+artist_name+track_name,give me {track_name} by {artist_name}
+artist_name+track_name,let's hear {artist_name} performing {track_name}
+artist_name+track_name,listen to {track_name} by {artist_name}
+artist_name+track_name,play the hit {track_name} by {artist_name}
+artist_name+track_name,play the track {track_name} by {artist_name}
+artist_name+track_name,play the {artist_name} song called {track_name}
+artist_name+track_name,play {artist_name} singing {track_name}
+artist_name+track_name,play {artist_name}'s {track_name}
+artist_name+track_name,play {track_name} featuring {artist_name}
+artist_name+track_name,play {track_name} from {artist_name}'s collection
+artist_name+track_name,play {track_name} performed by {artist_name}
+artist_name+track_name,put on the {track_name} track from {artist_name}
+artist_name+track_name,queue up {track_name} by {artist_name}
+artist_name+track_name,spin {track_name} by {artist_name}
+artist_name+track_name,start playing {track_name} by {artist_name}
+artist_name+track_name,stick on {track_name} by {artist_name}
+artist_name+track_name,stream the song {track_name} by {artist_name}
+artist_name+track_name,stream {track_name} by {artist_name} please
+artist_name,I need {artist_name} tunes
+artist_name,I want to hear {artist_name}
+artist_name,I want to hear {artist_name} live
+artist_name,I want to listen to {artist_name}
+artist_name,I'm craving {artist_name} music
+artist_name,I'm in the mood for {artist_name}
+artist_name,any new drops from {artist_name}
+artist_name,blast some {artist_name}
+artist_name,can you play {artist_name}
+artist_name,chuck on some {artist_name}
+artist_name,dig up some {artist_name}
+artist_name,fancy some {artist_name}
+artist_name,find music by {artist_name}
+artist_name,find something by {artist_name}
+artist_name,give me a taste of {artist_name}
+artist_name,give me some {artist_name}
+artist_name,got any {artist_name}
+artist_name,is there any {artist_name} playing
+artist_name,let's hear {artist_name}
+artist_name,let's vibe to {artist_name}
+artist_name,listen to {artist_name}
+artist_name,more {artist_name} please
+artist_name,play anything by {artist_name}
+artist_name,play hits by {artist_name}
+artist_name,play music from {artist_name}
+artist_name,play some music by {artist_name}
+artist_name,play songs by {artist_name}
+artist_name,play the best of {artist_name}
+artist_name,play the essentials of {artist_name}
+artist_name,play the latest from {artist_name}
+artist_name,play the top rated {artist_name} songs
+artist_name,play top songs by {artist_name}
+artist_name,play tracks by {artist_name}
+artist_name,play {artist_name}
+artist_name,play {artist_name} on repeat
+artist_name,play {artist_name} radio
+artist_name,play {artist_name}'s deep cuts
+artist_name,play {artist_name}'s greatest hits
+artist_name,put on a bit of {artist_name}
+artist_name,put on an {artist_name} mix
+artist_name,put on some {artist_name}
+artist_name,put on that {artist_name} station
+artist_name,put {artist_name} on shuffle
+artist_name,queue up some {artist_name}
+artist_name,shuffle songs by {artist_name}
+artist_name,shuffle through {artist_name}'s discography
+artist_name,shuffle {artist_name}
+artist_name,spin some {artist_name}
+artist_name,start a {artist_name} station
+artist_name,start an {artist_name} playlist
+artist_name,start the {artist_name} radio stream
+artist_name,stick on some {artist_name}
+artist_name,stream {artist_name}
+cartoon_title,I need the {cartoon_title} opening song
+cartoon_title,I want to hear the {cartoon_title} theme
+cartoon_title,I want to listen to the {cartoon_title} soundtrack
+cartoon_title,blast the {cartoon_title} intro
+cartoon_title,find the theme from {cartoon_title}
+cartoon_title,find the {cartoon_title} music for me
+cartoon_title,let's hear the {cartoon_title} theme
+cartoon_title,play music from {cartoon_title}
+cartoon_title,play the opening to {cartoon_title}
+cartoon_title,play the {cartoon_title} intro music
+cartoon_title,play the {cartoon_title} series theme
+cartoon_title,play the {cartoon_title} theme
+cartoon_title,play the {cartoon_title} theme song
+cartoon_title,play the {cartoon_title} title song
+cartoon_title,put on the {cartoon_title} theme for me
+cartoon_title,queue up the {cartoon_title} theme
+cartoon_title,spin the {cartoon_title} theme song
+cartoon_title,start the {cartoon_title} intro
+cartoon_title,stream the {cartoon_title} theme song
+documentary_title,I need to hear the score from {documentary_title}
+documentary_title,I want to hear the {documentary_title} background music
+documentary_title,find the music from the documentary {documentary_title}
+documentary_title,find the soundtrack to {documentary_title}
+documentary_title,let's hear the {documentary_title} score
+documentary_title,play music from {documentary_title}
+documentary_title,play the original score for {documentary_title}
+documentary_title,play the theme from {documentary_title}
+documentary_title,play the theme of {documentary_title}
+documentary_title,play the {documentary_title} documentary soundtrack
+documentary_title,play the {documentary_title} film score
+documentary_title,play the {documentary_title} soundtrack
+documentary_title,put on the {documentary_title} music
+documentary_title,queue up the {documentary_title} soundtrack
+documentary_title,spin the {documentary_title} OST
+documentary_title,start the {documentary_title} music
+documentary_title,stream the {documentary_title} OST
+documentary_title,stream the {documentary_title} score
+game_title,I need to hear the {game_title} background music
+game_title,I want the {game_title} title theme
+game_title,I want to hear the {game_title} soundtrack
+game_title,blast the {game_title} battle theme
+game_title,find the music from {game_title}
+game_title,let's hear some {game_title} music
+game_title,listen to the {game_title} background tracks
+game_title,play music from {game_title}
+game_title,play the OST for {game_title}
+game_title,play the main theme of {game_title}
+game_title,play the original score from {game_title}
+game_title,play the {game_title} OST
+game_title,play the {game_title} boss music
+game_title,play the {game_title} game music collection
+game_title,play the {game_title} score
+game_title,play the {game_title} soundtrack
+game_title,play video game music from {game_title}
+game_title,put on the {game_title} soundtrack
+game_title,queue up the {game_title} OST
+game_title,spin the {game_title} score
+game_title,start the {game_title} score
+game_title,stream the {game_title} OST
+game_title,stream the {game_title} game soundtrack
+movie_title,I need to hear the music from {movie_title}
+movie_title,I want the {movie_title} movie music
+movie_title,I want to hear the music from {movie_title}
+movie_title,blast the {movie_title} soundtrack
+movie_title,find the soundtrack for {movie_title}
+movie_title,let's hear the {movie_title} score
+movie_title,listen to the {movie_title} film score
+movie_title,play music from {movie_title}
+movie_title,play music inspired by {movie_title}
+movie_title,play songs from the {movie_title} movie
+movie_title,play the film score for {movie_title}
+movie_title,play the main theme of {movie_title}
+movie_title,play the original soundtrack from {movie_title}
+movie_title,play the soundtrack for {movie_title} please
+movie_title,play the theme from {movie_title}
+movie_title,play the {movie_title} OST
+movie_title,play the {movie_title} film soundtrack
+movie_title,play the {movie_title} score
+movie_title,play the {movie_title} soundtrack
+movie_title,put on music from the movie {movie_title}
+movie_title,put on the {movie_title} OST
+movie_title,queue up the {movie_title} OST
+movie_title,shuffle the {movie_title} soundtrack
+movie_title,spin the {movie_title} OST
+movie_title,start the {movie_title} soundtrack
+movie_title,stream the original score from {movie_title}
+movie_title,stream the {movie_title} soundtrack
+music_genre+music_streaming_service,I need some {music_genre} from {music_streaming_service}
+music_genre+music_streaming_service,I want to hear {music_genre} radio on {music_streaming_service}
+music_genre+music_streaming_service,blast {music_genre} music on {music_streaming_service}
+music_genre+music_streaming_service,find me a {music_genre} playlist on {music_streaming_service}
+music_genre+music_streaming_service,find {music_genre} music on {music_streaming_service}
+music_genre+music_streaming_service,let's hear {music_genre} hits on {music_streaming_service}
+music_genre+music_streaming_service,listen to {music_genre} through {music_streaming_service}
+music_genre+music_streaming_service,open {music_streaming_service} and play {music_genre}
+music_genre+music_streaming_service,play a {music_genre} mix on {music_streaming_service}
+music_genre+music_streaming_service,play {music_genre} on {music_streaming_service}
+music_genre+music_streaming_service,play {music_genre} tunes using {music_streaming_service}
+music_genre+music_streaming_service,put on some {music_genre} via {music_streaming_service}
+music_genre+music_streaming_service,queue up {music_genre} music on {music_streaming_service}
+music_genre+music_streaming_service,shuffle {music_genre} on {music_streaming_service}
+music_genre+music_streaming_service,start a {music_genre} playlist on {music_streaming_service}
+music_genre+music_streaming_service,start a {music_genre} station on {music_streaming_service}
+music_genre+music_streaming_service,stream some {music_genre} from {music_streaming_service}
+music_genre+music_streaming_service,stream {music_genre} via {music_streaming_service}
+music_genre,I feel like listening to {music_genre}
+music_genre,I need some {music_genre} in my life
+music_genre,I want to hear {music_genre} radio
+music_genre,I want to listen to {music_genre}
+music_genre,I want to vibe to {music_genre}
+music_genre,I'm in a {music_genre} mood
+music_genre,blast some {music_genre} tunes
+music_genre,can you play {music_genre}
+music_genre,find me {music_genre} hits
+music_genre,find some {music_genre} music
+music_genre,give me a {music_genre} beat
+music_genre,give me some chill {music_genre}
+music_genre,give me some {music_genre}
+music_genre,got any {music_genre}
+music_genre,let's get some {music_genre} going
+music_genre,let's hear some {music_genre}
+music_genre,play a {music_genre} station
+music_genre,play classic {music_genre}
+music_genre,play good {music_genre} music
+music_genre,play old school {music_genre}
+music_genre,play some new {music_genre}
+music_genre,play some upbeat {music_genre}
+music_genre,play some {music_genre} music
+music_genre,play the best {music_genre}
+music_genre,play the latest in {music_genre}
+music_genre,play top {music_genre} tracks
+music_genre,play underground {music_genre}
+music_genre,play {music_genre}
+music_genre,play {music_genre} hits
+music_genre,play {music_genre} radio
+music_genre,put on a {music_genre} mix
+music_genre,put on some {music_genre}
+music_genre,put on that {music_genre} sound
+music_genre,queue up some {music_genre}
+music_genre,shuffle through {music_genre} songs
+music_genre,shuffle {music_genre} music
+music_genre,something {music_genre} please
+music_genre,start a {music_genre} playlist
+music_genre,start the {music_genre} stream
+music_genre,stream a {music_genre} channel
+music_genre,stream {music_genre}
+music_streaming_service,I want to use {music_streaming_service}
+music_streaming_service,I want {music_streaming_service} now
+music_streaming_service,bring up {music_streaming_service}
+music_streaming_service,connect to {music_streaming_service}
+music_streaming_service,get {music_streaming_service} going
+music_streaming_service,give me tunes from {music_streaming_service}
+music_streaming_service,launch {music_streaming_service}
+music_streaming_service,load my {music_streaming_service} library
+music_streaming_service,open up {music_streaming_service} please
+music_streaming_service,open {music_streaming_service}
+music_streaming_service,open {music_streaming_service} music
+music_streaming_service,play from {music_streaming_service}
+music_streaming_service,play music on {music_streaming_service}
+music_streaming_service,play my queue on {music_streaming_service}
+music_streaming_service,play something on {music_streaming_service}
+music_streaming_service,pull up my music on {music_streaming_service}
+music_streaming_service,start the {music_streaming_service} app
+music_streaming_service,start {music_streaming_service}
+music_streaming_service,stream music from {music_streaming_service}
+music_streaming_service,stream through {music_streaming_service}
+music_streaming_service,switch to {music_streaming_service}
+music_streaming_service,tune into {music_streaming_service}
+music_streaming_service,use {music_streaming_service}
+music_streaming_service,use {music_streaming_service} for my music
+record_label,I want to hear music on {record_label}
+record_label,I want to listen to the {record_label} roster
+record_label,anything on {record_label}
+record_label,blast the {record_label} hits
+record_label,find me artists on {record_label}
+record_label,find music from {record_label}
+record_label,give me that {record_label} sound
+record_label,is there anything new from {record_label}
+record_label,let's hear some {record_label} artists
+record_label,play music from {record_label}
+record_label,play the best of {record_label}
+record_label,play the latest from {record_label}
+record_label,play tracks from {record_label}
+record_label,play {record_label} artists
+record_label,play {record_label} radio
+record_label,queue up music from {record_label}
+record_label,show me {record_label}'s catalog
+record_label,shuffle {record_label} tracks
+record_label,something on {record_label}
+record_label,start a {record_label} station
+record_label,stream artists from {record_label}
+record_label,stream the {record_label} discography
+record_label,stream {record_label} tunes
+track_name+music_streaming_service,I need to hear {track_name} on {music_streaming_service}
+track_name+music_streaming_service,I want to hear {track_name} on {music_streaming_service}
+track_name+music_streaming_service,blast {track_name} on {music_streaming_service}
+track_name+music_streaming_service,can you find {track_name} on {music_streaming_service}
+track_name+music_streaming_service,find the track {track_name} on {music_streaming_service}
+track_name+music_streaming_service,find {track_name} on {music_streaming_service}
+track_name+music_streaming_service,give me {track_name} on {music_streaming_service}
+track_name+music_streaming_service,let's hear {track_name} on {music_streaming_service}
+track_name+music_streaming_service,listen to {track_name} through {music_streaming_service}
+track_name+music_streaming_service,look for {track_name} on {music_streaming_service}
+track_name+music_streaming_service,open {music_streaming_service} and play {track_name}
+track_name+music_streaming_service,play {track_name} from my {music_streaming_service} library
+track_name+music_streaming_service,play {track_name} on {music_streaming_service}
+track_name+music_streaming_service,play {track_name} using {music_streaming_service}
+track_name+music_streaming_service,play {track_name} via {music_streaming_service}
+track_name+music_streaming_service,put on the song {track_name} on {music_streaming_service}
+track_name+music_streaming_service,queue up {track_name} via {music_streaming_service}
+track_name+music_streaming_service,spin {track_name} on {music_streaming_service}
+track_name+music_streaming_service,start playing {track_name} on {music_streaming_service}
+track_name+music_streaming_service,stream the track {track_name} using {music_streaming_service}
+track_name+music_streaming_service,stream {track_name} on {music_streaming_service}
+track_name,I need to hear {track_name}
+track_name,I want to hear {track_name}
+track_name,I want {track_name} right now
+track_name,I'd like to listen to {track_name}
+track_name,I'm looking for {track_name}
+track_name,blast the song {track_name}
+track_name,can we listen to {track_name}
+track_name,can you play {track_name}
+track_name,chuck {track_name} on
+track_name,find the lyrics for {track_name} and play it
+track_name,find the song {track_name}
+track_name,find the song {track_name} for me
+track_name,get {track_name} going
+track_name,give me the song {track_name}
+track_name,let's hear {track_name}
+track_name,let's hear {track_name} again
+track_name,listen to {track_name}
+track_name,play the acoustic version of {track_name}
+track_name,play the hit {track_name}
+track_name,play the latest single {track_name}
+track_name,play the original version of {track_name}
+track_name,play the single {track_name}
+track_name,play the song {track_name}
+track_name,play the track called {track_name}
+track_name,play the track {track_name}
+track_name,play {track_name}
+track_name,play {track_name} for me
+track_name,play {track_name} immediately
+track_name,play {track_name} now
+track_name,play {track_name} on repeat
+track_name,put on {track_name}
+track_name,put {track_name} in my ears
+track_name,queue up {track_name}
+track_name,spin {track_name}
+track_name,start playing {track_name}
+track_name,start {track_name} for me
+track_name,stick {track_name} on
+track_name,stream {track_name}
+track_name,stream {track_name} live
+track_name,that song {track_name} please
+tv_show_title,I need the {tv_show_title} opening track
+tv_show_title,I want to hear the {tv_show_title} theme
+tv_show_title,I want to listen to the {tv_show_title} intro
+tv_show_title,blast the {tv_show_title} theme song
+tv_show_title,find the music from {tv_show_title}
+tv_show_title,find the {tv_show_title} soundtrack for me
+tv_show_title,let's hear the {tv_show_title} music
+tv_show_title,play music from {tv_show_title}
+tv_show_title,play the ending theme from {tv_show_title}
+tv_show_title,play the main theme of {tv_show_title}
+tv_show_title,play the soundtrack from {tv_show_title}
+tv_show_title,play the theme from {tv_show_title}
+tv_show_title,play the theme to {tv_show_title}
+tv_show_title,play the {tv_show_title} opening theme
+tv_show_title,play the {tv_show_title} series theme
+tv_show_title,play the {tv_show_title} theme
+tv_show_title,play the {tv_show_title} theme song
+tv_show_title,play the {tv_show_title} title track
+tv_show_title,put on the {tv_show_title} theme
+tv_show_title,queue up the {tv_show_title} theme
+tv_show_title,spin the {tv_show_title} soundtrack
+tv_show_title,start the {tv_show_title} opening
+tv_show_title,stream the {tv_show_title} soundtrack
+artist_name+album_name,find {artist_name}'s album {album_name}
+artist_name+album_name,get me {artist_name}'s {album_name}
+artist_name+album_name,play {artist_name}'s {album_name} album
+artist_name+album_name,play the album {album_name} by {artist_name}
+artist_name+album_name,put on {artist_name}'s record {album_name}
+artist_name+album_name,queue up {artist_name}'s {album_name}
+artist_name+album_name,shuffle {artist_name}'s {album_name}
+artist_name+album_name,start {artist_name}'s {album_name}
+artist_name+track_name,find {artist_name}'s song {track_name}
+artist_name+track_name,get {artist_name}'s track {track_name}
+artist_name+track_name,play {artist_name}'s {track_name}
+artist_name+track_name,play the song {track_name} by {artist_name}
+artist_name+track_name,put on {artist_name}'s {track_name}
+artist_name+track_name,queue {artist_name}'s {track_name}
+artist_name+track_name,shuffle {artist_name}'s {track_name}
+artist_name+track_name,start {artist_name}'s {track_name}
+artist_name+track_name,stream {artist_name}'s {track_name}
+artist_name+music_genre,find {artist_name} {music_genre}
+artist_name+music_genre,find {music_genre} by {artist_name}
+artist_name+music_genre,get me {artist_name} {music_genre}
+artist_name+music_genre,play {artist_name} {music_genre}
+artist_name+music_genre,play some {artist_name} in {music_genre} style
+artist_name+music_genre,put on {artist_name} {music_genre}
+artist_name+music_genre,queue {artist_name} {music_genre}
+artist_name+music_genre,shuffle {artist_name} {music_genre}
+artist_name+music_genre,start {artist_name} {music_genre}
+artist_name+music_streaming_service,find {artist_name} on {music_streaming_service}
+artist_name+music_streaming_service,get {artist_name} from {music_streaming_service}
+artist_name+music_streaming_service,play {artist_name} via {music_streaming_service}
+artist_name+music_streaming_service,put on {artist_name} from {music_streaming_service}
+artist_name+music_streaming_service,queue {artist_name} on {music_streaming_service}
+artist_name+music_streaming_service,shuffle {artist_name} on {music_streaming_service}
+artist_name+music_streaming_service,start {artist_name} on {music_streaming_service}
+artist_name+music_streaming_service,stream {artist_name} from {music_streaming_service}
+artist_name+record_label,find {artist_name} from {record_label}
+artist_name+record_label,get {artist_name} from {record_label}
+artist_name+record_label,play {artist_name} on {record_label}
+artist_name+record_label,put on {artist_name} from {record_label}
+artist_name+record_label,shuffle {artist_name} from {record_label}
+artist_name+record_label,start {artist_name} from {record_label}
+album_name+track_name,find {track_name} on {album_name}
+album_name+track_name,get {track_name} from {album_name}
+album_name+track_name,play {track_name} from {album_name}
+album_name+track_name,put on {track_name} from {album_name}
+album_name+track_name,queue {track_name} from {album_name}
+album_name+track_name,shuffle {track_name} from {album_name}
+album_name+music_genre,find {album_name} {music_genre}
+album_name+music_genre,get {album_name} in {music_genre} style
+album_name+music_genre,play {album_name} {music_genre}
+album_name+music_genre,put on {album_name} as {music_genre}
+album_name+music_genre,shuffle {album_name} {music_genre}
+album_name+music_genre,start {album_name} {music_genre}
+album_name+music_streaming_service,find {album_name} on {music_streaming_service}
+album_name+music_streaming_service,get {album_name} from {music_streaming_service}
+album_name+music_streaming_service,play {album_name} via {music_streaming_service}
+album_name+music_streaming_service,put on {album_name} from {music_streaming_service}
+album_name+music_streaming_service,queue {album_name} on {music_streaming_service}
+album_name+music_streaming_service,shuffle {album_name} on {music_streaming_service}
+album_name+music_streaming_service,start {album_name} on {music_streaming_service}
+album_name+record_label,find {album_name} on {record_label}
+album_name+record_label,get {album_name} from {record_label}
+album_name+record_label,play {album_name} from {record_label}
+album_name+record_label,put on {album_name} by {record_label}
+album_name+record_label,shuffle {album_name} from {record_label}
+track_name+album_name+artist_name,find {track_name} by {artist_name} on {album_name}
+track_name+album_name+artist_name,get {track_name} from {album_name} by {artist_name}
+track_name+album_name+artist_name,play {track_name} by {artist_name} from {album_name}
+track_name+album_name+artist_name,put on {track_name} from {album_name} by {artist_name}
+track_name+album_name+artist_name,queue {track_name} from {album_name} by {artist_name}
+track_name+album_name+artist_name,shuffle {track_name} from {album_name} by {artist_name}
+track_name+album_name+music_streaming_service,find {track_name} on {album_name} via {music_streaming_service}
+track_name+album_name+music_streaming_service,get {track_name} from {album_name} on {music_streaming_service}
+track_name+album_name+music_streaming_service,play {track_name} from {album_name} on {music_streaming_service}
+track_name+music_genre,find {track_name} {music_genre} version
+track_name+music_genre,get {track_name} in {music_genre} style
+track_name+music_genre,play {track_name} as {music_genre}
+track_name+music_genre,play {track_name} in {music_genre} style
+track_name+music_genre,put on {track_name} {music_genre}
+track_name+music_genre,shuffle {track_name} {music_genre}
+track_name+music_streaming_service,find {track_name} on {music_streaming_service}
+track_name+music_streaming_service,get {track_name} from {music_streaming_service}
+track_name+music_streaming_service,play {track_name} via {music_streaming_service}
+track_name+music_streaming_service,put on {track_name} from {music_streaming_service}
+track_name+music_streaming_service,queue {track_name} on {music_streaming_service}
+track_name+music_streaming_service,shuffle {track_name} on {music_streaming_service}
+track_name+record_label,find {track_name} on {record_label}
+track_name+record_label,get {track_name} from {record_label}
+track_name+record_label,play {track_name} from {record_label}
+track_name+record_label,put on {track_name} from {record_label}
+track_name+record_label,shuffle {track_name} from {record_label}
+music_genre+music_streaming_service,find {music_genre} on {music_streaming_service}
+music_genre+music_streaming_service,get {music_genre} from {music_streaming_service}
+music_genre+music_streaming_service,play {music_genre} via {music_streaming_service}
+music_genre+music_streaming_service,put on {music_genre} from {music_streaming_service}
+music_genre+music_streaming_service,queue {music_genre} on {music_streaming_service}
+music_genre+music_streaming_service,shuffle {music_genre} on {music_streaming_service}
+music_genre+music_streaming_service,start {music_genre} on {music_streaming_service}
+music_genre+music_streaming_service,stream {music_genre} from {music_streaming_service}
+music_genre+record_label,find {music_genre} on {record_label}
+music_genre+record_label,get {music_genre} from {record_label}
+music_genre+record_label,play {music_genre} from {record_label}
+music_genre+record_label,put on {music_genre} from {record_label}
+music_genre+record_label,shuffle {music_genre} from {record_label}
+music_genre+record_label,start {music_genre} from {record_label}
+record_label+music_streaming_service,find {record_label} on {music_streaming_service}
+record_label+music_streaming_service,get {record_label} from {music_streaming_service}
+record_label+music_streaming_service,play {record_label} via {music_streaming_service}
+record_label+music_streaming_service,put on {record_label} from {music_streaming_service}
+record_label+music_streaming_service,queue {record_label} on {music_streaming_service}
+record_label+music_streaming_service,shuffle {record_label} on {music_streaming_service}
+album_type+music_streaming_service,find {album_type} on {music_streaming_service}
+album_type+music_streaming_service,get {album_type} from {music_streaming_service}
+album_type+music_streaming_service,play {album_type} via {music_streaming_service}
+album_type+music_streaming_service,put on {album_type} from {music_streaming_service}
+album_type+music_streaming_service,shuffle {album_type} on {music_streaming_service}
+album_type+artist_name,find {album_type} by {artist_name}
+album_type+artist_name,get {album_type} from {artist_name}
+album_type+artist_name,play {album_type} by {artist_name}
+album_type+artist_name,put on {album_type} from {artist_name}
+album_type+album_name,find {album_type} {album_name}
+album_type+album_name,get {album_type} version of {album_name}
+album_type+album_name,play {album_type} of {album_name}
+album_type+album_name,put on {album_type} {album_name}
+album_type+music_genre,find {album_type} {music_genre}
+album_type+music_genre,get {album_type} {music_genre}
+album_type+music_genre,play {album_type} {music_genre}
+album_type+music_genre,put on {album_type} {music_genre}
+artist_name,find {artist_name}'s latest release
+artist_name,find {artist_name}'s newest album
+artist_name,find {artist_name}'s top songs
+artist_name,get {artist_name}'s best hits
+artist_name,get {artist_name}'s discography
+artist_name,play {artist_name}'s complete works
+artist_name,play {artist_name}'s essential tracks
+artist_name,play {artist_name}'s greatest hits album
+artist_name,play {artist_name}'s most popular songs
+artist_name,play {artist_name}'s new music
+artist_name,play {artist_name}'s recent releases
+artist_name,play {artist_name}'s top 10
+artist_name,put on {artist_name}'s best of
+artist_name,shuffle {artist_name}'s collection
+artist_name,shuffle {artist_name}'s hits
+artist_name,start {artist_name}'s playlist
+artist_name,stream {artist_name}'s entire discography
+album_name,find {album_name} in my library
+album_name,find {album_name} to listen to
+album_name,get {album_name} to play
+album_name,play {album_name} all the way through
+album_name,play {album_name} from start to finish
+album_name,play {album_name} in full
+album_name,play {album_name} in order
+album_name,put on {album_name} for me
+album_name,put on {album_name} on repeat
+album_name,queue {album_name} up
+album_name,resume {album_name} from where i left off
+album_name,shuffle {album_name} tracks
+album_name,start {album_name} from beginning
+album_name,stream {album_name} completely
+track_name,find {track_name} to listen to
+track_name,find the lyrics for {track_name}
+track_name,get the meaning of {track_name}
+track_name,play {track_name} again
+track_name,play {track_name} on loop
+track_name,play {track_name} over and over
+track_name,put {track_name} on repeat
+track_name,queue {track_name} next
+track_name,replay {track_name}
+track_name,start {track_name} from beginning
+track_name,stream {track_name} again
+music_genre,find {music_genre} to relax to
+music_genre,find {music_genre} for working out
+music_genre,find {music_genre} for studying
+music_genre,find {music_genre} for the gym
+music_genre,find new {music_genre} releases
+music_genre,find popular {music_genre}
+music_genre,get {music_genre} for a party
+music_genre,get {music_genre} for driving
+music_genre,play {music_genre} for a road trip
+music_genre,play {music_genre} for date night
+music_genre,play {music_genre} for focus
+music_genre,play {music_genre} for studying
+music_genre,play {music_genre} in the car
+music_genre,play {music_genre} while working out
+music_genre,put on some {music_genre} for the gym
+music_genre,shuffle {music_genre} playlist
+music_streaming_service,find my liked songs on {music_streaming_service}
+music_streaming_service,find my playlists on {music_streaming_service}
+music_streaming_service,get my library on {music_streaming_service}
+music_streaming_service,play my Discover Weekly on {music_streaming_service}
+music_streaming_service,play my liked songs on {music_streaming_service}
+music_streaming_service,play my mix on {music_streaming_service}
+music_streaming_service,play my recommendations on {music_streaming_service}
+music_streaming_service,put on my Daily Mix from {music_streaming_service}
+music_streaming_service,resume playback on {music_streaming_service}
+music_streaming_service,shuffle my library on {music_streaming_service}
+music_streaming_service,start my playlist on {music_streaming_service}
+music_streaming_service,stream my music from {music_streaming_service}
+record_label,find artists from {record_label}
+record_label,find new releases from {record_label}
+record_label,get the {record_label} catalog
+record_label,play artists from {record_label}
+record_label,play the {record_label} collection
+record_label,put on music from {record_label}
+record_label,shuffle {record_label} artists
+record_label,start {record_label} radio
+record_label,stream from {record_label}

@@ -1,0 +1,37 @@
+Metadata-Version: 2.4
+Name: ovos-media-classifier
+Version: 0.0.1a1
+Summary: Pluggable media-type classification for OCP (Open Conversation Platform).
+Author-email: JarbasAI <jarbasai@mailfence.com>
+License: Apache-2.0
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Operating System :: OS Independent
+Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Requires-Dist: ovos-utils>=0.0.38
+Provides-Extra: guided
+Requires-Dist: guided-categorical-embeddings[sklearn]; extra == "guided"
+Requires-Dist: onnxruntime; extra == "guided"
+Provides-Extra: train
+Requires-Dist: guided-categorical-embeddings[sklearn,train]; extra == "train"
+Requires-Dist: pandas; extra == "train"
+Requires-Dist: pyarrow; extra == "train"
+Provides-Extra: sklearn
+Requires-Dist: scikit-learn; extra == "sklearn"
+Requires-Dist: joblib; extra == "sklearn"
+Provides-Extra: ner
+Requires-Dist: ahocorasick-ner>=0.0.1; extra == "ner"
+Provides-Extra: padatious
+Requires-Dist: padatious; extra == "padatious"
+Provides-Extra: m2v
+Requires-Dist: model2vec; extra == "m2v"
+Requires-Dist: numpy; extra == "m2v"
+Requires-Dist: onnxruntime; extra == "m2v"
+Provides-Extra: media-servers
+Requires-Dist: requests; extra == "media-servers"
+Provides-Extra: huggingface
+Requires-Dist: datasets; extra == "huggingface"
+Provides-Extra: all
+Requires-Dist: ovos-media-classifier[guided,huggingface,m2v,media_servers,ner,padatious,sklearn]; extra == "all"

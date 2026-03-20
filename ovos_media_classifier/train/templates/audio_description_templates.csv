@@ -1,0 +1,141 @@
+category,template
+anime_title,I want {anime_title} with accessibility narration
+anime_title,enable audio description and play {anime_title}
+anime_title,find the narrated version of {anime_title}
+anime_title,find {anime_title} with AD
+anime_title,play the described version of {anime_title}
+anime_title,play {anime_title} audio described
+anime_title,play {anime_title} with audio description
+anime_title,play {anime_title} with narrator track
+anime_title,play {anime_title} with visual description track
+anime_title,stream {anime_title} with audio description
+audio_description,I need {audio_description} with audio description enabled
+audio_description,I want the narrated version of {audio_description}
+audio_description,I want to watch {audio_description} — turn on audio description
+audio_description,I want {audio_description} with audio description
+audio_description,I'd like {audio_description} with the described track
+audio_description,I'm visually impaired — play {audio_description} with narration
+audio_description,can you find {audio_description} with audio description
+audio_description,does {audio_description} have audio description
+audio_description,enable audio description and play {audio_description}
+audio_description,find the audio described {audio_description}
+audio_description,find the blind-accessible version of {audio_description}
+audio_description,find the narrated version of {audio_description}
+audio_description,find the visual description track for {audio_description}
+audio_description,find {audio_description} with AD
+audio_description,is there an audio described version of {audio_description}
+audio_description,play the audio described {audio_description}
+audio_description,play the described version of {audio_description}
+audio_description,play {audio_description} accessible version
+audio_description,play {audio_description} audio described
+audio_description,play {audio_description} described version
+audio_description,play {audio_description} for the visually impaired
+audio_description,play {audio_description} narrated for the visually impaired
+audio_description,play {audio_description} with AD enabled
+audio_description,play {audio_description} with AD track
+audio_description,play {audio_description} with accessibility audio track
+audio_description,play {audio_description} with accessibility narration
+audio_description,play {audio_description} with accessibility track enabled
+audio_description,play {audio_description} with audio narration
+audio_description,play {audio_description} with commentary for the blind
+audio_description,play {audio_description} with described audio
+audio_description,play {audio_description} with descriptive audio
+audio_description,play {audio_description} with image descriptions
+audio_description,play {audio_description} with narrator
+audio_description,play {audio_description} with scene descriptions
+audio_description,play {audio_description} with screen reader narration
+audio_description,play {audio_description} with vision impaired support
+audio_description,play {audio_description} with visual description track
+audio_description,play {audio_description} with visual narration
+audio_description,play {audio_description} — I need the described version
+audio_description,put on {audio_description} with audio description
+audio_description,stream the accessible version of {audio_description}
+audio_description,stream {audio_description} with narration for the visually impaired
+audio_description,stream {audio_description} with narrator track
+audio_description,turn on audio description for {audio_description}
+audio_description,watch {audio_description} with audio description
+movie_title+tv_show_title,play {movie_title} with audio description or the {tv_show_title} series
+movie_title,I need {movie_title} with audio description enabled
+movie_title,I want the narrated version of {movie_title}
+movie_title,I want to watch {movie_title} — turn on audio description
+movie_title,I want {movie_title} with audio description
+movie_title,I'd like {movie_title} with the described track
+movie_title,I'm visually impaired — play {movie_title} with narration
+movie_title,can you find {movie_title} with audio description
+movie_title,does {movie_title} have audio description
+movie_title,enable audio description and play {movie_title}
+movie_title,find the audio described {movie_title}
+movie_title,find the blind-accessible version of {movie_title}
+movie_title,find the narrated version of {movie_title}
+movie_title,find the visual description track for {movie_title}
+movie_title,find {movie_title} with AD
+movie_title,is there an audio described version of {movie_title}
+movie_title,play the described version of {movie_title}
+movie_title,play {movie_title} accessible version
+movie_title,play {movie_title} audio described
+movie_title,play {movie_title} described version
+movie_title,play {movie_title} for the visually impaired
+movie_title,play {movie_title} narrated for the visually impaired
+movie_title,play {movie_title} with AD enabled
+movie_title,play {movie_title} with AD track
+movie_title,play {movie_title} with accessibility audio track
+movie_title,play {movie_title} with accessibility narration
+movie_title,play {movie_title} with accessibility track enabled
+movie_title,play {movie_title} with audio description
+movie_title,play {movie_title} with audio narration
+movie_title,play {movie_title} with commentary for the blind
+movie_title,play {movie_title} with described audio
+movie_title,play {movie_title} with descriptive audio
+movie_title,play {movie_title} with image descriptions
+movie_title,play {movie_title} with narrator
+movie_title,play {movie_title} with scene descriptions
+movie_title,play {movie_title} with screen reader narration
+movie_title,play {movie_title} with vision impaired support
+movie_title,play {movie_title} with visual description track
+movie_title,play {movie_title} with visual narration
+movie_title,play {movie_title} — I need the described version
+movie_title,put on {movie_title} with audio description
+movie_title,stream the accessible version of {movie_title}
+movie_title,stream {movie_title} with narration for the visually impaired
+movie_title,stream {movie_title} with narrator track
+movie_title,turn on audio description for {movie_title}
+movie_title,watch {movie_title} with audio description
+tv_show_title,I need {tv_show_title} with audio description
+tv_show_title,I want the narrated version of {tv_show_title}
+tv_show_title,I want to watch {tv_show_title} — enable audio description
+tv_show_title,I want {tv_show_title} with audio description
+tv_show_title,I'm visually impaired — play {tv_show_title} with narration
+tv_show_title,does {tv_show_title} have audio description
+tv_show_title,enable audio description and play {tv_show_title}
+tv_show_title,find the audio described version of {tv_show_title}
+tv_show_title,find the described track for {tv_show_title}
+tv_show_title,find {tv_show_title} with AD
+tv_show_title,find {tv_show_title} with narrator track
+tv_show_title,is there a described version of {tv_show_title}
+tv_show_title,play the accessible episode of {tv_show_title}
+tv_show_title,play the described version of {tv_show_title}
+tv_show_title,play {tv_show_title} blind-accessible version
+tv_show_title,play {tv_show_title} for the visually impaired
+tv_show_title,play {tv_show_title} narrated version
+tv_show_title,play {tv_show_title} with AD enabled
+tv_show_title,play {tv_show_title} with AD track
+tv_show_title,play {tv_show_title} with accessibility audio
+tv_show_title,play {tv_show_title} with accessibility narration
+tv_show_title,play {tv_show_title} with audio description
+tv_show_title,play {tv_show_title} with audio narration
+tv_show_title,play {tv_show_title} with commentary for the blind
+tv_show_title,play {tv_show_title} with descriptive audio
+tv_show_title,play {tv_show_title} with image descriptions
+tv_show_title,play {tv_show_title} with narrator
+tv_show_title,play {tv_show_title} with scene descriptions
+tv_show_title,play {tv_show_title} with visual description track
+tv_show_title,put on {tv_show_title} with narration for the visually impaired
+tv_show_title,stream the accessible version of {tv_show_title}
+tv_show_title,stream {tv_show_title} accessible version
+tv_show_title,stream {tv_show_title} with narrator track
+tv_show_title,turn on audio description for {tv_show_title}
+tv_show_title,watch {tv_show_title} audio described
+audio_description+game_title,play {game_title} with audio description
+audio_description+game_title,find {game_title} with descriptive audio
+audio_description+documentary_title,play {documentary_title} with audio description
+audio_description+documentary_title,find {documentary_title} with AD

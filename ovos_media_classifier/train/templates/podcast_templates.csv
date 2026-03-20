@@ -1,0 +1,404 @@
+category,template
+artist_name,I want the {artist_name} guest show
+artist_name,I want to hear {artist_name} on a podcast
+artist_name,find a podcast with {artist_name}
+artist_name,find an interview with {artist_name} on a podcast
+artist_name,find me a podcast featuring {artist_name}
+artist_name,find the episode where {artist_name} was interviewed
+artist_name,find {artist_name}'s guest spot on a podcast
+artist_name,get me the {artist_name} interview podcast
+artist_name,is there a new interview with {artist_name}
+artist_name,is there a podcast featuring {artist_name}
+artist_name,is {artist_name} featured in any podcasts
+artist_name,let's hear {artist_name}'s podcast appearance
+artist_name,play a podcast about {artist_name}
+artist_name,play a podcast covering {artist_name}'s music
+artist_name,play the latest show about {artist_name}
+artist_name,play the show where they discuss {artist_name}
+artist_name,play the {artist_name} interview episode
+artist_name,play {artist_name} talking on a podcast
+artist_name,search for {artist_name} in podcasts
+artist_name,show me podcasts about {artist_name}
+artist_name,stream the podcast about {artist_name}
+movie_actor,I want the {movie_actor} guest episode
+movie_actor,I want to hear {movie_actor} on a podcast
+movie_actor,find a conversation with {movie_actor}
+movie_actor,find an interview podcast featuring {movie_actor}
+movie_actor,find an interview with {movie_actor}
+movie_actor,find me a podcast featuring {movie_actor}
+movie_actor,find {movie_actor}'s guest appearance on a podcast
+movie_actor,get me the {movie_actor} interview podcast
+movie_actor,is there a new interview with {movie_actor}
+movie_actor,is there a podcast with {movie_actor}
+movie_actor,is {movie_actor} in any podcasts
+movie_actor,let's hear {movie_actor}'s podcast interview
+movie_actor,play a podcast with {movie_actor}
+movie_actor,play the episode where {movie_actor} was the guest
+movie_actor,play the latest show with {movie_actor}
+movie_actor,play the show where they talk to {movie_actor}
+movie_actor,play the {movie_actor} interview show
+movie_actor,play {movie_actor} talking on a podcast
+movie_actor,search for {movie_actor} in podcasts
+movie_actor,show me podcasts with {movie_actor}
+movie_actor,stream the podcast episode with {movie_actor}
+news_category,I need a {news_category} daily update podcast
+news_category,I want a podcast covering {news_category}
+news_category,I want to listen to {news_category} podcasts
+news_category,I'm looking for a {news_category} news show
+news_category,find a daily podcast about {news_category}
+news_category,find me a weekly show about {news_category}
+news_category,find me a {news_category} podcast
+news_category,find me some {news_category} coverage
+news_category,find the top {news_category} podcast
+news_category,get me a {news_category} focused show
+news_category,is there a podcast for {news_category}
+news_category,let's hear a {news_category} show
+news_category,play a podcast about {news_category}
+news_category,play a podcast focused on {news_category}
+news_category,play a show about {news_category}
+news_category,play news coverage of {news_category}
+news_category,play the latest {news_category} podcast
+news_category,play the {news_category} report podcast
+news_category,show me podcasts about {news_category}
+news_category,start a podcast covering {news_category}
+news_category,stream {news_category} news podcasts
+podcast_episode+podcast_streaming_service,find {podcast_episode} on {podcast_streaming_service}
+podcast_episode+podcast_streaming_service,find {podcast_episode} using {podcast_streaming_service}
+podcast_episode+podcast_streaming_service,listen to {podcast_episode} on {podcast_streaming_service}
+podcast_episode+podcast_streaming_service,load {podcast_episode} from {podcast_streaming_service}
+podcast_episode+podcast_streaming_service,play the episode {podcast_episode} on {podcast_streaming_service}
+podcast_episode+podcast_streaming_service,play {podcast_episode} on {podcast_streaming_service}
+podcast_episode+podcast_streaming_service,stream {podcast_episode} from {podcast_streaming_service}
+podcast_episode,I need to hear the {podcast_episode} episode
+podcast_episode,I want the {podcast_episode} podcast episode
+podcast_episode,I want to hear the episode called {podcast_episode}
+podcast_episode,I'd like to listen to the episode {podcast_episode}
+podcast_episode,I'm looking for the episode {podcast_episode}
+podcast_episode,can you play the {podcast_episode} episode
+podcast_episode,find the episode named {podcast_episode}
+podcast_episode,find the episode titled {podcast_episode}
+podcast_episode,find the podcast episode {podcast_episode}
+podcast_episode,find {podcast_episode} and play it
+podcast_episode,get me the episode called {podcast_episode}
+podcast_episode,let's hear {podcast_episode}
+podcast_episode,load the episode {podcast_episode}
+podcast_episode,play back the episode {podcast_episode}
+podcast_episode,play the episode {podcast_episode}
+podcast_episode,play the guest episode {podcast_episode}
+podcast_episode,play the interview episode {podcast_episode}
+podcast_episode,play the podcast episode {podcast_episode}
+podcast_episode,play the specific episode {podcast_episode}
+podcast_episode,play {podcast_episode}
+podcast_episode,pull up the episode {podcast_episode}
+podcast_episode,put on the episode {podcast_episode}
+podcast_episode,resume the episode {podcast_episode}
+podcast_episode,show me the {podcast_episode} episode
+podcast_episode,start {podcast_episode}
+podcast_episode,stream the episode {podcast_episode}
+podcast_episode,stream the podcast episode called {podcast_episode}
+podcast_episode,stream the track {podcast_episode}
+podcast_host+podcast_streaming_service,find podcasts by {podcast_host} on {podcast_streaming_service}
+podcast_host+podcast_streaming_service,find {podcast_host}'s episodes on {podcast_streaming_service}
+podcast_host+podcast_streaming_service,listen to {podcast_host} on {podcast_streaming_service}
+podcast_host+podcast_streaming_service,listen to {podcast_host} via {podcast_streaming_service}
+podcast_host+podcast_streaming_service,play shows from {podcast_host} on {podcast_streaming_service}
+podcast_host+podcast_streaming_service,stream {podcast_host}'s podcasts on {podcast_streaming_service}
+podcast_host,I love {podcast_host} — play their latest
+podcast_host,I need some {podcast_host} in my life
+podcast_host,I want to hear {podcast_host} talk
+podcast_host,I want to listen to {podcast_host}
+podcast_host,I'm looking for {podcast_host}'s newest project
+podcast_host,find a podcast from {podcast_host}
+podcast_host,find me {podcast_host}'s podcast
+podcast_host,find something by {podcast_host}
+podcast_host,find the interview by {podcast_host}
+podcast_host,find {podcast_host}'s back catalogue
+podcast_host,get me {podcast_host}'s newest upload
+podcast_host,give me some {podcast_host} episodes
+podcast_host,is there a new {podcast_host} episode
+podcast_host,listen to {podcast_host}'s neuesten podcast
+podcast_host,load {podcast_host}'s latest show
+podcast_host,play a podcast by {podcast_host}
+podcast_host,play anything by {podcast_host}
+podcast_host,play interviews by {podcast_host}
+podcast_host,play the first episode from {podcast_host}
+podcast_host,play the latest from {podcast_host}
+podcast_host,play the latest guest with {podcast_host}
+podcast_host,play the most recent episode from {podcast_host}
+podcast_host,play the show hosted by {podcast_host}
+podcast_host,play the {podcast_host} series
+podcast_host,play {podcast_host}'s latest episode
+podcast_host,play {podcast_host}'s podcast
+podcast_host,show me what {podcast_host} has released
+podcast_host,show me {podcast_host}'s episodes
+podcast_host,start the {podcast_host} podcast
+podcast_host,stream the newest from {podcast_host}
+podcast_host,stream the podcast from {podcast_host}
+podcast_host,stream {podcast_host}
+podcast_host,what's {podcast_host}'s newest episode
+podcast_streaming_service,I want to use {podcast_streaming_service}
+podcast_streaming_service,I want {podcast_streaming_service} right now
+podcast_streaming_service,browse podcasts on {podcast_streaming_service}
+podcast_streaming_service,browse the {podcast_streaming_service} catalog
+podcast_streaming_service,browse {podcast_streaming_service}
+podcast_streaming_service,check {podcast_streaming_service} for updates
+podcast_streaming_service,connect to {podcast_streaming_service}
+podcast_streaming_service,find a podcast on {podcast_streaming_service}
+podcast_streaming_service,find my subscriptions on {podcast_streaming_service}
+podcast_streaming_service,find new podcasts on {podcast_streaming_service}
+podcast_streaming_service,get {podcast_streaming_service} going
+podcast_streaming_service,give me something on {podcast_streaming_service}
+podcast_streaming_service,launch the {podcast_streaming_service} podcast player
+podcast_streaming_service,launch {podcast_streaming_service}
+podcast_streaming_service,load {podcast_streaming_service}
+podcast_streaming_service,open up {podcast_streaming_service}
+podcast_streaming_service,open {podcast_streaming_service}
+podcast_streaming_service,open {podcast_streaming_service} podcasts
+podcast_streaming_service,play my latest shows on {podcast_streaming_service}
+podcast_streaming_service,play my queue on {podcast_streaming_service}
+podcast_streaming_service,play podcasts on {podcast_streaming_service}
+podcast_streaming_service,play something on {podcast_streaming_service}
+podcast_streaming_service,pull up my podcasts on {podcast_streaming_service}
+podcast_streaming_service,resume my podcast on {podcast_streaming_service}
+podcast_streaming_service,start my show on {podcast_streaming_service}
+podcast_streaming_service,start the {podcast_streaming_service} app
+podcast_streaming_service,switch to {podcast_streaming_service}
+podcast_streaming_service,tune into {podcast_streaming_service}
+podcast_streaming_service,use {podcast_streaming_service} for my shows
+podcast_title+podcast_episode,I need to hear {podcast_episode} on {podcast_title}
+podcast_title+podcast_episode,I want the {podcast_title} show with {podcast_episode}
+podcast_title+podcast_episode,I want to hear {podcast_episode} from {podcast_title}
+podcast_title+podcast_episode,find and play {podcast_episode} from {podcast_title}
+podcast_title+podcast_episode,find me {podcast_episode} on the {podcast_title} podcast
+podcast_title+podcast_episode,find the episode {podcast_episode} of {podcast_title}
+podcast_title+podcast_episode,find {podcast_episode} from {podcast_title}
+podcast_title+podcast_episode,find {podcast_episode} on {podcast_title}
+podcast_title+podcast_episode,find {podcast_title} episode {podcast_episode}
+podcast_title+podcast_episode,get the {podcast_episode} episode of {podcast_title}
+podcast_title+podcast_episode,let's listen to {podcast_episode} from {podcast_title}
+podcast_title+podcast_episode,load the {podcast_episode} from {podcast_title}
+podcast_title+podcast_episode,load {podcast_title} {podcast_episode}
+podcast_title+podcast_episode,play episode {podcast_episode} of {podcast_title}
+podcast_title+podcast_episode,play the {podcast_episode} episode of {podcast_title}
+podcast_title+podcast_episode,play the {podcast_episode} track from {podcast_title}
+podcast_title+podcast_episode,play the {podcast_title} episode {podcast_episode}
+podcast_title+podcast_episode,play {podcast_title} {podcast_episode}
+podcast_title+podcast_episode,play {podcast_title} — the {podcast_episode} episode
+podcast_title+podcast_episode,play {podcast_title}'s episode named {podcast_episode}
+podcast_title+podcast_episode,put on the {podcast_episode} episode of {podcast_title}
+podcast_title+podcast_episode,start the {podcast_episode} episode of {podcast_title}
+podcast_title+podcast_episode,stream the {podcast_episode} session of {podcast_title}
+podcast_title+podcast_episode,stream the {podcast_title} episode titled {podcast_episode}
+podcast_title+podcast_episode,stream {podcast_episode} from {podcast_title}
+podcast_title+podcast_host,I need {podcast_host}'s episode of {podcast_title}
+podcast_title+podcast_host,I want to hear {podcast_host} on {podcast_title}
+podcast_title+podcast_host,I want to listen to {podcast_host}'s {podcast_title}
+podcast_title+podcast_host,find me the show {podcast_title} with {podcast_host}
+podcast_title+podcast_host,find the {podcast_host} interview on {podcast_title}
+podcast_title+podcast_host,find {podcast_title} with {podcast_host}
+podcast_title+podcast_host,get me {podcast_title} featuring {podcast_host}
+podcast_title+podcast_host,is {podcast_host} on {podcast_title} — play it
+podcast_title+podcast_host,let's hear {podcast_host} on the {podcast_title} show
+podcast_title+podcast_host,load {podcast_title} hosted by {podcast_host}
+podcast_title+podcast_host,play the {podcast_host} episode of {podcast_title}
+podcast_title+podcast_host,play the {podcast_title} podcast by {podcast_host}
+podcast_title+podcast_host,play the {podcast_title} podcast with {podcast_host}
+podcast_title+podcast_host,play {podcast_title} hosted by {podcast_host}
+podcast_title+podcast_host,play {podcast_title} with host {podcast_host}
+podcast_title+podcast_host,put on {podcast_host} on {podcast_title}
+podcast_title+podcast_host,start the {podcast_host} version of {podcast_title}
+podcast_title+podcast_host,stream the {podcast_title} hosted by {podcast_host}
+podcast_title+podcast_host,stream {podcast_title} by {podcast_host}
+podcast_title+podcast_streaming_service,I need to hear {podcast_title} on {podcast_streaming_service}
+podcast_title+podcast_streaming_service,I want the {podcast_title} show on {podcast_streaming_service}
+podcast_title+podcast_streaming_service,find me {podcast_title} on the {podcast_streaming_service} app
+podcast_title+podcast_streaming_service,find the show {podcast_title} on {podcast_streaming_service}
+podcast_title+podcast_streaming_service,find {podcast_title} on {podcast_streaming_service}
+podcast_title+podcast_streaming_service,get {podcast_title} from {podcast_streaming_service}
+podcast_title+podcast_streaming_service,is {podcast_title} available on {podcast_streaming_service}
+podcast_title+podcast_streaming_service,is {podcast_title} on {podcast_streaming_service}
+podcast_title+podcast_streaming_service,let's listen to {podcast_title} on {podcast_streaming_service}
+podcast_title+podcast_streaming_service,load up {podcast_title} on {podcast_streaming_service}
+podcast_title+podcast_streaming_service,open {podcast_streaming_service} and play {podcast_title}
+podcast_title+podcast_streaming_service,play {podcast_title} on {podcast_streaming_service}
+podcast_title+podcast_streaming_service,play {podcast_title} through {podcast_streaming_service}
+podcast_title+podcast_streaming_service,play {podcast_title} using {podcast_streaming_service}
+podcast_title+podcast_streaming_service,put on {podcast_title} via {podcast_streaming_service}
+podcast_title+podcast_streaming_service,start {podcast_title} on {podcast_streaming_service}
+podcast_title+podcast_streaming_service,stream the {podcast_title} podcast from {podcast_streaming_service}
+podcast_title+podcast_streaming_service,stream {podcast_title} on the {podcast_streaming_service} platform
+podcast_title+podcast_streaming_service,stream {podcast_title} via {podcast_streaming_service}
+podcast_title,I feel like listening to {podcast_title}
+podcast_title,I haven't listened to {podcast_title} in a while — catch me up
+podcast_title,I want the next {podcast_title} episode
+podcast_title,I want to listen to {podcast_title}
+podcast_title,I'd like to hear the latest {podcast_title}
+podcast_title,I'd like to hear {podcast_title}
+podcast_title,I'd like to hear {podcast_title} again
+podcast_title,I'm ready for more {podcast_title}
+podcast_title,I've been meaning to listen to {podcast_title}
+podcast_title,any new episodes of {podcast_title}
+podcast_title,catch me up on {podcast_title}
+podcast_title,continue listening to {podcast_title}
+podcast_title,continue {podcast_title}
+podcast_title,find me the latest {podcast_title}
+podcast_title,find the best episode of {podcast_title}
+podcast_title,find the {podcast_title} podcast
+podcast_title,find {podcast_title}
+podcast_title,give me the latest {podcast_title}
+podcast_title,is there a new {podcast_title} episode
+podcast_title,let's hear {podcast_title}
+podcast_title,let's listen to {podcast_title} today
+podcast_title,load the latest {podcast_title}
+podcast_title,load up {podcast_title}
+podcast_title,open {podcast_title}
+podcast_title,play a random episode of {podcast_title}
+podcast_title,play an episode of {podcast_title}
+podcast_title,play some {podcast_title}
+podcast_title,play the first episode of {podcast_title}
+podcast_title,play the latest episode of {podcast_title}
+podcast_title,play the most popular episode of {podcast_title}
+podcast_title,play the most recent {podcast_title} episode
+podcast_title,play the new episode of {podcast_title}
+podcast_title,play the newest upload of {podcast_title}
+podcast_title,play the newest {podcast_title}
+podcast_title,play the next episode of {podcast_title}
+podcast_title,play the recap of {podcast_title}
+podcast_title,play the {podcast_title} back episode
+podcast_title,play the {podcast_title} podcast
+podcast_title,play this week's {podcast_title}
+podcast_title,play today's {podcast_title}
+podcast_title,play {podcast_title}
+podcast_title,play {podcast_title} from episode 1
+podcast_title,play {podcast_title} from the beginning
+podcast_title,play {podcast_title} in the background
+podcast_title,play {podcast_title} while I work
+podcast_title,pull up {podcast_title}
+podcast_title,put on {podcast_title}
+podcast_title,put on {podcast_title} while I drive
+podcast_title,put {podcast_title} on in the background
+podcast_title,queue up {podcast_title}
+podcast_title,resume my {podcast_title} session
+podcast_title,resume the last {podcast_title} episode
+podcast_title,resume {podcast_title}
+podcast_title,start my {podcast_title} playlist
+podcast_title,start the {podcast_title} series
+podcast_title,start {podcast_title}
+podcast_title,stream {podcast_title}
+podcast_title,stream {podcast_title} now
+podcast_title,subscribe to {podcast_title} and play the latest
+podcast_title,what did {podcast_title} release this week
+podcast_title,what's new on {podcast_title}
+podcast_title,where was I in {podcast_title}
+tv_show_title,I need the {tv_show_title} companion podcast
+tv_show_title,I want the {tv_show_title} companion series
+tv_show_title,I want the {tv_show_title} companion show
+tv_show_title,find the official {tv_show_title} podcast
+tv_show_title,find the recap podcast for {tv_show_title}
+tv_show_title,find the show {tv_show_title}'s podcast
+tv_show_title,find the {tv_show_title} series podcast
+tv_show_title,is there a podcast for {tv_show_title}
+tv_show_title,is there an official podcast for {tv_show_title}
+tv_show_title,let's hear the {tv_show_title} recap
+tv_show_title,load the {tv_show_title} official podcast
+tv_show_title,play the companion podcast for {tv_show_title}
+tv_show_title,play the discussion podcast for {tv_show_title}
+tv_show_title,play the fan podcast about {tv_show_title}
+tv_show_title,play the podcast about the show {tv_show_title}
+tv_show_title,play the podcast for fans of {tv_show_title}
+tv_show_title,play the {tv_show_title} behind the scenes podcast
+tv_show_title,play the {tv_show_title} podcast
+tv_show_title,put on the podcast for the series {tv_show_title}
+tv_show_title,start the {tv_show_title} fan podcast
+tv_show_title,stream the {tv_show_title} recap show
+podcast_title+podcast_episode+podcast_streaming_service,find {podcast_episode} of {podcast_title} on {podcast_streaming_service}
+podcast_title+podcast_episode+podcast_streaming_service,get {podcast_episode} from {podcast_title} on {podcast_streaming_service}
+podcast_title+podcast_episode+podcast_streaming_service,play {podcast_episode} of {podcast_title} on {podcast_streaming_service}
+podcast_title+podcast_host+podcast_streaming_service,find {podcast_title} hosted by {podcast_host} on {podcast_streaming_service}
+podcast_title+podcast_host+podcast_streaming_service,get {podcast_title} with {podcast_host} on {podcast_streaming_service}
+podcast_title+podcast_host+podcast_streaming_service,play {podcast_title} by {podcast_host} on {podcast_streaming_service}
+podcast_title+news_category,find {podcast_title} about {news_category}
+podcast_title+news_category,get {podcast_title} covering {news_category}
+podcast_title+news_category,play {podcast_title} about {news_category}
+podcast_title+podcast_streaming_service,find {podcast_title} on {podcast_streaming_service}
+podcast_title+podcast_streaming_service,get {podcast_title} from {podcast_streaming_service}
+podcast_title+podcast_streaming_service,play {podcast_title} via {podcast_streaming_service}
+podcast_title+podcast_streaming_service,put on {podcast_title} from {podcast_streaming_service}
+podcast_title+podcast_streaming_service,queue {podcast_title} on {podcast_streaming_service}
+podcast_title+podcast_streaming_service,shuffle {podcast_title} on {podcast_streaming_service}
+podcast_title+podcast_streaming_service,start {podcast_title} on {podcast_streaming_service}
+podcast_episode+podcast_streaming_service,find {podcast_episode} on {podcast_streaming_service}
+podcast_episode+podcast_streaming_service,get {podcast_episode} from {podcast_streaming_service}
+podcast_episode+podcast_streaming_service,play {podcast_episode} via {podcast_streaming_service}
+podcast_episode+podcast_streaming_service,put on {podcast_episode} from {podcast_streaming_service}
+podcast_episode+podcast_streaming_service,queue {podcast_episode} on {podcast_streaming_service}
+podcast_episode+podcast_streaming_service,shuffle {podcast_episode} on {podcast_streaming_service}
+podcast_episode+podcast_streaming_service,stream {podcast_episode} from {podcast_streaming_service}
+podcast_host+podcast_episode,find {podcast_host}'s {podcast_episode}
+podcast_host+podcast_episode,get {podcast_episode} by {podcast_host}
+podcast_host+podcast_episode,play {podcast_episode} by {podcast_host}
+podcast_host+podcast_streaming_service,find {podcast_host} on {podcast_streaming_service}
+podcast_host+podcast_streaming_service,get {podcast_host} from {podcast_streaming_service}
+podcast_host+podcast_streaming_service,play {podcast_host} via {podcast_streaming_service}
+podcast_host+podcast_streaming_service,put on {podcast_host} from {podcast_streaming_service}
+podcast_host+podcast_streaming_service,queue {podcast_host} on {podcast_streaming_service}
+podcast_host+podcast_streaming_service,shuffle {podcast_host} on {podcast_streaming_service}
+podcast_host+podcast_streaming_service,start {podcast_host} on {podcast_streaming_service}
+podcast_host+podcast_streaming_service,stream {podcast_host} from {podcast_streaming_service}
+podcast_streaming_service,find new episodes on {podcast_streaming_service}
+podcast_streaming_service,find subscriptions on {podcast_streaming_service}
+podcast_streaming_service,get my downloads from {podcast_streaming_service}
+podcast_streaming_service,get my feed from {podcast_streaming_service}
+podcast_streaming_service,play latest episodes on {podcast_streaming_service}
+podcast_streaming_service,play my downloads from {podcast_streaming_service}
+podcast_streaming_service,play my queue on {podcast_streaming_service}
+podcast_streaming_service,put on latest from {podcast_streaming_service}
+podcast_streaming_service,queue up new episodes on {podcast_streaming_service}
+podcast_streaming_service,resume my listening on {podcast_streaming_service}
+podcast_streaming_service,shuffle episodes on {podcast_streaming_service}
+podcast_streaming_service,start my podcast feed on {podcast_streaming_service}
+podcast_streaming_service,stream my podcasts from {podcast_streaming_service}
+podcast_title,find {podcast_title} in my library
+podcast_title,find new episodes of {podcast_title}
+podcast_title,get latest episode of {podcast_title}
+podcast_title,play a random {podcast_title} episode
+podcast_title,play episode of {podcast_title}
+podcast_title,play the first episode of {podcast_title}
+podcast_title,play the latest {podcast_title}
+podcast_title,play the newest {podcast_title}
+podcast_title,put on {podcast_title} for my commute
+podcast_title,queue up {podcast_title}
+podcast_title,resume {podcast_title} episode
+podcast_title,start listening to {podcast_title}
+podcast_title,stream {podcast_title}
+podcast_title,stream the latest {podcast_title}
+podcast_episode,find {podcast_episode} to listen to
+podcast_episode,get {podcast_episode} to play
+podcast_episode,play {podcast_episode}
+podcast_episode,play episode called {podcast_episode}
+podcast_episode,put on {podcast_episode}
+podcast_episode,queue {podcast_episode}
+podcast_episode,resume {podcast_episode}
+podcast_episode,start {podcast_episode}
+podcast_host,find {podcast_host}'s shows
+podcast_host,find episodes by {podcast_host}
+podcast_host,get {podcast_host}'s latest
+podcast_host,listen to {podcast_host}'s podcast
+podcast_host,play {podcast_host}'s content
+podcast_host,play shows by {podcast_host}
+podcast_host,put on {podcast_host}'s podcast
+podcast_host,queue {podcast_host}'s episodes
+podcast_host,start {podcast_host}'s show
+podcast_host,stream {podcast_host}'s podcast
+news_category+podcast_streaming_service,find {news_category} podcast on {podcast_streaming_service}
+news_category+podcast_streaming_service,get {news_category} show on {podcast_streaming_service}
+news_category+podcast_streaming_service,play {news_category} podcast on {podcast_streaming_service}
+news_category,find a {news_category} podcast
+news_category,find {news_category} show to listen to
+news_category,get a {news_category} podcast
+news_category,play a {news_category} podcast
+news_category,play {news_category} episode
+news_category,play the latest {news_category} news
+news_category,put on a {news_category} show
+news_category,queue {news_category} podcast
+news_category,start {news_category} podcast

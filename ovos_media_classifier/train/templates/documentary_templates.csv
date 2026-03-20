@@ -1,0 +1,147 @@
+category,template
+anime_title,find a documentary about {anime_title}
+anime_title,is there a making-of documentary for {anime_title}
+anime_title,play a documentary about how {anime_title} was made
+artist_name,I want to watch a documentary on {artist_name}
+artist_name,I'd like to learn more about {artist_name} — play a documentary
+artist_name,find a doc about {artist_name}
+artist_name,find a music documentary about {artist_name}
+artist_name,is there a documentary about {artist_name}
+artist_name,play a biography documentary about {artist_name}
+artist_name,play a documentary about {artist_name}
+artist_name,play the behind the music documentary for {artist_name}
+artist_name,play the {artist_name} documentary
+artist_name,show me a doc about {artist_name}
+documentary_title,I feel like watching {documentary_title}
+documentary_title,I want to learn about {documentary_title}
+documentary_title,I want to watch {documentary_title}
+documentary_title,I was watching {documentary_title} — continue please
+documentary_title,I'd like to watch {documentary_title}
+documentary_title,I've been meaning to watch {documentary_title}
+documentary_title,can I watch {documentary_title}
+documentary_title,can you play {documentary_title}
+documentary_title,continue {documentary_title}
+documentary_title,do you have {documentary_title}
+documentary_title,find me the documentary called {documentary_title}
+documentary_title,find the documentary called {documentary_title}
+documentary_title,find {documentary_title}
+documentary_title,go back to {documentary_title}
+documentary_title,is {documentary_title} available
+documentary_title,let's watch {documentary_title}
+documentary_title,load the documentary {documentary_title}
+documentary_title,load up {documentary_title}
+documentary_title,open {documentary_title}
+documentary_title,pick up {documentary_title} where I left off
+documentary_title,play episode 1 of {documentary_title}
+documentary_title,play episode 2 of {documentary_title}
+documentary_title,play part 1 of {documentary_title}
+documentary_title,play part 2 of {documentary_title}
+documentary_title,play the doc {documentary_title}
+documentary_title,play the docudrama {documentary_title}
+documentary_title,play the documentary {documentary_title}
+documentary_title,play the docuseries {documentary_title}
+documentary_title,play the feature documentary {documentary_title}
+documentary_title,play the film {documentary_title}
+documentary_title,play the full documentary {documentary_title}
+documentary_title,play the history documentary {documentary_title}
+documentary_title,play the nature documentary {documentary_title}
+documentary_title,play the next episode of {documentary_title}
+documentary_title,play the next part of {documentary_title}
+documentary_title,play the science documentary {documentary_title}
+documentary_title,play the series {documentary_title}
+documentary_title,play the short documentary {documentary_title}
+documentary_title,play the true crime documentary {documentary_title}
+documentary_title,play {documentary_title}
+documentary_title,put on the documentary {documentary_title}
+documentary_title,put on {documentary_title}
+documentary_title,put on {documentary_title} for me
+documentary_title,queue up {documentary_title}
+documentary_title,resume {documentary_title}
+documentary_title,show me the documentary {documentary_title}
+documentary_title,show me {documentary_title}
+documentary_title,start {documentary_title}
+documentary_title,stream the documentary {documentary_title}
+documentary_title,stream {documentary_title}
+documentary_title,watch {documentary_title}
+game_title,find a doc about the making of {game_title}
+game_title,find a gaming documentary about {game_title}
+game_title,is there a documentary about the creation of {game_title}
+game_title,play a documentary about {game_title}
+game_title,play a documentary on the history of {game_title}
+game_title,show me a making-of doc for {game_title}
+movie_actor,I'd like to watch a doc about {movie_actor}
+movie_actor,find a biography film about {movie_actor}
+movie_actor,find a documentary about {movie_actor}
+movie_actor,is there a documentary about {movie_actor}
+movie_actor,play a documentary featuring {movie_actor}
+movie_actor,play the {movie_actor} documentary
+movie_actor,show me a documentary on {movie_actor}
+movie_director,I want to learn about {movie_director} — play a documentary
+movie_director,I'd like to watch a film about {movie_director}
+movie_director,find a doc about the work of {movie_director}
+movie_director,find a documentary about director {movie_director}
+movie_director,is there a documentary about {movie_director}
+movie_director,play a documentary about {movie_director}
+movie_director,play a profile documentary on {movie_director}
+movie_director,play the {movie_director} documentary
+movie_director,show me a documentary on {movie_director}
+movie_title,find a documentary about {movie_title} being made
+movie_title,find a making-of doc for {movie_title}
+movie_title,is there a making-of documentary for {movie_title}
+movie_title,play a documentary about the making of {movie_title}
+movie_title,play the behind the scenes documentary for {movie_title}
+movie_title,play the documentary about how {movie_title} was made
+movie_title,play the {movie_title} behind the scenes film
+movie_title,play the {movie_title} making-of documentary
+movie_title,show me the making-of for {movie_title}
+tv_show_title,find a behind the scenes doc for {tv_show_title}
+tv_show_title,is there a documentary about how {tv_show_title} was made
+tv_show_title,play a documentary about the making of {tv_show_title}
+tv_show_title,play a documentary about {tv_show_title} being made
+tv_show_title,show me a making-of doc for {tv_show_title}
+documentary_title+anime_title,find documentary about {anime_title} called {documentary_title}
+documentary_title+anime_title,play {documentary_title} about {anime_title}
+documentary_title+artist_name,find {documentary_title} about {artist_name}
+documentary_title+artist_name,play {documentary_title} featuring {artist_name}
+documentary_title+movie_title,find documentary about {movie_title} called {documentary_title}
+documentary_title+movie_title,play {documentary_title} about {movie_title}
+documentary_title+tv_show_title,find {documentary_title} about {tv_show_title}
+documentary_title+tv_show_title,play {documentary_title} featuring {tv_show_title}
+documentary_title+game_title,find documentary about {game_title} called {documentary_title}
+documentary_title+game_title,play {documentary_title} about {game_title}
+documentary_title,continue watching {documentary_title}
+documentary_title,find more documentaries like {documentary_title}
+documentary_title,get the next episode of {documentary_title}
+documentary_title,play episode two of {documentary_title}
+documentary_title,play the final part of {documentary_title}
+documentary_title,play the first episode of {documentary_title}
+documentary_title,play the next part of {documentary_title}
+documentary_title,put on {documentary_title} for me
+documentary_title,queue up {documentary_title}
+documentary_title,resume {documentary_title}
+documentary_title,start {documentary_title} from beginning
+documentary_title,stream {documentary_title}
+documentary_title,watch the rest of {documentary_title}
+movie_title,find documentary about {movie_title}
+movie_title,get doc about {movie_title}
+movie_title,play a film documentary about {movie_title}
+movie_title,play the story behind {movie_title}
+movie_title,show me the {movie_title} documentary
+anime_title,find anime documentary about {anime_title}
+anime_title,get a doc about {anime_title}
+anime_title,play anime making-of {anime_title}
+anime_title,show me {anime_title} documentary
+artist_name,continue watching {artist_name} documentary
+artist_name,find artist doc about {artist_name}
+artist_name,get the biography of {artist_name}
+artist_name,play musician documentary about {artist_name}
+artist_name,show me {artist_name} bio documentary
+game_title,find documentary about {game_title}
+game_title,get doc about {game_title}
+game_title,play game documentary about {game_title}
+game_title,show me {game_title} documentary
+tv_show_title,continue watching {tv_show_title} documentary
+tv_show_title,find doc about {tv_show_title}
+tv_show_title,get making-of {tv_show_title}
+tv_show_title,play series documentary about {tv_show_title}
+tv_show_title,show me {tv_show_title} behind the scenes

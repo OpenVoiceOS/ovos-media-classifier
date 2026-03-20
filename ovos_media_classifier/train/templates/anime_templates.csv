@@ -1,0 +1,168 @@
+category,template
+anime_title+music_genre,find {music_genre} songs from {anime_title}
+anime_title+music_genre,play the {music_genre} music from {anime_title}
+anime_title+music_genre,play the {music_genre} soundtrack of {anime_title}
+anime_title,I feel like watching {anime_title}
+anime_title,I finished season 1 of {anime_title} — play season 2
+anime_title,I finished {anime_title} — what's next
+anime_title,I left off at episode 5 of {anime_title}
+anime_title,I need my {anime_title} fix
+anime_title,I want the live action {anime_title}
+anime_title,I want the subtitled version of {anime_title}
+anime_title,I want the uncut version of {anime_title}
+anime_title,I want to binge {anime_title}
+anime_title,I want to rewatch {anime_title}
+anime_title,I want to start watching {anime_title}
+anime_title,I want to watch {anime_title}
+anime_title,I want to watch {anime_title} with English dub
+anime_title,I was watching {anime_title} — pick it back up
+anime_title,I'd like to start {anime_title}
+anime_title,I'd like to watch {anime_title}
+anime_title,I'm catching up on {anime_title}
+anime_title,I've heard good things about {anime_title} — play it
+anime_title,any good anime like {anime_title}
+anime_title,binge {anime_title}
+anime_title,can I watch {anime_title}
+anime_title,can you play {anime_title}
+anime_title,chuck on {anime_title}
+anime_title,continue watching {anime_title} from last time
+anime_title,continue {anime_title}
+anime_title,do you have {anime_title}
+anime_title,find me {anime_title} to watch
+anime_title,find something similar to {anime_title}
+anime_title,find the live action adaptation of {anime_title}
+anime_title,find {anime_title}
+anime_title,get {anime_title} on
+anime_title,go back to {anime_title}
+anime_title,is {anime_title} available
+anime_title,let's watch {anime_title}
+anime_title,load up the next episode of {anime_title}
+anime_title,load {anime_title}
+anime_title,pick up {anime_title} where I left off
+anime_title,play a random episode of {anime_title}
+anime_title,play an episode of {anime_title}
+anime_title,play episode 1 of {anime_title}
+anime_title,play episode 10 of {anime_title}
+anime_title,play episode 5 of {anime_title}
+anime_title,play from where I stopped watching {anime_title}
+anime_title,play season 3 of {anime_title}
+anime_title,play season one of {anime_title}
+anime_title,play some {anime_title}
+anime_title,play the English dub of {anime_title}
+anime_title,play the anime {anime_title}
+anime_title,play the dub of {anime_title}
+anime_title,play the dubbed version of {anime_title}
+anime_title,play the final episode of {anime_title}
+anime_title,play the finale of {anime_title}
+anime_title,play the first episode of {anime_title}
+anime_title,play the last episode of {anime_title}
+anime_title,play the latest episode of {anime_title}
+anime_title,play the live action version of {anime_title}
+anime_title,play the most popular episode of {anime_title}
+anime_title,play the movie version of {anime_title}
+anime_title,play the next episode of {anime_title}
+anime_title,play the opening theme of {anime_title}
+anime_title,play the original Japanese version of {anime_title}
+anime_title,play the recap episodes of {anime_title}
+anime_title,play the sequel to {anime_title}
+anime_title,play the spin-off of {anime_title}
+anime_title,play the sub of {anime_title}
+anime_title,play the subbed version of {anime_title}
+anime_title,play the uncensored version of {anime_title}
+anime_title,play the {anime_title} ONA
+anime_title,play the {anime_title} OVA
+anime_title,play the {anime_title} compilation movie
+anime_title,play the {anime_title} mini series
+anime_title,play the {anime_title} movie
+anime_title,play the {anime_title} prequel
+anime_title,play {anime_title}
+anime_title,play {anime_title} again from the start
+anime_title,play {anime_title} dubbed
+anime_title,play {anime_title} dubbed in English
+anime_title,play {anime_title} from episode 1
+anime_title,play {anime_title} from season 2
+anime_title,play {anime_title} in English
+anime_title,play {anime_title} in Japanese audio
+anime_title,play {anime_title} in Japanese with subs
+anime_title,play {anime_title} in the original language
+anime_title,play {anime_title} please
+anime_title,play {anime_title} right now
+anime_title,play {anime_title} season 2
+anime_title,play {anime_title} season 4
+anime_title,play {anime_title} season 5
+anime_title,play {anime_title} subbed
+anime_title,play {anime_title} with English subtitles
+anime_title,play {anime_title} with subtitles
+anime_title,play {anime_title} without subtitles
+anime_title,play {anime_title} — pick up where I left off
+anime_title,put on {anime_title}
+anime_title,put {anime_title} on the screen
+anime_title,queue up {anime_title}
+anime_title,queue {anime_title} for later
+anime_title,resume {anime_title}
+anime_title,rewatch {anime_title}
+anime_title,show me an episode of {anime_title}
+anime_title,show me {anime_title}
+anime_title,show {anime_title}
+anime_title,skip to the next episode of {anime_title}
+anime_title,start {anime_title}
+anime_title,start {anime_title} from the beginning
+anime_title,stick on {anime_title}
+anime_title,stream {anime_title}
+anime_title,watch the {anime_title} film
+anime_title,watch the {anime_title} special
+anime_title,watch {anime_title}
+movie_title,find an anime adaptation of {movie_title}
+movie_title,find the anime adaptation of {movie_title}
+movie_title,is there an anime version of {movie_title}
+movie_title,is {movie_title} available as an anime
+movie_title,play the anime remake of {movie_title}
+movie_title,play the anime version of {movie_title}
+movie_title,watch the anime based on {movie_title}
+movie_title,watch the {movie_title} anime adaptation
+anime_title+anime_title,find sequel to {anime_title}
+anime_title+anime_title,play {anime_title} season two
+anime_title+anime_title,play {anime_title} second season
+anime_title+tv_show_title,find anime version of {tv_show_title}
+anime_title+tv_show_title,play {anime_title} based on {tv_show_title}
+anime_title+cartoon_title,find {anime_title} similar to {cartoon_title}
+anime_title+cartoon_title,play {anime_title} like {cartoon_title}
+anime_title+game_title,find anime game adaptation {anime_title}
+anime_title+game_title,play {anime_title} based on {game_title}
+anime_title+documentary_title,find anime documentary {anime_title}
+anime_title+documentary_title,play {documentary_title} anime style
+anime_title,binge watch {anime_title}
+anime_title,continue my anime of {anime_title}
+anime_title,find episode 10 of {anime_title}
+anime_title,find episode of {anime_title}
+anime_title,find next episode {anime_title}
+anime_title,find season 1 of {anime_title}
+anime_title,get latest episode of {anime_title}
+anime_title,keep watching {anime_title}
+anime_title,play episode 3 of {anime_title}
+anime_title,play episode of {anime_title}
+anime_title,play final episode of {anime_title}
+anime_title,play first episode of {anime_title}
+anime_title,play latest season of {anime_title}
+anime_title,play movie version of {anime_title}
+anime_title,play next episode of {anime_title}
+anime_title,play new episode of {anime_title}
+anime_title,play season 2 of {anime_title}
+anime_title,play season finale of {anime_title}
+anime_title,put on {anime_title} for binge
+anime_title,queue up {anime_title}
+anime_title,resume {anime_title}
+anime_title,start anime {anime_title}
+anime_title,start new season of {anime_title}
+anime_title,stream {anime_title} episodes
+anime_title,watch anime {anime_title}
+anime_title,watch latest of {anime_title}
+cartoon_title,find anime similar to {cartoon_title}
+cartoon_title,get anime version of {cartoon_title}
+cartoon_title,play anime like {cartoon_title}
+tv_show_title,find anime adaptation of {tv_show_title}
+tv_show_title,get anime version of {tv_show_title}
+tv_show_title,play anime based on {tv_show_title}
+game_title,find anime game {game_title}
+game_title,get anime version of {game_title}
+game_title,play anime based on {game_title}

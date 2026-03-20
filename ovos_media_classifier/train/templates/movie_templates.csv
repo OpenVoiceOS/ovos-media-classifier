@@ -1,0 +1,816 @@
+category,template
+anime_title,I want the film version of {anime_title}
+anime_title,I want to watch the {anime_title} movie
+anime_title,find me the movie {anime_title}
+anime_title,find the movie adaptation of {anime_title}
+anime_title,find the {anime_title} movie
+anime_title,is there a film for {anime_title}
+anime_title,is there an {anime_title} movie I can watch
+anime_title,let's watch the {anime_title} film
+anime_title,play the latest {anime_title} film
+anime_title,play the movie version of {anime_title}
+anime_title,play the {anime_title} feature film
+anime_title,play the {anime_title} movie
+anime_title,play {anime_title} film
+anime_title,put on the {anime_title} movie adaptation
+anime_title,show me the {anime_title} animated movie
+anime_title,start the {anime_title} movie
+anime_title,stream the {anime_title} film
+anime_title,stream {anime_title} the movie
+anime_title,watch the live action {anime_title}
+anime_title,watch the original {anime_title} movie
+anime_title,watch the {anime_title} film adaptation
+audiobook_title,I want the film version of the book {audiobook_title}
+audiobook_title,I want to see the movie based on {audiobook_title}
+audiobook_title,find me the movie {audiobook_title}
+audiobook_title,find the film based on {audiobook_title}
+audiobook_title,find the movie from the novel {audiobook_title}
+audiobook_title,is there a movie of the book {audiobook_title}
+audiobook_title,is there an {audiobook_title} movie I can watch
+audiobook_title,let's watch the {audiobook_title} movie
+audiobook_title,play the feature film based on {audiobook_title}
+audiobook_title,play the latest movie based on {audiobook_title}
+audiobook_title,play the movie adaptation of {audiobook_title}
+audiobook_title,play {audiobook_title} film
+audiobook_title,put on the {audiobook_title} movie adaptation
+audiobook_title,show me the film adaptation of the book {audiobook_title}
+audiobook_title,start the film {audiobook_title}
+audiobook_title,stream the film version of {audiobook_title}
+audiobook_title,stream {audiobook_title} the movie
+audiobook_title,watch the {audiobook_title} movie
+cartoon_title,I want the film version of {cartoon_title}
+cartoon_title,I want to see the {cartoon_title} movie
+cartoon_title,find me the movie {cartoon_title}
+cartoon_title,find the movie version of {cartoon_title}
+cartoon_title,find the {cartoon_title} movie
+cartoon_title,is there a movie for {cartoon_title}
+cartoon_title,is there a {cartoon_title} movie I can watch
+cartoon_title,let's watch the {cartoon_title} movie
+cartoon_title,play the latest {cartoon_title} film
+cartoon_title,play the {cartoon_title} feature film
+cartoon_title,play the {cartoon_title} film
+cartoon_title,play {cartoon_title} film
+cartoon_title,put on the {cartoon_title} movie adaptation
+cartoon_title,show me the animated film {cartoon_title}
+cartoon_title,start the {cartoon_title} film
+cartoon_title,stream {cartoon_title} the movie
+cartoon_title,watch the feature length {cartoon_title}
+cartoon_title,watch the {cartoon_title} movie
+movie_actor+movie_director,I want to see {movie_actor} in a {movie_director} film
+movie_actor+movie_director,I want to watch {movie_director}'s films with {movie_actor}
+movie_actor+movie_director,find a film with {movie_actor} from director {movie_director}
+movie_actor+movie_director,find me a {movie_actor} film from director {movie_director}
+movie_actor+movie_director,find me a {movie_director} movie starring {movie_actor}
+movie_actor+movie_director,is there a movie with {movie_actor} by {movie_director}
+movie_actor+movie_director,let's watch {movie_actor} in a movie by {movie_director}
+movie_actor+movie_director,play a movie starring {movie_actor} by {movie_director}
+movie_actor+movie_director,play a {movie_actor} movie from director {movie_director}
+movie_actor+movie_director,play some {movie_director} cinema featuring {movie_actor}
+movie_actor+movie_director,put on a movie starring {movie_actor} by {movie_director}
+movie_actor+movie_director,show me a {movie_actor} film directed by {movie_director}
+movie_actor+movie_director,show me director {movie_director}'s movies with {movie_actor}
+movie_actor+movie_director,show me {movie_actor} movies directed by {movie_director}
+movie_actor+movie_director,start a film featuring {movie_actor} from director {movie_director}
+movie_actor+movie_director,start a {movie_director} directed movie starring {movie_actor}
+movie_actor+movie_director,stream a film featuring {movie_actor} and directed by {movie_director}
+movie_actor+movie_streaming_service,I need a {movie_actor} movie from {movie_streaming_service}
+movie_actor+movie_streaming_service,I want to see {movie_actor} using {movie_streaming_service}
+movie_actor+movie_streaming_service,I want to watch {movie_actor} on {movie_streaming_service}
+movie_actor+movie_streaming_service,browse {movie_actor} films on {movie_streaming_service}
+movie_actor+movie_streaming_service,find me a {movie_actor} flick on {movie_streaming_service}
+movie_actor+movie_streaming_service,find movies with {movie_actor} on {movie_streaming_service}
+movie_actor+movie_streaming_service,is there a {movie_actor} movie on {movie_streaming_service}
+movie_actor+movie_streaming_service,launch {movie_streaming_service} and find {movie_actor}
+movie_actor+movie_streaming_service,let's watch {movie_actor} using {movie_streaming_service}
+movie_actor+movie_streaming_service,open {movie_streaming_service} and play a movie with {movie_actor}
+movie_actor+movie_streaming_service,play a {movie_actor} film on {movie_streaming_service}
+movie_actor+movie_streaming_service,play me something with {movie_actor} on {movie_streaming_service}
+movie_actor+movie_streaming_service,put on a {movie_actor} film from {movie_streaming_service}
+movie_actor+movie_streaming_service,show me {movie_actor} movies on {movie_streaming_service}
+movie_actor+movie_streaming_service,start a movie with {movie_actor} from {movie_streaming_service}
+movie_actor+movie_streaming_service,stream a movie starring {movie_actor} on {movie_streaming_service}
+movie_actor+movie_streaming_service,stream {movie_actor}'s latest on {movie_streaming_service}
+movie_actor+movie_streaming_service,what movies with {movie_actor} are on {movie_streaming_service}
+movie_actor,I love {movie_actor} — play one of their films
+movie_actor,I want a {movie_actor} film
+movie_actor,I want to see {movie_actor} tonight
+movie_actor,I want to see {movie_actor}'s latest film
+movie_actor,I'm in the mood for {movie_actor}
+movie_actor,I'm looking for a {movie_actor} flick
+movie_actor,any good movies with {movie_actor}
+movie_actor,anything with {movie_actor} in it
+movie_actor,find films featuring {movie_actor}
+movie_actor,find me a film starring {movie_actor}
+movie_actor,find me a movie with {movie_actor}
+movie_actor,find me something with {movie_actor}
+movie_actor,give me some {movie_actor} cinema
+movie_actor,is there a {movie_actor} movie I can watch
+movie_actor,is there anything new with {movie_actor}
+movie_actor,let's watch a movie with {movie_actor}
+movie_actor,let's watch {movie_actor}
+movie_actor,play a movie with {movie_actor}
+movie_actor,play a {movie_actor} movie
+movie_actor,play an old {movie_actor} movie
+movie_actor,play one of {movie_actor}'s movies
+movie_actor,play something starring {movie_actor}
+movie_actor,put on a movie starring {movie_actor}
+movie_actor,put on a {movie_actor} classic
+movie_actor,put on some {movie_actor} cinema
+movie_actor,show me movies where {movie_actor} is the lead
+movie_actor,show me {movie_actor} films
+movie_actor,show me {movie_actor} in a movie
+movie_actor,show me {movie_actor}'s work
+movie_actor,stream a movie featuring {movie_actor}
+movie_actor,stream some {movie_actor}
+movie_actor,watch something with {movie_actor}
+movie_actor,what movies does {movie_actor} star in
+movie_composer,I want to hear {movie_composer}'s music in a movie
+movie_composer,I want to watch a movie scored by {movie_composer}
+movie_composer,I want to watch something with a {movie_composer} score
+movie_composer,I'm looking for a movie with a {movie_composer} score
+movie_composer,anything with music by {movie_composer}
+movie_composer,find films with music by {movie_composer}
+movie_composer,find me a film with {movie_composer} music
+movie_composer,find me a {movie_composer} movie
+movie_composer,is there a movie with music by {movie_composer}
+movie_composer,let's watch something with {movie_composer}'s score
+movie_composer,play a film with a {movie_composer} soundtrack
+movie_composer,play a movie scored by {movie_composer}
+movie_composer,play something with a {movie_composer} score
+movie_composer,put on a film with {movie_composer} music
+movie_composer,show me a film composed by {movie_composer}
+movie_composer,show me films with a score by {movie_composer}
+movie_composer,show me movies composed by {movie_composer}
+movie_composer,start a {movie_composer} scored film
+movie_composer,stream a movie with {movie_composer}'s music
+movie_director+movie_streaming_service,I need a {movie_director} film from {movie_streaming_service}
+movie_director+movie_streaming_service,I want to see {movie_director}'s work on {movie_streaming_service}
+movie_director+movie_streaming_service,I want to watch a {movie_director} film on {movie_streaming_service}
+movie_director+movie_streaming_service,browse {movie_director}'s catalog on {movie_streaming_service}
+movie_director+movie_streaming_service,find me a {movie_director} flick on {movie_streaming_service}
+movie_director+movie_streaming_service,find {movie_director} films on {movie_streaming_service}
+movie_director+movie_streaming_service,is there a film by {movie_director} on {movie_streaming_service}
+movie_director+movie_streaming_service,launch {movie_streaming_service} and find a {movie_director} movie
+movie_director+movie_streaming_service,let's watch {movie_director} using {movie_streaming_service}
+movie_director+movie_streaming_service,open {movie_streaming_service} and play a film by {movie_director}
+movie_director+movie_streaming_service,play me something by director {movie_director} on {movie_streaming_service}
+movie_director+movie_streaming_service,put on a {movie_director} movie from {movie_streaming_service}
+movie_director+movie_streaming_service,show me movies directed by {movie_director} on {movie_streaming_service}
+movie_director+movie_streaming_service,start a movie from director {movie_director} on {movie_streaming_service}
+movie_director+movie_streaming_service,stream a movie by {movie_director} on {movie_streaming_service}
+movie_director+movie_streaming_service,stream {movie_director}'s latest on {movie_streaming_service}
+movie_director+movie_streaming_service,what films directed by {movie_director} are on {movie_streaming_service}
+movie_director,I want to see a {movie_director} production
+movie_director,I want to see something from director {movie_director}
+movie_director,I want to watch a {movie_director} film
+movie_director,I want to watch something {movie_director} directed
+movie_director,I'm looking for a {movie_director} movie
+movie_director,find a film by {movie_director}
+movie_director,find a movie from {movie_director}
+movie_director,find anything by {movie_director}
+movie_director,find me a film from director {movie_director}
+movie_director,is there a film by {movie_director}
+movie_director,is there a movie by {movie_director} I can watch
+movie_director,let's see a {movie_director} production
+movie_director,let's watch a {movie_director} feature
+movie_director,look for anything directed by {movie_director}
+movie_director,play a film directed by {movie_director}
+movie_director,play a movie from {movie_director}
+movie_director,play a {movie_director} movie
+movie_director,play some {movie_director} cinema
+movie_director,play the movie directed by {movie_director}
+movie_director,put on a {movie_director} film
+movie_director,put on a {movie_director} flick
+movie_director,show me a {movie_director} flick
+movie_director,show me director {movie_director}'s latest
+movie_director,show me movies directed by {movie_director}
+movie_director,show me {movie_director}'s movies
+movie_director,start a movie by {movie_director}
+movie_director,start a {movie_director} film
+movie_director,stream something from director {movie_director}
+movie_genre+movie_actor+movie_director+movie_producer,I want to see {movie_actor} in a {movie_producer} {movie_genre} movie directed by {movie_director}
+movie_genre+movie_actor+movie_director+movie_producer,I want to watch a {movie_producer} {movie_genre} film with {movie_actor} by {movie_director}
+movie_genre+movie_actor+movie_director+movie_producer,find a {movie_genre} movie with {movie_actor} directed by {movie_director} and produced by {movie_producer}
+movie_genre+movie_actor+movie_director+movie_producer,find me a {movie_actor} {movie_genre} film from producer {movie_producer} and director {movie_director}
+movie_genre+movie_actor+movie_director+movie_producer,find me a {movie_genre} flick from {movie_producer} starring {movie_actor} and directed by {movie_director}
+movie_genre+movie_actor+movie_director+movie_producer,is there a {movie_genre} movie produced by {movie_producer} starring {movie_actor} by {movie_director}
+movie_genre+movie_actor+movie_director+movie_producer,let's watch {movie_actor} in a {movie_genre} movie by {movie_director} produced by {movie_producer}
+movie_genre+movie_actor+movie_director+movie_producer,play some {movie_producer} {movie_genre} featuring {movie_actor} from director {movie_director}
+movie_genre+movie_actor+movie_director+movie_producer,play the {movie_producer} production of the {movie_genre} film starring {movie_actor} by {movie_director}
+movie_genre+movie_actor+movie_director+movie_producer,play the {movie_producer} {movie_genre} movie starring {movie_actor} and directed by {movie_director}
+movie_genre+movie_actor+movie_director+movie_producer,put on a {movie_genre} film starring {movie_actor} produced by {movie_producer} by {movie_director}
+movie_genre+movie_actor+movie_director+movie_producer,show me a {movie_genre} movie with {movie_actor} from {movie_director} and {movie_producer}
+movie_genre+movie_actor+movie_director+movie_producer,show me {movie_producer}'s {movie_genre} movie with {movie_actor} and {movie_director}
+movie_genre+movie_actor+movie_director+movie_producer,start a {movie_genre} film produced by {movie_producer} featuring {movie_actor} from director {movie_director}
+movie_genre+movie_actor+movie_director+movie_producer,stream a {movie_genre} movie starring {movie_actor} directed by {movie_director} and produced by {movie_producer}
+movie_genre+movie_actor+movie_director,I want to see {movie_actor} in a {movie_director} {movie_genre} movie
+movie_genre+movie_actor+movie_director,I want to watch a {movie_director} {movie_genre} film with {movie_actor}
+movie_genre+movie_actor+movie_director,find a {movie_genre} film with {movie_actor} and directed by {movie_director}
+movie_genre+movie_actor+movie_director,find me a {movie_actor} {movie_genre} film from director {movie_director}
+movie_genre+movie_actor+movie_director,find me a {movie_genre} flick starring {movie_actor} and directed by {movie_director}
+movie_genre+movie_actor+movie_director,is there a {movie_genre} movie starring {movie_actor} by {movie_director}
+movie_genre+movie_actor+movie_director,let's see a {movie_genre} movie starring {movie_actor} directed by {movie_director}
+movie_genre+movie_actor+movie_director,let's watch {movie_actor} in a {movie_genre} movie by {movie_director}
+movie_genre+movie_actor+movie_director,play a {movie_actor} {movie_genre} movie directed by {movie_director}
+movie_genre+movie_actor+movie_director,play a {movie_genre} movie featuring {movie_actor} from director {movie_director}
+movie_genre+movie_actor+movie_director,play some {movie_director} {movie_genre} featuring {movie_actor}
+movie_genre+movie_actor+movie_director,put on a {movie_genre} film starring {movie_actor} by {movie_director}
+movie_genre+movie_actor+movie_director,show me a {movie_genre} movie with {movie_actor} from director {movie_director}
+movie_genre+movie_actor+movie_director,show me {movie_director}'s {movie_genre} movie with {movie_actor}
+movie_genre+movie_actor+movie_director,start a {movie_director} directed {movie_genre} movie with {movie_actor}
+movie_genre+movie_actor+movie_director,start a {movie_genre} film featuring {movie_actor} from director {movie_director}
+movie_genre+movie_actor+movie_director,stream a {movie_genre} movie with {movie_actor} by {movie_director}
+movie_genre+movie_actor+movie_director,watch {movie_actor} in a {movie_genre} film by {movie_director}
+movie_genre+movie_actor,I want to see {movie_actor} in a {movie_genre} movie
+movie_genre+movie_actor,I want to watch a {movie_actor} {movie_genre} movie
+movie_genre+movie_actor,I'm looking for a {movie_genre} movie with {movie_actor}
+movie_genre+movie_actor,can you find a {movie_genre} movie with {movie_actor}
+movie_genre+movie_actor,find a {movie_genre} flick with {movie_actor}
+movie_genre+movie_actor,find me a {movie_actor} {movie_genre} movie
+movie_genre+movie_actor,find me a {movie_genre} movie with {movie_actor}
+movie_genre+movie_actor,let's watch a {movie_genre} movie starring {movie_actor}
+movie_genre+movie_actor,play a {movie_actor} {movie_genre} film
+movie_genre+movie_actor,play a {movie_genre} film starring {movie_actor}
+movie_genre+movie_actor,play something {movie_genre} starring {movie_actor}
+movie_genre+movie_actor,put on a {movie_genre} film with {movie_actor}
+movie_genre+movie_actor,put on a {movie_genre} flick with {movie_actor}
+movie_genre+movie_actor,show me a {movie_genre} movie with {movie_actor}
+movie_genre+movie_actor,show me {movie_actor} in a {movie_genre} flick
+movie_genre+movie_actor,show me {movie_genre} movies featuring {movie_actor}
+movie_genre+movie_actor,start a {movie_genre} film featuring {movie_actor}
+movie_genre+movie_actor,stream a {movie_genre} film starring {movie_actor}
+movie_genre+movie_actor,suggest a {movie_genre} movie with {movie_actor}
+movie_genre+movie_director,I want to see a {movie_genre} movie from director {movie_director}
+movie_genre+movie_director,I want to watch a {movie_genre} movie directed by {movie_director}
+movie_genre+movie_director,I'm looking for a {movie_director} {movie_genre} movie
+movie_genre+movie_director,can you play a {movie_genre} film by {movie_director}
+movie_genre+movie_director,find a {movie_genre} movie by {movie_director}
+movie_genre+movie_director,find me a {movie_director} {movie_genre} flick
+movie_genre+movie_director,find me a {movie_genre} film from director {movie_director}
+movie_genre+movie_director,is there a {movie_genre} movie by {movie_director}
+movie_genre+movie_director,let's watch a {movie_genre} movie from {movie_director}
+movie_genre+movie_director,play a {movie_genre} movie from director {movie_director}
+movie_genre+movie_director,play some {movie_director} {movie_genre} cinema
+movie_genre+movie_director,play the {movie_genre} film directed by {movie_director}
+movie_genre+movie_director,put on a {movie_genre} film by {movie_director}
+movie_genre+movie_director,show me a {movie_genre} film directed by {movie_director}
+movie_genre+movie_director,show me director {movie_director}'s {movie_genre} movies
+movie_genre+movie_director,start a {movie_director} directed {movie_genre} movie
+movie_genre+movie_director,start a {movie_genre} film by {movie_director}
+movie_genre+movie_director,stream a {movie_genre} film by {movie_director}
+movie_genre+movie_director,watch a {movie_director} {movie_genre} film
+movie_genre+movie_streaming_service,I need a {movie_genre} movie from {movie_streaming_service}
+movie_genre+movie_streaming_service,I want to see a {movie_genre} flick on {movie_streaming_service}
+movie_genre+movie_streaming_service,I want to watch a {movie_genre} movie on {movie_streaming_service}
+movie_genre+movie_streaming_service,browse {movie_genre} on {movie_streaming_service}
+movie_genre+movie_streaming_service,find a {movie_genre} film to watch on {movie_streaming_service}
+movie_genre+movie_streaming_service,find {movie_genre} movies on {movie_streaming_service}
+movie_genre+movie_streaming_service,is there any {movie_genre} movie on {movie_streaming_service}
+movie_genre+movie_streaming_service,launch {movie_streaming_service} and find a {movie_genre} movie
+movie_genre+movie_streaming_service,let's watch {movie_genre} on {movie_streaming_service}
+movie_genre+movie_streaming_service,open {movie_streaming_service} for {movie_genre} films
+movie_genre+movie_streaming_service,play a {movie_genre} film on {movie_streaming_service}
+movie_genre+movie_streaming_service,play me a {movie_genre} movie using {movie_streaming_service}
+movie_genre+movie_streaming_service,put on some {movie_genre} cinema on {movie_streaming_service}
+movie_genre+movie_streaming_service,show me {movie_genre} content on {movie_streaming_service}
+movie_genre+movie_streaming_service,start a {movie_genre} movie from {movie_streaming_service}
+movie_genre+movie_streaming_service,stream a {movie_genre} title from {movie_streaming_service}
+movie_genre+movie_streaming_service,stream {movie_genre} movies on {movie_streaming_service}
+movie_genre+movie_streaming_service,what {movie_genre} movies are on {movie_streaming_service}
+movie_genre+movie_title+movie_actor,I want to see the {movie_genre} film {movie_title} starring {movie_actor}
+movie_genre+movie_title+movie_actor,I want to see {movie_actor} in the {movie_genre} movie called {movie_title}
+movie_genre+movie_title+movie_actor,I want to watch the {movie_actor} {movie_genre} film {movie_title}
+movie_genre+movie_title+movie_actor,can you play the {movie_genre} movie {movie_title} starring {movie_actor}
+movie_genre+movie_title+movie_actor,find me the {movie_actor} {movie_genre} movie called {movie_title}
+movie_genre+movie_title+movie_actor,find the {movie_genre} film {movie_title} with {movie_actor}
+movie_genre+movie_title+movie_actor,let's watch {movie_title}, a {movie_genre} film with {movie_actor}
+movie_genre+movie_title+movie_actor,play me the {movie_genre} film {movie_title} starring {movie_actor}
+movie_genre+movie_title+movie_actor,play the {movie_genre} movie {movie_title} with {movie_actor}
+movie_genre+movie_title+movie_actor,play {movie_title} with {movie_actor} — it's a {movie_genre} flick
+movie_genre+movie_title+movie_actor,put on the {movie_genre} movie {movie_title} with {movie_actor}
+movie_genre+movie_title+movie_actor,show me the {movie_genre} film {movie_title} with {movie_actor}
+movie_genre+movie_title+movie_actor,show me {movie_actor} in the {movie_genre} movie {movie_title}
+movie_genre+movie_title+movie_actor,start the {movie_genre} movie {movie_title} featuring {movie_actor}
+movie_genre+movie_title+movie_actor,stream the {movie_genre} movie {movie_title} starring {movie_actor}
+movie_genre+movie_title+movie_director,I want to see {movie_director}'s {movie_genre} movie called {movie_title}
+movie_genre+movie_title+movie_director,I want to watch the {movie_director} {movie_genre} film {movie_title}
+movie_genre+movie_title+movie_director,can you play the {movie_genre} movie {movie_title} from director {movie_director}
+movie_genre+movie_title+movie_director,find me the {movie_director} {movie_genre} movie called {movie_title}
+movie_genre+movie_title+movie_director,find the {movie_genre} film {movie_title} from director {movie_director}
+movie_genre+movie_title+movie_director,let's watch {movie_title}, a {movie_genre} film from director {movie_director}
+movie_genre+movie_title+movie_director,play me the {movie_genre} film {movie_title} from director {movie_director}
+movie_genre+movie_title+movie_director,play {movie_director}'s {movie_genre} movie {movie_title}
+movie_genre+movie_title+movie_director,play {movie_title} by {movie_director} — it's a {movie_genre} flick
+movie_genre+movie_title+movie_director,put on the {movie_genre} film {movie_title} directed by {movie_director}
+movie_genre+movie_title+movie_director,put on the {movie_genre} movie {movie_title} by {movie_director}
+movie_genre+movie_title+movie_director,show me the {movie_genre} film {movie_title} by {movie_director}
+movie_genre+movie_title+movie_director,show me {movie_director}'s {movie_genre} movie {movie_title}
+movie_genre+movie_title+movie_director,start the {movie_genre} movie {movie_title} directed by {movie_director}
+movie_genre+movie_title+movie_director,stream the {movie_genre} movie {movie_title} by {movie_director}
+movie_genre+movie_title,I want the {movie_genre} movie {movie_title}
+movie_genre+movie_title,I want to watch the {movie_genre} movie {movie_title}
+movie_genre+movie_title,I'd like to see the {movie_genre} flick {movie_title}
+movie_genre+movie_title,can you play the {movie_genre} film {movie_title}
+movie_genre+movie_title,find me a {movie_genre} movie like {movie_title}
+movie_genre+movie_title,find the {movie_genre} film {movie_title}
+movie_genre+movie_title,find the {movie_genre} movie called {movie_title}
+movie_genre+movie_title,is {movie_title} a {movie_genre} movie — play it
+movie_genre+movie_title,let's watch the {movie_genre} movie {movie_title}
+movie_genre+movie_title,play me the {movie_genre} film {movie_title}
+movie_genre+movie_title,play the {movie_genre} movie {movie_title}
+movie_genre+movie_title,play {movie_title} — it's a {movie_genre} movie
+movie_genre+movie_title,put on the {movie_genre} film {movie_title}
+movie_genre+movie_title,put on the {movie_genre} flick {movie_title}
+movie_genre+movie_title,show me the {movie_genre} movie {movie_title}
+movie_genre+movie_title,start the {movie_genre} movie {movie_title}
+movie_genre+movie_title,start {movie_title}, the {movie_genre} film
+movie_genre+movie_title,stream the {movie_genre} film {movie_title}
+movie_genre+movie_writer+movie_director,I want to see a {movie_writer} {movie_genre} movie directed by {movie_director}
+movie_genre+movie_writer+movie_director,I want to watch a {movie_director} {movie_genre} film penned by {movie_writer}
+movie_genre+movie_writer+movie_director,can you play a {movie_genre} film written by {movie_writer} by {movie_director}
+movie_genre+movie_writer+movie_director,find a {movie_genre} film penned by {movie_writer} from director {movie_director}
+movie_genre+movie_writer+movie_director,find me a {movie_genre} flick written by {movie_writer} and directed by {movie_director}
+movie_genre+movie_writer+movie_director,find me a {movie_writer} {movie_genre} film from director {movie_director}
+movie_genre+movie_writer+movie_director,is there a {movie_genre} movie written by {movie_writer} by {movie_director}
+movie_genre+movie_writer+movie_director,let's watch a {movie_genre} movie by {movie_director} and {movie_writer}
+movie_genre+movie_writer+movie_director,play a {movie_genre} movie written by {movie_writer} and directed by {movie_director}
+movie_genre+movie_writer+movie_director,play a {movie_writer} {movie_genre} movie directed by {movie_director}
+movie_genre+movie_writer+movie_director,play some {movie_director} {movie_genre} penned by {movie_writer}
+movie_genre+movie_writer+movie_director,put on a {movie_genre} film penned by {movie_writer} by {movie_director}
+movie_genre+movie_writer+movie_director,show me a {movie_genre} movie penned by {movie_writer} from director {movie_director}
+movie_genre+movie_writer+movie_director,show me {movie_director}'s {movie_genre} movie written by {movie_writer}
+movie_genre+movie_writer+movie_director,start a {movie_director} directed {movie_genre} movie penned by {movie_writer}
+movie_genre+movie_writer+movie_director,start a {movie_genre} film written by {movie_writer} from director {movie_director}
+movie_genre+movie_writer+movie_director,stream a {movie_genre} movie written by {movie_writer} by {movie_director}
+movie_genre,I feel like watching a {movie_genre} movie
+movie_genre,I need a {movie_genre} movie
+movie_genre,I want a {movie_genre} movie right now
+movie_genre,I want to see a {movie_genre} movie
+movie_genre,I want to watch something {movie_genre}
+movie_genre,I want to watch something {movie_genre} tonight
+movie_genre,I'm in the mood for a {movie_genre} film
+movie_genre,I'm looking for a {movie_genre} film
+movie_genre,any good {movie_genre} flicks
+movie_genre,find a {movie_genre} movie to watch
+movie_genre,find me a good {movie_genre} movie
+movie_genre,find me a {movie_genre} film
+movie_genre,find some {movie_genre} movies for me
+movie_genre,give me some {movie_genre} cinema
+movie_genre,got any {movie_genre} movies
+movie_genre,let's see a {movie_genre} feature
+movie_genre,let's watch a {movie_genre} flick
+movie_genre,play a {movie_genre} movie
+movie_genre,play any {movie_genre} movie
+movie_genre,play some {movie_genre} movies
+movie_genre,play something {movie_genre}
+movie_genre,play {movie_genre} tonight
+movie_genre,put on a {movie_genre} flick
+movie_genre,put on a {movie_genre} story
+movie_genre,put on something {movie_genre}
+movie_genre,queue up a {movie_genre} film
+movie_genre,recommend a {movie_genre} title
+movie_genre,show me a {movie_genre} movie
+movie_genre,show me the best {movie_genre} cinema
+movie_genre,show me the latest {movie_genre} movies
+movie_genre,show me {movie_genre} films
+movie_genre,something {movie_genre} please
+movie_genre,start a {movie_genre} marathon
+movie_genre,start some {movie_genre} movies
+movie_genre,stream a {movie_genre} title
+movie_genre,suggest a {movie_genre} film
+movie_genre,suggest something {movie_genre}
+movie_genre,watch a {movie_genre} film
+movie_producer+movie_director,I want to see a {movie_producer} movie directed by {movie_director}
+movie_producer+movie_director,I want to watch a {movie_producer} production directed by {movie_director}
+movie_producer+movie_director,find a collaboration between {movie_producer} and {movie_director}
+movie_producer+movie_director,find me a {movie_producer} and {movie_director} film
+movie_producer+movie_director,find me a {movie_producer} project from director {movie_director}
+movie_producer+movie_director,is there a movie produced by {movie_producer} by {movie_director}
+movie_producer+movie_director,let's watch a collaboration from {movie_producer} and {movie_director}
+movie_producer+movie_director,play a film from {movie_producer} and {movie_director}
+movie_producer+movie_director,play something from director {movie_director} and producer {movie_producer}
+movie_producer+movie_director,put on a film by {movie_director} from {movie_producer}
+movie_producer+movie_director,show me a movie produced by {movie_producer} and directed by {movie_director}
+movie_producer+movie_director,show me {movie_producer}'s films directed by {movie_director}
+movie_producer+movie_director,start a film by {movie_director} produced by {movie_producer}
+movie_producer+movie_director,start a {movie_director} directed {movie_producer} movie
+movie_producer+movie_director,stream a movie by {movie_director} from producer {movie_producer}
+movie_producer+movie_director,watch a movie produced by {movie_producer} and directed by {movie_director}
+movie_producer,I want to see the new {movie_producer} project
+movie_producer,I want to see {movie_producer}'s movies
+movie_producer,I want to watch a {movie_producer} project
+movie_producer,I'm looking for a {movie_producer} film
+movie_producer,anything from producer {movie_producer}
+movie_producer,anything new from {movie_producer}
+movie_producer,find a film produced by {movie_producer}
+movie_producer,find films produced by {movie_producer}
+movie_producer,find me a {movie_producer} film
+movie_producer,find me a {movie_producer} project
+movie_producer,is there a movie from producer {movie_producer}
+movie_producer,let's watch something produced by {movie_producer}
+movie_producer,play a {movie_producer} movie
+movie_producer,play something from {movie_producer}
+movie_producer,play something produced by {movie_producer}
+movie_producer,put on a movie produced by {movie_producer}
+movie_producer,put on a {movie_producer} film
+movie_producer,show me a film from {movie_producer}
+movie_producer,show me a {movie_producer} movie
+movie_producer,show me what {movie_producer} produced
+movie_producer,start a {movie_producer} movie
+movie_producer,stream a {movie_producer} production
+movie_producer,watch a {movie_producer} production
+movie_streaming_service,I want to see what's on {movie_streaming_service}
+movie_streaming_service,I want to watch something on {movie_streaming_service}
+movie_streaming_service,I want {movie_streaming_service}
+movie_streaming_service,browse {movie_streaming_service}
+movie_streaming_service,can you open {movie_streaming_service}
+movie_streaming_service,find movies on {movie_streaming_service}
+movie_streaming_service,find something to watch on {movie_streaming_service}
+movie_streaming_service,get {movie_streaming_service} going
+movie_streaming_service,go to {movie_streaming_service}
+movie_streaming_service,launch {movie_streaming_service}
+movie_streaming_service,load {movie_streaming_service} please
+movie_streaming_service,open the {movie_streaming_service} app
+movie_streaming_service,open {movie_streaming_service}
+movie_streaming_service,play a movie on {movie_streaming_service}
+movie_streaming_service,play me a movie from {movie_streaming_service}
+movie_streaming_service,play something from {movie_streaming_service}
+movie_streaming_service,pull up {movie_streaming_service}
+movie_streaming_service,show me {movie_streaming_service} movies
+movie_streaming_service,start a film from {movie_streaming_service}
+movie_streaming_service,start {movie_streaming_service}
+movie_streaming_service,stream a film on {movie_streaming_service}
+movie_streaming_service,stream something on {movie_streaming_service}
+movie_streaming_service,use {movie_streaming_service}
+movie_streaming_service,what films are on {movie_streaming_service}
+movie_streaming_service,what's on {movie_streaming_service}
+movie_title+movie_actor+movie_director+movie_writer,I want to see {movie_actor} in {movie_title} by {movie_director} and {movie_writer}
+movie_title+movie_actor+movie_director+movie_writer,I want to watch {movie_title} featuring {movie_actor} from {movie_director} and {movie_writer}
+movie_title+movie_actor+movie_director+movie_writer,can you play {movie_title} starring {movie_actor} directed by {movie_director} and written by {movie_writer}
+movie_title+movie_actor+movie_director+movie_writer,find me {movie_title} with {movie_actor} directed by {movie_director} and written by {movie_writer}
+movie_title+movie_actor+movie_director+movie_writer,find the film {movie_title} with {movie_actor} by {movie_director} and {movie_writer}
+movie_title+movie_actor+movie_director+movie_writer,let's watch {movie_title} starring {movie_actor} by {movie_director} and writer {movie_writer}
+movie_title+movie_actor+movie_director+movie_writer,play {movie_title} starring {movie_actor} directed by {movie_director} and written by {movie_writer}
+movie_title+movie_actor+movie_director+movie_writer,play {movie_title} with {movie_actor} from {movie_director} and writer {movie_writer}
+movie_title+movie_actor+movie_director+movie_writer,put on {movie_director}'s {movie_title} starring {movie_actor} and penned by {movie_writer}
+movie_title+movie_actor+movie_director+movie_writer,show me the film {movie_title} from {movie_director} featuring {movie_actor} and written by {movie_writer}
+movie_title+movie_actor+movie_director+movie_writer,show me {movie_title} by writer {movie_writer} director {movie_director} and starring {movie_actor}
+movie_title+movie_actor+movie_director+movie_writer,start {movie_title} with {movie_actor} directed by {movie_director} and written by {movie_writer}
+movie_title+movie_actor+movie_director+movie_writer,stream the movie {movie_title} by {movie_director} featuring {movie_actor} and written by {movie_writer}
+movie_title+movie_actor+movie_director+movie_writer,stream {movie_title} starring {movie_actor} directed by {movie_director} and penned by {movie_writer}
+movie_title+movie_actor+movie_director+movie_writer,watch {movie_title} with {movie_actor} by director {movie_director} and writer {movie_writer}
+movie_title+movie_actor+movie_director,I want to see {movie_actor} in {movie_title} by director {movie_director}
+movie_title+movie_actor+movie_director,I want to see {movie_title} with {movie_actor} directed by {movie_director}
+movie_title+movie_actor+movie_director,I want to watch {movie_director}'s {movie_title} with {movie_actor}
+movie_title+movie_actor+movie_director,can you play {movie_title} starring {movie_actor} directed by {movie_director}
+movie_title+movie_actor+movie_director,find me {movie_title} directed by {movie_director} with {movie_actor}
+movie_title+movie_actor+movie_director,let's watch {movie_title} by {movie_director} featuring {movie_actor}
+movie_title+movie_actor+movie_director,play the film {movie_title} by {movie_director} starring {movie_actor}
+movie_title+movie_actor+movie_director,play {movie_title} starring {movie_actor} and directed by {movie_director}
+movie_title+movie_actor+movie_director,play {movie_title} with {movie_actor} by director {movie_director}
+movie_title+movie_actor+movie_director,put on director {movie_director}'s film {movie_title} with {movie_actor}
+movie_title+movie_actor+movie_director,put on the film {movie_title} directed by {movie_director} with {movie_actor}
+movie_title+movie_actor+movie_director,show me the movie {movie_title} by {movie_director} featuring {movie_actor}
+movie_title+movie_actor+movie_director,show me {movie_actor} in {movie_title} from {movie_director}
+movie_title+movie_actor+movie_director,show me {movie_title} starring {movie_actor} from {movie_director}
+movie_title+movie_actor+movie_director,start {movie_title} directed by {movie_director} starring {movie_actor}
+movie_title+movie_actor+movie_director,stream {movie_title} by {movie_director} featuring {movie_actor}
+movie_title+movie_actor+movie_director,stream {movie_title} starring {movie_actor} and directed by {movie_director}
+movie_title+movie_actor+movie_director,watch {movie_title} with {movie_actor} directed by {movie_director}
+movie_title+movie_actor+movie_producer,I want to see {movie_actor} in {movie_producer}'s {movie_title}
+movie_title+movie_actor+movie_producer,I want to see {movie_title} with {movie_actor} from producer {movie_producer}
+movie_title+movie_actor+movie_producer,I want {movie_producer}'s {movie_title} starring {movie_actor}
+movie_title+movie_actor+movie_producer,can you play {movie_title} starring {movie_actor} produced by {movie_producer}
+movie_title+movie_actor+movie_producer,find me {movie_title} starring {movie_actor} produced by {movie_producer}
+movie_title+movie_actor+movie_producer,find the film {movie_title} with {movie_actor} from producer {movie_producer}
+movie_title+movie_actor+movie_producer,let's watch {movie_actor} in {movie_producer}'s {movie_title}
+movie_title+movie_actor+movie_producer,let's watch {movie_title} by {movie_producer} featuring {movie_actor}
+movie_title+movie_actor+movie_producer,play {movie_title} with {movie_actor} from producer {movie_producer}
+movie_title+movie_actor+movie_producer,play {movie_title} with {movie_actor} produced by {movie_producer}
+movie_title+movie_actor+movie_producer,put on producer {movie_producer}'s movie {movie_title} with {movie_actor}
+movie_title+movie_actor+movie_producer,show me {movie_actor} in the {movie_producer} film {movie_title}
+movie_title+movie_actor+movie_producer,show me {movie_title} starring {movie_actor} by {movie_producer}
+movie_title+movie_actor+movie_producer,start {movie_title} produced by {movie_producer} starring {movie_actor}
+movie_title+movie_actor+movie_producer,stream {movie_title} by {movie_producer} featuring {movie_actor}
+movie_title+movie_actor+movie_producer,stream {movie_title} produced by {movie_producer} and starring {movie_actor}
+movie_title+movie_actor+movie_producer,watch {movie_actor} in {movie_title} from producer {movie_producer}
+movie_title+movie_actor,I want to see {movie_actor} in {movie_title}
+movie_title+movie_actor,I want to see {movie_title} with {movie_actor} tonight
+movie_title+movie_actor,I want to watch {movie_actor} in the film {movie_title}
+movie_title+movie_actor,I'm looking for {movie_title} with {movie_actor}
+movie_title+movie_actor,can we watch {movie_title} starring {movie_actor}
+movie_title+movie_actor,can you play {movie_title} with {movie_actor}
+movie_title+movie_actor,find me {movie_title} featuring {movie_actor}
+movie_title+movie_actor,find {movie_title} with {movie_actor}
+movie_title+movie_actor,is {movie_actor} in {movie_title} — play it
+movie_title+movie_actor,is {movie_title} the one with {movie_actor}
+movie_title+movie_actor,let's watch {movie_actor} in {movie_title}
+movie_title+movie_actor,let's watch {movie_title} starring {movie_actor}
+movie_title+movie_actor,play the film {movie_title} with {movie_actor}
+movie_title+movie_actor,play the {movie_title} movie featuring {movie_actor}
+movie_title+movie_actor,play {movie_title} starring {movie_actor}
+movie_title+movie_actor,play {movie_title} with {movie_actor}
+movie_title+movie_actor,play {movie_title} — it has {movie_actor}
+movie_title+movie_actor,put on the film {movie_title} featuring {movie_actor}
+movie_title+movie_actor,put on {movie_title} and {movie_actor}
+movie_title+movie_actor,show me the {movie_actor} movie {movie_title}
+movie_title+movie_actor,show me {movie_title} starring {movie_actor}
+movie_title+movie_actor,start {movie_title} featuring {movie_actor}
+movie_title+movie_actor,start {movie_title} with {movie_actor}
+movie_title+movie_actor,stream {movie_title} starring {movie_actor}
+movie_title+movie_actor,watch {movie_title} with {movie_actor}
+movie_title+movie_director+movie_writer,I want to see {movie_director}'s {movie_title} penned by {movie_writer}
+movie_title+movie_director+movie_writer,I want to watch {movie_title} from {movie_director} and {movie_writer}
+movie_title+movie_director+movie_writer,I want {movie_director}'s {movie_title} penned by writer {movie_writer}
+movie_title+movie_director+movie_writer,can you play {movie_title} written by {movie_writer} directed by {movie_director}
+movie_title+movie_director+movie_writer,find me {movie_title} by {movie_director} and {movie_writer}
+movie_title+movie_director+movie_writer,find the film {movie_title} from {movie_director} and {movie_writer}
+movie_title+movie_director+movie_writer,let's watch {movie_title} written by {movie_writer} directed by {movie_director}
+movie_title+movie_director+movie_writer,play {movie_title} from {movie_director} and writer {movie_writer}
+movie_title+movie_director+movie_writer,play {movie_title} written by {movie_writer} and directed by {movie_director}
+movie_title+movie_director+movie_writer,put on {movie_director}'s {movie_title} written by {movie_writer}
+movie_title+movie_director+movie_writer,show me the film {movie_title} from {movie_director} and {movie_writer}
+movie_title+movie_director+movie_writer,show me {movie_title} by writer {movie_writer} and director {movie_director}
+movie_title+movie_director+movie_writer,start {movie_title} by {movie_director} and {movie_writer}
+movie_title+movie_director+movie_writer,stream the movie {movie_title} by {movie_director} and {movie_writer}
+movie_title+movie_director+movie_writer,stream {movie_title} written by {movie_writer} directed by {movie_director}
+movie_title+movie_director+movie_writer,watch {movie_title} by {movie_director} and {movie_writer}
+movie_title+movie_director,I want to see {movie_title} directed by {movie_director}
+movie_title+movie_director,I want to watch {movie_director}'s {movie_title}
+movie_title+movie_director,I want {movie_director}'s {movie_title}
+movie_title+movie_director,I'd like to see {movie_title} by {movie_director}
+movie_title+movie_director,can you play {movie_title} directed by {movie_director}
+movie_title+movie_director,find me {movie_director}'s {movie_title}
+movie_title+movie_director,find the movie {movie_title} by {movie_director}
+movie_title+movie_director,find {movie_title} directed by {movie_director}
+movie_title+movie_director,let's see {movie_title} by {movie_director}
+movie_title+movie_director,let's watch {movie_director}'s {movie_title} film
+movie_title+movie_director,load the {movie_director} movie {movie_title}
+movie_title+movie_director,play the film {movie_title} from director {movie_director}
+movie_title+movie_director,play {movie_title} by director {movie_director}
+movie_title+movie_director,play {movie_title} from director {movie_director}
+movie_title+movie_director,put on director {movie_director}'s {movie_title}
+movie_title+movie_director,put on the film {movie_title} by {movie_director}
+movie_title+movie_director,show me the movie {movie_title} by {movie_director}
+movie_title+movie_director,show me {movie_title} from {movie_director}
+movie_title+movie_director,start the film {movie_title} by {movie_director}
+movie_title+movie_director,start the movie {movie_title} directed by {movie_director}
+movie_title+movie_director,stream the movie {movie_title} by {movie_director}
+movie_title+movie_director,stream {movie_title} directed by {movie_director}
+movie_title+movie_director,watch {movie_director}'s film {movie_title}
+movie_title+movie_producer,I want to see {movie_producer}'s film {movie_title}
+movie_title+movie_producer,I want to watch {movie_title} from producer {movie_producer}
+movie_title+movie_producer,can you play {movie_title} produced by {movie_producer}
+movie_title+movie_producer,find me {movie_title} produced by {movie_producer}
+movie_title+movie_producer,find the film {movie_title} from {movie_producer}
+movie_title+movie_producer,let's watch {movie_title} produced by {movie_producer}
+movie_title+movie_producer,play the movie {movie_title} from producer {movie_producer}
+movie_title+movie_producer,play the {movie_producer} production {movie_title}
+movie_title+movie_producer,play {movie_title} from {movie_producer}
+movie_title+movie_producer,put on producer {movie_producer}'s {movie_title}
+movie_title+movie_producer,put on {movie_title} produced by {movie_producer}
+movie_title+movie_producer,show me {movie_title} by {movie_producer}
+movie_title+movie_producer,show me {movie_title} from {movie_producer}
+movie_title+movie_producer,start the film {movie_title} by {movie_producer}
+movie_title+movie_producer,start the movie {movie_title} produced by {movie_producer}
+movie_title+movie_producer,stream the movie {movie_title} by producer {movie_producer}
+movie_title+movie_producer,stream {movie_title} produced by {movie_producer}
+movie_title+movie_streaming_service,I need to watch {movie_title} on {movie_streaming_service}
+movie_title+movie_streaming_service,I want to see {movie_title} using {movie_streaming_service}
+movie_title+movie_streaming_service,I want to watch {movie_title} on {movie_streaming_service}
+movie_title+movie_streaming_service,can I stream {movie_title} on {movie_streaming_service}
+movie_title+movie_streaming_service,can we get {movie_title} on {movie_streaming_service}
+movie_title+movie_streaming_service,find the movie {movie_title} on {movie_streaming_service}
+movie_title+movie_streaming_service,find {movie_title} on {movie_streaming_service}
+movie_title+movie_streaming_service,is {movie_title} available on {movie_streaming_service}
+movie_title+movie_streaming_service,is {movie_title} on {movie_streaming_service}
+movie_title+movie_streaming_service,launch {movie_streaming_service} and play {movie_title}
+movie_title+movie_streaming_service,let's watch {movie_title} on {movie_streaming_service}
+movie_title+movie_streaming_service,open {movie_streaming_service} and find {movie_title}
+movie_title+movie_streaming_service,play {movie_title} from {movie_streaming_service} library
+movie_title+movie_streaming_service,play {movie_title} on {movie_streaming_service}
+movie_title+movie_streaming_service,put {movie_title} on from {movie_streaming_service}
+movie_title+movie_streaming_service,show me {movie_title} on {movie_streaming_service}
+movie_title+movie_streaming_service,start {movie_title} on {movie_streaming_service}
+movie_title+movie_streaming_service,stream {movie_title} on {movie_streaming_service}
+movie_title+movie_streaming_service,stream {movie_title} via the {movie_streaming_service} app
+movie_title+movie_streaming_service,watch {movie_title} on {movie_streaming_service}
+movie_title+movie_writer,I want to see {movie_writer}'s {movie_title}
+movie_title+movie_writer,I want to watch {movie_title} by {movie_writer}
+movie_title+movie_writer,I want {movie_writer}'s movie {movie_title}
+movie_title+movie_writer,can you play {movie_title} penned by {movie_writer}
+movie_title+movie_writer,find me the movie {movie_title} written by {movie_writer}
+movie_title+movie_writer,find the film {movie_title} by {movie_writer}
+movie_title+movie_writer,let's watch {movie_title} by {movie_writer}
+movie_title+movie_writer,play the film {movie_title} penned by {movie_writer}
+movie_title+movie_writer,play {movie_title} from writer {movie_writer}
+movie_title+movie_writer,play {movie_title} written by {movie_writer}
+movie_title+movie_writer,put on {movie_title} written by {movie_writer}
+movie_title+movie_writer,show me {movie_title} from writer {movie_writer}
+movie_title+movie_writer,show me {movie_writer}'s film {movie_title}
+movie_title+movie_writer,start the film {movie_title} by {movie_writer}
+movie_title+movie_writer,start the movie {movie_title} penned by {movie_writer}
+movie_title+movie_writer,stream the movie {movie_title} written by {movie_writer}
+movie_title+movie_writer,stream {movie_title} written by {movie_writer}
+movie_title+movie_writer,watch the movie {movie_title} penned by {movie_writer}
+movie_title,I fancy watching {movie_title}
+movie_title,I need to see {movie_title}
+movie_title,I want to see the movie {movie_title}
+movie_title,I want to watch the film {movie_title}
+movie_title,I want to watch {movie_title}
+movie_title,I'm in the mood for {movie_title}
+movie_title,I'm ready for {movie_title}
+movie_title,I've been meaning to watch {movie_title}
+movie_title,can we watch {movie_title} tonight
+movie_title,can you play the movie {movie_title}
+movie_title,can you start {movie_title}
+movie_title,chuck {movie_title} on
+movie_title,find me the film {movie_title}
+movie_title,find me {movie_title}
+movie_title,find {movie_title}
+movie_title,fire up {movie_title}
+movie_title,get the movie {movie_title} on
+movie_title,get {movie_title} ready to watch
+movie_title,is {movie_title} available to stream
+movie_title,is {movie_title} on
+movie_title,let's get {movie_title} going
+movie_title,let's watch {movie_title}
+movie_title,load the film {movie_title}
+movie_title,load {movie_title} for me
+movie_title,look for the movie {movie_title}
+movie_title,open up {movie_title}
+movie_title,play the film {movie_title}
+movie_title,play the flick {movie_title}
+movie_title,play {movie_title}
+movie_title,play {movie_title} immediately
+movie_title,play {movie_title} right now
+movie_title,put on the film {movie_title}
+movie_title,put on {movie_title}
+movie_title,put {movie_title} on please
+movie_title,show me the movie {movie_title}
+movie_title,start the film {movie_title}
+movie_title,start the movie {movie_title}
+movie_title,start {movie_title}
+movie_title,stick {movie_title} on
+movie_title,stream the movie {movie_title}
+movie_title,stream {movie_title}
+movie_title,watch the movie {movie_title}
+movie_writer,I want to see a movie by {movie_writer}
+movie_writer,I want to see {movie_writer}'s films
+movie_writer,I'm looking for {movie_writer}'s scripts
+movie_writer,anything new written by {movie_writer}
+movie_writer,anything written by {movie_writer}
+movie_writer,find a script by {movie_writer} turned into a movie
+movie_writer,find anything penned by {movie_writer}
+movie_writer,find me a film written by {movie_writer}
+movie_writer,find me a {movie_writer} movie
+movie_writer,find me a {movie_writer} story
+movie_writer,is there a movie by writer {movie_writer}
+movie_writer,let's watch something written by {movie_writer}
+movie_writer,play a movie from {movie_writer}
+movie_writer,play something penned by {movie_writer}
+movie_writer,play the film based on {movie_writer}'s writing
+movie_writer,play the film written by {movie_writer}
+movie_writer,put on a {movie_writer} film
+movie_writer,show me a film from writer {movie_writer}
+movie_writer,show me what {movie_writer} wrote
+movie_writer,show me {movie_writer}'s movies
+movie_writer,start a {movie_writer} film
+movie_writer,stream a movie written by {movie_writer}
+movie_writer,watch the movie penned by {movie_writer}
+tv_show_title,I want the film adaptation of {tv_show_title}
+tv_show_title,I want to watch the {tv_show_title} movie
+tv_show_title,find me the movie {tv_show_title}
+tv_show_title,find the movie from the series {tv_show_title}
+tv_show_title,find the {tv_show_title} movie
+tv_show_title,is there a {tv_show_title} film I can watch
+tv_show_title,is there a {tv_show_title} movie
+tv_show_title,let's watch the {tv_show_title} movie
+tv_show_title,play the latest {tv_show_title} movie
+tv_show_title,play the movie version of {tv_show_title}
+tv_show_title,play the {tv_show_title} feature film
+tv_show_title,play the {tv_show_title} movie adaptation
+tv_show_title,play {tv_show_title} movie
+tv_show_title,put on the {tv_show_title} movie version
+tv_show_title,show me the film based on {tv_show_title}
+tv_show_title,start the {tv_show_title} film
+tv_show_title,stream the movie based on {tv_show_title}
+tv_show_title,stream {tv_show_title} the movie
+tv_show_title,watch the spinoff movie for {tv_show_title}
+tv_show_title,watch the {tv_show_title} film
+movie_title+movie_genre,I want to see a {movie_genre} version of {movie_title}
+movie_title+movie_genre,find the {movie_genre} style {movie_title}
+movie_title+movie_genre,play {movie_title} as a {movie_genre}
+movie_title+movie_genre,show me {movie_title} in {movie_genre} style
+movie_title+movie_composer+music_genre,find {movie_title} with {movie_composer} {music_genre} score
+movie_title+movie_composer+music_genre,play {movie_title} with {movie_genre} music by {movie_composer}
+movie_title+movie_director+movie_genre,find {movie_title} directed as {movie_genre}
+movie_title+movie_director+movie_genre,play {movie_title} in {movie_genre} style by {movie_director}
+movie_title+movie_actor+movie_genre,find {movie_title} starring {movie_actor} {movie_genre}
+movie_title+movie_actor+movie_genre,play {movie_title} {movie_genre} with {movie_actor}
+movie_title+movie_producer,I want to see {movie_producer}'s {movie_title}
+movie_title+movie_producer,find {movie_title} produced by {movie_producer}
+movie_title+movie_producer,play {movie_title} from {movie_producer}
+movie_title+movie_writer,find {movie_title} written by {movie_writer}
+movie_title+movie_writer,play {movie_title} based on {movie_writer}'s script
+movie_title+movie_writer,show me {movie_title} by writer {movie_writer}
+movie_title+movie_composer,find {movie_title} scored by {movie_composer}
+movie_title+movie_composer,play {movie_title} with {movie_composer} music
+movie_title+movie_composer,stream {movie_title} featuring {movie_composer} score
+movie_title+movie_streaming_service,find {movie_title} on {movie_streaming_service}
+movie_title+movie_streaming_service,play {movie_title} on {movie_streaming_service}
+movie_title+movie_streaming_service,stream {movie_title} via {movie_streaming_service}
+movie_actor+movie_actor,find movies with {movie_actor} starring together
+movie_actor+movie_actor,play film with both {movie_actor}
+movie_director+movie_director,find collaboration between {movie_director} directors
+movie_director+movie_director,play movie directed by both {movie_director}
+movie_genre+movie_streaming_service,find {movie_genre} movies on {movie_streaming_service}
+movie_genre+movie_streaming_service,play {movie_genre} film on {movie_streaming_service}
+movie_genre+movie_streaming_service,stream {movie_genre} on {movie_streaming_service}
+movie_actor+movie_actor+movie_director,find {movie_actor} film with {movie_director}
+movie_actor+movie_actor+movie_director,play {movie_actor} movie by {movie_director}
+movie_actor+movie_genre+movie_streaming_service,find {movie_actor} {movie_genre} on {movie_streaming_service}
+movie_actor+movie_genre+movie_streaming_service,play {movie_actor} {movie_genre} on {movie_streaming_service}
+movie_director+movie_genre+movie_streaming_service,find {movie_director} {movie_genre} on {movie_streaming_service}
+movie_director+movie_genre+movie_streaming_service,play {movie_director} {movie_genre} on {movie_streaming_service}
+movie_director+movie_actor+movie_streaming_service,find {movie_director} film with {movie_actor} on {movie_streaming_service}
+movie_director+movie_actor+movie_streaming_service,play {movie_director} {movie_actor} movie on {movie_streaming_service}
+movie_title+movie_actor+movie_streaming_service,find {movie_title} starring {movie_actor} on {movie_streaming_service}
+movie_title+movie_actor+movie_streaming_service,play {movie_title} with {movie_actor} on {movie_streaming_service}
+movie_title+movie_director+movie_streaming_service,find {movie_title} by {movie_director} on {movie_streaming_service}
+movie_title+movie_director+movie_streaming_service,play {movie_title} directed by {movie_director} on {movie_streaming_service}
+movie_title+movie_producer+movie_streaming_service,find {movie_title} from {movie_producer} on {movie_streaming_service}
+movie_title+movie_producer+movie_streaming_service,play {movie_title} produced by {movie_producer} on {movie_streaming_service}
+movie_title+movie_writer+movie_streaming_service,find {movie_title} by {movie_writer} on {movie_streaming_service}
+movie_title+movie_writer+movie_streaming_service,play {movie_title} written by {movie_writer} on {movie_streaming_service}
+movie_title+movie_composer+movie_streaming_service,find {movie_title} score by {movie_composer} on {movie_streaming_service}
+movie_title+movie_composer+movie_streaming_service,play {movie_title} with {movie_composer} on {movie_streaming_service}
+movie_title+movie_genre+movie_streaming_service,find {movie_title} {movie_genre} on {movie_streaming_service}
+movie_title+movie_genre+movie_streaming_service,play {movie_title} {movie_genre} on {movie_streaming_service}
+movie_actor,find movies where {movie_actor} is the main character
+movie_actor,find {movie_actor}'s best rated film
+movie_actor,find {movie_actor}'s classic movies
+movie_actor,find {movie_actor}'s recent films
+movie_actor,find {movie_actor}'s top rated movies
+movie_actor,find films starring {movie_actor} only
+movie_actor,get me a {movie_actor} film from the 90s
+movie_actor,get me a {movie_actor} movie from early 2000s
+movie_actor,play a classic {movie_actor} movie
+movie_actor,play a recent {movie_actor} film
+movie_actor,play an Oscar winning {movie_actor} movie
+movie_director,find {movie_director}'s complete filmography
+movie_director,find {movie_director}'s best movies
+movie_director,find {movie_director}'s earliest work
+movie_director,find {movie_director}'s latest release
+movie_director,find {movie_director}'s most popular films
+movie_director,find films directed by {movie_director} only
+movie_director,get me a {movie_director} film from the 80s
+movie_director,play a {movie_director} classic
+movie_director,play a {movie_director} movie from the 90s
+movie_director,play the newest {movie_director} film
+movie_director,show me the {movie_director} collection
+movie_writer,find {movie_writer}'s adapted works
+movie_writer,find {movie_writer}'s film adaptations
+movie_writer,find {movie_writer}'s original screenplays
+movie_writer,find movies based on {movie_writer}'s books
+movie_writer,get me a film written by {movie_writer}
+movie_writer,play a {movie_writer} adaptation
+movie_writer,play an original screenplay by {movie_writer}
+movie_producer,find {movie_producer}'s best productions
+movie_producer,find {movie_producer}'s famous films
+movie_producer,find {movie_producer}'s recent movies
+movie_producer,get me a film from {movie_producer}
+movie_producer,play a {movie_producer} production
+movie_producer,show me {movie_producer}'s filmography
+movie_composer,find {movie_composer}'s film scores
+movie_composer,find movies with {movie_composer}'s music
+movie_composer,find {movie_composer}'s best soundtracks
+movie_composer,get me a film with {movie_composer} score
+movie_composer,play a movie with {movie_composer} music
+movie_composer,play the {movie_composer} greatest hits
+movie_genre,find a {movie_genre} movie for date night
+movie_genre,find a {movie_genre} movie for family
+movie_genre,find a {movie_genre} movie for kids
+movie_genre,find a {movie_genre} movie to relax
+movie_genre,find a {movie_genre} movie to watch alone
+movie_genre,find classic {movie_genre} movies
+movie_genre,find new {movie_genre} releases
+movie_genre,find popular {movie_genre} films
+movie_genre,get me a {movie_genre} movie for tonight
+movie_genre,play a {movie_genre} movie from the 80s
+movie_genre,play a classic {movie_genre} film
+movie_genre,play a family friendly {movie_genre}
+movie_genre,play a modern {movie_genre} movie
+movie_genre,play a recent {movie_genre} release
+movie_genre,play an Oscar winning {movie_genre} film
+movie_genre,play the best {movie_genre} movies
+movie_title,find a movie similar to {movie_title}
+movie_title,find movies like {movie_title}
+movie_title,find other films like {movie_title}
+movie_title,get me more movies like {movie_title}
+movie_title,i want something similar to {movie_title}
+movie_title,play a movie like {movie_title}
+movie_title,play another film similar to {movie_title}
+movie_title,play movies related to {movie_title}
+movie_title,recommend films like {movie_title}
+movie_title,show me movies similar to {movie_title}

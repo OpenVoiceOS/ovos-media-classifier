@@ -1,0 +1,112 @@
+category,template
+anime_title,find a game based on {anime_title}
+anime_title,is there a {anime_title} game available
+anime_title,launch the {anime_title} video game
+anime_title,play the {anime_title} fighting game
+anime_title,play the {anime_title} game
+game_title,I feel like playing {game_title}
+game_title,I haven't played {game_title} in ages — start it up
+game_title,I need to get back to {game_title}
+game_title,I want another go at {game_title}
+game_title,I want to continue my run in {game_title}
+game_title,I want to finish {game_title}
+game_title,I want to give {game_title} a go
+game_title,I want to go back to {game_title}
+game_title,I want to jump back into {game_title}
+game_title,I want to pick up {game_title}
+game_title,I want to play {game_title}
+game_title,I want to start {game_title}
+game_title,I want to try {game_title}
+game_title,I was playing {game_title} — continue please
+game_title,I'd like to play {game_title}
+game_title,I'm going back to {game_title}
+game_title,I'm in the mood for {game_title}
+game_title,I'm picking up {game_title} again
+game_title,I'm playing {game_title} tonight — start it
+game_title,I've heard great things about {game_title} — play it
+game_title,I've never played {game_title} — start it
+game_title,boot up {game_title}
+game_title,boot {game_title}
+game_title,bring up {game_title}
+game_title,can you launch {game_title}
+game_title,can you load {game_title}
+game_title,can you open {game_title}
+game_title,continue my {game_title} save
+game_title,continue where I left off in {game_title}
+game_title,do you have {game_title}
+game_title,find me {game_title}
+game_title,find {game_title}
+game_title,fire up {game_title}
+game_title,fire {game_title} up
+game_title,get {game_title} going
+game_title,get {game_title} ready
+game_title,get {game_title} started
+game_title,go back to my {game_title} save
+game_title,is {game_title} available
+game_title,jump back into {game_title}
+game_title,kick off {game_title}
+game_title,launch the game {game_title}
+game_title,launch {game_title}
+game_title,let me play {game_title}
+game_title,let me try {game_title}
+game_title,let's play {game_title}
+game_title,load my last save in {game_title}
+game_title,load my most recent save in {game_title}
+game_title,load my {game_title} save game
+game_title,load up a game of {game_title}
+game_title,load up {game_title}
+game_title,load {game_title}
+game_title,open up {game_title}
+game_title,open {game_title}
+game_title,pick up where I left off in {game_title}
+game_title,play a game of {game_title}
+game_title,play a round of {game_title}
+game_title,play the game {game_title}
+game_title,play {game_title}
+game_title,please start {game_title}
+game_title,pull up {game_title}
+game_title,put on {game_title}
+game_title,resume my campaign in {game_title}
+game_title,resume {game_title}
+game_title,run {game_title}
+game_title,start playing {game_title}
+game_title,start up {game_title}
+game_title,start {game_title}
+game_title,stream {game_title}
+movie_title,I want a game similar to {movie_title}
+movie_title,find a game like {movie_title}
+movie_title,find the video game adaptation of {movie_title}
+movie_title,is there a game based on {movie_title}
+movie_title,is there a {movie_title} game I can play
+movie_title,launch the {movie_title} game
+movie_title,play the game based on {movie_title}
+movie_title,play the {movie_title} video game
+tv_show_title,find a game from the {tv_show_title} universe
+tv_show_title,find the {tv_show_title} game
+tv_show_title,is there a video game for {tv_show_title}
+tv_show_title,launch the {tv_show_title} game
+tv_show_title,play the game based on {tv_show_title}
+tv_show_title,play the {tv_show_title} video game
+game_title+anime_title,find game based on {anime_title} like {game_title}
+game_title+anime_title,play {game_title} from {anime_title} universe
+game_title+movie_title,find game based on {movie_title} called {game_title}
+game_title+movie_title,play {game_title} inspired by {movie_title}
+game_title+tv_show_title,find game based on {tv_show_title} called {game_title}
+game_title+tv_show_title,play {game_title} from {tv_show_title}
+game_title+cartoon_title,find cartoon game {game_title}
+game_title+cartoon_title,play {game_title} based on {cartoon_title}
+game_title,continue my game in {game_title}
+game_title,continue playing {game_title}
+game_title,get back to {game_title}
+game_title,keep playing {game_title}
+game_title,load my save in {game_title}
+game_title,pause and resume {game_title}
+game_title,pick up {game_title} again
+game_title,play a quick match in {game_title}
+game_title,play the campaign in {game_title}
+game_title,play the next level of {game_title}
+game_title,resume my session in {game_title}
+game_title,save my progress in {game_title}
+game_title,start a new game in {game_title}
+game_title,start multiplayer in {game_title}
+game_title,stream game from {game_title}

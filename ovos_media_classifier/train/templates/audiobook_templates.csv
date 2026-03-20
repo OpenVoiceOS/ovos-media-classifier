@@ -1,0 +1,295 @@
+category,template
+audiobook_author+audiobook_streaming_service,I need some {audiobook_author} from {audiobook_streaming_service}
+audiobook_author+audiobook_streaming_service,I want to hear {audiobook_author} using {audiobook_streaming_service}
+audiobook_author+audiobook_streaming_service,browse the {audiobook_author} collection on {audiobook_streaming_service}
+audiobook_author+audiobook_streaming_service,browse {audiobook_author} titles on {audiobook_streaming_service}
+audiobook_author+audiobook_streaming_service,find a {audiobook_author} book on {audiobook_streaming_service}
+audiobook_author+audiobook_streaming_service,find me {audiobook_author} on the {audiobook_streaming_service} app
+audiobook_author+audiobook_streaming_service,find {audiobook_author}'s audiobooks on {audiobook_streaming_service}
+audiobook_author+audiobook_streaming_service,get me a {audiobook_author} novel on {audiobook_streaming_service}
+audiobook_author+audiobook_streaming_service,is there any {audiobook_author} on {audiobook_streaming_service}
+audiobook_author+audiobook_streaming_service,let's listen to {audiobook_author} on {audiobook_streaming_service}
+audiobook_author+audiobook_streaming_service,load {audiobook_author}'s works on {audiobook_streaming_service}
+audiobook_author+audiobook_streaming_service,open {audiobook_streaming_service} and find {audiobook_author}
+audiobook_author+audiobook_streaming_service,play any {audiobook_author} book from {audiobook_streaming_service}
+audiobook_author+audiobook_streaming_service,play the latest from {audiobook_author} on {audiobook_streaming_service}
+audiobook_author+audiobook_streaming_service,play {audiobook_author} on {audiobook_streaming_service}
+audiobook_author+audiobook_streaming_service,put on a {audiobook_author} audiobook via {audiobook_streaming_service}
+audiobook_author+audiobook_streaming_service,start a book by {audiobook_author} on {audiobook_streaming_service}
+audiobook_author+audiobook_streaming_service,start the {audiobook_author} series on {audiobook_streaming_service}
+audiobook_author+audiobook_streaming_service,stream something from {audiobook_author} on {audiobook_streaming_service}
+audiobook_author,I want to explore {audiobook_author}'s work
+audiobook_author,I want to hear {audiobook_author}'s writing
+audiobook_author,I want to listen to {audiobook_author}
+audiobook_author,I'd like a story from {audiobook_author}
+audiobook_author,I'd like to hear {audiobook_author}
+audiobook_author,I'm looking for audiobooks by {audiobook_author}
+audiobook_author,anything by {audiobook_author}
+audiobook_author,do you have anything by {audiobook_author}
+audiobook_author,find an audiobook by {audiobook_author}
+audiobook_author,find me a {audiobook_author} audiobook
+audiobook_author,find me {audiobook_author}'s best book
+audiobook_author,find the complete series by {audiobook_author}
+audiobook_author,find the newest book by {audiobook_author}
+audiobook_author,find the series by {audiobook_author}
+audiobook_author,get me a book by {audiobook_author}
+audiobook_author,is there anything new from {audiobook_author}
+audiobook_author,let's listen to {audiobook_author}
+audiobook_author,play a book by {audiobook_author}
+audiobook_author,play an audiobook by {audiobook_author}
+audiobook_author,play something from {audiobook_author}
+audiobook_author,play something penned by {audiobook_author}
+audiobook_author,play the first book by {audiobook_author}
+audiobook_author,play the latest from {audiobook_author}
+audiobook_author,play the most popular book by {audiobook_author}
+audiobook_author,play the narration of {audiobook_author}'s book
+audiobook_author,play {audiobook_author}
+audiobook_author,play {audiobook_author}'s audiobook
+audiobook_author,play {audiobook_author}'s collection
+audiobook_author,read me a novel by {audiobook_author}
+audiobook_author,read me a story by {audiobook_author}
+audiobook_author,read me something by {audiobook_author}
+audiobook_author,read me {audiobook_author}'s latest
+audiobook_author,show me audiobooks from {audiobook_author}
+audiobook_author,start a book from {audiobook_author}
+audiobook_author,start the {audiobook_author} audiobook
+audiobook_author,stream a book by {audiobook_author}
+audiobook_author,stream the works of {audiobook_author}
+audiobook_author,stream {audiobook_author}'s latest release
+audiobook_author,what books do you have by {audiobook_author}
+audiobook_streaming_service,I want to use {audiobook_streaming_service}
+audiobook_streaming_service,I want {audiobook_streaming_service} now
+audiobook_streaming_service,browse audiobooks on {audiobook_streaming_service}
+audiobook_streaming_service,browse my {audiobook_streaming_service} library
+audiobook_streaming_service,browse the {audiobook_streaming_service} catalog
+audiobook_streaming_service,check {audiobook_streaming_service} for new titles
+audiobook_streaming_service,connect to {audiobook_streaming_service}
+audiobook_streaming_service,find a recommendation on {audiobook_streaming_service}
+audiobook_streaming_service,find audiobooks on {audiobook_streaming_service}
+audiobook_streaming_service,find my library on {audiobook_streaming_service}
+audiobook_streaming_service,get {audiobook_streaming_service} going
+audiobook_streaming_service,give me a book on {audiobook_streaming_service}
+audiobook_streaming_service,launch the {audiobook_streaming_service} player
+audiobook_streaming_service,launch {audiobook_streaming_service}
+audiobook_streaming_service,load {audiobook_streaming_service}
+audiobook_streaming_service,open the {audiobook_streaming_service} app
+audiobook_streaming_service,open {audiobook_streaming_service}
+audiobook_streaming_service,open {audiobook_streaming_service} library
+audiobook_streaming_service,play a book on {audiobook_streaming_service}
+audiobook_streaming_service,play my latest audiobook on {audiobook_streaming_service}
+audiobook_streaming_service,play something from {audiobook_streaming_service}
+audiobook_streaming_service,pull up my books on {audiobook_streaming_service}
+audiobook_streaming_service,start my narration on {audiobook_streaming_service}
+audiobook_streaming_service,start {audiobook_streaming_service}
+audiobook_streaming_service,stream an audiobook from {audiobook_streaming_service}
+audiobook_streaming_service,switch to {audiobook_streaming_service}
+audiobook_streaming_service,tune into {audiobook_streaming_service} for books
+audiobook_streaming_service,use {audiobook_streaming_service} for my audiobooks
+audiobook_streaming_service,use {audiobook_streaming_service} to play a book
+audiobook_title+audiobook_author,I need to hear {audiobook_title} penned by {audiobook_author}
+audiobook_title+audiobook_author,I want the audiobook {audiobook_title} from {audiobook_author}
+audiobook_title+audiobook_author,I want to hear {audiobook_title} by {audiobook_author}
+audiobook_title+audiobook_author,I'd like to listen to {audiobook_title} by {audiobook_author}
+audiobook_title+audiobook_author,can you read {audiobook_title} by {audiobook_author}
+audiobook_title+audiobook_author,find the audiobook {audiobook_title} authored by {audiobook_author}
+audiobook_title+audiobook_author,find the narration of {audiobook_title} by {audiobook_author}
+audiobook_title+audiobook_author,find {audiobook_title} written by {audiobook_author}
+audiobook_title+audiobook_author,get me {audiobook_title} by {audiobook_author}
+audiobook_title+audiobook_author,let's hear {audiobook_author}'s {audiobook_title}
+audiobook_title+audiobook_author,listen to {audiobook_title} written by {audiobook_author}
+audiobook_title+audiobook_author,load {audiobook_title} by {audiobook_author}
+audiobook_title+audiobook_author,play the novel {audiobook_title} by {audiobook_author}
+audiobook_title+audiobook_author,play the {audiobook_author} audiobook {audiobook_title}
+audiobook_title+audiobook_author,play {audiobook_author}'s {audiobook_title}
+audiobook_title+audiobook_author,play {audiobook_title} by {audiobook_author}
+audiobook_title+audiobook_author,play {audiobook_title} narrated by {audiobook_author}
+audiobook_title+audiobook_author,put on {audiobook_title} by {audiobook_author}
+audiobook_title+audiobook_author,read me {audiobook_title} by {audiobook_author}
+audiobook_title+audiobook_author,read the story {audiobook_title} by {audiobook_author}
+audiobook_title+audiobook_author,start reading {audiobook_title} from {audiobook_author}
+audiobook_title+audiobook_author,start {audiobook_title} by author {audiobook_author}
+audiobook_title+audiobook_author,stream the book {audiobook_title} by {audiobook_author}
+audiobook_title+audiobook_author,stream {audiobook_title} by {audiobook_author}
+audiobook_title+audiobook_streaming_service,I need to hear {audiobook_title} on {audiobook_streaming_service}
+audiobook_title+audiobook_streaming_service,I want to listen to {audiobook_title} using {audiobook_streaming_service}
+audiobook_title+audiobook_streaming_service,can I get {audiobook_title} on {audiobook_streaming_service}
+audiobook_title+audiobook_streaming_service,find me the audiobook {audiobook_title} on {audiobook_streaming_service}
+audiobook_title+audiobook_streaming_service,find {audiobook_title} on {audiobook_streaming_service}
+audiobook_title+audiobook_streaming_service,get {audiobook_title} from my {audiobook_streaming_service} library
+audiobook_title+audiobook_streaming_service,is {audiobook_title} available on {audiobook_streaming_service}
+audiobook_title+audiobook_streaming_service,is {audiobook_title} on {audiobook_streaming_service}
+audiobook_title+audiobook_streaming_service,let's hear {audiobook_title} on {audiobook_streaming_service}
+audiobook_title+audiobook_streaming_service,load {audiobook_title} from {audiobook_streaming_service}
+audiobook_title+audiobook_streaming_service,open {audiobook_streaming_service} and play {audiobook_title}
+audiobook_title+audiobook_streaming_service,play the book {audiobook_title} on {audiobook_streaming_service}
+audiobook_title+audiobook_streaming_service,play {audiobook_title} from {audiobook_streaming_service}
+audiobook_title+audiobook_streaming_service,play {audiobook_title} on {audiobook_streaming_service}
+audiobook_title+audiobook_streaming_service,put on {audiobook_title} via the {audiobook_streaming_service} app
+audiobook_title+audiobook_streaming_service,resume {audiobook_title} on {audiobook_streaming_service}
+audiobook_title+audiobook_streaming_service,start the narration of {audiobook_title} on {audiobook_streaming_service}
+audiobook_title+audiobook_streaming_service,start {audiobook_title} on {audiobook_streaming_service}
+audiobook_title+audiobook_streaming_service,stream {audiobook_title} through {audiobook_streaming_service}
+audiobook_title+audiobook_streaming_service,stream {audiobook_title} via {audiobook_streaming_service}
+audiobook_title,I haven't finished {audiobook_title} — resume
+audiobook_title,I need to hear {audiobook_title}
+audiobook_title,I want to finish {audiobook_title}
+audiobook_title,I want to hear the book {audiobook_title}
+audiobook_title,I want to hear {audiobook_title}
+audiobook_title,I want to listen to {audiobook_title}
+audiobook_title,I want to listen to {audiobook_title} tonight
+audiobook_title,I was reading {audiobook_title} — continue please
+audiobook_title,I'd like to hear {audiobook_title}
+audiobook_title,I'd like to listen to {audiobook_title}
+audiobook_title,I'm partway through {audiobook_title} — keep going
+audiobook_title,I'm ready for the next part of {audiobook_title}
+audiobook_title,can you read {audiobook_title}
+audiobook_title,continue from where I stopped in {audiobook_title}
+audiobook_title,continue listening to {audiobook_title}
+audiobook_title,continue {audiobook_title}
+audiobook_title,find and play {audiobook_title}
+audiobook_title,find me {audiobook_title}
+audiobook_title,find the audiobook {audiobook_title}
+audiobook_title,find the full version of {audiobook_title}
+audiobook_title,get me {audiobook_title}
+audiobook_title,get the audiobook {audiobook_title} ready
+audiobook_title,let's hear {audiobook_title}
+audiobook_title,load the book {audiobook_title}
+audiobook_title,load up {audiobook_title}
+audiobook_title,load {audiobook_title}
+audiobook_title,open {audiobook_title}
+audiobook_title,pick up where I left off in {audiobook_title}
+audiobook_title,play chapter 3 of {audiobook_title}
+audiobook_title,play the abridged version of {audiobook_title}
+audiobook_title,play the audiobook {audiobook_title}
+audiobook_title,play the book {audiobook_title}
+audiobook_title,play the full audiobook {audiobook_title}
+audiobook_title,play the last chapter of {audiobook_title}
+audiobook_title,play the latest edition of {audiobook_title}
+audiobook_title,play the next chapter of {audiobook_title}
+audiobook_title,play the recording of {audiobook_title}
+audiobook_title,play the unabridged {audiobook_title}
+audiobook_title,play {audiobook_title}
+audiobook_title,play {audiobook_title} again from the start
+audiobook_title,play {audiobook_title} for me now
+audiobook_title,play {audiobook_title} from chapter 5
+audiobook_title,play {audiobook_title} from the beginning
+audiobook_title,play {audiobook_title} on-demand
+audiobook_title,play {audiobook_title} please
+audiobook_title,pull up {audiobook_title}
+audiobook_title,put on {audiobook_title}
+audiobook_title,queue up {audiobook_title}
+audiobook_title,read me {audiobook_title}
+audiobook_title,read {audiobook_title} out loud
+audiobook_title,read {audiobook_title} to me
+audiobook_title,resume my book {audiobook_title}
+audiobook_title,resume {audiobook_title}
+audiobook_title,start over with {audiobook_title}
+audiobook_title,start playing {audiobook_title}
+audiobook_title,start reading {audiobook_title}
+audiobook_title,start the audiobook {audiobook_title}
+audiobook_title,start the narrated version of {audiobook_title}
+audiobook_title,start the novel {audiobook_title}
+audiobook_title,start {audiobook_title} from chapter 1
+audiobook_title,start {audiobook_title} from the prologue
+audiobook_title,stream the complete {audiobook_title}
+audiobook_title,stream {audiobook_title}
+audiobook_title,where was I in {audiobook_title}
+movie_title,I loved {movie_title} — read me the book
+movie_title,I need to hear the original book for {movie_title}
+movie_title,I want to hear the story behind {movie_title}
+movie_title,I want to read the book behind {movie_title}
+movie_title,can you find the book for {movie_title}
+movie_title,find the audiobook version of {movie_title}
+movie_title,find the novel that {movie_title} was based on
+movie_title,find the source book for {movie_title}
+movie_title,find the written source material for {movie_title}
+movie_title,is there an audiobook for the movie {movie_title}
+movie_title,is {movie_title} based on a book — play it
+movie_title,let's hear the book version of {movie_title}
+movie_title,load the audiobook for the movie {movie_title}
+movie_title,play the audiobook adapted from {movie_title}
+movie_title,play the book that became the movie {movie_title}
+movie_title,play the book {movie_title} was adapted from
+movie_title,play the novel that inspired {movie_title}
+movie_title,play the novelization of {movie_title}
+movie_title,play the original novel that inspired {movie_title}
+movie_title,play the tie-in book for {movie_title}
+movie_title,put on the novelization of the film {movie_title}
+movie_title,read me the book that {movie_title} is based on
+movie_title,read me the novel version of {movie_title}
+movie_title,read the original story of {movie_title}
+movie_title,read the {movie_title} novelization
+movie_title,start the book adaptation of {movie_title}
+movie_title,start the novel that {movie_title} follows
+tv_show_title,I need to hear the original book for the show {tv_show_title}
+tv_show_title,I want to hear the story behind the show {tv_show_title}
+tv_show_title,I watched {tv_show_title} — now I want the book
+tv_show_title,can you find the book for the show {tv_show_title}
+tv_show_title,find the book that {tv_show_title} was based on
+tv_show_title,find the novel that the show {tv_show_title} was based on
+tv_show_title,find the novelization of {tv_show_title}
+tv_show_title,is there an audiobook for the show {tv_show_title}
+tv_show_title,is {tv_show_title} based on a book — find the audiobook
+tv_show_title,let's hear the book version of the show {tv_show_title}
+tv_show_title,load the audiobook for the series {tv_show_title}
+tv_show_title,play the audiobook adapted from the series {tv_show_title}
+tv_show_title,play the audiobook version of {tv_show_title}
+tv_show_title,play the book that inspired {tv_show_title}
+tv_show_title,play the source novel for {tv_show_title}
+tv_show_title,put on the novelization of the series {tv_show_title}
+tv_show_title,read me the book behind {tv_show_title}
+tv_show_title,read me the series novelization of {tv_show_title}
+tv_show_title,read the original story behind {tv_show_title}
+tv_show_title,start the book adaptation of the series {tv_show_title}
+tv_show_title,start the novel that {tv_show_title} follows
+audiobook_title+audiobook_author+audiobook_streaming_service,find {audiobook_title} by {audiobook_author} on {audiobook_streaming_service}
+audiobook_title+audiobook_author+audiobook_streaming_service,get {audiobook_title} from {audiobook_author} on {audiobook_streaming_service}
+audiobook_title+audiobook_author+audiobook_streaming_service,play {audiobook_title} by {audiobook_author} on {audiobook_streaming_service}
+audiobook_title+audiobook_streaming_service,find {audiobook_title} on {audiobook_streaming_service}
+audiobook_title+audiobook_streaming_service,get {audiobook_title} from {audiobook_streaming_service}
+audiobook_title+audiobook_streaming_service,play {audiobook_title} via {audiobook_streaming_service}
+audiobook_title+audiobook_streaming_service,put on {audiobook_title} from {audiobook_streaming_service}
+audiobook_title+audiobook_streaming_service,queue {audiobook_title} on {audiobook_streaming_service}
+audiobook_title+audiobook_streaming_service,shuffle {audiobook_title} on {audiobook_streaming_service}
+audiobook_title+audiobook_streaming_service,start {audiobook_title} on {audiobook_streaming_service}
+audiobook_author+audiobook_streaming_service,find {audiobook_author} on {audiobook_streaming_service}
+audiobook_author+audiobook_streaming_service,get {audiobook_author} from {audiobook_streaming_service}
+audiobook_author+audiobook_streaming_service,play {audiobook_author} via {audiobook_streaming_service}
+audiobook_author+audiobook_streaming_service,put on {audiobook_author} from {audiobook_streaming_service}
+audiobook_author+audiobook_streaming_service,queue {audiobook_author} on {audiobook_streaming_service}
+audiobook_author+audiobook_streaming_service,shuffle {audiobook_author} on {audiobook_streaming_service}
+audiobook_author+audiobook_streaming_service,start {audiobook_author} on {audiobook_streaming_service}
+audiobook_author+audiobook_title,find more from {audiobook_author} like {audiobook_title}
+audiobook_author+audiobook_title,get {audiobook_title} by {audiobook_author}
+audiobook_author+audiobook_title,play {audiobook_title} by {audiobook_author}
+audiobook_author+audiobook_title,put on {audiobook_title} by {audiobook_author}
+audiobook_streaming_service,find my library on {audiobook_streaming_service}
+audiobook_streaming_service,get my books from {audiobook_streaming_service}
+audiobook_streaming_service,play my audiobooks on {audiobook_streaming_service}
+audiobook_streaming_service,play my library on {audiobook_streaming_service}
+audiobook_streaming_service,put on my books from {audiobook_streaming_service}
+audiobook_streaming_service,queue my books on {audiobook_streaming_service}
+audiobook_streaming_service,resume my book on {audiobook_streaming_service}
+audiobook_streaming_service,shuffle my library on {audiobook_streaming_service}
+audiobook_streaming_service,start my listening on {audiobook_streaming_service}
+audiobook_streaming_service,stream my books from {audiobook_streaming_service}
+audiobook_title,find {audiobook_title} in my library
+audiobook_title,find new releases of {audiobook_title}
+audiobook_title,get {audiobook_title} for my commute
+audiobook_title,play {audiobook_title} for a long trip
+audiobook_title,play {audiobook_title} for relaxing
+audiobook_title,put on {audiobook_title} before bed
+audiobook_title,queue {audiobook_title} up
+audiobook_title,resume {audiobook_title}
+audiobook_title,start {audiobook_title} for listening
+audiobook_title,stream {audiobook_title}
+audiobook_title,continue from where I left off in {audiobook_title}
+audiobook_author,find books by {audiobook_author}
+audiobook_author,find new releases by {audiobook_author}
+audiobook_author,get works by {audiobook_author}
+audiobook_author,listen to {audiobook_author}'s books
+audiobook_author,play books by {audiobook_author}
+audiobook_author,put on {audiobook_author}'s novels
+audiobook_author,queue {audiobook_author}'s books
+audiobook_author,start listening to {audiobook_author}
+audiobook_author,stream {audiobook_author}'s audiobooks

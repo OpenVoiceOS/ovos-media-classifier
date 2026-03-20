@@ -1,15 +1,17 @@
 """Categorical feature extraction for guided-embeddings inference.
 
 Produces the same 84-column sparse feature dict at runtime that
-``scripts/generate_categorical_features.py`` produces during dataset
-generation.  Absent features are omitted (sparse); present features have
-value ``"1"`` (string, matching ``CategoricalVectorizer`` convention).
+``ovos_media_classifier.train.generate_categorical_features`` produces during
+dataset generation.  Absent features are omitted (sparse); present features
+have value ``"1"`` (string, matching ``CategoricalVectorizer`` convention).
 
 Feature sources (mirrors generate_categorical_features.py):
   - 27 keyword features  — ``kw_*`` columns via ``_VocMatcher.match()``
   - 57+ NER entity features — ``OCPEntityLabel`` values via AhocorasickNER
 
-[generate_categorical_features.py — scripts/generate_categorical_features.py:72-108]
+Constants ``_KEYWORD_VOCABS`` and ``_ENTITY_LABEL_VALUES`` defined here are
+the single source of truth; ``train/generate_categorical_features.py`` imports
+them from this module.
 """
 from __future__ import annotations
 
@@ -22,7 +24,8 @@ if TYPE_CHECKING:
     from ovos_media_classifier.entities import EntitiesContainer
 
 # ---------------------------------------------------------------------------
-# Module-level constants — copied from generate_categorical_features.py:59-108
+# Module-level constants — single source of truth; imported by
+# ovos_media_classifier/train/generate_categorical_features.py
 # ---------------------------------------------------------------------------
 
 _KEYWORD_LABEL_VALUES: frozenset = frozenset(

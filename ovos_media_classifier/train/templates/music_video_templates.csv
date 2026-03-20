@@ -1,0 +1,350 @@
+category,template
+album_name+artist_name,I want to see {artist_name}'s {album_name} videos
+album_name+artist_name,find the visual rollout for {artist_name}'s {album_name}
+album_name+artist_name,find videos from {artist_name}'s {album_name} era
+album_name+artist_name,play music videos from {artist_name}'s {album_name}
+album_name+artist_name,play the {album_name} videos by {artist_name}
+album_name+artist_name,play {artist_name}'s {album_name} era music videos
+album_name+artist_name,show me videos from {artist_name}'s {album_name} album
+album_name+artist_name,show me {artist_name}'s visuals from {album_name}
+album_name+artist_name,stream videos from {artist_name}'s {album_name}
+album_name,I want to see videos from the {album_name} era
+album_name,find music videos from {album_name}
+album_name,find the {album_name} era music videos
+album_name,find videos associated with {album_name}
+album_name,play music videos released with {album_name}
+album_name,play the music videos from {album_name}
+album_name,play the videos that go with {album_name}
+album_name,play visuals from {album_name}
+album_name,play {album_name} era videos
+album_name,show me all the videos for {album_name}
+album_name,show me the visual rollout for {album_name}
+album_name,show me the {album_name} album visuals
+album_name,show me videos from the {album_name} era
+album_name,stream visuals from {album_name}
+artist_name,I want to see {artist_name} in a video
+artist_name,I want to see {artist_name}'s latest visual
+artist_name,I want to see {artist_name}'s video collection
+artist_name,I want to watch music videos by {artist_name}
+artist_name,find a {artist_name} video I haven't seen
+artist_name,find award winning {artist_name} videos
+artist_name,find concert footage from {artist_name}
+artist_name,find music videos from {artist_name}
+artist_name,find the most popular {artist_name} videos
+artist_name,find the newest video from {artist_name}
+artist_name,find {artist_name} performance footage
+artist_name,find {artist_name} stage performance videos
+artist_name,find {artist_name} throwback videos
+artist_name,find {artist_name} video clips
+artist_name,play a music video by {artist_name}
+artist_name,play a random {artist_name} video
+artist_name,play everything from {artist_name} visually
+artist_name,play live music videos by {artist_name}
+artist_name,play old school {artist_name} videos
+artist_name,play some {artist_name} videos
+artist_name,play the latest {artist_name} video
+artist_name,play the {artist_name} live session video
+artist_name,play {artist_name} classic videos
+artist_name,play {artist_name} concert video
+artist_name,play {artist_name} live performance video
+artist_name,play {artist_name} music videos
+artist_name,play {artist_name} official videos
+artist_name,play {artist_name}'s iconic videos
+artist_name,play {artist_name}'s live music video
+artist_name,play {artist_name}'s newest release video
+artist_name,queue up {artist_name} music videos
+artist_name,show me all {artist_name} music videos
+artist_name,show me the newest video from {artist_name}
+artist_name,show me vintage {artist_name} music videos
+artist_name,show me {artist_name} at a concert
+artist_name,show me {artist_name} performing live
+artist_name,show me {artist_name} performing on stage
+artist_name,show me {artist_name} videos
+artist_name,show me {artist_name}'s best music videos
+artist_name,show me {artist_name}'s discography videos
+artist_name,show me {artist_name}'s studio session
+artist_name,show me {artist_name}'s visual work
+artist_name,stream the latest {artist_name} video
+artist_name,stream {artist_name} music videos
+music_genre,I want to see {music_genre} artists in videos
+music_genre,I want to watch {music_genre} videos
+music_genre,find classic {music_genre} music videos
+music_genre,find {music_genre} music videos
+music_genre,play music videos from the {music_genre} genre
+music_genre,play popular {music_genre} videos
+music_genre,play some {music_genre} music videos
+music_genre,play {music_genre} video clips
+music_genre,show me iconic {music_genre} videos
+music_genre,show me the best {music_genre} music videos
+music_genre,show me {music_genre} music videos
+music_genre,stream {music_genre} music videos
+music_video,I want the music video to {music_video}
+music_video,I want to see the visual for {music_video}
+music_video,I want to see the {music_video} music video
+music_video,I want to watch the music video for {music_video}
+music_video,I want to watch {music_video}
+music_video,I'd like to watch the video for {music_video}
+music_video,bring up the {music_video} video
+music_video,can you find the music video for {music_video}
+music_video,chuck on {music_video}
+music_video,could you play the video for {music_video}
+music_video,find a choreography {music_video}
+music_video,find a classic {music_video}
+music_video,find a concert {music_video}
+music_video,find a dance {music_video}
+music_video,find a live {music_video}
+music_video,find a lyric {music_video}
+music_video,find a making of {music_video}
+music_video,find a new {music_video}
+music_video,find a performance {music_video}
+music_video,find a popular {music_video}
+music_video,find a promo {music_video}
+music_video,find a session {music_video}
+music_video,find a trending {music_video}
+music_video,find a viral {music_video}
+music_video,find a visual {music_video}
+music_video,find a visualizer {music_video}
+music_video,find an acoustic {music_video}
+music_video,find an animated {music_video}
+music_video,find an award winning {music_video}
+music_video,find an iconic {music_video}
+music_video,find an official {music_video}
+music_video,find behind the scenes {music_video}
+music_video,find the acoustic {music_video}
+music_video,find the animated {music_video}
+music_video,find the award winning {music_video}
+music_video,find the behind the scenes {music_video}
+music_video,find the choreography {music_video}
+music_video,find the classic {music_video}
+music_video,find the concert {music_video}
+music_video,find the dance {music_video}
+music_video,find the iconic {music_video}
+music_video,find the latest {music_video}
+music_video,find the live {music_video}
+music_video,find the lyric video for {music_video}
+music_video,find the lyric {music_video}
+music_video,find the making of {music_video}
+music_video,find the music video for {music_video}
+music_video,find the new {music_video}
+music_video,find the official video to {music_video}
+music_video,find the official {music_video}
+music_video,find the performance {music_video}
+music_video,find the popular {music_video}
+music_video,find the promo {music_video}
+music_video,find the session {music_video}
+music_video,find the trending {music_video}
+music_video,find the video for {music_video}
+music_video,find the viral {music_video}
+music_video,find the visual {music_video}
+music_video,find the visualizer for {music_video}
+music_video,find the visualizer {music_video}
+music_video,find the {music_video} official video
+music_video,find the {music_video} video
+music_video,find {music_video}
+music_video,find {music_video} video
+music_video,is there a music video for {music_video}
+music_video,load the music video for {music_video}
+music_video,load {music_video}
+music_video,open {music_video}
+music_video,play a choreography {music_video}
+music_video,play a classic {music_video}
+music_video,play a concert {music_video}
+music_video,play a dance {music_video}
+music_video,play a live {music_video}
+music_video,play a lyric {music_video}
+music_video,play a making of {music_video}
+music_video,play a new {music_video}
+music_video,play a performance {music_video}
+music_video,play a popular {music_video}
+music_video,play a promo {music_video}
+music_video,play a session {music_video}
+music_video,play a trending {music_video}
+music_video,play a viral {music_video}
+music_video,play a visual {music_video}
+music_video,play a visualizer {music_video}
+music_video,play an acoustic {music_video}
+music_video,play an animated {music_video}
+music_video,play an award winning {music_video}
+music_video,play an iconic {music_video}
+music_video,play an official {music_video}
+music_video,play behind the scenes {music_video}
+music_video,play the acoustic {music_video}
+music_video,play the animated video for {music_video}
+music_video,play the animated {music_video}
+music_video,play the award winning {music_video}
+music_video,play the behind the scenes {music_video}
+music_video,play the choreography {music_video}
+music_video,play the classic {music_video}
+music_video,play the concert {music_video}
+music_video,play the dance {music_video}
+music_video,play the iconic {music_video}
+music_video,play the latest {music_video}
+music_video,play the live version video of {music_video}
+music_video,play the live {music_video}
+music_video,play the lyric {music_video}
+music_video,play the making of {music_video}
+music_video,play the music video for {music_video}
+music_video,play the music video {music_video}
+music_video,play the new {music_video}
+music_video,play the official video for {music_video}
+music_video,play the official {music_video}
+music_video,play the performance {music_video}
+music_video,play the popular {music_video}
+music_video,play the promo {music_video}
+music_video,play the session {music_video}
+music_video,play the trending {music_video}
+music_video,play the video clip for {music_video}
+music_video,play the viral {music_video}
+music_video,play the visual {music_video}
+music_video,play the visualizer {music_video}
+music_video,play the {music_video} clip
+music_video,play the {music_video} lyric video
+music_video,play the {music_video} music video
+music_video,play the {music_video} official music video
+music_video,play the {music_video} video
+music_video,play the {music_video} visual
+music_video,play {music_video} now
+music_video,play {music_video} please
+music_video,play {music_video} video
+music_video,pull up the {music_video} video
+music_video,put on the music video for {music_video}
+music_video,put on {music_video}
+music_video,put {music_video} on
+music_video,queue up the {music_video} video
+music_video,queue up {music_video}
+music_video,search for the music video to {music_video}
+music_video,show a choreography {music_video}
+music_video,show a classic {music_video}
+music_video,show a concert {music_video}
+music_video,show a dance {music_video}
+music_video,show a live {music_video}
+music_video,show a lyric {music_video}
+music_video,show a making of {music_video}
+music_video,show a new {music_video}
+music_video,show a performance {music_video}
+music_video,show a popular {music_video}
+music_video,show a promo {music_video}
+music_video,show a session {music_video}
+music_video,show a trending {music_video}
+music_video,show a viral {music_video}
+music_video,show a visual {music_video}
+music_video,show a visualizer {music_video}
+music_video,show an acoustic {music_video}
+music_video,show an animated {music_video}
+music_video,show an award winning {music_video}
+music_video,show an iconic {music_video}
+music_video,show an official {music_video}
+music_video,show behind the scenes {music_video}
+music_video,show me the live performance video of {music_video}
+music_video,show me the music video for {music_video}
+music_video,show me the promo video for {music_video}
+music_video,show me the {music_video} clip
+music_video,show me the {music_video} promo
+music_video,show me the {music_video} video
+music_video,show me the {music_video} visualizer
+music_video,show me {music_video}
+music_video,show the acoustic {music_video}
+music_video,show the animated {music_video}
+music_video,show the award winning {music_video}
+music_video,show the behind the scenes {music_video}
+music_video,show the choreography {music_video}
+music_video,show the classic {music_video}
+music_video,show the concert {music_video}
+music_video,show the dance {music_video}
+music_video,show the iconic {music_video}
+music_video,show the latest {music_video}
+music_video,show the live {music_video}
+music_video,show the lyric {music_video}
+music_video,show the making of {music_video}
+music_video,show the new {music_video}
+music_video,show the official {music_video}
+music_video,show the official {music_video} video
+music_video,show the performance {music_video}
+music_video,show the popular {music_video}
+music_video,show the promo {music_video}
+music_video,show the session {music_video}
+music_video,show the trending {music_video}
+music_video,show the viral {music_video}
+music_video,show the visual {music_video}
+music_video,show the visualizer {music_video}
+music_video,show the {music_video} video
+music_video,show {music_video} video
+music_video,start playing {music_video}
+music_video,start {music_video}
+music_video,stick on {music_video}
+music_video,stream the music video for {music_video}
+music_video,stream the official {music_video} video
+music_video,stream {music_video}
+music_video,watch the {music_video} video
+music_video,watch {music_video}
+music_video,watch {music_video} video
+track_name+artist_name,I want to see the {track_name} visual by {artist_name}
+track_name+artist_name,I want to see {artist_name} in the video for {track_name}
+track_name+artist_name,I want to watch the video for {track_name} by {artist_name}
+track_name+artist_name,find the {artist_name} video for {track_name}
+track_name+artist_name,find the {track_name} clip by {artist_name}
+track_name+artist_name,find the {track_name} music video from {artist_name}
+track_name+artist_name,load the {track_name} video by {artist_name}
+track_name+artist_name,play the music video for {track_name} by {artist_name}
+track_name+artist_name,play the official {artist_name} {track_name} video
+track_name+artist_name,play the {artist_name} {track_name} music video
+track_name+artist_name,play {artist_name}'s {track_name} video
+track_name+artist_name,pull up {artist_name}'s video for {track_name}
+track_name+artist_name,queue up the music video for {track_name} by {artist_name}
+track_name+artist_name,show me the official video for {track_name} from {artist_name}
+track_name+artist_name,show me the {track_name} video by {artist_name}
+track_name+artist_name,show me {artist_name} performing {track_name}
+track_name+artist_name,stream the official video for {track_name} by {artist_name}
+track_name+artist_name,stream {artist_name}'s video for {track_name}
+track_name,I want the music video to {track_name}
+track_name,I want to see the visual for {track_name}
+track_name,I want to see the {track_name} music video
+track_name,I want to watch the music video for {track_name}
+track_name,I'd like to watch the video for {track_name}
+track_name,bring up the {track_name} video
+track_name,can you find the music video for {track_name}
+track_name,could you play the video for {track_name}
+track_name,find the lyric video for {track_name}
+track_name,find the music video for {track_name}
+track_name,find the official video to {track_name}
+track_name,find the video for {track_name}
+track_name,find the visualizer for {track_name}
+track_name,find the {track_name} official video
+track_name,is there a music video for {track_name}
+track_name,load the music video for {track_name}
+track_name,play the animated video for {track_name}
+track_name,play the live version video of {track_name}
+track_name,play the music video for {track_name}
+track_name,play the official video for {track_name}
+track_name,play the video clip for {track_name}
+track_name,play the {track_name} clip
+track_name,play the {track_name} lyric video
+track_name,play the {track_name} music video
+track_name,play the {track_name} official music video
+track_name,play the {track_name} visual
+track_name,pull up the {track_name} video
+track_name,put on the music video for {track_name}
+track_name,queue up the {track_name} video
+track_name,search for the music video to {track_name}
+track_name,show me the live performance video of {track_name}
+track_name,show me the music video for {track_name}
+track_name,show me the promo video for {track_name}
+track_name,show me the {track_name} clip
+track_name,show me the {track_name} promo
+track_name,show me the {track_name} video
+track_name,show me the {track_name} visualizer
+track_name,show the official {track_name} video
+track_name,stream the music video for {track_name}
+track_name,stream the official {track_name} video
+music_video+artist_name,find {artist_name} music video {music_video}
+music_video+artist_name,play {music_video} by {artist_name}
+music_video+album_name,find {album_name} music video {music_video}
+music_video+album_name,play {music_video} from {album_name}
+music_video+movie_title,find music video inspired by {movie_title}
+music_video+movie_title,play {music_video} inspired by {movie_title}
+music_video+tv_show_title,find music video from {tv_show_title}
+music_video+tv_show_title,play {music_video} from {tv_show_title}
+music_video+game_title,find music video from {game_title} game
+music_video+game_title,play {music_video} {game_title} video
+music_genre+artist_name,find {music_genre} music video by {artist_name}
+music_genre+artist_name,play {music_genre} video by {artist_name}

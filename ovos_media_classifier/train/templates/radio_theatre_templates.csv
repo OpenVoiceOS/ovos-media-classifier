@@ -1,0 +1,478 @@
+category,template
+audiobook_title+movie_actor,find the full cast radio drama of {audiobook_title} with {movie_actor}
+audiobook_title,I want to hear {audiobook_title} as a radio drama
+audiobook_title,find the BBC radio drama of {audiobook_title}
+audiobook_title,find the audio drama based on {audiobook_title}
+audiobook_title,find the audio play based on {audiobook_title}
+audiobook_title,find the radio serialization of {audiobook_title}
+audiobook_title,is there a radio adaptation of {audiobook_title}
+audiobook_title,is {audiobook_title} available as a radio drama
+audiobook_title,play the full cast radio adaptation of {audiobook_title}
+audiobook_title,play the radio drama version of {audiobook_title}
+audiobook_title,play the radio play of {audiobook_title}
+audiobook_title,play the serialized radio adaptation of {audiobook_title}
+audiobook_title,stream the radio theatre production of {audiobook_title}
+movie_actor,find a radio play with {movie_actor}
+movie_actor,find an audio drama featuring {movie_actor}
+movie_actor,is there a radio drama with {movie_actor}
+movie_actor,play the BBC radio drama starring {movie_actor}
+movie_actor,play the radio drama featuring {movie_actor}
+movie_director,find a radio drama directed by {movie_director}
+movie_director,find an audio drama from {movie_director}
+movie_director,play a radio play by {movie_director}
+movie_title+movie_actor,play the radio drama of {movie_title} with {movie_actor}
+movie_title+movie_director,find the radio adaptation of {movie_title} by {movie_director}
+movie_title,I want to hear {movie_title} as a radio drama
+movie_title,find me a radio drama like {movie_title}
+movie_title,find the BBC radio version of {movie_title}
+movie_title,find the audio drama based on {movie_title}
+movie_title,find the radio drama version of {movie_title}
+movie_title,is there a radio play of {movie_title}
+movie_title,is {movie_title} available as an audio drama
+movie_title,play the audio adaptation of the film {movie_title}
+movie_title,play the radio adaptation of {movie_title}
+movie_title,play the radio play based on {movie_title}
+movie_title,play the radio theatre version of {movie_title}
+movie_title,stream the audio drama adaptation of {movie_title}
+radio_drama_title+movie_actor,play {radio_drama_title} starring {movie_actor}
+radio_drama_title,I feel like listening to {radio_drama_title}
+radio_drama_title,I remember {radio_drama_title} — play it
+radio_drama_title,I want to get into {radio_drama_title}
+radio_drama_title,I want to hear the audio play {radio_drama_title}
+radio_drama_title,I want to listen to {radio_drama_title}
+radio_drama_title,I was in the middle of {radio_drama_title} — continue
+radio_drama_title,I'd like to hear {radio_drama_title}
+radio_drama_title,I'd like to revisit {radio_drama_title}
+radio_drama_title,I'd like {radio_drama_title} on quietly
+radio_drama_title,I'd love to listen to {radio_drama_title}
+radio_drama_title,I've been meaning to listen to {radio_drama_title}
+radio_drama_title,binge {radio_drama_title}
+radio_drama_title,can you find {radio_drama_title}
+radio_drama_title,catch me up on {radio_drama_title}
+radio_drama_title,continue {radio_drama_title}
+radio_drama_title,do you have {radio_drama_title}
+radio_drama_title,find me the radio drama {radio_drama_title}
+radio_drama_title,find the audio drama {radio_drama_title}
+radio_drama_title,find the audio play titled {radio_drama_title}
+radio_drama_title,find the audio recording of {radio_drama_title}
+radio_drama_title,find the golden age radio show {radio_drama_title}
+radio_drama_title,find the next series of {radio_drama_title}
+radio_drama_title,find the radio serial {radio_drama_title}
+radio_drama_title,find {radio_drama_title}
+radio_drama_title,finish {radio_drama_title} for me
+radio_drama_title,is {radio_drama_title} available
+radio_drama_title,let's listen to {radio_drama_title}
+radio_drama_title,load {radio_drama_title}
+radio_drama_title,open {radio_drama_title}
+radio_drama_title,pick up {radio_drama_title} where I left off
+radio_drama_title,play a random episode of {radio_drama_title}
+radio_drama_title,play an episode of {radio_drama_title}
+radio_drama_title,play episode one of {radio_drama_title}
+radio_drama_title,play season 2 of {radio_drama_title}
+radio_drama_title,play the 1940s radio drama {radio_drama_title}
+radio_drama_title,play the Audible drama {radio_drama_title}
+radio_drama_title,play the BBC Radio 4 drama {radio_drama_title}
+radio_drama_title,play the BBC radio drama {radio_drama_title}
+radio_drama_title,play the adventure serial {radio_drama_title}
+radio_drama_title,play the anthology episode {radio_drama_title}
+radio_drama_title,play the anthology series {radio_drama_title}
+radio_drama_title,play the archived recording of {radio_drama_title}
+radio_drama_title,play the audio drama series {radio_drama_title}
+radio_drama_title,play the audio play {radio_drama_title}
+radio_drama_title,play the audio thriller {radio_drama_title}
+radio_drama_title,play the classic mystery serial {radio_drama_title}
+radio_drama_title,play the classic radio serial {radio_drama_title}
+radio_drama_title,play the comedy serial {radio_drama_title}
+radio_drama_title,play the crime radio drama {radio_drama_title}
+radio_drama_title,play the detective serial {radio_drama_title}
+radio_drama_title,play the dramatic reading {radio_drama_title}
+radio_drama_title,play the fantasy audio play {radio_drama_title}
+radio_drama_title,play the finale of {radio_drama_title}
+radio_drama_title,play the first episode of {radio_drama_title}
+radio_drama_title,play the full cast audio drama {radio_drama_title}
+radio_drama_title,play the full cast production of {radio_drama_title}
+radio_drama_title,play the historical radio drama {radio_drama_title}
+radio_drama_title,play the horror radio drama {radio_drama_title}
+radio_drama_title,play the last episode of {radio_drama_title}
+radio_drama_title,play the latest episode of {radio_drama_title}
+radio_drama_title,play the mystery audio drama {radio_drama_title}
+radio_drama_title,play the new series of {radio_drama_title}
+radio_drama_title,play the next episode of {radio_drama_title}
+radio_drama_title,play the noir radio serial {radio_drama_title}
+radio_drama_title,play the old time radio show {radio_drama_title}
+radio_drama_title,play the period drama {radio_drama_title}
+radio_drama_title,play the radio comedy {radio_drama_title}
+radio_drama_title,play the radio drama {radio_drama_title}
+radio_drama_title,play the radio play adaptation {radio_drama_title}
+radio_drama_title,play the radio play called {radio_drama_title}
+radio_drama_title,play the radio play version of {radio_drama_title}
+radio_drama_title,play the radio play {radio_drama_title}
+radio_drama_title,play the radio show {radio_drama_title}
+radio_drama_title,play the radio theatre production {radio_drama_title}
+radio_drama_title,play the remastered version of {radio_drama_title}
+radio_drama_title,play the restored broadcast of {radio_drama_title}
+radio_drama_title,play the sci-fi audio drama {radio_drama_title}
+radio_drama_title,play the serialized radio drama {radio_drama_title}
+radio_drama_title,play the spoken word drama {radio_drama_title}
+radio_drama_title,play the supernatural audio drama {radio_drama_title}
+radio_drama_title,play the thriller audio play {radio_drama_title}
+radio_drama_title,play the wartime radio serial {radio_drama_title}
+radio_drama_title,play the western radio drama {radio_drama_title}
+radio_drama_title,play {radio_drama_title}
+radio_drama_title,play {radio_drama_title} again
+radio_drama_title,play {radio_drama_title} during my drive
+radio_drama_title,play {radio_drama_title} for my commute
+radio_drama_title,play {radio_drama_title} from episode 1
+radio_drama_title,play {radio_drama_title} from the beginning
+radio_drama_title,play {radio_drama_title} in the evening
+radio_drama_title,play {radio_drama_title} season 2
+radio_drama_title,play {radio_drama_title} to fall asleep to
+radio_drama_title,play {radio_drama_title} while I cook
+radio_drama_title,play {radio_drama_title} while I fall asleep
+radio_drama_title,play {radio_drama_title} while I work
+radio_drama_title,pull up {radio_drama_title}
+radio_drama_title,put on {radio_drama_title}
+radio_drama_title,put on {radio_drama_title} in the background
+radio_drama_title,put {radio_drama_title} on again
+radio_drama_title,queue up {radio_drama_title}
+radio_drama_title,resume {radio_drama_title}
+radio_drama_title,rewind and play {radio_drama_title}
+radio_drama_title,start {radio_drama_title}
+radio_drama_title,stream the audio theatre production {radio_drama_title}
+radio_drama_title,stream the old time radio drama {radio_drama_title}
+radio_drama_title,stream {radio_drama_title}
+radio_theatre,I feel like listening to {radio_theatre}
+radio_theatre,I need some {radio_theatre}
+radio_theatre,I remember {radio_theatre} — play it
+radio_theatre,I want to get into {radio_theatre}
+radio_theatre,I want to hear the audio play {radio_theatre}
+radio_theatre,I want to listen to {radio_theatre}
+radio_theatre,I want {radio_theatre}
+radio_theatre,I was in the middle of {radio_theatre} — continue
+radio_theatre,I'd like to hear {radio_theatre}
+radio_theatre,I'd like to revisit {radio_theatre}
+radio_theatre,I'd like {radio_theatre} on quietly
+radio_theatre,I'd love to listen to {radio_theatre}
+radio_theatre,I've been meaning to listen to {radio_theatre}
+radio_theatre,begin {radio_theatre}
+radio_theatre,binge {radio_theatre}
+radio_theatre,can you find {radio_theatre}
+radio_theatre,catch me up on {radio_theatre}
+radio_theatre,commence {radio_theatre}
+radio_theatre,continue {radio_theatre}
+radio_theatre,do you have {radio_theatre}
+radio_theatre,find audio {radio_theatre}
+radio_theatre,find me the radio drama {radio_theatre}
+radio_theatre,find radio {radio_theatre}
+radio_theatre,find something from {radio_theatre}
+radio_theatre,find the audio drama {radio_theatre}
+radio_theatre,find the audio play titled {radio_theatre}
+radio_theatre,find the audio recording of {radio_theatre}
+radio_theatre,find the golden age radio show {radio_theatre}
+radio_theatre,find the next series of {radio_theatre}
+radio_theatre,find the radio serial {radio_theatre}
+radio_theatre,find the {radio_theatre} episode
+radio_theatre,find the {radio_theatre} production
+radio_theatre,find the {radio_theatre} show
+radio_theatre,find {radio_theatre}
+radio_theatre,find {radio_theatre} on BBC Radio
+radio_theatre,find {radio_theatre} on audible
+radio_theatre,find {radio_theatre} on radio
+radio_theatre,finish {radio_theatre} for me
+radio_theatre,fire up {radio_theatre}
+radio_theatre,get me {radio_theatre}
+radio_theatre,get {radio_theatre} going
+radio_theatre,give me some {radio_theatre}
+radio_theatre,is {radio_theatre} available
+radio_theatre,let's listen to {radio_theatre}
+radio_theatre,listen to audio {radio_theatre}
+radio_theatre,listen to the radio {radio_theatre}
+radio_theatre,listen to the {radio_theatre} drama
+radio_theatre,listen to the {radio_theatre} story
+radio_theatre,listen to {radio_theatre}
+radio_theatre,listen to {radio_theatre} again
+radio_theatre,listen to {radio_theatre} on BBC
+radio_theatre,listen to {radio_theatre} on audible
+radio_theatre,listen to {radio_theatre} on radio
+radio_theatre,load {radio_theatre}
+radio_theatre,load {radio_theatre} up
+radio_theatre,loop {radio_theatre}
+radio_theatre,open {radio_theatre}
+radio_theatre,pick up {radio_theatre} where I left off
+radio_theatre,play a random episode of {radio_theatre}
+radio_theatre,play an episode of {radio_theatre}
+radio_theatre,play audio {radio_theatre}
+radio_theatre,play episode one of {radio_theatre}
+radio_theatre,play from the top with {radio_theatre}
+radio_theatre,play me {radio_theatre}
+radio_theatre,play season 2 of {radio_theatre}
+radio_theatre,play the 1940s radio drama {radio_theatre}
+radio_theatre,play the Audible drama {radio_theatre}
+radio_theatre,play the BBC Radio 4 drama {radio_theatre}
+radio_theatre,play the BBC radio drama {radio_theatre}
+radio_theatre,play the adventure serial {radio_theatre}
+radio_theatre,play the anthology episode {radio_theatre}
+radio_theatre,play the anthology series {radio_theatre}
+radio_theatre,play the archived recording of {radio_theatre}
+radio_theatre,play the audio drama series {radio_theatre}
+radio_theatre,play the audio play {radio_theatre}
+radio_theatre,play the audio thriller {radio_theatre}
+radio_theatre,play the audio {radio_theatre}
+radio_theatre,play the classic mystery serial {radio_theatre}
+radio_theatre,play the classic radio serial {radio_theatre}
+radio_theatre,play the comedy serial {radio_theatre}
+radio_theatre,play the crime radio drama {radio_theatre}
+radio_theatre,play the detective serial {radio_theatre}
+radio_theatre,play the dramatic reading {radio_theatre}
+radio_theatre,play the fantasy audio play {radio_theatre}
+radio_theatre,play the finale of {radio_theatre}
+radio_theatre,play the first episode of {radio_theatre}
+radio_theatre,play the full cast audio drama {radio_theatre}
+radio_theatre,play the full cast production of {radio_theatre}
+radio_theatre,play the historical radio drama {radio_theatre}
+radio_theatre,play the horror radio drama {radio_theatre}
+radio_theatre,play the last episode of {radio_theatre}
+radio_theatre,play the latest episode of {radio_theatre}
+radio_theatre,play the mystery audio drama {radio_theatre}
+radio_theatre,play the new series of {radio_theatre}
+radio_theatre,play the next episode of {radio_theatre}
+radio_theatre,play the noir radio serial {radio_theatre}
+radio_theatre,play the old time radio show {radio_theatre}
+radio_theatre,play the period drama {radio_theatre}
+radio_theatre,play the radio comedy {radio_theatre}
+radio_theatre,play the radio drama {radio_theatre}
+radio_theatre,play the radio play adaptation {radio_theatre}
+radio_theatre,play the radio play called {radio_theatre}
+radio_theatre,play the radio play version of {radio_theatre}
+radio_theatre,play the radio play {radio_theatre}
+radio_theatre,play the radio show {radio_theatre}
+radio_theatre,play the radio theatre production {radio_theatre}
+radio_theatre,play the radio {radio_theatre}
+radio_theatre,play the remastered version of {radio_theatre}
+radio_theatre,play the restored broadcast of {radio_theatre}
+radio_theatre,play the sci-fi audio drama {radio_theatre}
+radio_theatre,play the serialized radio drama {radio_theatre}
+radio_theatre,play the spoken word drama {radio_theatre}
+radio_theatre,play the supernatural audio drama {radio_theatre}
+radio_theatre,play the thriller audio play {radio_theatre}
+radio_theatre,play the wartime radio serial {radio_theatre}
+radio_theatre,play the western radio drama {radio_theatre}
+radio_theatre,play the {radio_theatre} audio
+radio_theatre,play the {radio_theatre} production
+radio_theatre,play the {radio_theatre} serial
+radio_theatre,play the {radio_theatre} story
+radio_theatre,play {radio_theatre} again
+radio_theatre,play {radio_theatre} during my drive
+radio_theatre,play {radio_theatre} for my commute
+radio_theatre,play {radio_theatre} from episode 1
+radio_theatre,play {radio_theatre} from start
+radio_theatre,play {radio_theatre} from the beginning
+radio_theatre,play {radio_theatre} in the evening
+radio_theatre,play {radio_theatre} on BBC
+radio_theatre,play {radio_theatre} on audible
+radio_theatre,play {radio_theatre} on repeat
+radio_theatre,play {radio_theatre} on the radio
+radio_theatre,play {radio_theatre} please
+radio_theatre,play {radio_theatre} season 2
+radio_theatre,play {radio_theatre} to fall asleep to
+radio_theatre,play {radio_theatre} while I cook
+radio_theatre,play {radio_theatre} while I fall asleep
+radio_theatre,play {radio_theatre} while I work
+radio_theatre,pull up {radio_theatre}
+radio_theatre,put on radio {radio_theatre}
+radio_theatre,put on {radio_theatre}
+radio_theatre,put on {radio_theatre} for me
+radio_theatre,put on {radio_theatre} in the background
+radio_theatre,put {radio_theatre} on again
+radio_theatre,queue up {radio_theatre}
+radio_theatre,queue {radio_theatre}
+radio_theatre,repeat {radio_theatre}
+radio_theatre,restart {radio_theatre}
+radio_theatre,resume {radio_theatre}
+radio_theatre,rewind and play {radio_theatre}
+radio_theatre,show me {radio_theatre}
+radio_theatre,start listening to {radio_theatre}
+radio_theatre,start over with {radio_theatre}
+radio_theatre,start {radio_theatre}
+radio_theatre,start {radio_theatre} now
+radio_theatre,stream radio {radio_theatre}
+radio_theatre,stream the audio theatre production {radio_theatre}
+radio_theatre,stream the old time radio drama {radio_theatre}
+radio_theatre,stream {radio_theatre}
+radio_theatre,stream {radio_theatre} now
+radio_theatre,turn on radio {radio_theatre}
+radio_theatre_title,I feel like listening to {radio_theatre_title}
+radio_theatre_title,I need some {radio_theatre_title}
+radio_theatre_title,I remember {radio_theatre_title} — play it
+radio_theatre_title,I want to get into {radio_theatre_title}
+radio_theatre_title,I want to hear the audio play {radio_theatre_title}
+radio_theatre_title,I want to listen to {radio_theatre_title}
+radio_theatre_title,I want {radio_theatre_title}
+radio_theatre_title,I was in the middle of {radio_theatre_title} — continue
+radio_theatre_title,I'd like to hear {radio_theatre_title}
+radio_theatre_title,I'd like to revisit {radio_theatre_title}
+radio_theatre_title,I'd like {radio_theatre_title} on quietly
+radio_theatre_title,I'd love to listen to {radio_theatre_title}
+radio_theatre_title,I've been meaning to listen to {radio_theatre_title}
+radio_theatre_title,begin {radio_theatre_title}
+radio_theatre_title,binge {radio_theatre_title}
+radio_theatre_title,can you find {radio_theatre_title}
+radio_theatre_title,catch me up on {radio_theatre_title}
+radio_theatre_title,commence {radio_theatre_title}
+radio_theatre_title,continue {radio_theatre_title}
+radio_theatre_title,do you have {radio_theatre_title}
+radio_theatre_title,find audio {radio_theatre_title}
+radio_theatre_title,find me the radio drama {radio_theatre_title}
+radio_theatre_title,find radio {radio_theatre_title}
+radio_theatre_title,find something from {radio_theatre_title}
+radio_theatre_title,find the audio drama {radio_theatre_title}
+radio_theatre_title,find the audio play titled {radio_theatre_title}
+radio_theatre_title,find the audio recording of {radio_theatre_title}
+radio_theatre_title,find the golden age radio show {radio_theatre_title}
+radio_theatre_title,find the next series of {radio_theatre_title}
+radio_theatre_title,find the radio serial {radio_theatre_title}
+radio_theatre_title,find the {radio_theatre_title} episode
+radio_theatre_title,find the {radio_theatre_title} production
+radio_theatre_title,find the {radio_theatre_title} show
+radio_theatre_title,find {radio_theatre_title}
+radio_theatre_title,find {radio_theatre_title} on BBC Radio
+radio_theatre_title,find {radio_theatre_title} on audible
+radio_theatre_title,find {radio_theatre_title} on radio
+radio_theatre_title,finish {radio_theatre_title} for me
+radio_theatre_title,fire up {radio_theatre_title}
+radio_theatre_title,get me {radio_theatre_title}
+radio_theatre_title,get {radio_theatre_title} going
+radio_theatre_title,give me some {radio_theatre_title}
+radio_theatre_title,is {radio_theatre_title} available
+radio_theatre_title,let's listen to {radio_theatre_title}
+radio_theatre_title,listen to audio {radio_theatre_title}
+radio_theatre_title,listen to the radio {radio_theatre_title}
+radio_theatre_title,listen to the {radio_theatre_title} drama
+radio_theatre_title,listen to the {radio_theatre_title} story
+radio_theatre_title,listen to {radio_theatre_title}
+radio_theatre_title,listen to {radio_theatre_title} again
+radio_theatre_title,listen to {radio_theatre_title} on BBC
+radio_theatre_title,listen to {radio_theatre_title} on audible
+radio_theatre_title,listen to {radio_theatre_title} on radio
+radio_theatre_title,load {radio_theatre_title}
+radio_theatre_title,load {radio_theatre_title} up
+radio_theatre_title,loop {radio_theatre_title}
+radio_theatre_title,open {radio_theatre_title}
+radio_theatre_title,pick up {radio_theatre_title} where I left off
+radio_theatre_title,play a random episode of {radio_theatre_title}
+radio_theatre_title,play an episode of {radio_theatre_title}
+radio_theatre_title,play audio {radio_theatre_title}
+radio_theatre_title,play episode one of {radio_theatre_title}
+radio_theatre_title,play from the top with {radio_theatre_title}
+radio_theatre_title,play me {radio_theatre_title}
+radio_theatre_title,play season 2 of {radio_theatre_title}
+radio_theatre_title,play the 1940s radio drama {radio_theatre_title}
+radio_theatre_title,play the Audible drama {radio_theatre_title}
+radio_theatre_title,play the BBC Radio 4 drama {radio_theatre_title}
+radio_theatre_title,play the BBC radio drama {radio_theatre_title}
+radio_theatre_title,play the adventure serial {radio_theatre_title}
+radio_theatre_title,play the anthology episode {radio_theatre_title}
+radio_theatre_title,play the anthology series {radio_theatre_title}
+radio_theatre_title,play the archived recording of {radio_theatre_title}
+radio_theatre_title,play the audio drama series {radio_theatre_title}
+radio_theatre_title,play the audio play {radio_theatre_title}
+radio_theatre_title,play the audio thriller {radio_theatre_title}
+radio_theatre_title,play the audio {radio_theatre_title}
+radio_theatre_title,play the classic mystery serial {radio_theatre_title}
+radio_theatre_title,play the classic radio serial {radio_theatre_title}
+radio_theatre_title,play the comedy serial {radio_theatre_title}
+radio_theatre_title,play the crime radio drama {radio_theatre_title}
+radio_theatre_title,play the detective serial {radio_theatre_title}
+radio_theatre_title,play the dramatic reading {radio_theatre_title}
+radio_theatre_title,play the fantasy audio play {radio_theatre_title}
+radio_theatre_title,play the finale of {radio_theatre_title}
+radio_theatre_title,play the first episode of {radio_theatre_title}
+radio_theatre_title,play the full cast audio drama {radio_theatre_title}
+radio_theatre_title,play the full cast production of {radio_theatre_title}
+radio_theatre_title,play the historical radio drama {radio_theatre_title}
+radio_theatre_title,play the horror radio drama {radio_theatre_title}
+radio_theatre_title,play the last episode of {radio_theatre_title}
+radio_theatre_title,play the latest episode of {radio_theatre_title}
+radio_theatre_title,play the mystery audio drama {radio_theatre_title}
+radio_theatre_title,play the new series of {radio_theatre_title}
+radio_theatre_title,play the next episode of {radio_theatre_title}
+radio_theatre_title,play the noir radio serial {radio_theatre_title}
+radio_theatre_title,play the old time radio show {radio_theatre_title}
+radio_theatre_title,play the period drama {radio_theatre_title}
+radio_theatre_title,play the radio comedy {radio_theatre_title}
+radio_theatre_title,play the radio drama {radio_theatre_title}
+radio_theatre_title,play the radio play adaptation {radio_theatre_title}
+radio_theatre_title,play the radio play called {radio_theatre_title}
+radio_theatre_title,play the radio play version of {radio_theatre_title}
+radio_theatre_title,play the radio play {radio_theatre_title}
+radio_theatre_title,play the radio show {radio_theatre_title}
+radio_theatre_title,play the radio theatre production {radio_theatre_title}
+radio_theatre_title,play the radio {radio_theatre_title}
+radio_theatre_title,play the remastered version of {radio_theatre_title}
+radio_theatre_title,play the restored broadcast of {radio_theatre_title}
+radio_theatre_title,play the sci-fi audio drama {radio_theatre_title}
+radio_theatre_title,play the serialized radio drama {radio_theatre_title}
+radio_theatre_title,play the spoken word drama {radio_theatre_title}
+radio_theatre_title,play the supernatural audio drama {radio_theatre_title}
+radio_theatre_title,play the thriller audio play {radio_theatre_title}
+radio_theatre_title,play the wartime radio serial {radio_theatre_title}
+radio_theatre_title,play the western radio drama {radio_theatre_title}
+radio_theatre_title,play the {radio_theatre_title} audio
+radio_theatre_title,play the {radio_theatre_title} production
+radio_theatre_title,play the {radio_theatre_title} serial
+radio_theatre_title,play the {radio_theatre_title} story
+radio_theatre_title,play {radio_theatre_title}
+radio_theatre_title,play {radio_theatre_title} again
+radio_theatre_title,play {radio_theatre_title} during my drive
+radio_theatre_title,play {radio_theatre_title} for my commute
+radio_theatre_title,play {radio_theatre_title} from episode 1
+radio_theatre_title,play {radio_theatre_title} from start
+radio_theatre_title,play {radio_theatre_title} from the beginning
+radio_theatre_title,play {radio_theatre_title} in the evening
+radio_theatre_title,play {radio_theatre_title} on BBC
+radio_theatre_title,play {radio_theatre_title} on audible
+radio_theatre_title,play {radio_theatre_title} on repeat
+radio_theatre_title,play {radio_theatre_title} on the radio
+radio_theatre_title,play {radio_theatre_title} please
+radio_theatre_title,play {radio_theatre_title} season 2
+radio_theatre_title,play {radio_theatre_title} to fall asleep to
+radio_theatre_title,play {radio_theatre_title} while I cook
+radio_theatre_title,play {radio_theatre_title} while I fall asleep
+radio_theatre_title,play {radio_theatre_title} while I work
+radio_theatre_title,pull up {radio_theatre_title}
+radio_theatre_title,put on radio {radio_theatre_title}
+radio_theatre_title,put on {radio_theatre_title}
+radio_theatre_title,put on {radio_theatre_title} for me
+radio_theatre_title,put on {radio_theatre_title} in the background
+radio_theatre_title,put {radio_theatre_title} on again
+radio_theatre_title,queue up {radio_theatre_title}
+radio_theatre_title,queue {radio_theatre_title}
+radio_theatre_title,repeat {radio_theatre_title}
+radio_theatre_title,restart {radio_theatre_title}
+radio_theatre_title,resume {radio_theatre_title}
+radio_theatre_title,rewind and play {radio_theatre_title}
+radio_theatre_title,show me {radio_theatre_title}
+radio_theatre_title,start listening to {radio_theatre_title}
+radio_theatre_title,start over with {radio_theatre_title}
+radio_theatre_title,start {radio_theatre_title}
+radio_theatre_title,start {radio_theatre_title} now
+radio_theatre_title,stream radio {radio_theatre_title}
+radio_theatre_title,stream the audio theatre production {radio_theatre_title}
+radio_theatre_title,stream the old time radio drama {radio_theatre_title}
+radio_theatre_title,stream {radio_theatre_title}
+radio_theatre_title,stream {radio_theatre_title} now
+radio_theatre_title,turn on radio {radio_theatre_title}
+tv_show_title,I want to hear {tv_show_title} as an audio drama
+tv_show_title,find the BBC radio version of {tv_show_title}
+tv_show_title,find the audio drama version of {tv_show_title}
+tv_show_title,find the audio version of {tv_show_title}
+tv_show_title,is there a radio adaptation of {tv_show_title}
+tv_show_title,is {tv_show_title} available as a radio drama
+tv_show_title,play the radio drama based on {tv_show_title}
+tv_show_title,play the radio play of {tv_show_title}
+tv_show_title,play the radio theatre adaptation of {tv_show_title}
+tv_show_title,stream the audio drama based on {tv_show_title}
+radio_drama_title+tv_show_title,find radio drama {radio_drama_title} based on {tv_show_title}
+radio_drama_title+tv_show_title,play {radio_drama_title} from {tv_show_title}
+radio_drama_title+anime_title,find radio drama {radio_drama_title} based on {anime_title}
+radio_drama_title+anime_title,play {radio_drama_title} from {anime_title}

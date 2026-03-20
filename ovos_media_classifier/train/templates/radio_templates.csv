@@ -1,0 +1,93 @@
+category,template
+radio_station+radio_streaming_service,I want to hear {radio_station} on {radio_streaming_service}
+radio_station+radio_streaming_service,find {radio_station} on {radio_streaming_service}
+radio_station+radio_streaming_service,find {radio_station} using {radio_streaming_service}
+radio_station+radio_streaming_service,listen to {radio_station} using {radio_streaming_service}
+radio_station+radio_streaming_service,open {radio_station} on {radio_streaming_service}
+radio_station+radio_streaming_service,play {radio_station} on {radio_streaming_service}
+radio_station+radio_streaming_service,play {radio_station} through {radio_streaming_service}
+radio_station+radio_streaming_service,stream {radio_station} on {radio_streaming_service}
+radio_station+radio_streaming_service,stream {radio_station} via {radio_streaming_service}
+radio_station+radio_streaming_service,tune to {radio_station} through {radio_streaming_service}
+radio_station,I want to hear {radio_station}
+radio_station,I want to listen to {radio_station}
+radio_station,I want to tune in to {radio_station}
+radio_station,I want {radio_station} on please
+radio_station,I'd like to hear {radio_station}
+radio_station,I'd like to listen to {radio_station}
+radio_station,I'd love to hear {radio_station}
+radio_station,bring up {radio_station}
+radio_station,can you play {radio_station}
+radio_station,change to {radio_station}
+radio_station,chuck on {radio_station}
+radio_station,connect to {radio_station}
+radio_station,could you find {radio_station} for me
+radio_station,could you play {radio_station} for me
+radio_station,find the station {radio_station}
+radio_station,find the {radio_station} radio stream
+radio_station,find {radio_station}
+radio_station,get {radio_station} going
+radio_station,is {radio_station} available
+radio_station,launch {radio_station}
+radio_station,load {radio_station}
+radio_station,open {radio_station}
+radio_station,play the live stream from {radio_station}
+radio_station,play the {radio_station} station
+radio_station,play {radio_station}
+radio_station,play {radio_station} for me please
+radio_station,play {radio_station} in the background
+radio_station,play {radio_station} live
+radio_station,play {radio_station} online
+radio_station,play {radio_station} radio
+radio_station,pull up {radio_station}
+radio_station,put on {radio_station}
+radio_station,put on {radio_station} for me
+radio_station,queue up {radio_station}
+radio_station,start {radio_station}
+radio_station,stick on {radio_station}
+radio_station,stream the radio station {radio_station}
+radio_station,stream {radio_station}
+radio_station,stream {radio_station} live
+radio_station,switch the radio to {radio_station}
+radio_station,switch to {radio_station}
+radio_station,tune in to {radio_station}
+radio_station,tune into {radio_station}
+radio_station,turn on {radio_station}
+radio_station,turn {radio_station} on
+radio_streaming_service,I want to use {radio_streaming_service}
+radio_streaming_service,I'd like to use {radio_streaming_service}
+radio_streaming_service,browse {radio_streaming_service}
+radio_streaming_service,connect to {radio_streaming_service}
+radio_streaming_service,find a station on {radio_streaming_service}
+radio_streaming_service,find radio on {radio_streaming_service}
+radio_streaming_service,find something to listen to on {radio_streaming_service}
+radio_streaming_service,launch {radio_streaming_service}
+radio_streaming_service,open up {radio_streaming_service}
+radio_streaming_service,open {radio_streaming_service}
+radio_streaming_service,play radio on {radio_streaming_service}
+radio_streaming_service,play radio through {radio_streaming_service}
+radio_streaming_service,play something on {radio_streaming_service}
+radio_streaming_service,start {radio_streaming_service}
+radio_streaming_service,stream from {radio_streaming_service}
+radio_streaming_service,stream radio from {radio_streaming_service}
+radio_streaming_service,switch to {radio_streaming_service}
+radio_streaming_service,tune in through {radio_streaming_service}
+radio_streaming_service,use {radio_streaming_service}
+radio_streaming_service,use {radio_streaming_service} to play the radio
+radio_station+music_genre,find {radio_station} playing {music_genre}
+radio_station+music_genre,play {radio_station} {music_genre}
+radio_station+artist_name,find {radio_station} playing {artist_name}
+radio_station+artist_name,play {radio_station} with {artist_name}
+radio_station+news_category,find {radio_station} news
+radio_station+news_category,listen to {news_category} on {radio_station}
+radio_station,find similar stations to {radio_station}
+radio_station,get more like {radio_station}
+radio_station,play alternative to {radio_station}
+radio_station,play local radio {radio_station}
+radio_station,play online radio {radio_station}
+radio_station,stream internet radio {radio_station}
+radio_streaming_service,find local stations on {radio_streaming_service}
+radio_streaming_service,get my presets on {radio_streaming_service}
+radio_streaming_service,play my saved stations on {radio_streaming_service}
+radio_streaming_service,resume radio on {radio_streaming_service}
+radio_streaming_service,shuffle stations on {radio_streaming_service}
