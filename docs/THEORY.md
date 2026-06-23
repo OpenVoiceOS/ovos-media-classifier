@@ -1,5 +1,14 @@
 # Theory — How OCP Media Classification Works
 
+> **Superseded.** The current, authoritative design is the orthogonal multi-axis
+> model in [classification-model.md](classification-model.md); the shipped public
+> API and contract are in [stable-api.md](stable-api.md) and
+> [taxonomy.md](taxonomy.md). This page is retained as background design notes:
+> it predates the multi-axis model (it describes a two-level hierarchy) and
+> discusses several ML backends — sklearn, padatious, Model2Vec, NER — that are
+> **not** part of this release; those land later as
+> [external plugins](external-plugins.md). Treat it as history, not as the spec.
+
 This document explains the conceptual foundation of `ovos-media-classifier`:
 the classification problem it solves, the two-level hierarchy it uses, how
 confidence scores are computed, and why each backend exists.

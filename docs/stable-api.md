@@ -1,16 +1,20 @@
 # Stable API
 
-The public, stable surface is `load_media_classifier()`, the four classification
-methods on the returned object, `ContentFilter`, and the
-`AbstractMediaClassifier` contract that the bundled classifier and external plugins
-implement.
+The public, stable surface is `load_media_classifier()`, the classification
+methods on the returned object (the per-axis methods plus `classify_full`),
+`ContentFilter`, and the `AbstractMediaClassifier` contract that the bundled
+classifier and external plugins implement.
+
+For *why* the output is split into orthogonal axes, see
+[classification-model.md](classification-model.md); this page is the method
+reference.
 
 ## The classifier object
 
 `load_media_classifier(config=None, voc_match_func=None)` returns an
 `AbstractMediaClassifier` — in this release the bundled keyword classifier, unless
 `config["media_classifier_plugin"]` selects an external plugin. Every classifier
-exposes the same four methods.
+exposes the same methods below.
 
 ### `classify(query, lang, valid_labels=None) -> (MediaType, float)`
 
@@ -58,6 +62,47 @@ when the domain is not `NOT_OCP`).
 clf.is_ocp_query("what is the weather", "en-us")  # (False, 0.0)
 ```
 
+## Multi-axis methods
+
+These return the coarse axes of the [multi-axis
+model](classification-model.md). On the bundled keyword classifier they are
+**derived** from the leaf `MediaType`; a trained plugin MAY override each to
+predict it with its own head.
+
+### `classify_playback_type(query, lang) -> PlaybackType`
+
+Returns the modality axis as a `mediavocab.PlaybackType`
+(`audio` / `video` / `paged` / `interactive` / `unknown`). Default: derived from
+`classify()` via `mediavocab.infer_playback_type`.
+
+```python
+clf.classify_playback_type("play a podcast", "en-us")   # <PlaybackType.AUDIO: 'audio'>
+```
+
+### `classify_structure(query, lang) -> Structure`
+
+Returns the structure axis as a `Structure`
+(`single` / `episodic` / `continuous` / `collection` / `unknown`). Default:
+derived from `classify()` via `infer_structure`.
+
+```python
+clf.classify_structure("put on the radio", "en-us")     # <Structure.CONTINUOUS: 'continuous'>
+```
+
+### `classify_full(query, lang) -> MediaClassification`
+
+Returns **all axes at once** in a `MediaClassification` dataclass: `media_type`,
+`playback_type`, `structure`, `domain`, `genres`, `confidence`. Default: runs
+`classify`/`classify_domain`/`classify_genres` once and derives the coarse axes
+from the leaf. A backend with dedicated heads SHOULD override this to predict the
+axes directly and soft-gate the leaf.
+
+```python
+clf.classify_full("play the breaking bad tv series", "en-us").as_dict()
+# {'media_type': 'episodic_series', 'playback_type': 'video', 'structure': 'episodic',
+#  'domain': 'ocp_play', 'genres': [], 'confidence': 0.6}
+```
+
 ## The `AbstractMediaClassifier` contract
 
 This ABC is both the interface the bundled keyword classifier implements and the
@@ -70,22 +115,32 @@ This ABC is both the interface the bundled keyword classifier implements and the
 | `classify_domain` | optional override | derives from `classify()` |
 | `is_ocp_query` | optional override | derives from `classify_domain()` |
 | `classify_genres` | optional override | returns `[]` |
+| `classify_playback_type` | optional override | derives from `classify()` |
+| `classify_structure` | optional override | derives from `classify()` |
+| `classify_full` | optional override | combines the above (derive-from-leaf) |
 
 Override guidance (for plugin authors — the bundled keyword classifier only
-overrides `classify_genres()`):
+overrides `classify_genres()` and derives every coarse axis from the leaf):
 
 - Override `classify_domain()` when you have a cheap domain head.
 - Override `is_ocp_query()` when you also handle `ocp_control`, so control commands
   count as OCP queries.
 - Override `classify_genres()` when you can surface genre signal so the
   [content filter](content-filtering.md) can block on it.
+- Override `classify_playback_type()` / `classify_structure()` (and `classify_full()`)
+  when you have dedicated coarse-axis heads — predict each axis directly and
+  soft-gate the leaf instead of deriving the axes from it (see
+  [classification-model.md](classification-model.md)).
 
 ## Return types
 
 | Type | Source | Notes |
 |---|---|---|
-| `MediaType` | re-exported from `mediavocab` | string-Enum; the enforced public taxonomy |
+| `MediaType` | re-exported from `mediavocab` | string-Enum; the enforced public taxonomy (the leaf axis) |
+| `PlaybackType` | `mediavocab` | string-Enum; the modality axis (`audio`/`video`/`paged`/`interactive`/`unknown`) |
+| `Structure` | `ovos_media_classifier` | string-Enum; the structure axis (`single`/`episodic`/`continuous`/`collection`/`unknown`) |
 | `OCPDomain` | `ovos_media_classifier` | `ocp_play` / `ocp_control` / `not_ocp` |
+| `MediaClassification` | `ovos_media_classifier` | dataclass holding all axes + genres + confidence; `.as_dict()` for a plain dict |
 | genre tags | `list[str]` | members of `mediavocab` `KNOWN_GENRES` |
 | confidence | `float` | in `[0, 1]` |
 

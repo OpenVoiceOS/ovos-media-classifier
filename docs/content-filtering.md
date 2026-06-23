@@ -35,7 +35,9 @@ classifier's `classify()` and `classify_genres()` and applies the policy, return
 The genre signal comes from the taxonomy map `PLAY_INTENT_TO_GENRES` — adult,
 hentai and adult-audio intents all carry the `adult` tag even though their public
 `MediaType` is a generic `MOVIE` / `MUSIC` / `EPISODIC_SERIES`. The type alone never
-carries the adult signal; the genre does. See [taxonomy.md](taxonomy.md).
+carries the adult signal; the genre does. Genres are an **orthogonal tag**, not a
+classification axis — see [taxonomy.md](taxonomy.md) and
+[classification-model.md](classification-model.md#2-the-axes).
 
 ## Configuration
 

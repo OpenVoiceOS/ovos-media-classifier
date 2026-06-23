@@ -33,6 +33,12 @@ the classifier reads the bundled files directly. Matching runs in a fixed priori
 order (e.g. `MusicVideoKeyword` before `MusicKeyword`) and surfaces genre tags
 (`anime`, `adult`, …) via `classify_genres()`.
 
+It predicts only the leaf `MediaType` and **derives** the coarse axes — `domain`,
+`playback_type`, `structure` — from it (cheap and exact for the type defaults), so
+`classify_full()` returns a complete multi-axis result with no extra model. A
+trained plugin predicts each axis with its own head instead — see
+[classification-model.md](classification-model.md#4-how-the-axes-are-produced).
+
 Because it derives the domain from the media-type result, the keyword classifier
 reports `OCP_PLAY` / `NOT_OCP` but does not detect `OCP_CONTROL` — a dedicated
 control head is something a future plugin can add by overriding `classify_domain()`.
