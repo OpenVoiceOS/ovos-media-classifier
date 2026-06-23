@@ -108,3 +108,27 @@ class AbstractMediaClassifier(ABC):
         domain, _ = self.classify_domain(query, lang)
         genres = self.classify_genres(query, lang)
         return classification_from_media_type(media_type, domain, genres, conf)
+
+    def to_signals(self, query: str, lang: str = "en-us"):
+        """Build a provider-ready :class:`mediavocab.Signals` from the query.
+
+        This is the classifier's primary output for the OCP pipeline: *all* the
+        NLP (classification + the coarse axes) lives here, and the pipeline
+        forwards the returned ``Signals`` straight to ``MediaProvider.serves`` /
+        ``search`` without doing any parsing of its own.
+
+        The base populates the classification axes (``medium`` /
+        ``playback_type`` / ``content_genres``) plus the raw ``title``; backends
+        that extract entities (artist / year / season / episode) should override
+        to enrich the ``Signals`` further.
+        """
+        from mediavocab import Signals, MediaType
+        full = self.classify_full(query, lang)
+        sentinels = {MediaType.GENERIC, MediaType.NOT_MEDIA, MediaType.CONTROL}
+        return Signals.as_query(
+            title=query or None,
+            medium=full.media_type if full.media_type not in sentinels else None,
+            playback_type=full.playback_type,
+            content_genres=list(full.genres),
+            language=(lang.split("-")[0] if lang else None),
+        )

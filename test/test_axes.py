@@ -74,3 +74,24 @@ class TestKeywordClassifierAxes(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestToSignals(unittest.TestCase):
+    """The classifier emits a provider-ready mediavocab.Signals."""
+
+    def setUp(self):
+        self.clf = load_media_classifier()
+
+    def test_to_signals_carries_axes(self):
+        from mediavocab import Signals, PlaybackType, MediaType
+        s = self.clf.to_signals("i want to watch an anime", "en-us")
+        self.assertIsInstance(s, Signals)
+        self.assertEqual(s.medium, MediaType.EPISODIC_SERIES)
+        self.assertEqual(s.playback_type, PlaybackType.VIDEO)
+        self.assertIn("anime", s.content_genres)
+        self.assertEqual(s.title, "i want to watch an anime")
+        self.assertEqual(s.language, "en")
+
+    def test_to_signals_non_media_has_no_medium(self):
+        s = self.clf.to_signals("what time is it", "en-us")
+        self.assertIsNone(s.medium)
