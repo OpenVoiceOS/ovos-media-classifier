@@ -104,6 +104,43 @@ entry-point group and load by name — the same mechanism any third party uses (
 [External plugins](#external-plugins-opm)). The core package stays lean: one
 zero-dependency keyword classifier plus the plugin contract.
 
+## Optional ONNX trained backend (opt-in)
+
+An **experimental, opt-in** trained backend ships in-tree as
+`ovos_media_classifier.onnx.OnnxMediaClassifier`. It uses **raw `onnxruntime` +
+`numpy` only** (no heavy ML framework), and both are imported lazily — the
+default install and the keyword path never touch them.
+
+```bash
+pip install ovos-media-classifier[onnx]
+```
+
+```python
+from ovos_media_classifier import load_media_classifier
+
+# point at a self-describing model bundle directory
+clf = load_media_classifier({"media_classifier_onnx_model": "/path/to/bundle"})
+```
+
+A bundle is a self-describing directory:
+
+```
+<bundle>/
+  ├── domain.onnx   # domain head  (ocp_play / ocp_control / not_ocp)
+  ├── play.onnx     # play head    (fine-grained media-type label)
+  └── meta.json     # {feature_names, domain_labels, play_labels, ...}
+```
+
+`meta.json` records the ordered `feature_names` (the categorical feature columns
+the model was trained on) plus `domain_labels` / `play_labels` (output-index →
+label). At inference a sparse keyword-feature dict (from the bundled `.voc`
+files) is vectorized in `feature_names` order, run through both heads
+(softmax → argmax), and mapped to a `mediavocab.MediaType` + genres + coarse
+axes. If the extra is missing or the bundle is invalid, the factory logs a
+warning and falls back to the keyword classifier. See
+[`examples/onnx_backend.py`](examples/onnx_backend.py) and the module docstring
+for the full bundle contract.
+
 ## Content filtering
 
 `ContentFilter` is a detect-to-block content-moderation / parental-control layer.
