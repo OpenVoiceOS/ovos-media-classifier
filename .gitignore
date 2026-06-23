@@ -20,3 +20,4 @@ scripts/ocp_*.csv
 templates_new/
 .venv/
 venv/
+.claude/
