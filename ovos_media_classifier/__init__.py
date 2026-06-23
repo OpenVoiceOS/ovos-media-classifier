@@ -52,6 +52,12 @@ from ovos_media_classifier.intents import (
     genres_for_label,
 )
 from ovos_media_classifier.keyword import KeywordMediaClassifier
+from ovos_media_classifier.slots import (
+    KeywordFeatureSlot,
+    KEYWORD_FEATURE_SLOTS,
+    slot_for_label,
+    slots_for_media_type,
+)
 from ovos_media_classifier.plugins import (
     find_media_classifier_plugins,
     load_media_classifier_plugin,
@@ -78,6 +84,10 @@ __all__ = [
     "NER_LABEL_TO_PLAY_INTENT",
     "genres_for_label",
     "KeywordMediaClassifier",
+    "KeywordFeatureSlot",
+    "KEYWORD_FEATURE_SLOTS",
+    "slot_for_label",
+    "slots_for_media_type",
     "find_media_classifier_plugins",
     "load_media_classifier_plugin",
     "load_media_classifier",
