@@ -76,23 +76,35 @@ from typing import Callable, Dict, List, Optional
 from ovos_utils.log import LOG
 
 from ovos_media_classifier.base import AbstractMediaClassifier
+from ovos_media_classifier.content_filter import ContentFilter
 from ovos_media_classifier.entities import EntitiesContainer
 from ovos_media_classifier.intents import (
+    MediaType,
     OCPDomain,
     OCPPlayIntent,
     OCPControlIntent,
     OCPEntityLabel,
     PLAY_INTENT_TO_MEDIA_TYPE,
+    PLAY_INTENT_TO_GENRES,
     MEDIA_TYPE_TO_PLAY_INTENT,
     LABEL_TO_MEDIA_TYPE,
+    LABEL_TO_GENRES,
     NER_LABEL_TO_PLAY_INTENT,
+    genres_for_label,
 )
 from ovos_media_classifier.keyword import KeywordMediaClassifier
+from ovos_media_classifier.plugins import (
+    find_media_classifier_plugins,
+    load_media_classifier_plugin,
+)
 from ovos_media_classifier.version import __version__
 
 __all__ = [
-    # base
+    # base / taxonomy
     "AbstractMediaClassifier",
+    "MediaType",
+    # content filtering
+    "ContentFilter",
     # entity container
     "EntitiesContainer",
     # enums
@@ -102,12 +114,18 @@ __all__ = [
     "OCPEntityLabel",
     # mappings
     "PLAY_INTENT_TO_MEDIA_TYPE",
+    "PLAY_INTENT_TO_GENRES",
     "MEDIA_TYPE_TO_PLAY_INTENT",
     "LABEL_TO_MEDIA_TYPE",
+    "LABEL_TO_GENRES",
     "NER_LABEL_TO_PLAY_INTENT",
+    "genres_for_label",
     # classifiers
     "KeywordMediaClassifier",
     "GuidedEmbeddingsMediaClassifier",
+    # external plugin discovery
+    "find_media_classifier_plugins",
+    "load_media_classifier_plugin",
     # factory
     "load_media_classifier",
     "__version__",
@@ -140,6 +158,19 @@ def load_media_classifier(
             instance, used by the keyword classifier.
     """
     config = config or {}
+
+    # 0. External (3rd-party) classifier registered under opm.media.classifier
+    plugin_name = config.get("media_classifier_plugin")
+    if plugin_name:
+        try:
+            clf = load_media_classifier_plugin(plugin_name, config)
+            LOG.info(f"OCP media classifier: external plugin ({plugin_name})")
+            return clf
+        except Exception as e:
+            LOG.warning(
+                f"Failed to load external media classifier {plugin_name!r}: {e}. "
+                "Trying built-in backends."
+            )
 
     # 1. Model2Vec
     model_path = config.get("media_classifier_model")

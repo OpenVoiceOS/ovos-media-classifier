@@ -307,6 +307,23 @@ class AhocorasickMediaClassifier(AbstractMediaClassifier):
 
         return media_type, _HIT_CONFIDENCE
 
+    def classify_genres(self, query: str, lang: str) -> List[str]:
+        """Genre tags implied by the matched NER intent (e.g. adult/anime/asmr).
+
+        Without this override the content filter would have no genre signal from
+        the NER backend and could not block adult entities (pornstar, etc.).
+        """
+        from ovos_media_classifier.intents import PLAY_INTENT_TO_GENRES
+        try:
+            raw = self._ner.tag(query)
+            entities = {e["label"]: e["word"] for e in raw}
+        except Exception:
+            return []
+        intent = self._entities_to_intent(entities)
+        if intent is None:
+            return []
+        return list(PLAY_INTENT_TO_GENRES.get(intent, []))
+
     def classify_domain(self, query: str, lang: str) -> Tuple[OCPDomain, float]:
         """Domain is OCP_PLAY when any known entity is found, NOT_OCP otherwise."""
         try:

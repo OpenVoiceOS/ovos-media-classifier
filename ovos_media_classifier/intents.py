@@ -23,54 +23,18 @@ OCPControlIntent
   One value per control action supported by the OCP pipeline.
   The string values match the padatious intent names (without the ".intent" suffix).
 """
-from enum import Enum, IntEnum
-from typing import Dict
+from enum import Enum
+from typing import Dict, List
 
-
-class MediaType(IntEnum):
-    """Canonical OCP media type taxonomy.
-
-    Authoritative definition lives here (ovos-media-classifier), not in
-    ovos-utils.  ovos-utils keeps a backward-compatible copy for non-OCP
-    OVOS components; integer values for shared types are identical.
-    """
-    # ── Catch-all ──────────────────────────────────────────────────────
-    GENERIC           = 0
-    # ── Audio-only ─────────────────────────────────────────────────────
-    AUDIO             = 1    # ambient / unclassified audio
-    MUSIC             = 2
-    AUDIOBOOK         = 4
-    PODCAST           = 6
-    RADIO             = 7    # live radio stream
-    NEWS              = 8    # news broadcast / feed
-    RADIO_THEATRE     = 16   # audio drama / radio play
-    ASMR              = 23
-    MUSIC_VIDEO       = 24   # official music video for a song
-    AUDIO_DESCRIPTION = 12   # narrated film for the blind
-    # ── Live streams ───────────────────────────────────────────────────
-    TV                = 9    # live IPTV / cable TV stream
-    # ── Video – episodic / online ──────────────────────────────────────
-    VIDEO_EPISODES    = 19   # YouTube channels, online video series
-    TV_SHOW           = 25   # episodic TV series (Breaking Bad, Naruto)
-    # ── Video – film ───────────────────────────────────────────────────
-    VIDEO             = 3    # generic / YouTube video
-    MOVIE             = 10
-    SHORT_FILM        = 17
-    SILENT_MOVIE      = 18
-    BLACK_WHITE_MOVIE = 20
-    DOCUMENTARY       = 15
-    TRAILER           = 11
-    BEHIND_THE_SCENES = 14
-    VISUAL_STORY      = 13   # animated comic / motion comic
-    # ── Animation ──────────────────────────────────────────────────────
-    ANIME             = 22
-    CARTOON           = 21
-    # ── Interactive ────────────────────────────────────────────────────
-    GAME              = 5
-    # ── Adult (content-filter group, high int values) ──────────────────
-    ADULT             = 69
-    HENTAI            = 70
-    ADULT_AUDIO       = 71
+# The canonical media taxonomy is owned by ``mediavocab`` (a str-Enum), not by
+# this package.  We re-export it under the historical name ``MediaType`` so the
+# public API stays ``(MediaType, confidence)`` while *enforcing* the shared
+# vocabulary.  The classifier keeps a richer internal *intent* label space
+# (``OCPPlayIntent`` / ``OCPEntityLabel``) used to train models; the public
+# output is mapped onto ``mediavocab.MediaType`` + genre tags at the boundary
+# (see ``PLAY_INTENT_TO_MEDIA_TYPE`` / ``PLAY_INTENT_TO_GENRES``).
+from mediavocab import MediaType
+from mediavocab.taxonomy.genre import KNOWN_GENRES
 
 
 class OCPDomain(str, Enum):
@@ -157,7 +121,7 @@ class OCPEntityLabel(str, Enum):
     Training vs runtime
     -------------------
     During training the NER is pre-seeded from HuggingFace datasets (see
-    ``ovos_media_classifier.train.ner_datasets``).  At runtime it is
+    ``training.ner_datasets``).  At runtime it is
     populated incrementally as skills register their content.
     """
 
@@ -268,46 +232,93 @@ class OCPEntityLabel(str, Enum):
 # Shared by all backends — keeps training labels and runtime values in sync.
 # ---------------------------------------------------------------------------
 
+# Fine-grained play intent → canonical ``mediavocab.MediaType``.  Several
+# intents collapse onto one mediavocab type (the taxonomy deliberately models
+# distinctions like anime / cartoon / silent / documentary as *genre* or
+# *content-form*, not as media types) — the lost nuance is carried by
+# ``PLAY_INTENT_TO_GENRES`` below so it survives for content filtering / ranking.
 PLAY_INTENT_TO_MEDIA_TYPE: Dict[OCPPlayIntent, MediaType] = {
     OCPPlayIntent.MUSIC:              MediaType.MUSIC,
     OCPPlayIntent.PODCAST:            MediaType.PODCAST,
     OCPPlayIntent.RADIO:              MediaType.RADIO,
     OCPPlayIntent.AUDIOBOOK:          MediaType.AUDIOBOOK,
-    OCPPlayIntent.NEWS:               MediaType.NEWS,
+    OCPPlayIntent.NEWS:               MediaType.RADIO,
     OCPPlayIntent.MOVIE:              MediaType.MOVIE,
     OCPPlayIntent.TV:                 MediaType.TV,
-    OCPPlayIntent.TV_SHOW:            MediaType.TV_SHOW,
-    OCPPlayIntent.VIDEO:              MediaType.VIDEO,
-    OCPPlayIntent.VIDEO_EPISODES:     MediaType.VIDEO_EPISODES,
-    OCPPlayIntent.AUDIO:              MediaType.AUDIO,
+    OCPPlayIntent.TV_SHOW:            MediaType.EPISODIC_SERIES,
+    OCPPlayIntent.VIDEO:              MediaType.MOVIE,
+    OCPPlayIntent.VIDEO_EPISODES:     MediaType.EPISODIC_SERIES,
+    OCPPlayIntent.AUDIO:              MediaType.MUSIC,
     OCPPlayIntent.GAME:               MediaType.GAME,
-    OCPPlayIntent.ANIME:              MediaType.ANIME,
-    OCPPlayIntent.CARTOON:            MediaType.CARTOON,
-    OCPPlayIntent.DOCUMENTARY:        MediaType.DOCUMENTARY,
+    OCPPlayIntent.ANIME:             MediaType.EPISODIC_SERIES,
+    OCPPlayIntent.CARTOON:            MediaType.EPISODIC_SERIES,
+    OCPPlayIntent.DOCUMENTARY:        MediaType.MOVIE,
     OCPPlayIntent.SHORT_FILM:         MediaType.SHORT_FILM,
-    OCPPlayIntent.SILENT_MOVIE:       MediaType.SILENT_MOVIE,
-    OCPPlayIntent.BW_MOVIE:           MediaType.BLACK_WHITE_MOVIE,
-    OCPPlayIntent.RADIO_THEATRE:      MediaType.RADIO_THEATRE,
-    OCPPlayIntent.VISUAL_STORY:       MediaType.VISUAL_STORY,
-    OCPPlayIntent.ASMR:               MediaType.ASMR,
-    OCPPlayIntent.AUDIO_DESCRIPTION:  MediaType.AUDIO_DESCRIPTION,
+    OCPPlayIntent.SILENT_MOVIE:       MediaType.MOVIE,
+    OCPPlayIntent.BW_MOVIE:           MediaType.MOVIE,
+    OCPPlayIntent.RADIO_THEATRE:      MediaType.AUDIO_DRAMA,
+    OCPPlayIntent.VISUAL_STORY:       MediaType.COMIC,
+    OCPPlayIntent.ASMR:               MediaType.PROCEDURAL_AMBIENT,
+    OCPPlayIntent.AUDIO_DESCRIPTION:  MediaType.MOVIE,
     OCPPlayIntent.MUSIC_VIDEO:        MediaType.MUSIC_VIDEO,
-    OCPPlayIntent.TRAILER:            MediaType.TRAILER,
-    OCPPlayIntent.BEHIND_THE_SCENES:  MediaType.BEHIND_THE_SCENES,
-    OCPPlayIntent.ADULT:              MediaType.ADULT,
-    OCPPlayIntent.ADULT_AUDIO:        MediaType.ADULT_AUDIO,
-    OCPPlayIntent.HENTAI:             MediaType.HENTAI,
+    OCPPlayIntent.TRAILER:            MediaType.MOVIE,
+    OCPPlayIntent.BEHIND_THE_SCENES:  MediaType.MOVIE,
+    OCPPlayIntent.ADULT:              MediaType.MOVIE,
+    OCPPlayIntent.ADULT_AUDIO:        MediaType.MUSIC,
+    OCPPlayIntent.HENTAI:             MediaType.EPISODIC_SERIES,
     OCPPlayIntent.GENERIC:            MediaType.GENERIC,
 }
 
+# Fine-grained play intent → genre tags (all members of ``mediavocab`` KNOWN_GENRES).
+# These preserve the distinctions that collapse in the type map and, crucially,
+# carry the ``adult`` signal the content filter blocks on by default.
+_RAW_PLAY_INTENT_GENRES: Dict[OCPPlayIntent, List[str]] = {
+    OCPPlayIntent.ANIME:        ["anime"],
+    OCPPlayIntent.CARTOON:      ["animation"],
+    OCPPlayIntent.ASMR:         ["asmr"],
+    OCPPlayIntent.ADULT:        ["adult"],
+    OCPPlayIntent.ADULT_AUDIO:  ["adult"],
+    OCPPlayIntent.HENTAI:       ["anime", "adult"],
+}
+# enforce taxonomy: only emit genres mediavocab actually knows
+PLAY_INTENT_TO_GENRES: Dict[OCPPlayIntent, List[str]] = {
+    intent: [g for g in genres if g in KNOWN_GENRES]
+    for intent, genres in _RAW_PLAY_INTENT_GENRES.items()
+}
+
+# Canonical reverse (one representative intent per mediavocab type), used by
+# training/exploration tooling.  Explicit to avoid arbitrary last-wins collapse.
 MEDIA_TYPE_TO_PLAY_INTENT: Dict[MediaType, OCPPlayIntent] = {
-    v: k for k, v in PLAY_INTENT_TO_MEDIA_TYPE.items()
+    MediaType.MUSIC:              OCPPlayIntent.MUSIC,
+    MediaType.PODCAST:            OCPPlayIntent.PODCAST,
+    MediaType.RADIO:              OCPPlayIntent.RADIO,
+    MediaType.AUDIOBOOK:          OCPPlayIntent.AUDIOBOOK,
+    MediaType.MOVIE:              OCPPlayIntent.MOVIE,
+    MediaType.TV:                 OCPPlayIntent.TV,
+    MediaType.EPISODIC_SERIES:    OCPPlayIntent.TV_SHOW,
+    MediaType.GAME:               OCPPlayIntent.GAME,
+    MediaType.SHORT_FILM:         OCPPlayIntent.SHORT_FILM,
+    MediaType.AUDIO_DRAMA:        OCPPlayIntent.RADIO_THEATRE,
+    MediaType.COMIC:              OCPPlayIntent.VISUAL_STORY,
+    MediaType.PROCEDURAL_AMBIENT: OCPPlayIntent.ASMR,
+    MediaType.MUSIC_VIDEO:        OCPPlayIntent.MUSIC_VIDEO,
+    MediaType.GENERIC:            OCPPlayIntent.GENERIC,
 }
 
 # String form of intent labels → MediaType (used by backends that emit raw strings)
 LABEL_TO_MEDIA_TYPE: Dict[str, MediaType] = {
     intent.value: mt for intent, mt in PLAY_INTENT_TO_MEDIA_TYPE.items()
 }
+
+# String form of intent labels → genre tags (raw model output → genres)
+LABEL_TO_GENRES: Dict[str, List[str]] = {
+    intent.value: genres for intent, genres in PLAY_INTENT_TO_GENRES.items()
+}
+
+
+def genres_for_label(label: str) -> List[str]:
+    """Return the mediavocab genre tags implied by a raw play-intent label."""
+    return list(LABEL_TO_GENRES.get(label, []))
 
 # ---------------------------------------------------------------------------
 # NER entity label → OCPPlayIntent mapping

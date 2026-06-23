@@ -5,17 +5,24 @@ from ovos_media_classifier.intents import MediaType, OCPDomain
 
 
 class AbstractMediaClassifier(ABC):
-    """Classifies a natural-language query into an OCP MediaType and domain.
+    """Classifies a natural-language query into a ``mediavocab.MediaType`` + domain.
+
+    This is also the **plugin contract** for external classifiers discovered via
+    the ``opm.media.classifier`` entry-point group: a 3rd-party package ships a
+    subclass and the factory loads it by name.
 
     Implementors must provide:
-      classify()        — (MediaType, confidence) for the ocp_play domain
+      classify()        — (mediavocab.MediaType, confidence) for the ocp_play domain
       classify_domain() — (OCPDomain, confidence); default derives from classify()
       is_ocp_query()    — (bool, confidence); default derives from classify_domain()
+      classify_genres() — optional list[str] of mediavocab genre tags (default [])
 
     Subclasses that have a cheap domain head (e.g. M2V, padatious with a
     separate domain container) should override classify_domain() directly.
     Subclasses that also handle ocp_control (padatious) may override
-    is_ocp_query() to return True for control intents too.
+    is_ocp_query() to return True for control intents too.  Subclasses that can
+    surface genre signal (keyword, guided, m2v) should override
+    classify_genres() so the content filter can block on it.
     """
 
     @abstractmethod
@@ -56,3 +63,12 @@ class AbstractMediaClassifier(ABC):
         """
         domain, conf = self.classify_domain(query, lang)
         return domain != OCPDomain.NOT_OCP, conf
+
+    def classify_genres(self, query: str, lang: str) -> List[str]:
+        """Return mediavocab genre tags implied by the query (default: none).
+
+        Genres are orthogonal to ``MediaType`` and are what the content filter
+        blocks on (e.g. ``adult``).  Backends that can cheaply surface genre
+        (keyword, guided, m2v) should override this.
+        """
+        return []

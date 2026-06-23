@@ -1,7 +1,7 @@
 """Categorical feature extraction for guided-embeddings inference.
 
 Produces the same 98-column sparse feature dict at runtime that
-``ovos_media_classifier.train.generate_categorical_features`` produces during
+``training.generate_categorical_features`` produces during
 dataset generation.  Absent features are omitted (sparse); present features
 have value ``"1"`` (string, matching ``CategoricalVectorizer`` convention).
 
@@ -25,7 +25,7 @@ if TYPE_CHECKING:
 
 # ---------------------------------------------------------------------------
 # Module-level constants — single source of truth; imported by
-# ovos_media_classifier/train/generate_categorical_features.py
+# training/generate_categorical_features.py
 # ---------------------------------------------------------------------------
 
 _KEYWORD_LABEL_VALUES: frozenset = frozenset(

@@ -17,6 +17,9 @@ import unittest
 from typing import Dict, List, Optional
 from unittest.mock import MagicMock, patch
 
+import enum
+
+import mediavocab
 import numpy as np
 
 from ovos_media_classifier.base import AbstractMediaClassifier
@@ -118,25 +121,30 @@ class TestKeywordMediaClassifierNoMatch(unittest.TestCase):
 
 
 class TestKeywordMediaClassifierBasicTypes(unittest.TestCase):
-    """Each first-tier vocab should produce the expected MediaType."""
+    """Each first-tier vocab should produce the expected mediavocab MediaType.
+
+    Several fine-grained vocabs now collapse onto a shared mediavocab type
+    (e.g. DocumentaryKeyword/VideoKeyword/ADKeyword → MOVIE); the lost nuance
+    is carried as genre tags and asserted separately below.
+    """
 
     _CASES = [
-        ("DocumentaryKeyword", MediaType.DOCUMENTARY),
+        ("DocumentaryKeyword", MediaType.MOVIE),
         ("AudioBookKeyword",   MediaType.AUDIOBOOK),
-        ("NewsKeyword",        MediaType.NEWS),
-        ("AnimeKeyword",       MediaType.ANIME),
-        ("CartoonKeyword",     MediaType.CARTOON),
+        ("NewsKeyword",        MediaType.RADIO),
+        ("AnimeKeyword",       MediaType.EPISODIC_SERIES),
+        ("CartoonKeyword",     MediaType.EPISODIC_SERIES),
         ("PodcastKeyword",     MediaType.PODCAST),
         ("RadioKeyword",       MediaType.RADIO),
         ("MusicKeyword",       MediaType.MUSIC),
         ("TVKeyword",          MediaType.TV),
-        ("SeriesKeyword",      MediaType.VIDEO_EPISODES),
-        ("ComicBookKeyword",   MediaType.VISUAL_STORY),
+        ("SeriesKeyword",      MediaType.EPISODIC_SERIES),
+        ("ComicBookKeyword",   MediaType.COMIC),
         ("GameKeyword",        MediaType.GAME),
-        ("ADKeyword",          MediaType.AUDIO_DESCRIPTION),
-        ("ASMRKeyword",        MediaType.ASMR),
-        ("VideoKeyword",       MediaType.VIDEO),
-        ("AudioKeyword",       MediaType.AUDIO),
+        ("ADKeyword",          MediaType.MOVIE),
+        ("ASMRKeyword",        MediaType.PROCEDURAL_AMBIENT),
+        ("VideoKeyword",       MediaType.MOVIE),
+        ("AudioKeyword",       MediaType.MUSIC),
     ]
 
     def test_each_vocab_maps_to_correct_type(self):
@@ -147,6 +155,20 @@ class TestKeywordMediaClassifierBasicTypes(unittest.TestCase):
                 self.assertEqual(mt, expected_type, f"Failed for {vocab}")
                 self.assertGreater(conf, 0.0)
 
+    def test_genre_tags_preserve_collapsed_distinctions(self):
+        """Where a vocab collapses to a shared type, classify_genres keeps
+        the distinguishing tag (anime / animation / asmr)."""
+        cases = [
+            ("AnimeKeyword",   "anime"),
+            ("CartoonKeyword", "animation"),
+            ("ASMRKeyword",    "asmr"),
+        ]
+        for vocab, genre in cases:
+            with self.subTest(vocab=vocab):
+                clf = _kw_clf(vocab)
+                genres = clf.classify_genres("irrelevant query", "en-us")
+                self.assertIn(genre, genres, f"Failed for {vocab}")
+
 
 class TestKeywordMediaClassifierAudioDrama(unittest.TestCase):
     """AudioDramaKeyword must beat plain RadioKeyword (ordering check)."""
@@ -154,7 +176,7 @@ class TestKeywordMediaClassifierAudioDrama(unittest.TestCase):
     def test_audio_drama_wins_over_radio(self):
         clf = _kw_clf("AudioDramaKeyword", "RadioKeyword")
         mt, _ = clf.classify("radio theatre", "en-us")
-        self.assertEqual(mt, MediaType.RADIO_THEATRE)
+        self.assertEqual(mt, MediaType.AUDIO_DRAMA)
 
     def test_radio_when_no_audio_drama(self):
         clf = _kw_clf("RadioKeyword")
@@ -172,15 +194,18 @@ class TestKeywordMediaClassifierMovieFamily(unittest.TestCase):
         self.assertAlmostEqual(conf, 0.7)
 
     def test_silent_movie_when_silent_keyword(self):
+        # SILENT_MOVIE intent now collapses onto the MOVIE mediavocab type,
+        # but the more specific keyword still wins a higher confidence.
         clf = _kw_clf("MovieKeyword", "SilentKeyword")
         mt, conf = clf.classify("silent movie", "en-us")
-        self.assertEqual(mt, MediaType.SILENT_MOVIE)
+        self.assertEqual(mt, MediaType.MOVIE)
         self.assertAlmostEqual(conf, 0.7)
 
     def test_bw_movie_when_bw_keyword(self):
+        # BW_MOVIE intent now collapses onto the MOVIE mediavocab type.
         clf = _kw_clf("MovieKeyword", "BWKeyword")
         mt, conf = clf.classify("black and white movie", "en-us")
-        self.assertEqual(mt, MediaType.BLACK_WHITE_MOVIE)
+        self.assertEqual(mt, MediaType.MOVIE)
         self.assertAlmostEqual(conf, 0.7)
 
     def test_plain_movie_fallback(self):
@@ -192,33 +217,47 @@ class TestKeywordMediaClassifierMovieFamily(unittest.TestCase):
 
 class TestKeywordMediaClassifierAdultFamily(unittest.TestCase):
     def test_hentai_via_hentai_keyword_alone(self):
+        # HENTAI intent collapses onto EPISODIC_SERIES; the adult/anime
+        # nuance survives as genre tags.
         clf = _kw_clf("HentaiKeyword")
         mt, _ = clf.classify("hentai", "en-us")
-        self.assertEqual(mt, MediaType.HENTAI)
+        self.assertEqual(mt, MediaType.EPISODIC_SERIES)
+        genres = clf.classify_genres("hentai", "en-us")
+        self.assertIn("anime", genres)
+        self.assertIn("adult", genres)
 
     def test_adult_audio_via_audio_keyword(self):
+        # ADULT_AUDIO intent collapses onto MUSIC; adult signal via genre.
         clf = _kw_clf("AdultKeyword", "AudioKeyword")
         mt, _ = clf.classify("adult audio", "en-us")
-        self.assertEqual(mt, MediaType.ADULT_AUDIO)
+        self.assertEqual(mt, MediaType.MUSIC)
+        self.assertIn("adult", clf.classify_genres("adult audio", "en-us"))
 
     def test_plain_adult_fallback(self):
+        # ADULT intent collapses onto MOVIE; adult signal via genre.
         clf = _kw_clf("AdultKeyword")
         mt, _ = clf.classify("adult content", "en-us")
-        self.assertEqual(mt, MediaType.ADULT)
+        self.assertEqual(mt, MediaType.MOVIE)
+        self.assertIn("adult", clf.classify_genres("adult content", "en-us"))
 
-    def test_anime_wins_over_adult_in_priority(self):
-        """AnimeKeyword is checked before Adult logic, so it returns ANIME."""
+    def test_adult_anime_is_hentai_and_blockable(self):
+        """Adult detection takes precedence (content filtering is a safety
+        feature): 'adult anime' resolves to the hentai intent — still
+        EPISODIC_SERIES, but tagged BOTH anime and adult so the filter blocks it."""
         clf = _kw_clf("AdultKeyword", "AnimeKeyword")
         mt, _ = clf.classify("adult anime", "en-us")
-        # AnimeKeyword is checked at line 140, before adult logic at line 193
-        self.assertEqual(mt, MediaType.ANIME)
+        self.assertEqual(mt, MediaType.EPISODIC_SERIES)
+        genres = clf.classify_genres("adult anime", "en-us")
+        self.assertIn("anime", genres)
+        self.assertIn("adult", genres)  # must be blockable
 
-    def test_asmr_wins_over_adult_in_priority(self):
-        """ASMRKeyword is checked before Adult logic, so it returns ASMR."""
+    def test_adult_asmr_is_adult_audio_and_blockable(self):
+        """'adult asmr' resolves to the adult_audio intent (MUSIC + adult genre)
+        so the content filter blocks it, rather than escaping as plain ASMR."""
         clf = _kw_clf("AdultKeyword", "ASMRKeyword")
         mt, _ = clf.classify("adult asmr", "en-us")
-        # ASMRKeyword is checked at line 188, before adult logic at line 193
-        self.assertEqual(mt, MediaType.ASMR)
+        self.assertEqual(mt, MediaType.MUSIC)
+        self.assertIn("adult", clf.classify_genres("adult asmr", "en-us"))
 
 
 class TestKeywordMediaClassifierValidLabels(unittest.TestCase):
@@ -345,11 +384,11 @@ class TestModel2VecClassify(unittest.TestCase):
                 self.assertIsInstance(mt, MediaType)
 
     def test_all_known_media_types_covered(self):
-        """Spot-check that the most common MediaTypes appear in the mapping."""
+        """Spot-check that the most common mediavocab types appear in the map."""
         mapped = set(INTENT_TO_MEDIA_TYPE.values())
         for mt in (MediaType.MUSIC, MediaType.MOVIE, MediaType.PODCAST,
-                   MediaType.RADIO, MediaType.NEWS, MediaType.AUDIOBOOK,
-                   MediaType.TV, MediaType.VIDEO):
+                   MediaType.RADIO, MediaType.AUDIOBOOK,
+                   MediaType.TV, MediaType.EPISODIC_SERIES):
             self.assertIn(mt, mapped)
 
 
@@ -519,23 +558,32 @@ class TestLoadMediaClassifierFactory(unittest.TestCase):
 # New taxonomy tests (TV/TV_SHOW split, TRAILER, BEHIND_THE_SCENES, etc.)
 # ---------------------------------------------------------------------------
 
-class TestMediaTypeLocalDefinition(unittest.TestCase):
-    """Verify the local MediaType enum has correct values."""
+class TestMediaTypeIsMediavocab(unittest.TestCase):
+    """The public MediaType is no longer locally defined — it is re-exported
+    from ``mediavocab`` (a str-Enum), enforcing the shared taxonomy."""
 
-    def test_tv_show_is_25(self):
-        self.assertEqual(MediaType.TV_SHOW, 25)
+    def test_media_type_is_mediavocab(self):
+        self.assertIs(MediaType, mediavocab.MediaType)
 
-    def test_tv_is_9(self):
-        self.assertEqual(MediaType.TV, 9)
+    def test_media_type_is_str_enum(self):
+        self.assertTrue(issubclass(MediaType, str))
+        self.assertTrue(issubclass(MediaType, enum.Enum))
 
-    def test_trailer_is_11(self):
-        self.assertEqual(MediaType.TRAILER, 11)
+    def test_members_are_canonical_strings(self):
+        # str-Enum: members compare equal to their string value, not ints.
+        self.assertEqual(MediaType.MOVIE, "movie")
+        self.assertEqual(MediaType.EPISODIC_SERIES, "episodic_series")
+        self.assertNotEqual(MediaType.MOVIE, MediaType.TV)
 
-    def test_behind_the_scenes_is_14(self):
-        self.assertEqual(MediaType.BEHIND_THE_SCENES, 14)
+    def test_removed_legacy_members_absent(self):
+        for name in ("DOCUMENTARY", "ANIME", "CARTOON", "NEWS", "VIDEO",
+                     "TV_SHOW", "TRAILER", "BEHIND_THE_SCENES", "ADULT",
+                     "HENTAI", "ASMR"):
+            self.assertFalse(hasattr(MediaType, name),
+                             f"{name} should no longer be a MediaType member")
 
-    def test_tv_show_not_equal_tv(self):
-        self.assertNotEqual(MediaType.TV_SHOW, MediaType.TV)
+    def test_episodic_series_present(self):
+        self.assertEqual(MediaType.EPISODIC_SERIES.value, "episodic_series")
 
 
 class TestOCPEntityLabelStrings(unittest.TestCase):
@@ -567,11 +615,44 @@ class TestOCPEntityLabelStrings(unittest.TestCase):
 
 
 class TestPlayIntentToMediaTypeMapping(unittest.TestCase):
-    """Verify the intent → MediaType mapping is correct and complete."""
+    """Verify the intent → mediavocab.MediaType mapping is correct/complete."""
 
-    def test_tv_show_maps_to_tv_show_not_tv(self):
+    # Expected collapse of the fine-grained intent space onto mediavocab types.
+    _EXPECTED = {
+        OCPPlayIntent.MUSIC:             MediaType.MUSIC,
+        OCPPlayIntent.PODCAST:           MediaType.PODCAST,
+        OCPPlayIntent.RADIO:             MediaType.RADIO,
+        OCPPlayIntent.AUDIOBOOK:         MediaType.AUDIOBOOK,
+        OCPPlayIntent.NEWS:              MediaType.RADIO,
+        OCPPlayIntent.MOVIE:             MediaType.MOVIE,
+        OCPPlayIntent.TV:                MediaType.TV,
+        OCPPlayIntent.TV_SHOW:           MediaType.EPISODIC_SERIES,
+        OCPPlayIntent.VIDEO:             MediaType.MOVIE,
+        OCPPlayIntent.VIDEO_EPISODES:    MediaType.EPISODIC_SERIES,
+        OCPPlayIntent.AUDIO:             MediaType.MUSIC,
+        OCPPlayIntent.GAME:              MediaType.GAME,
+        OCPPlayIntent.ANIME:             MediaType.EPISODIC_SERIES,
+        OCPPlayIntent.CARTOON:           MediaType.EPISODIC_SERIES,
+        OCPPlayIntent.DOCUMENTARY:       MediaType.MOVIE,
+        OCPPlayIntent.SHORT_FILM:        MediaType.SHORT_FILM,
+        OCPPlayIntent.SILENT_MOVIE:      MediaType.MOVIE,
+        OCPPlayIntent.BW_MOVIE:          MediaType.MOVIE,
+        OCPPlayIntent.RADIO_THEATRE:     MediaType.AUDIO_DRAMA,
+        OCPPlayIntent.VISUAL_STORY:      MediaType.COMIC,
+        OCPPlayIntent.ASMR:              MediaType.PROCEDURAL_AMBIENT,
+        OCPPlayIntent.AUDIO_DESCRIPTION: MediaType.MOVIE,
+        OCPPlayIntent.MUSIC_VIDEO:       MediaType.MUSIC_VIDEO,
+        OCPPlayIntent.TRAILER:           MediaType.MOVIE,
+        OCPPlayIntent.BEHIND_THE_SCENES: MediaType.MOVIE,
+        OCPPlayIntent.ADULT:             MediaType.MOVIE,
+        OCPPlayIntent.ADULT_AUDIO:       MediaType.MUSIC,
+        OCPPlayIntent.HENTAI:            MediaType.EPISODIC_SERIES,
+        OCPPlayIntent.GENERIC:           MediaType.GENERIC,
+    }
+
+    def test_tv_show_maps_to_episodic_series_not_tv(self):
         self.assertEqual(PLAY_INTENT_TO_MEDIA_TYPE[OCPPlayIntent.TV_SHOW],
-                         MediaType.TV_SHOW)
+                         MediaType.EPISODIC_SERIES)
         self.assertNotEqual(PLAY_INTENT_TO_MEDIA_TYPE[OCPPlayIntent.TV_SHOW],
                             MediaType.TV)
 
@@ -579,20 +660,28 @@ class TestPlayIntentToMediaTypeMapping(unittest.TestCase):
         self.assertEqual(PLAY_INTENT_TO_MEDIA_TYPE[OCPPlayIntent.TV],
                          MediaType.TV)
 
-    def test_trailer_intent_maps_to_trailer(self):
+    def test_trailer_intent_collapses_to_movie(self):
         self.assertEqual(PLAY_INTENT_TO_MEDIA_TYPE[OCPPlayIntent.TRAILER],
-                         MediaType.TRAILER)
+                         MediaType.MOVIE)
 
-    def test_behind_the_scenes_intent_maps_correctly(self):
+    def test_behind_the_scenes_intent_collapses_to_movie(self):
         self.assertEqual(
             PLAY_INTENT_TO_MEDIA_TYPE[OCPPlayIntent.BEHIND_THE_SCENES],
-            MediaType.BEHIND_THE_SCENES,
+            MediaType.MOVIE,
         )
+
+    def test_full_mapping_matches_expected(self):
+        self.assertEqual(dict(PLAY_INTENT_TO_MEDIA_TYPE), self._EXPECTED)
 
     def test_all_play_intents_have_mapping(self):
         for intent in OCPPlayIntent:
             with self.subTest(intent=intent):
                 self.assertIn(intent, PLAY_INTENT_TO_MEDIA_TYPE)
+
+    def test_every_value_is_a_mediavocab_type(self):
+        for intent, mt in PLAY_INTENT_TO_MEDIA_TYPE.items():
+            with self.subTest(intent=intent):
+                self.assertIsInstance(mt, mediavocab.MediaType)
 
 
 class TestOCPControlIntentExtensions(unittest.TestCase):
@@ -629,22 +718,25 @@ class TestKeywordMediaClassifierNewTypes(unittest.TestCase):
         mt, conf = clf.classify("live channel", "en-us")
         self.assertEqual(mt, MediaType.TV)
 
-    def test_trailer_keyword_returns_trailer(self):
+    def test_trailer_keyword_returns_movie(self):
+        # TRAILER intent collapses onto the MOVIE mediavocab type.
         clf = _kw_clf("TrailerKeyword")
         mt, conf = clf.classify("show the trailer for Top Gun", "en-us")
-        self.assertEqual(mt, MediaType.TRAILER)
+        self.assertEqual(mt, MediaType.MOVIE)
         self.assertAlmostEqual(conf, 0.7)
 
-    def test_behind_the_scenes_keyword_returns_bts(self):
+    def test_behind_the_scenes_keyword_returns_movie(self):
+        # BEHIND_THE_SCENES intent collapses onto the MOVIE mediavocab type.
         clf = _kw_clf("BehindTheScenesKeyword")
         mt, conf = clf.classify("watch the making of Dune", "en-us")
-        self.assertEqual(mt, MediaType.BEHIND_THE_SCENES)
+        self.assertEqual(mt, MediaType.MOVIE)
         self.assertAlmostEqual(conf, 0.7)
 
     def test_trailer_blocked_by_valid_labels(self):
+        # TRAILER collapses onto MOVIE, so MOVIE must be excluded to block it.
         clf = _kw_clf("TrailerKeyword")
         mt, conf = clf.classify("trailer", "en-us",
-                                valid_labels=[MediaType.MOVIE])
+                                valid_labels=[MediaType.MUSIC])
         self.assertEqual(mt, MediaType.GENERIC)
 
     def test_tv_show_keyword_still_works(self):

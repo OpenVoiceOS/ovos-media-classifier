@@ -34,7 +34,12 @@ from ovos_media_classifier.constants import (
     DEFAULT_KEYWORD_HIGH_CONFIDENCE,
     DEFAULT_KEYWORD_LOW_CONFIDENCE,
 )
-from ovos_media_classifier.intents import MediaType
+from ovos_media_classifier.intents import (
+    MediaType,
+    OCPPlayIntent,
+    PLAY_INTENT_TO_MEDIA_TYPE,
+    PLAY_INTENT_TO_GENRES,
+)
 
 # Bundled locale directory (ported from ovos-ocp-pipeline-plugin)
 _LOCALE_DIR = os.path.join(os.path.dirname(__file__), "locale")
@@ -51,17 +56,31 @@ class _VocMatcher:
     def __init__(self, locale_dir: str) -> None:
         self._locale_dir = locale_dir
         self._cache: Dict[Tuple[str, str], Set[str]] = {}
+        # case-insensitive index of available locale subdirs: "en-us" -> "en-US"
+        self._dirs: Dict[str, str] = {}
+        try:
+            for name in os.listdir(locale_dir):
+                if os.path.isdir(os.path.join(locale_dir, name)):
+                    self._dirs[name.lower()] = name
+        except OSError:
+            pass
+
+    def _resolve_dir(self, lang_tag: str) -> Optional[str]:
+        actual = self._dirs.get(lang_tag.lower())
+        return os.path.join(self._locale_dir, actual) if actual else None
 
     def _load(self, vocab_name: str, lang: str) -> Set[str]:
         key = (lang.lower(), vocab_name)
         if key not in self._cache:
             words: Set[str] = set()
-            # Try exact lang tag first, then language-only fallback (e.g. "en")
+            # Try exact lang tag first, then language-only fallback (e.g. "en"),
+            # resolving the locale subdir case-insensitively (en-us vs en-US).
             lang_candidates = [lang.lower(), lang.lower().split("-")[0]]
             for lang_tag in lang_candidates:
-                voc_path = os.path.join(
-                    self._locale_dir, lang_tag, f"{vocab_name}.voc"
-                )
+                lang_dir = self._resolve_dir(lang_tag)
+                if not lang_dir:
+                    continue
+                voc_path = os.path.join(lang_dir, f"{vocab_name}.voc")
                 if os.path.isfile(voc_path):
                     with open(voc_path, encoding="utf-8") as fh:
                         for line in fh:
@@ -124,94 +143,122 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
         """Keyword-based classification mirroring the original voc_match_media.
 
         Checks vocabulary files in priority order.  Returns the first match
-        that is also in *valid_labels* (or any match when valid_labels is None).
-        Falls back to (GENERIC, 0.0) when nothing matches.
+        that maps to a ``mediavocab.MediaType`` in *valid_labels* (or any match
+        when valid_labels is None).  Falls back to (GENERIC, 0.0).
         """
-        # When no restriction is given, all types are valid.
-        valid = set(valid_labels) if valid_labels is not None else None
+        intent, conf = self._classify_intent(query, lang, valid_labels)
+        return PLAY_INTENT_TO_MEDIA_TYPE.get(intent, MediaType.GENERIC), conf
 
-        def _ok(mt: MediaType) -> bool:
-            return valid is None or mt in valid
+    def classify_genres(self, query: str, lang: str) -> List[str]:
+        """Return mediavocab genre tags implied by the winning keyword intent.
+
+        This is what the content filter blocks on (e.g. an adult or anime
+        query surfaces ``["adult"]`` / ``["anime"]`` even though the public
+        ``MediaType`` is a generic ``MOVIE`` / ``EPISODIC_SERIES``).
+        """
+        intent, _ = self._classify_intent(query, lang, None)
+        return list(PLAY_INTENT_TO_GENRES.get(intent, []))
+
+    def _classify_intent(
+        self,
+        query: str,
+        lang: str,
+        valid_labels: Optional[List[MediaType]],
+    ) -> Tuple[OCPPlayIntent, float]:
+        """Resolve the fine-grained play intent in priority order.
+
+        Mirrors the original voc_match_media chain but yields an
+        ``OCPPlayIntent`` so both the public ``MediaType`` and the genre tags
+        can be derived from one pass.  ``valid_labels`` (mediavocab types) gate
+        each branch via the intent→type map.
+        """
+        valid = set(valid_labels) if valid_labels is not None else None
+        I = OCPPlayIntent
+
+        def _ok(intent: OCPPlayIntent) -> bool:
+            return valid is None or PLAY_INTENT_TO_MEDIA_TYPE.get(intent) in valid
 
         m = self._match
         q = query
 
-        if _ok(MediaType.DOCUMENTARY) and m(q, "DocumentaryKeyword", lang):
-            return MediaType.DOCUMENTARY, DEFAULT_KEYWORD_CONFIDENCE
-        if _ok(MediaType.AUDIOBOOK) and m(q, "AudioBookKeyword", lang):
-            return MediaType.AUDIOBOOK, DEFAULT_KEYWORD_CONFIDENCE
-        if _ok(MediaType.NEWS) and m(q, "NewsKeyword", lang):
-            return MediaType.NEWS, DEFAULT_KEYWORD_CONFIDENCE
-        if _ok(MediaType.ANIME) and m(q, "AnimeKeyword", lang):
-            return MediaType.ANIME, DEFAULT_KEYWORD_CONFIDENCE
-        if _ok(MediaType.CARTOON) and m(q, "CartoonKeyword", lang):
-            return MediaType.CARTOON, DEFAULT_KEYWORD_CONFIDENCE
-        if _ok(MediaType.PODCAST) and m(q, "PodcastKeyword", lang):
-            return MediaType.PODCAST, DEFAULT_KEYWORD_CONFIDENCE
-        if _ok(MediaType.RADIO_THEATRE) and m(q, "AudioDramaKeyword", lang):
+        # Adult family FIRST — content filtering is a safety feature, so an adult
+        # keyword must take precedence over substring collisions (e.g. German
+        # "sexfilm" contains "film", which would otherwise classify as a movie).
+        adult_intents = {I.ADULT, I.HENTAI, I.ADULT_AUDIO}
+        if any(_ok(t) for t in adult_intents) and (
+                m(q, "AdultKeyword", lang) or m(q, "HentaiKeyword", lang)):
+            if (_ok(I.HENTAI) and
+                    (m(q, "HentaiKeyword", lang) or
+                     m(q, "CartoonKeyword", lang) or
+                     m(q, "AnimeKeyword", lang))):
+                return I.HENTAI, DEFAULT_KEYWORD_LOW_CONFIDENCE
+            if (_ok(I.ADULT_AUDIO) and
+                    (m(q, "AudioKeyword", lang) or m(q, "ASMRKeyword", lang))):
+                return I.ADULT_AUDIO, DEFAULT_KEYWORD_LOW_CONFIDENCE
+            if _ok(I.ADULT):
+                return I.ADULT, DEFAULT_KEYWORD_LOW_CONFIDENCE
+
+        if _ok(I.DOCUMENTARY) and m(q, "DocumentaryKeyword", lang):
+            return I.DOCUMENTARY, DEFAULT_KEYWORD_CONFIDENCE
+        if _ok(I.AUDIOBOOK) and m(q, "AudioBookKeyword", lang):
+            return I.AUDIOBOOK, DEFAULT_KEYWORD_CONFIDENCE
+        if _ok(I.NEWS) and m(q, "NewsKeyword", lang):
+            return I.NEWS, DEFAULT_KEYWORD_CONFIDENCE
+        if _ok(I.ANIME) and m(q, "AnimeKeyword", lang):
+            return I.ANIME, DEFAULT_KEYWORD_CONFIDENCE
+        if _ok(I.CARTOON) and m(q, "CartoonKeyword", lang):
+            return I.CARTOON, DEFAULT_KEYWORD_CONFIDENCE
+        if _ok(I.PODCAST) and m(q, "PodcastKeyword", lang):
+            return I.PODCAST, DEFAULT_KEYWORD_CONFIDENCE
+        if _ok(I.RADIO_THEATRE) and m(q, "AudioDramaKeyword", lang):
             # NOTE: must come before plain RADIO so "radio theatre" wins
-            return MediaType.RADIO_THEATRE, DEFAULT_KEYWORD_CONFIDENCE
-        if _ok(MediaType.RADIO) and m(q, "RadioKeyword", lang):
-            return MediaType.RADIO, DEFAULT_KEYWORD_CONFIDENCE
-        if _ok(MediaType.MUSIC_VIDEO) and m(q, "MusicVideoKeyword", lang):
+            return I.RADIO_THEATRE, DEFAULT_KEYWORD_CONFIDENCE
+        if _ok(I.RADIO) and m(q, "RadioKeyword", lang):
+            return I.RADIO, DEFAULT_KEYWORD_CONFIDENCE
+        if _ok(I.MUSIC_VIDEO) and m(q, "MusicVideoKeyword", lang):
             # NOTE: must come before MusicKeyword (music video is more specific)
-            return MediaType.MUSIC_VIDEO, DEFAULT_KEYWORD_HIGH_CONFIDENCE
-        if _ok(MediaType.MUSIC) and m(q, "MusicKeyword", lang):
+            return I.MUSIC_VIDEO, DEFAULT_KEYWORD_HIGH_CONFIDENCE
+        if _ok(I.MUSIC) and m(q, "MusicKeyword", lang):
             # NOTE: must come before MOVIE to handle "{movie} soundtrack"
-            return MediaType.MUSIC, DEFAULT_KEYWORD_CONFIDENCE
+            return I.MUSIC, DEFAULT_KEYWORD_CONFIDENCE
         # IPTVKeyword (live channel/stream) takes priority over generic TVKeyword
-        if _ok(MediaType.TV) and m(q, "IPTVKeyword", lang):
-            return MediaType.TV, DEFAULT_KEYWORD_CONFIDENCE
-        if _ok(MediaType.TV) and m(q, "TVKeyword", lang):
-            return MediaType.TV, DEFAULT_KEYWORD_CONFIDENCE
-        if _ok(MediaType.VIDEO_EPISODES) and m(q, "SeriesKeyword", lang):
-            return MediaType.VIDEO_EPISODES, DEFAULT_KEYWORD_CONFIDENCE
+        if _ok(I.TV) and m(q, "IPTVKeyword", lang):
+            return I.TV, DEFAULT_KEYWORD_CONFIDENCE
+        # SeriesKeyword (e.g. "tv show", "episode") before the generic TVKeyword,
+        # else "tv show" would match "tv" and be classified as a live channel.
+        if _ok(I.VIDEO_EPISODES) and m(q, "SeriesKeyword", lang):
+            return I.VIDEO_EPISODES, DEFAULT_KEYWORD_CONFIDENCE
+        if _ok(I.TV) and m(q, "TVKeyword", lang):
+            return I.TV, DEFAULT_KEYWORD_CONFIDENCE
 
         # Movie family
-        movie_types = {MediaType.MOVIE, MediaType.SHORT_FILM,
-                       MediaType.SILENT_MOVIE, MediaType.BLACK_WHITE_MOVIE}
-        if any(_ok(t) for t in movie_types) and m(q, "MovieKeyword", lang):
-            if _ok(MediaType.SHORT_FILM) and m(q, "ShortKeyword", lang):
-                return MediaType.SHORT_FILM, DEFAULT_KEYWORD_HIGH_CONFIDENCE
-            if _ok(MediaType.SILENT_MOVIE) and m(q, "SilentKeyword", lang):
-                return MediaType.SILENT_MOVIE, DEFAULT_KEYWORD_HIGH_CONFIDENCE
-            if _ok(MediaType.BLACK_WHITE_MOVIE) and m(q, "BWKeyword", lang):
-                return MediaType.BLACK_WHITE_MOVIE, DEFAULT_KEYWORD_HIGH_CONFIDENCE
-            if _ok(MediaType.MOVIE):
-                return MediaType.MOVIE, DEFAULT_KEYWORD_CONFIDENCE
-        if _ok(MediaType.TRAILER) and m(q, "TrailerKeyword", lang):
-            return MediaType.TRAILER, DEFAULT_KEYWORD_HIGH_CONFIDENCE
-        if _ok(MediaType.BEHIND_THE_SCENES) and m(q, "BehindTheScenesKeyword", lang):
-            return MediaType.BEHIND_THE_SCENES, DEFAULT_KEYWORD_HIGH_CONFIDENCE
+        movie_intents = {I.MOVIE, I.SHORT_FILM, I.SILENT_MOVIE, I.BW_MOVIE}
+        if any(_ok(t) for t in movie_intents) and m(q, "MovieKeyword", lang):
+            if _ok(I.SHORT_FILM) and m(q, "ShortKeyword", lang):
+                return I.SHORT_FILM, DEFAULT_KEYWORD_HIGH_CONFIDENCE
+            if _ok(I.SILENT_MOVIE) and m(q, "SilentKeyword", lang):
+                return I.SILENT_MOVIE, DEFAULT_KEYWORD_HIGH_CONFIDENCE
+            if _ok(I.BW_MOVIE) and m(q, "BWKeyword", lang):
+                return I.BW_MOVIE, DEFAULT_KEYWORD_HIGH_CONFIDENCE
+            if _ok(I.MOVIE):
+                return I.MOVIE, DEFAULT_KEYWORD_CONFIDENCE
+        if _ok(I.TRAILER) and m(q, "TrailerKeyword", lang):
+            return I.TRAILER, DEFAULT_KEYWORD_HIGH_CONFIDENCE
+        if _ok(I.BEHIND_THE_SCENES) and m(q, "BehindTheScenesKeyword", lang):
+            return I.BEHIND_THE_SCENES, DEFAULT_KEYWORD_HIGH_CONFIDENCE
 
-        if _ok(MediaType.VISUAL_STORY) and m(q, "ComicBookKeyword", lang):
-            return MediaType.VISUAL_STORY, DEFAULT_KEYWORD_LOW_CONFIDENCE
-        if _ok(MediaType.GAME) and m(q, "GameKeyword", lang):
-            return MediaType.GAME, DEFAULT_KEYWORD_LOW_CONFIDENCE
-        if _ok(MediaType.AUDIO_DESCRIPTION) and m(q, "ADKeyword", lang):
-            return MediaType.AUDIO_DESCRIPTION, DEFAULT_KEYWORD_LOW_CONFIDENCE
-        if _ok(MediaType.ASMR) and m(q, "ASMRKeyword", lang):
-            return MediaType.ASMR, DEFAULT_KEYWORD_LOW_CONFIDENCE
+        if _ok(I.VISUAL_STORY) and m(q, "ComicBookKeyword", lang):
+            return I.VISUAL_STORY, DEFAULT_KEYWORD_LOW_CONFIDENCE
+        if _ok(I.GAME) and m(q, "GameKeyword", lang):
+            return I.GAME, DEFAULT_KEYWORD_LOW_CONFIDENCE
+        if _ok(I.AUDIO_DESCRIPTION) and m(q, "ADKeyword", lang):
+            return I.AUDIO_DESCRIPTION, DEFAULT_KEYWORD_LOW_CONFIDENCE
+        if _ok(I.ASMR) and m(q, "ASMRKeyword", lang):
+            return I.ASMR, DEFAULT_KEYWORD_LOW_CONFIDENCE
 
-        # Adult family
-        adult_types = {MediaType.ADULT, MediaType.HENTAI, MediaType.ADULT_AUDIO}
-        if any(_ok(t) for t in adult_types) and m(q, "AdultKeyword", lang):
-            if (_ok(MediaType.HENTAI) and
-                    (m(q, "CartoonKeyword", lang) or
-                     m(q, "AnimeKeyword", lang) or
-                     m(q, "HentaiKeyword", lang))):
-                return MediaType.HENTAI, DEFAULT_KEYWORD_LOW_CONFIDENCE
-            if (_ok(MediaType.ADULT_AUDIO) and
-                    (m(q, "AudioKeyword", lang) or m(q, "ASMRKeyword", lang))):
-                return MediaType.ADULT_AUDIO, DEFAULT_KEYWORD_LOW_CONFIDENCE
-            if _ok(MediaType.ADULT):
-                return MediaType.ADULT, DEFAULT_KEYWORD_LOW_CONFIDENCE
+        if _ok(I.VIDEO) and m(q, "VideoKeyword", lang):
+            return I.VIDEO, DEFAULT_KEYWORD_LOW_CONFIDENCE
+        if _ok(I.AUDIO) and m(q, "AudioKeyword", lang):
+            return I.AUDIO, DEFAULT_KEYWORD_LOW_CONFIDENCE
 
-        if _ok(MediaType.HENTAI) and m(q, "HentaiKeyword", lang):
-            return MediaType.HENTAI, DEFAULT_KEYWORD_LOW_CONFIDENCE
-        if _ok(MediaType.VIDEO) and m(q, "VideoKeyword", lang):
-            return MediaType.VIDEO, DEFAULT_KEYWORD_LOW_CONFIDENCE
-        if _ok(MediaType.AUDIO) and m(q, "AudioKeyword", lang):
-            return MediaType.AUDIO, DEFAULT_KEYWORD_LOW_CONFIDENCE
-
-        return MediaType.GENERIC, 0.0
+        return I.GENERIC, 0.0

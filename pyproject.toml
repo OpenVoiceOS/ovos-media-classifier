@@ -14,6 +14,8 @@ license = { text = "Apache-2.0" }
 requires-python = ">=3.10"
 dependencies = [
     "ovos-utils>=0.0.38",
+    "mediavocab>=1.0.0,<2.0.0",
+    "ovos-plugin-manager>=2.1.0,<3.0.0",
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
@@ -60,10 +62,10 @@ all = [
 ]
 
 [project.scripts]
-ovos-ocp-build-dataset = "ovos_media_classifier.train.build_dataset:main"
-ovos-ocp-train-guided  = "ovos_media_classifier.train.train_guided_embeddings:main"
-ovos-ocp-explore       = "ovos_media_classifier.train.explore_dataset:main"
-ovos-ocp-gen-features  = "ovos_media_classifier.train.generate_categorical_features:main"
+ovos-ocp-build-dataset = "training.build_dataset:main"
+ovos-ocp-train-guided  = "training.train_guided_embeddings:main"
+ovos-ocp-explore       = "training.explore_dataset:main"
+ovos-ocp-gen-features  = "training.generate_categorical_features:main"
 
 [tool.setuptools.dynamic]
 version = { attr = "ovos_media_classifier.version.__version__" }
@@ -71,6 +73,3 @@ version = { attr = "ovos_media_classifier.version.__version__" }
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["ovos_media_classifier*"]
-
-[tool.uv.sources]
-guided-categorical-embeddings = { path = "../../Machine Learning Workspace/guided-categorical-embeddings", editable = true }
