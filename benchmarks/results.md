@@ -1,6 +1,6 @@
 # ovos-media-classifier — benchmark results
 
-Eval set: **30000 utterances** across 11 languages (ca-es=2803, da-dk=309, de-de=416, en-us=23765, es-es=503, eu-es=71, fr-fr=169, gl-es=608, it-it=288, nl-nl=234, pt-pt=834), **9 adult-genre rows**. Ground truth and utterances are derived from the bundled `.voc` keyword files (see `benchmarks/dataset.py`).
+Eval set: **875 utterances** across 3 languages (de-de=277, en-us=360, pt-pt=238), **64 adult-genre rows**. Ground truth and utterances are derived from the bundled `.voc` keyword files (see `benchmarks/dataset.py`).
 
 - Available backends: keyword, ahocorasick
 - Unavailable backends: sklearn, padatious, model2vec, guided_onnx
@@ -9,8 +9,8 @@ Eval set: **30000 utterances** across 11 languages (ca-es=2803, da-dk=309, de-de
 
 | backend | status | accuracy | macro-F1 | median ms | p95 ms | rows/s | CF recall | false-block |
 |---|---|---|---|---|---|---|---|---|
-| keyword | available | 0.293 | 0.448 | 0.0132 | 0.0197 | 78378 | 0.667 (6/9) | 0.000 |
-| ahocorasick | available | 0.176 | 0.233 | 0.0016 | 0.0052 | 439834 | 0.222 (2/9) | 0.000 |
+| keyword | available | 0.973 | 0.972 | 0.0254 | 0.0531 | 32700 | 1.000 (64/64) | 0.000 |
+| ahocorasick | available | 0.495 | 0.628 | 0.0030 | 0.0055 | 363702 | 0.469 (30/64) | 0.000 |
 | sklearn | unavailable | – | – | – | – | – | – | – |
 | padatious | unavailable | – | – | – | – | – | – | – |
 | model2vec | unavailable | – | – | – | – | – | – | – |
@@ -27,38 +27,32 @@ Eval set: **30000 utterances** across 11 languages (ca-es=2803, da-dk=309, de-de
 
 | media_type | precision | recall | f1 | support |
 |---|---|---|---|---|
-| audio_drama | 0.917 | 0.548 | 0.686 | 365 |
-| audiobook | 0.652 | 0.387 | 0.485 | 2187 |
-| comic | 0.952 | 0.079 | 0.145 | 509 |
-| episodic_series | 0.852 | 0.338 | 0.484 | 3221 |
-| game | 0.573 | 0.590 | 0.582 | 166 |
-| generic | 0.015 | 0.463 | 0.029 | 596 |
-| movie | 0.749 | 0.658 | 0.700 | 4899 |
-| music | 0.556 | 0.149 | 0.234 | 8455 |
-| music_video | 0.997 | 0.369 | 0.538 | 1868 |
-| not_media | 0.000 | 0.000 | 0.000 | 6158 |
-| podcast | 0.888 | 0.648 | 0.749 | 676 |
-| procedural_ambient | 1.000 | 0.828 | 0.906 | 29 |
-| radio | 0.717 | 0.715 | 0.716 | 804 |
-| short_film | 0.667 | 0.318 | 0.430 | 63 |
-| tv | 0.019 | 1.000 | 0.037 | 4 |
+| audio_drama | 1.000 | 1.000 | 1.000 | 24 |
+| audiobook | 0.932 | 0.976 | 0.954 | 84 |
+| comic | 0.857 | 0.833 | 0.845 | 36 |
+| episodic_series | 1.000 | 1.000 | 1.000 | 148 |
+| game | 1.000 | 1.000 | 1.000 | 18 |
+| movie | 1.000 | 0.941 | 0.970 | 222 |
+| music | 0.857 | 1.000 | 0.923 | 78 |
+| music_video | 1.000 | 0.946 | 0.973 | 56 |
+| podcast | 1.000 | 1.000 | 1.000 | 21 |
+| procedural_ambient | 1.000 | 1.000 | 1.000 | 27 |
+| radio | 1.000 | 1.000 | 1.000 | 45 |
+| tv | 1.000 | 1.000 | 1.000 | 116 |
 
 ## Per-type metrics — `ahocorasick`
 
 | media_type | precision | recall | f1 | support |
 |---|---|---|---|---|
-| audio_drama | 0.923 | 0.526 | 0.670 | 365 |
-| audiobook | 0.929 | 0.162 | 0.276 | 2187 |
-| comic | 0.987 | 0.149 | 0.259 | 509 |
-| episodic_series | 0.841 | 0.339 | 0.484 | 3221 |
-| game | 0.000 | 0.000 | 0.000 | 166 |
-| generic | 0.021 | 0.804 | 0.040 | 596 |
-| movie | 0.715 | 0.386 | 0.502 | 4899 |
-| music | 0.393 | 0.037 | 0.069 | 8455 |
-| music_video | 0.995 | 0.199 | 0.331 | 1868 |
-| not_media | 0.000 | 0.000 | 0.000 | 6158 |
-| podcast | 0.878 | 0.640 | 0.741 | 676 |
-| procedural_ambient | 0.000 | 0.000 | 0.000 | 29 |
-| radio | 0.246 | 0.086 | 0.127 | 804 |
-| short_film | 0.000 | 0.000 | 0.000 | 63 |
-| tv | 0.000 | 0.000 | 0.000 | 4 |
+| audio_drama | 1.000 | 0.750 | 0.857 | 24 |
+| audiobook | 1.000 | 0.286 | 0.444 | 84 |
+| comic | 1.000 | 0.667 | 0.800 | 36 |
+| episodic_series | 1.000 | 0.540 | 0.702 | 148 |
+| game | 0.000 | 0.000 | 0.000 | 18 |
+| movie | 0.967 | 0.531 | 0.686 | 222 |
+| music | 0.828 | 0.615 | 0.706 | 78 |
+| music_video | 1.000 | 0.536 | 0.698 | 56 |
+| podcast | 1.000 | 1.000 | 1.000 | 21 |
+| procedural_ambient | 1.000 | 0.333 | 0.500 | 27 |
+| radio | 1.000 | 0.467 | 0.636 | 45 |
+| tv | 1.000 | 0.345 | 0.513 | 116 |

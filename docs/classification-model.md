@@ -169,30 +169,51 @@ Predicting the coarse axes with independent heads and soft-gating the leaf is:
 There are two production paths. They emit the **same** `MediaClassification`, so
 a consumer never has to care which one ran.
 
-### 4.1 Derive from the leaf (the keyword classifier)
+### 4.1 Predict coarse-to-fine (the keyword classifier)
 
-The bundled keyword classifier predicts only the **leaf** `MediaType` (cheaply,
-by `.voc` matching) and then **derives** the coarse axes from it — exactly and for
-free, with no extra model:
+The bundled keyword classifier predicts the axes **coarse-to-fine**, in
+descending order of signal strength, each from its own `.voc` evidence:
 
 ```
-leaf MediaType ──infer_playback_type()──▶ playback_type   (mediavocab)
-               ──infer_structure()──────▶ structure       (this package, §6)
-               ──classify_domain()──────▶ domain
-               ──classify_genres()──────▶ genres
+modality (PlaybackType)  ◀── VerbAudio / VerbVideo / VerbGame / VerbRead /
+                             VerbTune + leaf-family keywords (score & pick best)
+        │ constrains
+        ▼
+structure (Structure)    ◀── ModEpisode / ModSeason / ModLive / Series / Podcast /
+                             Radio / IPTV … (episodic / continuous / collection / single)
+        │ constrains the leaf candidate set
+        ▼
+leaf MediaType           ◀── the candidate leaves' `.voc` matched WITHIN the set;
+                             else the DEFAULT leaf for the (modality, structure) cell
+        │
+        ▼
+domain + genres          ◀── classify_domain() / classify_genres()
 ```
 
-This is correct because the *default* coarse axes are intrinsic to the type: a
-`podcast` is always audio+episodic; a `movie` is always video+single. The
-derivation lives in `ovos_media_classifier/axes.py`
-(`classification_from_media_type`), and the per-axis convenience accessors
-(`classify_playback_type`, `classify_structure`, `classify_full`) are on
-[`AbstractMediaClassifier`](stable-api.md).
+The high-signal coarse axes are predicted **first** and **constrain** the leaf
+candidate set (the `mediavocab.MediaType`s whose `infer_playback_type` equals the
+predicted modality and whose `infer_structure` is compatible with the predicted
+structure — the inverse of the `MEDIA_TYPE_TO_*` maps). A stray specific keyword
+that disagrees with the coarse prediction therefore **cannot win**: _"watch the
+news"_ predicts video → the audio `news` leaf is excluded → `tv`, while _"listen
+to the news"_ predicts audio → `radio`. When no specific leaf voc matches inside
+the constrained set the classifier emits a sensible **default leaf** for that
+(modality, structure) cell (audio+single→`music`, video+continuous→`tv`, …).
 
-The trade-off: a derived axis can only ever reflect the *type default*. The
-keyword classifier cannot know that _"play the **album** Rumours"_ should be a
-`collection`, because it derived `structure` from the `music` leaf. That nuance is
-exactly what a trained backend adds.
+This logic lives in `ovos_media_classifier/keyword.py` (`_predict_modality`,
+`_predict_structure`, `_candidate_media_types`, `_classify_intent`); the per-axis
+accessors (`classify_playback_type`, `classify_structure`, `classify_full`) are
+overridden to report the **predicted** axes rather than deriving them from the
+leaf. Where a locale lacks the axis vocab the prediction simply finds no evidence
+and the classifier degrades to leaf-only matching (the en-us path is the
+reference). The leaf-derived defaults (`infer_playback_type` / `infer_structure`
+in `axes.py`) remain the fallback for that degraded path and for plugins that
+model only the leaf.
+
+The trade-off: the keyword model reads modality/structure from a fixed cue
+vocabulary, so it still cannot capture every per-utterance override (e.g. _"play
+the **album** Rumours"_ → `collection` needs an album/playlist cue voc). A trained
+head with a genuine per-axis confidence is what closes that gap.
 
 ### 4.2 Predict each axis with its own head (trained plugins)
 
