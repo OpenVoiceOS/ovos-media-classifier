@@ -29,6 +29,12 @@ from typing import Callable, Optional
 
 from ovos_utils.log import LOG
 
+from ovos_media_classifier.axes import (
+    Structure,
+    MediaClassification,
+    MEDIA_TYPE_TO_STRUCTURE,
+    infer_structure,
+)
 from ovos_media_classifier.base import AbstractMediaClassifier
 from ovos_media_classifier.content_filter import ContentFilter
 from ovos_media_classifier.intents import (
@@ -56,6 +62,10 @@ __all__ = [
     "AbstractMediaClassifier",
     "MediaType",
     "ContentFilter",
+    "Structure",
+    "MediaClassification",
+    "MEDIA_TYPE_TO_STRUCTURE",
+    "infer_structure",
     "OCPDomain",
     "OCPPlayIntent",
     "OCPControlIntent",

@@ -36,6 +36,8 @@ from typing import List
 import pandas as pd
 
 from training.sources import SCHEMA_COLUMNS
+from mediavocab import infer_playback_type
+from ovos_media_classifier.axes import infer_structure
 from ovos_media_classifier.intents import (
     MediaType,
     OCPPlayIntent,
@@ -43,7 +45,11 @@ from ovos_media_classifier.intents import (
     PLAY_INTENT_TO_GENRES,
 )
 
-OUT_COLUMNS = SCHEMA_COLUMNS + ["mediavocab_type", "genres"]
+# multi-axis columns (OVOS-MEDIA-CLASSIFY): the leaf type + the orthogonal coarse
+# axes (playback_type / structure) + genres — supports multi-head training.
+OUT_COLUMNS = SCHEMA_COLUMNS + [
+    "mediavocab_type", "playback_type", "structure", "genres",
+]
 
 # normalize bare language codes to BCP-47 region forms for a consistent dataset
 _LANG_NORM = {
@@ -105,6 +111,11 @@ def enforce_taxonomy(df: pd.DataFrame) -> pd.DataFrame:
     df["lang"] = df["lang"].map(lambda l: _LANG_NORM.get(l, l))
     df["mediavocab_type"] = df["media_label"].map(_intent_to_mvtype)
     df["genres"] = df["media_label"].map(_intent_to_genres)
+    # derive the coarse axes from the leaf mediavocab type
+    df["playback_type"] = df["mediavocab_type"].map(
+        lambda v: infer_playback_type(MediaType(v)).value)
+    df["structure"] = df["mediavocab_type"].map(
+        lambda v: infer_structure(MediaType(v)).value)
     return df[OUT_COLUMNS]
 
 
