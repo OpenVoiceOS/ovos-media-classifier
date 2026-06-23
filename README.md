@@ -4,7 +4,7 @@ Media-type **command/intent** classification for [OCP (OVOS Common Playback)](ht
 
 Why axes instead of a single label or a strict tree — and how trained backends predict each axis with its own head — is in [docs/classification-model.md](docs/classification-model.md).
 
-This initial release ships **one** classifier: the bundled-`.voc` **KeywordMediaClassifier** — zero ML dependencies, no model files, fully offline. It is the minimum required for OCP to be functional. Richer strategies (trained ONNX models, NER from media servers, …) are **not** in this release; they land later as independent, separately-reviewed plugins through the `opm.media.classifier` mechanism (see [External plugins](#external-plugins-opm)).
+The default classifier is the bundled-`.voc` **KeywordMediaClassifier** — zero ML dependencies, no model files, fully offline. It is the minimum required for OCP to be functional. An **optional** NER (entity-based) backend is available behind extras (see [NER backend](#ner-entity-based-backend-optional)); other richer strategies (trained ONNX models, …) land later as independent, separately-reviewed plugins through the `opm.media.classifier` mechanism (see [External plugins](#external-plugins-opm)). The lean keyword default is always preserved — nothing extra is imported unless you opt in.
 
 > **Command classification, not catalog classification.** This package classifies a *voice command* ("play the news"). It is distinct from `mediavocab.text.classify`, which classifies a piece of *catalog content* (a video's title/description) into a media type. Use this package in the OCP pipeline; use `mediavocab.text` when tagging library items.
 
@@ -14,8 +14,10 @@ This initial release ships **one** classifier: the bundled-`.voc` **KeywordMedia
 pip install ovos-media-classifier
 ```
 
-The only runtime dependencies are `ovos-utils` and `mediavocab`. There are no ML
-extras — the keyword classifier reads the bundled `.voc` files directly.
+The only runtime dependencies are `ovos-utils` and `mediavocab` — the keyword
+classifier reads the bundled `.voc` files directly. The optional NER backend is
+opt-in via extras (`[ner]`, `[media_servers]`, `[huggingface]`); see
+[NER backend](#ner-entity-based-backend-optional).
 
 ## Quickstart
 
@@ -95,14 +97,68 @@ bundled files directly. Matching runs in a fixed priority order (e.g.
 See [docs/backends.md](docs/backends.md) for details, and
 [docs/external-plugins.md](docs/external-plugins.md) for writing a richer classifier.
 
-## Future strategies (plugins, not in this release)
+## NER (entity-based) backend (optional)
 
-Trained ONNX models, live NER against a user's media servers, and other richer
-strategies are **not** part of this release. They arrive as independent,
+The **NER backend** matches an utterance against the **real entities the user
+has** — movie titles, artist names, streaming-service names, … — using an
+[Aho-Corasick](https://pypi.org/project/ahocorasick-ner/) automaton:
+
+```
+"play Inception"   → MOVIE   (Inception is a known movie_title)
+"put on Radiohead" → MUSIC    (Radiohead is a known artist_name)
+```
+
+It is fully opt-in and pulled in only via extras — the default install stays
+lean (`ovos-utils` + `mediavocab` only):
+
+```bash
+pip install ovos-media-classifier[ner]              # AhocorasickMediaClassifier
+pip install ovos-media-classifier[media_servers]    # Radarr/Sonarr/Lidarr/Jellyfin/Music Assistant loaders (requests)
+pip install ovos-media-classifier[huggingface]      # datasets loader
+```
+
+Select it through config — the factory chooses the NER backend before the
+keyword fallback, and falls back to keyword (with a warning) if the optional
+dependency is missing:
+
+```python
+from ovos_media_classifier import load_media_classifier
+
+# inline wordlists of entities the user owns
+clf = load_media_classifier({
+    "media_classifier_wordlists": {
+        "movie_title": ["Inception", "The Matrix"],
+        "artist_name": ["Radiohead"],
+    },
+})
+
+# or pull entities live from media servers / HuggingFace
+clf = load_media_classifier({
+    "media_classifier_entities": {
+        "radarr":   {"url": "http://localhost:7878", "api_key": "…"},
+        "lidarr":   {"url": "http://localhost:8686", "api_key": "…"},
+        "jellyfin": {"url": "http://localhost:8096", "api_key": "…"},
+        "huggingface": [{"dataset": "TigreGotico/ocp-entities"}],
+    },
+})
+
+# or from a CSV of (label, value) / (entity, label) rows
+clf = load_media_classifier({"media_classifier_ner_csv": "/path/to/entities.csv"})
+```
+
+Entities can also be registered at runtime (e.g. by skills announcing their
+content) via an `EntitiesContainer` — newly added entities are reflected in
+`classify()` immediately, with no automaton rebuild. See
+[`examples/ner_backend.py`](examples/ner_backend.py).
+
+## Future strategies (plugins)
+
+Trained ONNX models and other richer strategies arrive as independent,
 separately-reviewed additions that register under the `opm.media.classifier`
 entry-point group and load by name — the same mechanism any third party uses (see
 [External plugins](#external-plugins-opm)). The core package stays lean: one
-zero-dependency keyword classifier plus the plugin contract.
+zero-dependency keyword classifier (plus the opt-in NER backend) and the plugin
+contract.
 
 ## Optional ONNX trained backend (opt-in)
 

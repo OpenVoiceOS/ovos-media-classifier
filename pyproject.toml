@@ -24,15 +24,22 @@ classifiers = [
 ]
 
 [project.optional-dependencies]
-# Optional, opt-in ONNX trained backend (ovos_media_classifier/onnx.py).
-# The default install stays lean (ovos-utils + mediavocab only); these are
-# imported lazily, only when the ONNX backend is actually selected.
 onnx = [
     "onnxruntime",
     "numpy",
 ]
+# --- optional NER (entity-based) backend (Aho-Corasick over the user's real entities) ---
+ner = [
+    "ahocorasick-ner>=0.0.1",
+]
+media_servers = [
+    "requests",
+]
+huggingface = [
+    "datasets",
+]
 
-# test deps — onnxruntime is mocked in the suite, so it is NOT required here
+# test deps — optional-backend deps are mocked in the suite, so [test] runs green
 test = [
     "pytest",
     "pytest-cov",

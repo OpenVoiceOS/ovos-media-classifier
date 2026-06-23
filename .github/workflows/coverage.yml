@@ -12,5 +12,5 @@ jobs:
       python_version: '3.11'
       coverage_source: 'ovos_media_classifier'
       test_path: 'test'
-      install_extras: ''
+      install_extras: '.[test,onnx,ner,media_servers,huggingface]'
       min_coverage: 0

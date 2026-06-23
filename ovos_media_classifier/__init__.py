@@ -122,10 +122,10 @@ def load_media_classifier(
                 "Falling back to the keyword classifier."
             )
 
+    # Optional ONNX trained backend — requires the ``[onnx]`` extra. Lazy import:
+    # onnxruntime/numpy must NOT be touched on the default import path.
     onnx_model = config.get("media_classifier_onnx_model")
     if onnx_model:
-        # Lazy import: the ONNX backend (and its onnxruntime/numpy deps) must NOT
-        # be touched on the default import path — only when explicitly selected.
         try:
             from ovos_media_classifier.onnx import OnnxMediaClassifier
             clf = OnnxMediaClassifier.from_path(onnx_model)
@@ -140,6 +140,39 @@ def load_media_classifier(
         except Exception as e:
             LOG.warning(
                 f"Failed to load ONNX media classifier from {onnx_model!r}: {e}. "
+                "Falling back to the keyword classifier."
+            )
+
+    # Optional NER (entity-based) backend — requires the ``[ner]`` extra (and
+    # ``[media_servers]`` / ``[huggingface]`` for the live loaders). On
+    # ImportError / failure we fall through to the lean keyword classifier so the
+    # zero-ML-dependency default is always preserved.
+    entities_cfg = config.get("media_classifier_entities")
+    wordlists_cfg = config.get("media_classifier_wordlists")
+    ner_csv = config.get("media_classifier_ner_csv")
+    if entities_cfg is not None or wordlists_cfg is not None or ner_csv is not None:
+        try:
+            from ovos_media_classifier.ahocorasick import AhocorasickMediaClassifier
+            from ovos_media_classifier.entities import EntitiesContainer
+
+            if entities_cfg is not None:
+                container = EntitiesContainer.from_config(entities_cfg)
+                clf = AhocorasickMediaClassifier.from_container(container)
+            elif wordlists_cfg is not None:
+                clf = AhocorasickMediaClassifier.from_wordlists(wordlists_cfg)
+            else:
+                clf = AhocorasickMediaClassifier.from_csv(ner_csv)
+            LOG.info("OCP media classifier: NER (Aho-Corasick entity matching)")
+            return clf
+        except ImportError as e:
+            LOG.warning(
+                f"NER classifier backend unavailable: {e}. "
+                "Install it with: pip install ovos-media-classifier[ner]. "
+                "Falling back to the keyword classifier."
+            )
+        except Exception as e:
+            LOG.warning(
+                f"Failed to build NER media classifier: {e}. "
                 "Falling back to the keyword classifier."
             )
 
