@@ -72,3 +72,39 @@ class AbstractMediaClassifier(ABC):
         (keyword, guided, m2v) should override this.
         """
         return []
+
+    # ------------------------------------------------------------------
+    # Multi-axis output (OVOS-MEDIA-CLASSIFY) — orthogonal coarse axes.
+    # Defaults derive the coarse axes from the predicted MediaType; a trained
+    # backend MAY override to predict each axis with its own head.
+    # ------------------------------------------------------------------
+
+    def classify_playback_type(self, query: str, lang: str):
+        """Return the ``mediavocab.PlaybackType`` (audio/video/paged/interactive).
+
+        Default: derived from the classified ``MediaType``.
+        """
+        from mediavocab import infer_playback_type
+        media_type, _ = self.classify(query, lang)
+        return infer_playback_type(media_type)
+
+    def classify_structure(self, query: str, lang: str):
+        """Return the :class:`~ovos_media_classifier.axes.Structure`
+        (single/episodic/continuous/collection).  Default: derived from MediaType."""
+        from ovos_media_classifier.axes import infer_structure
+        media_type, _ = self.classify(query, lang)
+        return infer_structure(media_type)
+
+    def classify_full(self, query: str, lang: str):
+        """Return the full multi-axis :class:`~ovos_media_classifier.axes.MediaClassification`.
+
+        Combines the leaf ``MediaType``, the derived coarse axes
+        (``playback_type`` + ``structure``), the ``domain`` and ``genres`` into
+        one result.  Backends with dedicated heads SHOULD override to predict the
+        axes directly (and soft-gate the leaf) rather than deriving them.
+        """
+        from ovos_media_classifier.axes import classification_from_media_type
+        media_type, conf = self.classify(query, lang)
+        domain, _ = self.classify_domain(query, lang)
+        genres = self.classify_genres(query, lang)
+        return classification_from_media_type(media_type, domain, genres, conf)
