@@ -72,6 +72,7 @@ from ovos_media_classifier.constants import (
 from ovos_media_classifier.intents import (
     OCPDomain,
     OCPPlayIntent,
+    OCPControlIntent,
     PLAY_INTENT_TO_MEDIA_TYPE,
     PLAY_INTENT_TO_GENRES,
 )
@@ -178,6 +179,45 @@ _MODALITY_DEFAULT_LEAF: Dict[PlaybackType, MediaType] = {
 }
 
 
+# ---------------------------------------------------------------------------
+# Transport-control voc resolution
+#
+# ``classify_control`` matches these ``Ctrl*.voc`` files **in order** (first hit
+# wins) so the more-specific / less-ambiguous action is preferred when several
+# could fire.  Notes on the deliberate ordering:
+#   * SeekBackward before Prev, and SeekForward before Next: "go back 30
+#     seconds" / "skip ahead a minute" is a seek, not a track change — a trailing
+#     duration/number is the disambiguator (see ``_DURATION_RE``).
+#   * Shuffle / Repeat are unambiguous keywords and come early.
+#   * Pause/Stop/Resume are high-signal and ordered before the directional ones.
+#   * Open / SaveGame / LoadGame / Like are domain-specific.
+# Each entry: (voc_name, OCPControlIntent).
+# ---------------------------------------------------------------------------
+_CONTROL_VOC_ORDER: List[Tuple[str, "OCPControlIntent"]] = [
+    ("CtrlShuffle", OCPControlIntent.SHUFFLE),
+    ("CtrlRepeat", OCPControlIntent.REPEAT),
+    ("CtrlPause", OCPControlIntent.PAUSE),
+    ("CtrlStop", OCPControlIntent.STOP),
+    ("CtrlResume", OCPControlIntent.RESUME),
+    ("CtrlSeekBackward", OCPControlIntent.SEEK_BACKWARD),
+    ("CtrlSeekForward", OCPControlIntent.SEEK_FORWARD),
+    ("CtrlNext", OCPControlIntent.NEXT),
+    ("CtrlPrev", OCPControlIntent.PREVIOUS),
+    ("CtrlLoadGame", OCPControlIntent.LOAD_GAME),
+    ("CtrlSaveGame", OCPControlIntent.SAVE_GAME),
+    ("CtrlOpen", OCPControlIntent.OPEN),
+    ("CtrlLike", OCPControlIntent.LIKE_SONG),
+]
+
+# A trailing duration ("30 seconds", "a minute", "2 mins") turns an ambiguous
+# directional cue ("go back", "forward") into a *seek* rather than a track skip.
+_DURATION_RE = re.compile(
+    r"\b(?:\d+|a|an|one|two|three|four|five|ten|fifteen|twenty|thirty|sixty)\b"
+    r"[^.]*?\b(?:sec(?:ond)?s?|min(?:ute)?s?|hours?|hrs?)\b",
+    re.IGNORECASE,
+)
+
+
 class KeywordMediaClassifier(AbstractMediaClassifier):
     """Classifies media type using hierarchical voc keyword matching.
 
@@ -238,11 +278,120 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
         return PLAY_INTENT_TO_MEDIA_TYPE.get(intent, MediaType.GENERIC), conf
 
     def classify_domain(self, query: str, lang: str) -> Tuple[OCPDomain, float]:
-        """Domain axis: ocp_play when any media evidence matches, else not_ocp."""
+        """Domain axis: ocp_control / ocp_play / not_ocp.
+
+        Precedence — this is where the "play" ambiguity is resolved:
+
+        * A concrete **media leaf** (music/movie/podcast/...) ⇒ ``OCP_PLAY``,
+          *unless* it is merely the object of a transport control and no
+          play-initiation verb is present ("stop the music", "save the game" →
+          CONTROL).
+        * A **play-initiation verb** (``Play.voc``: play/start/...) followed by
+          content ⇒ ``OCP_PLAY`` even when no specific leaf voc matched
+          ("play some jazz").
+        * Otherwise a **transport-control** voc (pause/stop/next/seek/...) ⇒
+          ``OCP_CONTROL``; bare "play"/"resume"/"continue" with no media also
+          resolve here (→ CONTROL PLAY / RESUME) via ``classify_control``.
+        * Else ⇒ ``NOT_OCP``.
+
+        The control vocs deliberately exclude bare "play", so "play <media>"
+        never trips a control match.
+        """
+        control = self.classify_control(query, lang)
         media_type, conf = self.classify(query, lang)
-        if media_type != MediaType.GENERIC:
-            return OCPDomain.OCP_PLAY, conf
+        has_leaf = media_type != MediaType.GENERIC
+        play_verb = self._is_play_request(query, lang)
+
+        # A new-play request (explicit play verb + content, or a concrete leaf)
+        # beats a transport control unless the control is the dominant verb with
+        # no play verb present (e.g. "stop the music").
+        if (has_leaf or play_verb) and control is None:
+            return OCPDomain.OCP_PLAY, (conf if has_leaf else DEFAULT_KEYWORD_CONFIDENCE)
+        if (has_leaf or play_verb) and control is not None:
+            # Both fired: a play verb means a *new* play request wins; otherwise
+            # the control owns the (media-noun) object.
+            if play_verb and control not in (OCPControlIntent.PLAY,
+                                             OCPControlIntent.RESUME):
+                return OCPDomain.OCP_PLAY, DEFAULT_KEYWORD_CONFIDENCE
+            return OCPDomain.OCP_CONTROL, DEFAULT_KEYWORD_CONFIDENCE
+
+        if control is not None:
+            return OCPDomain.OCP_CONTROL, DEFAULT_KEYWORD_CONFIDENCE
         return OCPDomain.NOT_OCP, 0.0
+
+    def _is_play_request(self, query: str, lang: str) -> bool:
+        """True when a play-initiation verb (``Play.voc``) is followed by content.
+
+        "play some jazz" / "start the movie" are new-play requests; a *bare*
+        play verb ("play", "start") with nothing after it is not (it is handled
+        as a CONTROL PLAY resume-current).
+        """
+        if not self._match(query, "Play", lang):
+            return False
+        # require something beyond the bare verb (a query / media noun)
+        words = [w for w in re.split(r"\s+", query.strip()) if w]
+        return len(words) > 1
+
+    def classify_control(
+        self, query: str, lang: str
+    ) -> Optional[OCPControlIntent]:
+        """Match a transport-control action from the ``Ctrl*.voc`` files.
+
+        Matches the per-action control vocs in ``_CONTROL_VOC_ORDER`` (most
+        specific / least ambiguous first) on word boundaries and returns the
+        first :class:`~ovos_media_classifier.intents.OCPControlIntent` that
+        fires; ``None`` when no control voc matches.
+
+        Disambiguations:
+
+        * A trailing duration ("go back 30 seconds", "skip ahead a minute")
+          forces an ambiguous directional cue to a *seek* (SEEK_BACKWARD /
+          SEEK_FORWARD) rather than a track change (PREVIOUS / NEXT).
+        * "play" is never a control cue here; a *bare* play/resume verb with no
+          media falls through to ``OCPControlIntent.PLAY`` / ``RESUME`` so
+          "play"/"resume"/"continue" (resume-current) are still control.
+        """
+        m = self._match
+        q = query
+        has_duration = bool(_DURATION_RE.search(q))
+
+        for voc_name, action in _CONTROL_VOC_ORDER:
+            if not m(q, voc_name, lang):
+                continue
+            if action is OCPControlIntent.SEEK_BACKWARD and not has_duration:
+                if not self._explicit_seek_back(q, lang):
+                    continue
+            if action is OCPControlIntent.SEEK_FORWARD and not has_duration:
+                if not self._explicit_seek_fwd(q, lang):
+                    continue
+            return action
+
+        # Bare play/resume verb with no media leaf ⇒ resume-current control.
+        # ``Resume.voc`` (resume/unpause) is unambiguous → RESUME.
+        if m(q, "Resume", lang):
+            return OCPControlIntent.RESUME
+        # A *bare* play verb ("play", "start") with no media is CONTROL PLAY
+        # (resume the current track).  "play <media>" is filtered out by the
+        # word-count guard so it stays a play request, not a control.
+        if m(q, "Play", lang) and not self._is_play_request(q, lang):
+            return OCPControlIntent.PLAY
+        return None
+
+    def _explicit_seek_back(self, q: str, lang: str) -> bool:
+        """True when an *unambiguous* rewind cue (not just "go back") fired."""
+        for kw in ("rewind", "skip back", "jump back", "seek backward",
+                   "seek back"):
+            if re.search(rf"\b{re.escape(kw)}\b", q, re.IGNORECASE):
+                return True
+        return False
+
+    def _explicit_seek_fwd(self, q: str, lang: str) -> bool:
+        """True when an *unambiguous* fast-forward cue (not just "forward") fired."""
+        for kw in ("fast forward", "skip ahead", "jump ahead", "skip forward",
+                   "seek forward"):
+            if re.search(rf"\b{re.escape(kw)}\b", q, re.IGNORECASE):
+                return True
+        return False
 
     def classify_genres(self, query: str, lang: str) -> List[str]:
         """Return mediavocab genre tags implied by the winning keyword intent.
@@ -288,6 +437,10 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
         Unlike the base implementation (which derives the coarse axes from the
         leaf), this predicts modality and structure from their own voc evidence,
         constrains the leaf to them, and reports all four axes consistently.
+
+        When the query is a **transport-control** request (``OCP_CONTROL``) the
+        media axes are left UNKNOWN/GENERIC (a pure control has no media leaf)
+        and ``control_intent`` carries the action.
         """
         modality, _ = self._predict_modality(query, lang)
         structure = self._predict_structure(query, lang, modality)
@@ -295,18 +448,39 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
         media_type = PLAY_INTENT_TO_MEDIA_TYPE.get(intent, MediaType.GENERIC)
         genres = list(PLAY_INTENT_TO_GENRES.get(intent, []))
 
-        if media_type == MediaType.GENERIC:
-            domain = OCPDomain.NOT_OCP
+        # The domain head owns the play-vs-control precedence (see
+        # ``classify_domain``); keep ``classify_full`` consistent with it.
+        domain, dconf = self.classify_domain(query, lang)
+        control_intent: Optional[OCPControlIntent] = None
+
+        if domain is OCPDomain.OCP_CONTROL:
+            # Pure transport control — media axes are unknown.
+            control_intent = self.classify_control(query, lang)
+            media_type = MediaType.GENERIC
             playback = PlaybackType.UNKNOWN
             structure = Structure.UNKNOWN
+            genres = []
+            conf = dconf
+        elif domain is OCPDomain.OCP_PLAY:
+            if media_type == MediaType.GENERIC:
+                # play-verb request with no specific leaf ("play some jazz")
+                conf = dconf
+                playback = (modality if modality is not PlaybackType.UNKNOWN
+                            else PlaybackType.UNKNOWN)
+                if structure is Structure.UNKNOWN and modality is not PlaybackType.UNKNOWN:
+                    structure = Structure.SINGLE
+            else:
+                # Prefer the predicted coarse axes; degrade to the leaf's
+                # intrinsic axis where no coarse evidence was found.
+                playback = (modality if modality is not PlaybackType.UNKNOWN
+                            else infer_playback_type(media_type))
+                if structure is Structure.UNKNOWN:
+                    structure = infer_structure(media_type)
         else:
-            domain = OCPDomain.OCP_PLAY
-            # Prefer the predicted coarse axes; degrade to the leaf's intrinsic
-            # axis where no coarse evidence was found (graceful degradation).
-            playback = (modality if modality is not PlaybackType.UNKNOWN
-                        else infer_playback_type(media_type))
-            if structure is Structure.UNKNOWN:
-                structure = infer_structure(media_type)
+            media_type = MediaType.GENERIC
+            genres = []
+            playback = PlaybackType.UNKNOWN
+            structure = Structure.UNKNOWN
 
         return MediaClassification(
             media_type=media_type,
@@ -315,6 +489,7 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
             domain=domain,
             genres=genres,
             confidence=conf,
+            control_intent=control_intent,
         )
 
     # ------------------------------------------------------------------

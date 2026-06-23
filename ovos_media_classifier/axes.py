@@ -22,11 +22,11 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import List
+from typing import List, Optional
 
 from mediavocab import MediaType, PlaybackType, infer_playback_type
 
-from ovos_media_classifier.intents import OCPDomain
+from ovos_media_classifier.intents import OCPDomain, OCPControlIntent
 
 
 class Structure(str, Enum):
@@ -78,6 +78,8 @@ class MediaClassification:
     domain: OCPDomain
     genres: List[str] = field(default_factory=list)
     confidence: float = 0.0
+    # The control action when ``domain == OCP_CONTROL`` (else ``None``).
+    control_intent: Optional[OCPControlIntent] = None
 
     def as_dict(self) -> dict:
         return {
@@ -87,6 +89,8 @@ class MediaClassification:
             "domain": self.domain.value,
             "genres": list(self.genres),
             "confidence": self.confidence,
+            "control_intent": (self.control_intent.value
+                               if self.control_intent is not None else None),
         }
 
 

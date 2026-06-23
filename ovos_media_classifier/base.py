@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Tuple, List, Optional
 
-from ovos_media_classifier.intents import MediaType, OCPDomain
+from ovos_media_classifier.intents import MediaType, OCPDomain, OCPControlIntent
 
 
 class AbstractMediaClassifier(ABC):
@@ -55,6 +55,22 @@ class AbstractMediaClassifier(ABC):
         if media_type != MediaType.GENERIC:
             return OCPDomain.OCP_PLAY, conf
         return OCPDomain.NOT_OCP, 0.0
+
+    def classify_control(
+        self, query: str, lang: str
+    ) -> Optional[OCPControlIntent]:
+        """Classify a player **control** action (the ocp_control domain).
+
+        Returns the :class:`~ovos_media_classifier.intents.OCPControlIntent` the
+        utterance targets (pause / stop / next / shuffle / seek / …), or ``None``
+        when the query is not a transport-control request.
+
+        The default returns ``None`` — only backends that model control intents
+        (the keyword backend via its ``Ctrl*.voc`` files, padatious, trained
+        heads) override this.  ``classify_domain`` consults it to decide between
+        ``OCP_PLAY`` and ``OCP_CONTROL``.
+        """
+        return None
 
     def is_ocp_query(self, query: str, lang: str) -> Tuple[bool, float]:
         """Return (True, conf) if the query targets OCP (play or control).
