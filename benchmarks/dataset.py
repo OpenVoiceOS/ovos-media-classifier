@@ -28,6 +28,8 @@ import random
 from dataclasses import dataclass
 from typing import Dict, List, Optional, Tuple
 
+from mediavocab import PlaybackType, infer_playback_type
+
 from ovos_media_classifier.intents import (
     MediaType,
     OCPPlayIntent,
@@ -88,32 +90,51 @@ _VOC_TO_INTENT: Dict[str, OCPPlayIntent] = {
 _ADULT_VOCS = {"AdultKeyword", "HentaiKeyword"}
 
 # Play-style templates, per language.  ``{kw}`` is the keyword phrase.
-_TEMPLATES: Dict[str, List[str]] = {
-    "en-us": [
-        "play {kw}",
-        "play some {kw}",
-        "put on some {kw}",
-        "i want to watch a {kw}",
-        "can you play {kw} for me",
-        "start playing {kw}",
-    ],
-    # NOTE: German play-verbs "spiele"/"abspielen" embed the GameKeyword "spiel",
-    # so we use "starte"/"mach an"/"zeig mir" to keep the carrier phrase from
-    # colliding with a keyword.  The "tv show"->TV vs EPISODIC_SERIES mismatch is
-    # a genuine keyword-backend priority artifact and is deliberately left in.
-    "de-de": [
-        "starte {kw}",
-        "mach {kw} an",
-        "ich möchte {kw} sehen",
-        "zeig mir {kw}",
-    ],
-    "pt-pt": [
-        "toca {kw}",
-        "põe {kw}",
-        "quero ver {kw}",
-        "mostra-me {kw}",
-    ],
+#
+# Templates are **modality-consistent**: the carrier verb must agree with the
+# leaf's playback modality, because the keyword backend is now *hierarchical*
+# (coarse-to-fine) — it predicts the modality from the verb FIRST and constrains
+# the leaf to it.  A contradictory carrier ("watch a radio") is not something a
+# real user says, and pairing it with an audio label would be a self-inflicted
+# mislabel, so each modality gets its own neutral + verb-matched templates.
+#
+# ``_NEUTRAL`` carriers (generic "play") work for every modality; the
+# modality-specific ones supply the matching verb (watch / listen / read / launch).
+_NEUTRAL_TEMPLATES: Dict[str, List[str]] = {
+    "en-us": ["play {kw}", "play some {kw}", "can you play {kw} for me",
+              "start playing {kw}"],
+    "de-de": ["starte {kw}", "mach {kw} an"],
+    "pt-pt": ["toca {kw}", "põe {kw}"],
 }
+_MODALITY_TEMPLATES: Dict[str, Dict[PlaybackType, List[str]]] = {
+    "en-us": {
+        PlaybackType.VIDEO: ["i want to watch a {kw}", "watch {kw}"],
+        PlaybackType.AUDIO: ["i want to listen to {kw}", "put on some {kw}"],
+        PlaybackType.PAGED: ["read me {kw}", "i want to read a {kw}"],
+        PlaybackType.INTERACTIVE: ["i want to play a {kw}", "launch {kw}"],
+    },
+    "de-de": {
+        PlaybackType.VIDEO: ["ich möchte {kw} sehen", "zeig mir {kw}"],
+        PlaybackType.AUDIO: ["ich möchte {kw} hören"],
+        PlaybackType.PAGED: ["lies mir {kw} vor"],
+        PlaybackType.INTERACTIVE: ["ich will {kw} spielen"],
+    },
+    "pt-pt": {
+        PlaybackType.VIDEO: ["quero ver {kw}", "mostra-me {kw}"],
+        PlaybackType.AUDIO: ["quero ouvir {kw}"],
+        PlaybackType.PAGED: ["lê-me {kw}"],
+        PlaybackType.INTERACTIVE: ["quero jogar {kw}"],
+    },
+}
+
+
+def _templates_for(lang: str, media_type: MediaType) -> List[str]:
+    """Modality-consistent templates for a leaf: neutral carriers + the carriers
+    whose verb matches the leaf's playback modality."""
+    neutral = _NEUTRAL_TEMPLATES.get(lang, _NEUTRAL_TEMPLATES["en-us"])
+    by_mod = _MODALITY_TEMPLATES.get(lang, _MODALITY_TEMPLATES["en-us"])
+    modality = infer_playback_type(media_type)
+    return list(neutral) + list(by_mod.get(modality, []))
 
 
 @dataclass
@@ -152,8 +173,6 @@ def _build_rows(lang: str, rng: random.Random) -> List[EvalRow]:
     to the file's own intent.  This keeps the ground truth honest without
     hard-coding the backend's exact behaviour.
     """
-    templates = _TEMPLATES.get(lang, _TEMPLATES["en-us"])
-
     # Pre-load all vocs for this lang, skip empties (lang may lack a file).
     voc_phrases: Dict[str, List[str]] = {}
     for voc in _VOC_TO_INTENT:
@@ -174,6 +193,9 @@ def _build_rows(lang: str, rng: random.Random) -> List[EvalRow]:
         intent = _VOC_TO_INTENT[voc]
         mtype: MediaType = PLAY_INTENT_TO_MEDIA_TYPE.get(intent, MediaType.GENERIC)
         genres: List[str] = list(PLAY_INTENT_TO_GENRES.get(intent, []))
+
+        # Modality-consistent carriers for this leaf (verb agrees with modality).
+        templates = _templates_for(lang, mtype)
 
         for phrase in phrases:
             owners = owner.get(phrase, {voc})

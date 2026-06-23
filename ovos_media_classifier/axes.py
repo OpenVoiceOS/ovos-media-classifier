@@ -11,9 +11,12 @@ prune the leaf label space.  Rather than a brittle hard hierarchy, the axes are
 * **media_type**    — the concrete ``mediavocab.MediaType`` leaf.
 * **genres**        — orthogonal tags (the ``adult`` genre drives content filtering).
 
-For the keyword classifier the coarse axes are *derived* from the predicted
-``MediaType`` (cheap and exact).  Trained classifier plugins MAY predict each
-axis with its own head and soft-gate the leaf — see OVOS-MEDIA-CLASSIFY.
+The keyword classifier predicts the coarse axes **coarse-to-fine** from their
+own ``.voc`` evidence (modality → structure) and *constrains* the leaf to them
+(see ``keyword.py``).  The ``infer_*`` helpers here provide the leaf-derived
+*defaults* — the fallback for locales without axis vocab and for plugins that
+model only the leaf.  Trained classifier plugins MAY predict each axis with its
+own head and soft-gate the leaf — see OVOS-MEDIA-CLASSIFY.
 """
 from __future__ import annotations
 

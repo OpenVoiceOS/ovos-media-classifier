@@ -48,9 +48,13 @@ network and no external dataset. For each `<Type>Keyword.voc`:
 2. That intent maps to a canonical `mediavocab.MediaType` via
    `PLAY_INTENT_TO_MEDIA_TYPE`, and to genre tags via `PLAY_INTENT_TO_GENRES`
    (this is where the `adult` signal comes from).
-3. Each keyword phrase is dropped into play-style templates
-   (`"play {kw}"`, `"put on some {kw}"`, `"i want to watch a {kw}"`, …) to make
-   realistic utterances.
+3. Each keyword phrase is dropped into **modality-consistent** play-style
+   templates. The keyword backend is hierarchical (coarse-to-fine): it predicts
+   the playback modality from the carrier verb FIRST and constrains the leaf to
+   it, so the carrier must agree with the leaf's modality — a video leaf gets a
+   "watch …" carrier, an audio leaf a "listen to …" carrier, etc. (no
+   self-inflicted "watch a radio" mislabels). Every leaf also gets the neutral
+   `"play {kw}"` carriers.
 
 Keyword phrases that are shared across media types (genuinely ambiguous for the
 keyword backend) are dropped so the labels stay honest. Sampling uses a fixed
@@ -79,30 +83,29 @@ the false-block rate over the non-adult slice.
 
 ## Latest results
 
-Eval set: **936 utterances** across 3 languages (`de-de`=308, `en-us`=360,
-`pt-pt`=268), **64 adult-genre rows**.
+Eval set: **875 utterances** across 3 languages (`de-de`=277, `en-us`=360,
+`pt-pt`=238), **64 adult-genre rows**.
 
 | backend | status | accuracy | macro-F1 | median ms | p95 ms | rows/s | CF recall | false-block |
 |---|---|---|---|---|---|---|---|---|
-| keyword | available | 0.981 | 0.989 | 0.0132 | 0.0337 | 53915 | 0.938 (60/64) | 0.000 |
-| ahocorasick | available | 0.481 | 0.613 | 0.0050 | 0.0120 | 141910 | 0.000 (0/64) | 0.000 |
+| keyword | available | 0.973 | 0.972 | 0.0254 | 0.0531 | 32700 | 1.000 (64/64) | 0.000 |
+| ahocorasick | available | 0.495 | 0.628 | 0.0030 | 0.0055 | 363702 | 0.469 (30/64) | 0.000 |
 | sklearn | unavailable | – | – | – | – | – | – | – |
 | padatious | unavailable | – | – | – | – | – | – | – |
 | model2vec | unavailable | – | – | – | – | – | – | – |
 | guided_onnx | unavailable | – | – | – | – | – | – | – |
 
-Notes from this run:
+Notes from this run (hierarchical coarse-to-fine keyword backend):
 
-- The keyword backend's only systematic errors are `episodic_series` ("tv show")
-  resolving to `tv` (the `TVKeyword`/`IPTVKeyword` branch outranks `SeriesKeyword`)
-  and a handful of `movie` titles caught by an `audiobook` substring.
-- Keyword content-filter recall is **0.938** (60/64); the 4 misses are German
-  `sexfilm` utterances that the `de-de` `AdultKeyword.voc` does not cover — a real
-  localization gap surfaced by the benchmark. False-block rate on non-adult rows
-  is **0.000**.
-- The ahocorasick exact-match baseline blocks **0** adult rows because it does not
-  surface a genre signal (`classify_genres` is the default empty), so the content
-  filter has nothing to act on — useful to keep visible.
+- The keyword backend's residual errors are lexical-substring artifacts, not
+  modality logic: German `audiobeschreibung` ("audio description") contains
+  `audio` so it scores as audio (`music`) rather than `movie`; the bare verb
+  `read`/`ler` is shared between `AudioBookKeyword` and the paged comic leaf.
+- Keyword content-filter recall is **1.000** (64/64) and false-block rate on
+  non-adult rows is **0.000** — adult precedence survives the rewrite intact.
+- The ahocorasick exact-match baseline now blocks the adult rows whose phrase is
+  in the bundled vocab (`classify_genres` surfaces the genre), giving a 0.469
+  recall; the remainder use phrases its wordlists do not cover.
 
 See `benchmarks/results.md` for the full per-type tables and
 `benchmarks/results.json` for the raw numbers and confusion matrices.
