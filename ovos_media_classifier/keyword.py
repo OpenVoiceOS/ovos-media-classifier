@@ -520,72 +520,17 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
         def _allow(intent: OCPPlayIntent) -> bool:
             return _ok(intent) and _in_set(intent)
 
-        # --- 3. Constrained specific-leaf chain -------------------------------
-        # Ordering mirrors the original priority chain (most-specific first) but
-        # every branch is now additionally gated by ``_in_set`` so a leaf whose
-        # modality/structure disagrees with the predicted axes cannot fire.
-        if _allow(I.DOCUMENTARY) and m(q, "DocumentaryKeyword", lang):
-            return I.DOCUMENTARY, DEFAULT_KEYWORD_CONFIDENCE
-        if _allow(I.AUDIOBOOK) and m(q, "AudioBookKeyword", lang):
-            return I.AUDIOBOOK, DEFAULT_KEYWORD_CONFIDENCE
-        if _allow(I.NEWS) and m(q, "NewsKeyword", lang):
-            return I.NEWS, DEFAULT_KEYWORD_CONFIDENCE
-        if _allow(I.ANIME) and m(q, "AnimeKeyword", lang):
-            return I.ANIME, DEFAULT_KEYWORD_CONFIDENCE
-        if _allow(I.CARTOON) and m(q, "CartoonKeyword", lang):
-            return I.CARTOON, DEFAULT_KEYWORD_CONFIDENCE
-        if _allow(I.PODCAST) and m(q, "PodcastKeyword", lang):
-            return I.PODCAST, DEFAULT_KEYWORD_CONFIDENCE
-        if _allow(I.RADIO_THEATRE) and m(q, "AudioDramaKeyword", lang):
-            # must come before plain RADIO so "radio theatre" wins
-            return I.RADIO_THEATRE, DEFAULT_KEYWORD_CONFIDENCE
-        if _allow(I.RADIO) and m(q, "RadioKeyword", lang):
-            return I.RADIO, DEFAULT_KEYWORD_CONFIDENCE
-        if _allow(I.MUSIC_VIDEO) and m(q, "MusicVideoKeyword", lang):
-            # must come before MusicKeyword (music video is more specific)
-            return I.MUSIC_VIDEO, DEFAULT_KEYWORD_HIGH_CONFIDENCE
-        if _allow(I.MUSIC) and m(q, "MusicKeyword", lang):
-            # must come before MOVIE to handle "{movie} soundtrack"
-            return I.MUSIC, DEFAULT_KEYWORD_CONFIDENCE
-        # IPTVKeyword (live channel/stream) takes priority over generic TVKeyword
-        if _allow(I.TV) and m(q, "IPTVKeyword", lang):
-            return I.TV, DEFAULT_KEYWORD_CONFIDENCE
-        # SeriesKeyword (e.g. "tv show", "episode") before the generic TVKeyword,
-        # else "tv show" would match "tv" and be classified as a live channel.
-        if _allow(I.VIDEO_EPISODES) and m(q, "SeriesKeyword", lang):
-            return I.VIDEO_EPISODES, DEFAULT_KEYWORD_CONFIDENCE
-        if _allow(I.TV) and m(q, "TVKeyword", lang):
-            return I.TV, DEFAULT_KEYWORD_CONFIDENCE
-
-        # Movie family
-        movie_intents = {I.MOVIE, I.SHORT_FILM, I.SILENT_MOVIE, I.BW_MOVIE}
-        if any(_allow(t) for t in movie_intents) and m(q, "MovieKeyword", lang):
-            if _allow(I.SHORT_FILM) and m(q, "ShortKeyword", lang):
-                return I.SHORT_FILM, DEFAULT_KEYWORD_HIGH_CONFIDENCE
-            if _allow(I.SILENT_MOVIE) and m(q, "SilentKeyword", lang):
-                return I.SILENT_MOVIE, DEFAULT_KEYWORD_HIGH_CONFIDENCE
-            if _allow(I.BW_MOVIE) and m(q, "BWKeyword", lang):
-                return I.BW_MOVIE, DEFAULT_KEYWORD_HIGH_CONFIDENCE
-            if _allow(I.MOVIE):
-                return I.MOVIE, DEFAULT_KEYWORD_CONFIDENCE
-        if _allow(I.TRAILER) and m(q, "TrailerKeyword", lang):
-            return I.TRAILER, DEFAULT_KEYWORD_HIGH_CONFIDENCE
-        if _allow(I.BEHIND_THE_SCENES) and m(q, "BehindTheScenesKeyword", lang):
-            return I.BEHIND_THE_SCENES, DEFAULT_KEYWORD_HIGH_CONFIDENCE
-
-        if _allow(I.VISUAL_STORY) and m(q, "ComicBookKeyword", lang):
-            return I.VISUAL_STORY, DEFAULT_KEYWORD_LOW_CONFIDENCE
-        if _allow(I.GAME) and m(q, "GameKeyword", lang):
-            return I.GAME, DEFAULT_KEYWORD_LOW_CONFIDENCE
-        if _allow(I.AUDIO_DESCRIPTION) and m(q, "ADKeyword", lang):
-            return I.AUDIO_DESCRIPTION, DEFAULT_KEYWORD_LOW_CONFIDENCE
-        if _allow(I.ASMR) and m(q, "ASMRKeyword", lang):
-            return I.ASMR, DEFAULT_KEYWORD_LOW_CONFIDENCE
-
-        if _allow(I.VIDEO) and m(q, "VideoKeyword", lang):
-            return I.VIDEO, DEFAULT_KEYWORD_LOW_CONFIDENCE
-        if _allow(I.AUDIO) and m(q, "AudioKeyword", lang):
-            return I.AUDIO, DEFAULT_KEYWORD_LOW_CONFIDENCE
+        # --- 3. Specific-leaf chain: constraint is a PREFERENCE, not a gate ----
+        # First run the leaf chain gated to the predicted (modality, structure)
+        # candidate set; if nothing matches there, retry WITHOUT the constraint.
+        # A direct specific-leaf voc match is strong evidence and must override a
+        # *mispredicted* coarse axis — so the constraint only breaks ties between
+        # competing leaves, it never suppresses an otherwise-certain leaf. This
+        # keeps real-query accuracy at least on par with flat leaf-first matching
+        # (a hard gate regressed macro-F1 when modality prediction was noisy).
+        hit = self._match_leaf_chain(q, lang, _ok)
+        if hit is not None:
+            return hit
 
         # --- 4. Default leaf for the (modality, structure) cell ---------------
         # No specific leaf voc matched inside the constrained set, but the coarse
@@ -602,6 +547,73 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
                     return intent, DEFAULT_KEYWORD_LOW_CONFIDENCE
 
         return I.GENERIC, 0.0
+
+    def _match_leaf_chain(
+        self, q: str, lang: str, allow: Callable[[OCPPlayIntent], bool]
+    ) -> Optional[Tuple[OCPPlayIntent, float]]:
+        """Specific-leaf voc priority chain (most-specific first).
+
+        ``allow(intent)`` decides whether a branch may fire — pass the constrained
+        ``_allow`` for the axis-gated pass, or the bare ``_ok`` for the unconstrained
+        leaf-first fallback. Returns ``(intent, confidence)`` on the first match,
+        else ``None``.
+        """
+        I = OCPPlayIntent
+        m = self._match
+        if allow(I.DOCUMENTARY) and m(q, "DocumentaryKeyword", lang):
+            return I.DOCUMENTARY, DEFAULT_KEYWORD_CONFIDENCE
+        if allow(I.AUDIOBOOK) and m(q, "AudioBookKeyword", lang):
+            return I.AUDIOBOOK, DEFAULT_KEYWORD_CONFIDENCE
+        if allow(I.NEWS) and m(q, "NewsKeyword", lang):
+            return I.NEWS, DEFAULT_KEYWORD_CONFIDENCE
+        if allow(I.ANIME) and m(q, "AnimeKeyword", lang):
+            return I.ANIME, DEFAULT_KEYWORD_CONFIDENCE
+        if allow(I.CARTOON) and m(q, "CartoonKeyword", lang):
+            return I.CARTOON, DEFAULT_KEYWORD_CONFIDENCE
+        if allow(I.PODCAST) and m(q, "PodcastKeyword", lang):
+            return I.PODCAST, DEFAULT_KEYWORD_CONFIDENCE
+        if allow(I.RADIO_THEATRE) and m(q, "AudioDramaKeyword", lang):
+            return I.RADIO_THEATRE, DEFAULT_KEYWORD_CONFIDENCE
+        if allow(I.RADIO) and m(q, "RadioKeyword", lang):
+            return I.RADIO, DEFAULT_KEYWORD_CONFIDENCE
+        if allow(I.MUSIC_VIDEO) and m(q, "MusicVideoKeyword", lang):
+            return I.MUSIC_VIDEO, DEFAULT_KEYWORD_HIGH_CONFIDENCE
+        if allow(I.MUSIC) and m(q, "MusicKeyword", lang):
+            return I.MUSIC, DEFAULT_KEYWORD_CONFIDENCE
+        if allow(I.TV) and m(q, "IPTVKeyword", lang):
+            return I.TV, DEFAULT_KEYWORD_CONFIDENCE
+        if allow(I.VIDEO_EPISODES) and m(q, "SeriesKeyword", lang):
+            return I.VIDEO_EPISODES, DEFAULT_KEYWORD_CONFIDENCE
+        if allow(I.TV) and m(q, "TVKeyword", lang):
+            return I.TV, DEFAULT_KEYWORD_CONFIDENCE
+
+        movie_intents = {I.MOVIE, I.SHORT_FILM, I.SILENT_MOVIE, I.BW_MOVIE}
+        if any(allow(t) for t in movie_intents) and m(q, "MovieKeyword", lang):
+            if allow(I.SHORT_FILM) and m(q, "ShortKeyword", lang):
+                return I.SHORT_FILM, DEFAULT_KEYWORD_HIGH_CONFIDENCE
+            if allow(I.SILENT_MOVIE) and m(q, "SilentKeyword", lang):
+                return I.SILENT_MOVIE, DEFAULT_KEYWORD_HIGH_CONFIDENCE
+            if allow(I.BW_MOVIE) and m(q, "BWKeyword", lang):
+                return I.BW_MOVIE, DEFAULT_KEYWORD_HIGH_CONFIDENCE
+            if allow(I.MOVIE):
+                return I.MOVIE, DEFAULT_KEYWORD_CONFIDENCE
+        if allow(I.TRAILER) and m(q, "TrailerKeyword", lang):
+            return I.TRAILER, DEFAULT_KEYWORD_HIGH_CONFIDENCE
+        if allow(I.BEHIND_THE_SCENES) and m(q, "BehindTheScenesKeyword", lang):
+            return I.BEHIND_THE_SCENES, DEFAULT_KEYWORD_HIGH_CONFIDENCE
+        if allow(I.VISUAL_STORY) and m(q, "ComicBookKeyword", lang):
+            return I.VISUAL_STORY, DEFAULT_KEYWORD_LOW_CONFIDENCE
+        if allow(I.GAME) and m(q, "GameKeyword", lang):
+            return I.GAME, DEFAULT_KEYWORD_LOW_CONFIDENCE
+        if allow(I.AUDIO_DESCRIPTION) and m(q, "ADKeyword", lang):
+            return I.AUDIO_DESCRIPTION, DEFAULT_KEYWORD_LOW_CONFIDENCE
+        if allow(I.ASMR) and m(q, "ASMRKeyword", lang):
+            return I.ASMR, DEFAULT_KEYWORD_LOW_CONFIDENCE
+        if allow(I.VIDEO) and m(q, "VideoKeyword", lang):
+            return I.VIDEO, DEFAULT_KEYWORD_LOW_CONFIDENCE
+        if allow(I.AUDIO) and m(q, "AudioKeyword", lang):
+            return I.AUDIO, DEFAULT_KEYWORD_LOW_CONFIDENCE
+        return None
 
     @staticmethod
     def _intent_for_default(media_type: MediaType) -> Optional[OCPPlayIntent]:

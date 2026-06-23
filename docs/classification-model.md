@@ -177,28 +177,34 @@ descending order of signal strength, each from its own `.voc` evidence:
 ```
 modality (PlaybackType)  ◀── VerbAudio / VerbVideo / VerbGame / VerbRead /
                              VerbTune + leaf-family keywords (score & pick best)
-        │ constrains
-        ▼
-structure (Structure)    ◀── ModEpisode / ModSeason / ModLive / Series / Podcast /
-                             Radio / IPTV … (episodic / continuous / collection / single)
-        │ constrains the leaf candidate set
-        ▼
-leaf MediaType           ◀── the candidate leaves' `.voc` matched WITHIN the set;
-                             else the DEFAULT leaf for the (modality, structure) cell
-        │
-        ▼
+structure (Structure)    ◀── ModEpisode / ModSeason / ModLive / Series / Podcast …
+        (orthogonal predicted axes — reported in their own right)
+
+leaf MediaType           ◀── leaf-first: the specific-leaf `.voc` chain (most
+                             specific first). No specific match + a confident
+                             modality → DEFAULT leaf for the (modality, structure) cell.
+
 domain + genres          ◀── classify_domain() / classify_genres()
 ```
 
-The high-signal coarse axes are predicted **first** and **constrain** the leaf
-candidate set (the `mediavocab.MediaType`s whose `infer_playback_type` equals the
-predicted modality and whose `infer_structure` is compatible with the predicted
-structure — the inverse of the `MEDIA_TYPE_TO_*` maps). A stray specific keyword
-that disagrees with the coarse prediction therefore **cannot win**: _"watch the
-news"_ predicts video → the audio `news` leaf is excluded → `tv`, while _"listen
-to the news"_ predicts audio → `radio`. When no specific leaf voc matches inside
-the constrained set the classifier emits a sensible **default leaf** for that
-(modality, structure) cell (audio+single→`music`, video+continuous→`tv`, …).
+The coarse axes (modality, structure) are predicted from their own voc evidence
+and reported as **orthogonal axes** — they are NOT used as a hard gate on the leaf.
+The leaf is chosen **leaf-first** (the specific-leaf voc chain), because an
+empirical check on the neutral HF test split showed that *constraining* the leaf to
+the predicted axes **regressed** real-query macro-F1: when modality prediction is
+noisy (and on natural language it often is), a hard constraint suppresses an
+otherwise-correct leaf. So a predicted axis and the leaf may legitimately differ —
+_"watch the news"_ → a news-derived leaf **with** a predicted **video** modality
+("video news"); the player consumes the `playback_type` axis, the leaf carries the
+content identity. The `(modality, structure)` **default leaf** is used only when no
+specific leaf voc matched at all (audio+single→`music`, video+continuous→`tv`, …).
+
+> **Honesty note.** This keyword backend is a deterministic **floor** (~0.29 acc on
+> the neutral HF split; ~0.99 on the synthetic set is vocabulary coverage, not
+> generalization — see `benchmarks/README.md`). Coarse-to-fine as a hard *search-space
+> constraint* pays off in a **trained** classifier (where it prunes a probabilistic
+> leaf distribution); in the deterministic keyword matcher it is value-neutral on real
+> data, so we predict the axes for output but select the leaf leaf-first.
 
 This logic lives in `ovos_media_classifier/keyword.py` (`_predict_modality`,
 `_predict_structure`, `_candidate_media_types`, `_classify_intent`); the per-axis

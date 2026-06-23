@@ -81,31 +81,45 @@ rows/sec. Globally: **content-filter recall** — of the adult-genre rows, the
 fraction the default `ContentFilter().check(clf, utterance, lang)` blocks — plus
 the false-block rate over the non-adult slice.
 
-## Latest results
+## Latest results — read this framing first
 
-Eval set: **875 utterances** across 3 languages (`de-de`=277, `en-us`=360,
-`pt-pt`=238), **64 adult-genre rows**.
+There are **two very different numbers**, and conflating them is misleading:
 
-| backend | status | accuracy | macro-F1 | median ms | p95 ms | rows/s | CF recall | false-block |
-|---|---|---|---|---|---|---|---|---|
-| keyword | available | 0.973 | 0.972 | 0.0254 | 0.0531 | 32700 | 1.000 (64/64) | 0.000 |
-| ahocorasick | available | 0.495 | 0.628 | 0.0030 | 0.0055 | 363702 | 0.469 (30/64) | 0.000 |
-| sklearn | unavailable | – | – | – | – | – | – | – |
-| padatious | unavailable | – | – | – | – | – | – | – |
-| model2vec | unavailable | – | – | – | – | – | – | – |
-| guided_onnx | unavailable | – | – | – | – | – | – | – |
+**1. Synthetic eval set (`benchmarks/eval_set.csv`)** — utterances generated *from
+the bundled `.voc` files*. This measures **vocabulary coverage / wiring** (is every
+keyword reachable, does adult precedence hold), **NOT generalization.** A keyword
+matcher scores ~0.99 here almost by construction — the test is built from its own
+vocabulary.
 
-Notes from this run (hierarchical coarse-to-fine keyword backend):
+| backend | accuracy | macro-F1 | median ms | rows/s | CF recall | false-block |
+|---|---|---|---|---|---|---|
+| keyword | **0.990** | 0.984 | 0.027 | 7900 | 1.000 (64/64) | 0.000 |
+| ahocorasick | 0.495 | 0.628 | 0.003 | 408000 | 0.469 (30/64) | 0.000 |
 
-- The keyword backend's residual errors are lexical-substring artifacts, not
-  modality logic: German `audiobeschreibung` ("audio description") contains
-  `audio` so it scores as audio (`music`) rather than `movie`; the bare verb
-  `read`/`ler` is shared between `AudioBookKeyword` and the paged comic leaf.
-- Keyword content-filter recall is **1.000** (64/64) and false-block rate on
-  non-adult rows is **0.000** — adult precedence survives the rewrite intact.
-- The ahocorasick exact-match baseline now blocks the adult rows whose phrase is
-  in the bundled vocab (`classify_genres` surfaces the genre), giving a 0.469
-  recall; the remainder use phrases its wordlists do not cover.
+**2. Neutral HF test split (`--hf-dataset TigreGotico/ocp-media-intents`)** — real,
+naturally-phrased commands the classifier has never seen. This measures **actual
+generalization**, and it is the number that matters:
+
+| backend | accuracy | macro-F1 | CF recall |
+|---|---|---|---|
+| keyword | **0.290** | 0.442 | (3-row adult sample, not significant) |
+| ahocorasick | 0.169 | 0.244 | — |
+
+### What this means
+
+- **The keyword backend is a deterministic FLOOR**, not a production-accuracy
+  classifier: ~0.29 on real queries. It exists so OCP works offline with zero ML
+  deps; **real accuracy comes from the trained ONNX backend.** Do not cite the 0.99.
+- Neither the **coarse-to-fine** restructure nor **word-boundary** matching moved the
+  real-query number (both improved the *synthetic* score; on the HF split they are
+  neutral-to-slightly-negative — word boundaries trade a little natural-language
+  recall for correctness, e.g. German "sexfilm" no longer false-matches "film").
+  They are justified by **architecture and safety**, not a keyword accuracy gain.
+- **Adult content-filter recall is 1.000** on the 64-row synthetic adult slice (the
+  reliable measure); the HF split has too few adult rows to be meaningful.
+- The gap between 0.99 and 0.29 is the **dataset itself**: it is ~99% synthetic
+  slot-fill, so models trained/measured on it overfit templated phrasing. Closing
+  the gap needs more *natural* training data, not more keyword tuning.
 
 See `benchmarks/results.md` for the full per-type tables and
 `benchmarks/results.json` for the raw numbers and confusion matrices.
