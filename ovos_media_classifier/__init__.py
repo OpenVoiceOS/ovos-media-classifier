@@ -95,12 +95,17 @@ def load_media_classifier(
 
     1. ``config["media_classifier_plugin"]`` → load that external classifier
        registered under the ``opm.media.classifier`` entry-point group.
-    2. Otherwise → the built-in keyword (``.voc``) classifier. When
+    2. ``config["media_classifier_onnx_model"]`` → load the optional, opt-in
+       ONNX trained backend from that bundle directory (requires the ``onnx``
+       extra: ``pip install ovos-media-classifier[onnx]``).  On any failure
+       (missing extra, bad bundle) this logs a warning and falls through.
+    3. Otherwise → the built-in keyword (``.voc``) classifier. When
        *voc_match_func* is given (e.g. a pipeline's ``voc_match``) it is used;
        otherwise the bundled locale files are read directly.
 
     Args:
-        config: OCP config block (``media_classifier_plugin`` selects a plugin).
+        config: OCP config block (``media_classifier_plugin`` selects a plugin;
+            ``media_classifier_onnx_model`` selects the ONNX bundle).
         voc_match_func: optional ``(phrase, vocab_name, *, lang) -> bool`` matcher.
     """
     config = config or {}
@@ -114,6 +119,27 @@ def load_media_classifier(
         except Exception as e:
             LOG.warning(
                 f"Failed to load media classifier plugin {plugin_name!r}: {e}. "
+                "Falling back to the keyword classifier."
+            )
+
+    onnx_model = config.get("media_classifier_onnx_model")
+    if onnx_model:
+        # Lazy import: the ONNX backend (and its onnxruntime/numpy deps) must NOT
+        # be touched on the default import path — only when explicitly selected.
+        try:
+            from ovos_media_classifier.onnx import OnnxMediaClassifier
+            clf = OnnxMediaClassifier.from_path(onnx_model)
+            LOG.info(f"OCP media classifier: ONNX trained backend ({onnx_model})")
+            return clf
+        except ImportError as e:
+            LOG.warning(
+                f"ONNX media classifier requested but onnxruntime/numpy are not "
+                f"installed ({e}). Install the 'onnx' extra. "
+                "Falling back to the keyword classifier."
+            )
+        except Exception as e:
+            LOG.warning(
+                f"Failed to load ONNX media classifier from {onnx_model!r}: {e}. "
                 "Falling back to the keyword classifier."
             )
 

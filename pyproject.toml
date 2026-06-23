@@ -24,7 +24,15 @@ classifiers = [
 ]
 
 [project.optional-dependencies]
-# test deps — the .voc keyword release has no optional ML backends to mock
+# Optional, opt-in ONNX trained backend (ovos_media_classifier/onnx.py).
+# The default install stays lean (ovos-utils + mediavocab only); these are
+# imported lazily, only when the ONNX backend is actually selected.
+onnx = [
+    "onnxruntime",
+    "numpy",
+]
+
+# test deps — onnxruntime is mocked in the suite, so it is NOT required here
 test = [
     "pytest",
     "pytest-cov",
