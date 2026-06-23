@@ -7,7 +7,8 @@ vectorizes this dict (in the model's ``feature_names`` order) before running
 the ONNX heads.
 
 This release ships the **pure-python keyword path only** — features come from
-the bundled ``.voc`` files via :class:`~ovos_media_classifier.keyword._VocMatcher`.
+the bundled ``.voc`` files via :class:`~ovos_media_classifier.keyword._VocMatcher`
+(word-boundary matching backed by ``ovos-spec-tools``).
 A richer NER feature path (Aho-Corasick over an ``EntitiesContainer``) is *not*
 part of this PR (``entities.py`` is not shipped); the extractor is written so it
 simply contributes no NER features when no entities backend is supplied.

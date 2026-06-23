@@ -35,11 +35,11 @@
   "backends": {
     "keyword": {
       "n": 875,
-      "accuracy": 0.9726,
-      "macro_f1": 0.972,
-      "latency_ms_median": 0.0254,
-      "latency_ms_p95": 0.0531,
-      "rows_per_sec": 32699.7,
+      "accuracy": 0.9829,
+      "macro_f1": 0.9814,
+      "latency_ms_median": 0.0247,
+      "latency_ms_p95": 0.0363,
+      "rows_per_sec": 7888.9,
       "per_type": {
         "audio_drama": {
           "precision": 1.0,
@@ -54,9 +54,9 @@
           "support": 84
         },
         "comic": {
-          "precision": 0.8571,
+          "precision": 0.9375,
           "recall": 0.8333,
-          "f1": 0.8451,
+          "f1": 0.8824,
           "support": 36
         },
         "episodic_series": {
@@ -73,20 +73,20 @@
         },
         "movie": {
           "precision": 1.0,
-          "recall": 0.9414,
-          "f1": 0.9698,
+          "recall": 0.9685,
+          "f1": 0.984,
           "support": 222
         },
         "music": {
-          "precision": 0.8571,
+          "precision": 0.9176,
           "recall": 1.0,
-          "f1": 0.9231,
+          "f1": 0.9571,
           "support": 78
         },
         "music_video": {
           "precision": 1.0,
-          "recall": 0.9464,
-          "f1": 0.9725,
+          "recall": 1.0,
+          "f1": 1.0,
           "support": 56
         },
         "podcast": {
@@ -216,11 +216,11 @@
         [
           0,
           0,
-          3,
           0,
           0,
-          209,
-          10,
+          0,
+          215,
+          7,
           0,
           0,
           0,
@@ -248,8 +248,8 @@
           0,
           0,
           0,
-          3,
-          53,
+          0,
+          56,
           0,
           0,
           0,
@@ -326,9 +326,9 @@
       "n": 875,
       "accuracy": 0.4949,
       "macro_f1": 0.6285,
-      "latency_ms_median": 0.003,
-      "latency_ms_p95": 0.0055,
-      "rows_per_sec": 363702.4,
+      "latency_ms_median": 0.0029,
+      "latency_ms_p95": 0.0047,
+      "rows_per_sec": 410470.6,
       "per_type": {
         "audio_drama": {
           "precision": 1.0,
