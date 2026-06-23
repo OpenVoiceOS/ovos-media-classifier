@@ -20,9 +20,11 @@ It can work in two modes:
    The pipeline plugin owns the locale files; the classifier just calls
    the function.
 
-2. **Standalone mode** – omit ``voc_match_func`` and the classifier reads
+2. **Standalone mode** – omit ``voc_match_func`` and the classifier loads
    the bundled ``.voc`` files from
-   ``ovos_media_classifier/locale/<lang>/<VocabName>.voc`` directly.
+   ``ovos_media_classifier/locale/<lang>/<VocabName>.voc`` via
+   ``ovos-spec-tools`` (the OVOS-INTENT-2 loader) and matches them on
+   **word boundaries**.
    Use ``KeywordMediaClassifier.from_locale_dir(locale_dir, lang)`` or
    simply ``KeywordMediaClassifier()`` to use the built-in locale files.
 
@@ -42,7 +44,11 @@ Usage::
     media_type, conf = clf.classify("play some jazz", "en-us")
 """
 import os
+import re
+from functools import lru_cache
 from typing import Callable, Dict, List, Optional, Set, Tuple
+
+from ovos_spec_tools import LocaleResources
 
 from mediavocab import (
     MediaType,
@@ -75,57 +81,51 @@ _LOCALE_DIR = os.path.join(os.path.dirname(__file__), "locale")
 
 
 class _VocMatcher:
-    """Simple vocabulary matcher backed by ``.voc`` files on disk.
+    """Vocabulary matcher backed by ``.voc`` files via ``ovos-spec-tools``.
 
-    Each ``.voc`` file contains one keyword or phrase per line.  A phrase
-    matches if any entry appears as a substring of the (lowercased) query.
-    Vocabulary files are loaded lazily and cached per (lang, vocab_name).
+    Wraps :class:`ovos_spec_tools.LocaleResources` (the OVOS-INTENT-2 spec
+    loader) so a phrase matches the query on **word boundaries** rather than as
+    a naive substring — German ``"sexfilm"`` no longer matches ``"film"`` and
+    ``"audiobeschreibung"`` no longer matches ``"audio"``.
+
+    ``LocaleResources`` owns the locale-dir resolution: it indexes the
+    per-language subdirs case-insensitively (``en-us`` vs ``en-US``) and applies
+    the spec §2.2 smart fallback (exact tag → language family → ``en-us``), so
+    the prior hand-rolled case folding + ``lang``→language-only fallback are
+    preserved. Compiled per-``(vocab, lang)`` regexes are cached.
     """
 
     def __init__(self, locale_dir: str) -> None:
         self._locale_dir = locale_dir
-        self._cache: Dict[Tuple[str, str], Set[str]] = {}
-        # case-insensitive index of available locale subdirs: "en-us" -> "en-US"
-        self._dirs: Dict[str, str] = {}
-        try:
-            for name in os.listdir(locale_dir):
-                if os.path.isdir(os.path.join(locale_dir, name)):
-                    self._dirs[name.lower()] = name
-        except OSError:
-            pass
+        self._resources = LocaleResources(skill_locale=locale_dir)
 
-    def _resolve_dir(self, lang_tag: str) -> Optional[str]:
-        actual = self._dirs.get(lang_tag.lower())
-        return os.path.join(self._locale_dir, actual) if actual else None
+    @lru_cache(maxsize=1024)
+    def _voc_phrases(self, vocab_name: str, lang: str) -> Tuple[str, ...]:
+        # spec-tools resolves the lang subdir (case-insensitive) and the
+        # language-family fallback chain internally.
+        phrases = self._resources.vocabularies(lang).get(vocab_name)
+        if phrases:
+            return tuple(phrases)
+        # Final safety net: the canonical en-us source.
+        if lang.lower() != "en-us":
+            phrases = self._resources.vocabularies("en-us").get(vocab_name)
+            if phrases:
+                return tuple(phrases)
+        return ()
 
-    def _load(self, vocab_name: str, lang: str) -> Set[str]:
-        key = (lang.lower(), vocab_name)
-        if key not in self._cache:
-            words: Set[str] = set()
-            # Try exact lang tag first, then language-only fallback (e.g. "en"),
-            # resolving the locale subdir case-insensitively (en-us vs en-US).
-            lang_candidates = [lang.lower(), lang.lower().split("-")[0]]
-            for lang_tag in lang_candidates:
-                lang_dir = self._resolve_dir(lang_tag)
-                if not lang_dir:
-                    continue
-                voc_path = os.path.join(lang_dir, f"{vocab_name}.voc")
-                if os.path.isfile(voc_path):
-                    with open(voc_path, encoding="utf-8") as fh:
-                        for line in fh:
-                            line = line.strip()
-                            if line and not line.startswith("#"):
-                                words.add(line.lower())
-                    break
-            self._cache[key] = words
-        return self._cache[key]
+    @lru_cache(maxsize=1024)
+    def _voc_regex(self, vocab_name: str, lang: str) -> Optional[re.Pattern]:
+        phrases = self._voc_phrases(vocab_name, lang)
+        if not phrases:
+            return None
+        # Longest-first so the alternation prefers the most specific phrase.
+        sorted_phrases = sorted(phrases, key=len, reverse=True)
+        alternation = "|".join(re.escape(p) for p in sorted_phrases)
+        return re.compile(rf"\b(?:{alternation})\b", re.IGNORECASE)
 
     def match(self, phrase: str, vocab_name: str, lang: str) -> bool:
-        phrase_lower = phrase.lower()
-        for word in self._load(vocab_name, lang):
-            if word in phrase_lower:
-                return True
-        return False
+        rx = self._voc_regex(vocab_name, lang.lower())
+        return bool(rx and rx.search(phrase))
 
 
 # ---------------------------------------------------------------------------
@@ -468,8 +468,12 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
     ) -> Tuple[OCPPlayIntent, float]:
         """Resolve the play intent coarse-to-fine.
 
-        1. Adult family FIRST (safety: content filtering must never be bypassed
-           by a substring collision such as German "sexfilm" ⊃ "film").
+        1. Adult family FIRST. Word-boundary matching (via ovos-spec-tools)
+           already prevents the old substring collisions (German "sexfilm" no
+           longer leaks "film"), so this gate is no longer a collision guard —
+           it stays because it owns the adult/hentai/audio routing: it maps the
+           adult cues to the correct adult intent so the ``adult`` (and, for
+           hentai, ``anime``) genre tag is always emitted for the content filter.
         2. Predict modality, then structure.
         3. Constrain the leaf candidates to those axes and run the specific-leaf
            voc chain *gated to the candidate set*; the first match wins.
@@ -487,7 +491,7 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
         def _ok(intent: OCPPlayIntent) -> bool:
             return valid is None or PLAY_INTENT_TO_MEDIA_TYPE.get(intent) in valid
 
-        # --- 1. Adult family (precedence preserved) ---------------------------
+        # --- 1. Adult family (owns adult/hentai genre routing) ----------------
         adult_intents = {I.ADULT, I.HENTAI, I.ADULT_AUDIO}
         if any(_ok(t) for t in adult_intents) and (
                 m(q, "AdultKeyword", lang) or m(q, "HentaiKeyword", lang)):

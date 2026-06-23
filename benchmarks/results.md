@@ -9,8 +9,8 @@ Eval set: **875 utterances** across 3 languages (de-de=277, en-us=360, pt-pt=238
 
 | backend | status | accuracy | macro-F1 | median ms | p95 ms | rows/s | CF recall | false-block |
 |---|---|---|---|---|---|---|---|---|
-| keyword | available | 0.973 | 0.972 | 0.0254 | 0.0531 | 32700 | 1.000 (64/64) | 0.000 |
-| ahocorasick | available | 0.495 | 0.628 | 0.0030 | 0.0055 | 363702 | 0.469 (30/64) | 0.000 |
+| keyword | available | 0.983 | 0.981 | 0.0247 | 0.0363 | 7889 | 1.000 (64/64) | 0.000 |
+| ahocorasick | available | 0.495 | 0.628 | 0.0029 | 0.0047 | 410471 | 0.469 (30/64) | 0.000 |
 | sklearn | unavailable | – | – | – | – | – | – | – |
 | padatious | unavailable | – | – | – | – | – | – | – |
 | model2vec | unavailable | – | – | – | – | – | – | – |
@@ -29,12 +29,12 @@ Eval set: **875 utterances** across 3 languages (de-de=277, en-us=360, pt-pt=238
 |---|---|---|---|---|
 | audio_drama | 1.000 | 1.000 | 1.000 | 24 |
 | audiobook | 0.932 | 0.976 | 0.954 | 84 |
-| comic | 0.857 | 0.833 | 0.845 | 36 |
+| comic | 0.938 | 0.833 | 0.882 | 36 |
 | episodic_series | 1.000 | 1.000 | 1.000 | 148 |
 | game | 1.000 | 1.000 | 1.000 | 18 |
-| movie | 1.000 | 0.941 | 0.970 | 222 |
-| music | 0.857 | 1.000 | 0.923 | 78 |
-| music_video | 1.000 | 0.946 | 0.973 | 56 |
+| movie | 1.000 | 0.969 | 0.984 | 222 |
+| music | 0.918 | 1.000 | 0.957 | 78 |
+| music_video | 1.000 | 1.000 | 1.000 | 56 |
 | podcast | 1.000 | 1.000 | 1.000 | 21 |
 | procedural_ambient | 1.000 | 1.000 | 1.000 | 27 |
 | radio | 1.000 | 1.000 | 1.000 | 45 |
