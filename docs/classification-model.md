@@ -224,6 +224,12 @@ report a genuine per-axis confidence for the pipeline to threshold. The base-cla
 defaults (derive-from-leaf) are always available as a fallback, so a plugin only
 overrides the axes it actually models.
 
+Both entity-driven strategies — the NER backend (Aho-Corasick exact match) and
+the future guided-embeddings classifier (which uses the user's known entities as
+categorical features) — read from the *same* **entity lists**
+(`label → list of strings`). That shared store, its source specs and the
+perf/memory tradeoff are documented in [entity-lists.md](entity-lists.md).
+
 ---
 
 ## 5. MediaType → default (playback_type, structure)

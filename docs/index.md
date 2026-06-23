@@ -29,6 +29,7 @@ which classifies *catalog content* — see [taxonomy.md](taxonomy.md#query-vs-co
 | [classification-model.md](classification-model.md) | **The multi-axis model**: the four axes + tags, why orthogonal axes beat a strict tree, and the `MediaType`→(playback_type, structure) defaults |
 | [taxonomy.md](taxonomy.md) | mediavocab `MediaType` enforcement, the internal `OCPPlayIntent`→type/genre mapping, and the query-vs-content distinction |
 | [backends.md](backends.md) | The bundled keyword classifier and how to add a classifier plugin |
+| [entity-lists.md](entity-lists.md) | **Entity lists** (`label → list of strings`): the source-agnostic store (runtime / `.csv` / `.tsv` / `.jsonl` / HuggingFace / inline) shared by the NER and guided-embeddings strategies, and its perf/memory tradeoff |
 | [content-filtering.md](content-filtering.md) | `ContentFilter`: detect-to-block content moderation / parental control |
 | [external-plugins.md](external-plugins.md) | Registering 3rd-party / future classifiers via the `opm.media.classifier` entry-point group |
 | [stable-api.md](stable-api.md) | The `AbstractMediaClassifier` contract, the multi-axis methods, and return types |
