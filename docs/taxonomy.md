@@ -1,5 +1,10 @@
 # Taxonomy
 
+This page covers the **leaf axis** — `mediavocab.MediaType` — and the internal
+intent space that feeds it. It is one of four orthogonal axes; the coarse axes
+(domain, modality, structure) and the rationale for splitting them are in
+[classification-model.md](classification-model.md).
+
 ## mediavocab is the source of truth
 
 This package does **not** define its own media taxonomy. The public output type

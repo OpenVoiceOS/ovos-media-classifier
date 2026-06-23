@@ -70,3 +70,10 @@ e.g. a dedicated domain head, control-intent support, or genre detection so the
 [content filter](content-filtering.md) can block on it. See
 [stable-api.md](stable-api.md) for the full contract and the default
 implementations.
+
+A trained plugin SHOULD also override the coarse-axis methods
+(`classify_playback_type()`, `classify_structure()`, `classify_full()`) to predict
+each axis with its own head and soft-gate the leaf, rather than relying on the
+derive-from-leaf defaults — that is the whole point of the multi-axis model and is
+what the `TigreGotico/ocp-media-intents` dataset's per-axis columns are for. See
+[classification-model.md](classification-model.md#42-predict-each-axis-with-its-own-head-trained-plugins).

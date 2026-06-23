@@ -1,5 +1,13 @@
 # Backend Reference
 
+> **Superseded.** This release ships **one** classifier — the bundled `.voc`
+> keyword backend, documented in [backends.md](backends.md). The six backends
+> described below (keyword, NER, sklearn, padatious, guided-embeddings,
+> Model2Vec) are pre-refactor design notes; the ML backends are **not** packaged
+> here and arrive later as [external plugins](external-plugins.md). For the
+> current model and API see [classification-model.md](classification-model.md)
+> and [stable-api.md](stable-api.md). Treat this page as history.
+
 This document describes all six classifier backends in depth.  For the
 conceptual overview see [THEORY.md](THEORY.md).
 

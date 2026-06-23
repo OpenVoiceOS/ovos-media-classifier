@@ -1,6 +1,8 @@
 # ovos-media-classifier
 
-Media-type **command/intent** classification for [OCP (OVOS Common Playback)](https://github.com/OpenVoiceOS/ovos-core). Given a spoken command such as _"play some music"_ it decides three things: whether the command targets OCP at all, which OCP **domain** it belongs to (play / control / not-OCP), and — for play requests — which `mediavocab.MediaType` and genre tags the user is asking for. An always-on content filter lets OVOS block sensitive (e.g. adult) requests by default.
+Media-type **command/intent** classification for [OCP (OVOS Common Playback)](https://github.com/OpenVoiceOS/ovos-core). Given a spoken command such as _"play some music"_ it resolves a small set of **orthogonal axes** in one pass: the **domain** (is this a media request at all — play / control / not-OCP), the **modality** (`playback_type`: audio / video / paged / interactive), the **structure** (single / episodic / continuous / collection), and the concrete `mediavocab.MediaType` **leaf** — plus orthogonal genre tags. Each axis is a coarse, high-signal question; together they pin down what the user wants without forcing every request into one rigid label. An always-on content filter lets OVOS block sensitive (e.g. adult) requests by default.
+
+Why axes instead of a single label or a strict tree — and how trained backends predict each axis with its own head — is in [docs/classification-model.md](docs/classification-model.md).
 
 This initial release ships **one** classifier: the bundled-`.voc` **KeywordMediaClassifier** — zero ML dependencies, no model files, fully offline. It is the minimum required for OCP to be functional. Richer strategies (trained ONNX models, NER from media servers, …) are **not** in this release; they land later as independent, separately-reviewed plugins through the `opm.media.classifier` mechanism (see [External plugins](#external-plugins-opm)).
 
@@ -20,31 +22,55 @@ extras — the keyword classifier reads the bundled `.voc` files directly.
 `load_media_classifier()` with no config returns the bundled `.voc` keyword
 classifier — no ML dependencies, no model files, works offline.
 
+`classify_full()` resolves every axis in one call and returns a
+`MediaClassification`:
+
 ```python
 from ovos_media_classifier import load_media_classifier
 
 clf = load_media_classifier()
 
-print(clf.classify("play some music", "en-us"))
-print(clf.classify("play a movie", "en-us"))
-print(clf.classify_genres("play some anime", "en-us"))
-print(clf.classify_domain("play a podcast", "en-us"))
-print(clf.is_ocp_query("what is the weather", "en-us"))
+print(clf.classify_full("play a podcast", "en-us").as_dict())
+print(clf.classify_full("play the breaking bad tv series", "en-us").as_dict())
+print(clf.classify_full("turn off the kitchen lights", "en-us").as_dict())
+```
+
+Verified output:
+
+```
+{'media_type': 'podcast', 'playback_type': 'audio', 'structure': 'episodic', 'domain': 'ocp_play', 'genres': [], 'confidence': 0.6}
+{'media_type': 'episodic_series', 'playback_type': 'video', 'structure': 'episodic', 'domain': 'ocp_play', 'genres': [], 'confidence': 0.6}
+{'media_type': 'generic', 'playback_type': 'unknown', 'structure': 'unknown', 'domain': 'not_ocp', 'genres': [], 'confidence': 0.0}
+```
+
+The non-media request (_"turn off the kitchen lights"_) collapses every content
+axis to `unknown` / `not_ocp` — IoT/device control is **not media**, so it is
+routed back to the rest of the OVOS pipeline.
+
+The individual axes are also available one at a time:
+
+```python
+print(clf.classify("play some music", "en-us"))             # leaf MediaType + confidence
+print(clf.classify_playback_type("play a movie", "en-us"))  # modality axis
+print(clf.classify_structure("put on the radio", "en-us"))  # structure axis
+print(clf.classify_genres("play some anime", "en-us"))      # orthogonal genre tags
+print(clf.classify_domain("play a podcast", "en-us"))       # domain axis
+print(clf.is_ocp_query("what is the weather", "en-us"))     # is this OCP at all?
 ```
 
 Verified output:
 
 ```
 (<MediaType.MUSIC: 'music'>, 0.6)
-(<MediaType.MOVIE: 'movie'>, 0.6)
+PlaybackType.VIDEO
+Structure.CONTINUOUS
 ['anime']
 (<OCPDomain.OCP_PLAY: 'ocp_play'>, 0.6)
 (False, 0.0)
 ```
 
-`classify` returns a `mediavocab.MediaType` plus a confidence; `classify_genres`
-returns the orthogonal genre tags (anime, adult, …); `classify_domain` returns an
-`OCPDomain`; `is_ocp_query` returns a bool. See [docs/stable-api.md](docs/stable-api.md).
+See [docs/stable-api.md](docs/stable-api.md) for every method and
+[docs/classification-model.md](docs/classification-model.md) for the axis model.
 
 ## The keyword classifier
 
@@ -139,6 +165,7 @@ See `training/README.md` for the full data-gathering and training workflow.
 ## Documentation
 
 - [docs/index.md](docs/index.md) — table of contents
+- [docs/classification-model.md](docs/classification-model.md) — the multi-axis model: the four axes + tags, why orthogonal axes beat a strict tree, and the `MediaType`→(playback_type, structure) defaults
 - [docs/taxonomy.md](docs/taxonomy.md) — mediavocab enforcement, intent→type/genre mapping, query-vs-content distinction
 - [docs/backends.md](docs/backends.md) — the bundled keyword classifier and how to add a classifier plugin
 - [docs/content-filtering.md](docs/content-filtering.md) — detect-to-block content moderation
