@@ -24,7 +24,23 @@ classifiers = [
 ]
 
 [project.optional-dependencies]
-# test deps — the .voc keyword release has no optional ML backends to mock
+# --- optional NER (entity-based) backend ---
+# AhocorasickMediaClassifier matches utterances against the user's real
+# entities (movie titles, artist names, …) via an Aho-Corasick automaton.
+ner = [
+    "ahocorasick-ner>=0.0.1",
+]
+# media-server loaders (Radarr / Sonarr / Lidarr / Jellyfin / Music Assistant)
+media_servers = [
+    "requests",
+]
+# HuggingFace datasets loader for EntitiesContainer.load_huggingface()
+huggingface = [
+    "datasets",
+]
+
+# test deps — the NER backend deps are mocked in the suite, so the bare
+# [test] extra still runs green without ahocorasick-ner / requests / datasets.
 test = [
     "pytest",
     "pytest-cov",

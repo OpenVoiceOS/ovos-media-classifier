@@ -117,6 +117,40 @@ def load_media_classifier(
                 "Falling back to the keyword classifier."
             )
 
+    # Optional NER (entity-based) backend — requires the ``[ner]`` extra
+    # (and ``[media_servers]`` / ``[huggingface]`` for the live loaders).
+    # Selected by any of these config keys; on ImportError / failure we
+    # LOG.warning and fall through to the lean keyword classifier so the
+    # zero-ML-dependency default is always preserved.
+    entities_cfg = config.get("media_classifier_entities")
+    wordlists_cfg = config.get("media_classifier_wordlists")
+    ner_csv = config.get("media_classifier_ner_csv")
+    if entities_cfg is not None or wordlists_cfg is not None or ner_csv is not None:
+        try:
+            from ovos_media_classifier.ahocorasick import AhocorasickMediaClassifier
+            from ovos_media_classifier.entities import EntitiesContainer
+
+            if entities_cfg is not None:
+                container = EntitiesContainer.from_config(entities_cfg)
+                clf = AhocorasickMediaClassifier.from_container(container)
+            elif wordlists_cfg is not None:
+                clf = AhocorasickMediaClassifier.from_wordlists(wordlists_cfg)
+            else:
+                clf = AhocorasickMediaClassifier.from_csv(ner_csv)
+            LOG.info("OCP media classifier: NER (Aho-Corasick entity matching)")
+            return clf
+        except ImportError as e:
+            LOG.warning(
+                f"NER classifier backend unavailable: {e}. "
+                "Install it with: pip install ovos-media-classifier[ner]. "
+                "Falling back to the keyword classifier."
+            )
+        except Exception as e:
+            LOG.warning(
+                f"Failed to build NER media classifier: {e}. "
+                "Falling back to the keyword classifier."
+            )
+
     if voc_match_func is not None:
         LOG.debug("OCP media classifier: keyword (voc_match)")
         return KeywordMediaClassifier(voc_match_func)
