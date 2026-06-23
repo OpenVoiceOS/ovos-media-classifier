@@ -147,6 +147,12 @@ def load_media_classifier(
     # ``[media_servers]`` / ``[huggingface]`` for the live loaders). On
     # ImportError / failure we fall through to the lean keyword classifier so the
     # zero-ML-dependency default is always preserved.
+    #
+    # ``media_classifier_entities`` is an EntitiesContainer.from_config dict; it
+    # accepts the source-agnostic ``entity_lists`` list (file paths / HF dicts /
+    # inline ``{label: [values]}`` dicts / media-server dicts) as well as the
+    # legacy structured keys (csv/wordlists/huggingface/<server>). See
+    # docs/entity-lists.md.
     entities_cfg = config.get("media_classifier_entities")
     wordlists_cfg = config.get("media_classifier_wordlists")
     ner_csv = config.get("media_classifier_ner_csv")

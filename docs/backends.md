@@ -18,6 +18,13 @@ the `opm.media.classifier` mechanism — see
 [writing a classifier plugin](#writing-a-classifier-plugin) below and
 [external-plugins.md](external-plugins.md).
 
+> The NER backend (and the future guided-embeddings strategy) classify by
+> matching the user's own media — their artists, titles and stations, captured as
+> **entity lists** (`label → list of strings`). That shared machinery, its source
+> specs (`.csv` / `.tsv` / `.jsonl` / HuggingFace / inline / runtime) and the
+> perf/memory tradeoff of loading more entities are documented in
+> [entity-lists.md](entity-lists.md).
+
 ## Keyword classifier (default, zero-dep)
 
 ```python
