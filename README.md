@@ -1,25 +1,24 @@
 # ovos-media-classifier
 
-Pluggable media-type **command/intent** classification for [OCP (OVOS Common Playback)](https://github.com/OpenVoiceOS/ovos-core). Given a spoken command such as _"play some music"_ it decides three things: whether the command targets OCP at all, which OCP **domain** it belongs to (play / control / not-OCP), and — for play requests — which `mediavocab.MediaType` and genre tags the user is asking for. Multiple backends sit behind one stable interface, from a zero-dependency bundled-keyword matcher to trained ONNX models, and an always-on content filter lets OVOS block sensitive (e.g. adult) requests by default.
+Media-type **command/intent** classification for [OCP (OVOS Common Playback)](https://github.com/OpenVoiceOS/ovos-core). Given a spoken command such as _"play some music"_ it decides three things: whether the command targets OCP at all, which OCP **domain** it belongs to (play / control / not-OCP), and — for play requests — which `mediavocab.MediaType` and genre tags the user is asking for. An always-on content filter lets OVOS block sensitive (e.g. adult) requests by default.
+
+This initial release ships **one** classifier: the bundled-`.voc` **KeywordMediaClassifier** — zero ML dependencies, no model files, fully offline. It is the minimum required for OCP to be functional. Richer strategies (trained ONNX models, NER from media servers, …) are **not** in this release; they land later as independent, separately-reviewed plugins through the `opm.media.classifier` mechanism (see [External plugins](#external-plugins-opm)).
 
 > **Command classification, not catalog classification.** This package classifies a *voice command* ("play the news"). It is distinct from `mediavocab.text.classify`, which classifies a piece of *catalog content* (a video's title/description) into a media type. Use this package in the OCP pipeline; use `mediavocab.text` when tagging library items.
 
 ## Install
 
 ```bash
-pip install ovos-media-classifier              # core: keyword backend, zero ML deps
-pip install ovos-media-classifier[guided]      # ONNX trained backend (recommended; torch-free at runtime)
-pip install ovos-media-classifier[sklearn]     # TF-IDF + LogisticRegression
-pip install ovos-media-classifier[padatious]   # pattern + ML intent matching
-pip install ovos-media-classifier[ner]         # AhocorasickNER (live media-server / HF entities)
-pip install ovos-media-classifier[m2v]         # Model2Vec hierarchical model
-pip install ovos-media-classifier[all]         # every backend
+pip install ovos-media-classifier
 ```
+
+The only runtime dependencies are `ovos-utils` and `mediavocab`. There are no ML
+extras — the keyword classifier reads the bundled `.voc` files directly.
 
 ## Quickstart
 
-The default backend (`load_media_classifier()` with no config) uses the bundled
-`.voc` keyword files — no ML dependencies, no model files, works offline.
+`load_media_classifier()` with no config returns the bundled `.voc` keyword
+classifier — no ML dependencies, no model files, works offline.
 
 ```python
 from ovos_media_classifier import load_media_classifier
@@ -47,25 +46,37 @@ Verified output:
 returns the orthogonal genre tags (anime, adult, …); `classify_domain` returns an
 `OCPDomain`; `is_ocp_query` returns a bool. See [docs/stable-api.md](docs/stable-api.md).
 
-## Backends
+## The keyword classifier
 
-`load_media_classifier(config)` selects a backend from the config keys present
-(first match wins), falling through to the next on any import/load error. The
-default with no config is the bundled keyword backend.
+`load_media_classifier()` returns the bundled keyword backend. It substring-matches
+the query against per-language `.voc` files
+(`ovos_media_classifier/locale/<lang>/<Vocab>.voc`) — no ML dependencies, no model
+files, fully offline.
 
-| Backend | Config key | Extra | Notes |
-|---|---|---|---|
-| Model2Vec | `media_classifier_model` | `[m2v]` | Hierarchical neural model |
-| **GuidedEmbeddings (ONNX)** | `media_classifier_guided_model` | `[guided]` | **Recommended trained backend**; torch-free at runtime; loads any export matching the feature contract |
-| scikit-learn | `media_classifier_sklearn_model` | `[sklearn]` | TF-IDF + LogisticRegression; fast |
-| Padatious | `media_classifier_padatious_dir` | `[padatious]` | Pattern + ML; native `ocp_control` head |
-| AhocorasickNER (live) | `media_classifier_entities` | `[ner]` (+ `[media_servers]`/`[huggingface]`) | Entities pulled from media servers / HF datasets at runtime |
-| AhocorasickNER (static) | `media_classifier_wordlists` / `media_classifier_ner_csv` | `[ner]` | Exact-match from a fixed word list or CSV |
-| Keyword | `voc_match_func=` supplied | — | Delegates `.voc` lookups to the OCP pipeline plugin |
-| Keyword (default) | — | — | Bundled per-language `.voc` files |
+```python
+clf = load_media_classifier()                                # bundled locale
+clf = load_media_classifier(voc_match_func=self.voc_match)   # pipeline mode
+```
 
-See [docs/backends.md](docs/backends.md) for config details, thresholds, and
-when to use each.
+In *pipeline mode* the OCP pipeline plugin owns the `.voc` files and passes its
+`voc_match` method as `voc_match_func`; in *standalone mode* the classifier reads the
+bundled files directly. Matching runs in a fixed priority order (e.g.
+`MusicVideoKeyword` before `MusicKeyword`) and surfaces genre tags (`anime`,
+`adult`, …) via `classify_genres()`. Bundled languages: `ca-es`, `da-dk`, `de-de`,
+`en-us`, `es-es`, `eu-es`, `fr-fr`, `gl-es`, `it-it`, `nl-nl`, `pl-pl`, `pt-br`,
+`pt-pt`.
+
+See [docs/backends.md](docs/backends.md) for details, and
+[docs/external-plugins.md](docs/external-plugins.md) for writing a richer classifier.
+
+## Future strategies (plugins, not in this release)
+
+Trained ONNX models, live NER against a user's media servers, and other richer
+strategies are **not** part of this release. They arrive as independent,
+separately-reviewed additions that register under the `opm.media.classifier`
+entry-point group and load by name — the same mechanism any third party uses (see
+[External plugins](#external-plugins-opm)). The core package stays lean: one
+zero-dependency keyword classifier plus the plugin contract.
 
 ## Content filtering
 
@@ -95,8 +106,9 @@ Configure via `media_content_filter` (`enabled`, `blocked_genres`,
 
 ## External plugins (OPM)
 
-Third-party classifiers register under the `opm.media.classifier` entry-point
-group and load by name. `AbstractMediaClassifier` is the contract.
+Richer classifiers — including the future trained/NER strategies — register under
+the `opm.media.classifier` entry-point group and load by name.
+`AbstractMediaClassifier` is the contract.
 
 ```toml
 # in a 3rd-party package's pyproject.toml
@@ -108,15 +120,17 @@ my-classifier = "my_pkg:MyMediaClassifier"
 clf = load_media_classifier(config={"media_classifier_plugin": "my-classifier"})
 ```
 
-See [docs/external-plugins.md](docs/external-plugins.md).
+If the named plugin fails to load, the factory logs a warning and falls back to the
+built-in keyword classifier — an external plugin never hard-fails the pipeline. See
+[docs/external-plugins.md](docs/external-plugins.md).
 
 ## Training
 
 Model training lives in the top-level `training/` directory and is **not** shipped
-in the wheel. It is gated by the `[train]` extra and run as a module:
+in the wheel. It produces models consumed by future classifier plugins, not by this
+package. Run it from a checkout:
 
 ```bash
-pip install ovos-media-classifier[train]
 python -m training.build_dataset
 ```
 
@@ -126,12 +140,14 @@ See `training/README.md` for the full data-gathering and training workflow.
 
 - [docs/index.md](docs/index.md) — table of contents
 - [docs/taxonomy.md](docs/taxonomy.md) — mediavocab enforcement, intent→type/genre mapping, query-vs-content distinction
-- [docs/backends.md](docs/backends.md) — every backend, its config keys, extras, and trade-offs
+- [docs/backends.md](docs/backends.md) — the bundled keyword classifier and how to add a classifier plugin
 - [docs/content-filtering.md](docs/content-filtering.md) — detect-to-block content moderation
-- [docs/external-plugins.md](docs/external-plugins.md) — registering 3rd-party classifiers
+- [docs/external-plugins.md](docs/external-plugins.md) — registering 3rd-party classifiers via `opm.media.classifier`
 - [docs/stable-api.md](docs/stable-api.md) — the `AbstractMediaClassifier` contract and return types
 
-See [benchmarks](docs/benchmarks/README.md) for accuracy/latency across backends.
+See [benchmarks](benchmarks/README.md) for the reproducible accuracy/latency
+harness (it evaluates whichever classifiers are installed; only the keyword
+classifier ships in this release).
 
 ## Credits
 

@@ -1,10 +1,16 @@
 # ovos-media-classifier documentation
 
-`ovos-media-classifier` provides pluggable media-type **command/intent**
-classification for OCP (OVOS Common Playback). It maps a spoken command to an
-`OCPDomain` (play / control / not-OCP), and for play requests to a
-`mediavocab.MediaType` plus genre tags. A detect-to-block content filter sits on
-top so OVOS can refuse sensitive requests by default.
+`ovos-media-classifier` provides media-type **command/intent** classification for
+OCP (OVOS Common Playback). It maps a spoken command to an `OCPDomain` (play /
+control / not-OCP), and for play requests to a `mediavocab.MediaType` plus genre
+tags. A detect-to-block content filter sits on top so OVOS can refuse sensitive
+requests by default.
+
+This release ships a **single** classifier: the bundled-`.voc` keyword classifier
+(zero ML dependencies — the minimum required for OCP to be functional). Richer
+strategies (trained ONNX models, NER from media servers, …) are **not** in this
+release; they arrive as independent plugins through the `opm.media.classifier`
+entry-point group — see [external-plugins.md](external-plugins.md).
 
 This classifies *voice commands*. It is distinct from `mediavocab.text.classify`,
 which classifies *catalog content* — see [taxonomy.md](taxonomy.md#query-vs-content-classification).
@@ -14,16 +20,17 @@ which classifies *catalog content* — see [taxonomy.md](taxonomy.md#query-vs-co
 | Page | What it covers |
 |---|---|
 | [taxonomy.md](taxonomy.md) | mediavocab `MediaType` enforcement, the internal `OCPPlayIntent`→type/genre mapping, and the query-vs-content distinction |
-| [backends.md](backends.md) | Each backend, its config key, pip extra, and when to use it |
+| [backends.md](backends.md) | The bundled keyword classifier and how to add a classifier plugin |
 | [content-filtering.md](content-filtering.md) | `ContentFilter`: detect-to-block content moderation / parental control |
-| [external-plugins.md](external-plugins.md) | Registering 3rd-party classifiers via the `opm.media.classifier` entry-point group |
+| [external-plugins.md](external-plugins.md) | Registering 3rd-party / future classifiers via the `opm.media.classifier` entry-point group |
 | [stable-api.md](stable-api.md) | The `AbstractMediaClassifier` contract and return types |
 
-For accuracy and latency comparisons across backends, see
-[benchmarks](benchmarks/README.md).
+For the reproducible accuracy/latency harness, see
+[benchmarks](../benchmarks/README.md). It evaluates whichever classifiers are
+installed; only the keyword classifier ships in this release.
 
-For model training (not shipped in the wheel), see `training/README.md` and the
-`[train]` extra.
+For model training (not shipped in the wheel; it feeds future classifier plugins,
+not this package), see `training/README.md`.
 
 ## Public API at a glance
 

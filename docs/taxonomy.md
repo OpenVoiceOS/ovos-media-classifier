@@ -12,14 +12,15 @@ from mediavocab import MediaType as MV
 assert MediaType is MV
 ```
 
-Every backend's `classify()` return value is mapped onto a `mediavocab.MediaType`
+The classifier's `classify()` return value is mapped onto a `mediavocab.MediaType`
 at the boundary, so the public contract enforces the shared vocabulary.
 
 ## Internal intent space vs. public types
 
-Models are trained on a richer, fine-grained label space — `OCPPlayIntent` — that
-draws distinctions the public taxonomy treats as **genre** or **content-form**
-rather than as media types. For example `anime`, `cartoon`, `asmr`, and the adult
+Internally the classifier works against a richer, fine-grained label space —
+`OCPPlayIntent` — that draws distinctions the public taxonomy treats as **genre** or
+**content-form** rather than as media types. (Future trained plugins use this same
+label space.) For example `anime`, `cartoon`, `asmr`, and the adult
 variants are intents, but they are *not* their own `MediaType`: they collapse onto
 a base type and carry their nuance as a genre tag.
 
@@ -51,7 +52,7 @@ So a query like _"play some hentai"_ yields a `MediaType.EPISODIC_SERIES` from
 what the [content filter](content-filtering.md) blocks on — the type alone never
 carries that signal.
 
-Backends that emit raw label strings instead of `OCPPlayIntent` use the
+Classifiers that emit raw label strings instead of `OCPPlayIntent` use the
 string-keyed equivalents `LABEL_TO_MEDIA_TYPE` and `LABEL_TO_GENRES`, plus the
 helper `genres_for_label(label) -> list[str]`.
 
@@ -67,18 +68,22 @@ target OCP at all?":
 | `NOT_OCP` | unrelated to media playback |
 
 `OCPControlIntent` enumerates control actions (`PLAY`, `PAUSE`, `STOP`, `NEXT`,
-`SHUFFLE`, `SEEK_FORWARD`, …). Only backends with a dedicated control head
-(e.g. padatious) classify these; keyword/NER backends derive the domain from the
-media-type result.
+`SHUFFLE`, `SEEK_FORWARD`, …). Only a classifier with a dedicated control head
+classifies these; the bundled keyword classifier derives the domain from the
+media-type result and so reports `OCP_PLAY` / `NOT_OCP` only. Control-intent
+detection is something a future plugin can add.
 
-## Entity labels
+## Entity labels (reserved)
 
 `OCPEntityLabel` is the NER vocabulary (`artist_name`, `movie_title`,
-`tv_show_title`, `radio_station`, …) used by the AhocorasickNER backend and the
-guided-embeddings feature extractor. Each entity label maps to an `OCPPlayIntent`
+`tv_show_title`, `radio_station`, …). Each entity label maps to an `OCPPlayIntent`
 via `NER_LABEL_TO_PLAY_INTENT`, so an entity hit ("play *Dune: Part Two*") resolves
-to a media type. Skills register their own content under these labels at runtime;
-see [backends.md](backends.md#ahocorasickner).
+to a media type.
+
+These labels and the `NER_LABEL_TO_PLAY_INTENT` map are **reserved for the future
+NER classifier plugin** — no classifier in this release uses them. They are exported
+so that an out-of-tree NER classifier (and the skills that register content under
+these labels at runtime) shares the same vocabulary.
 
 ## Query vs. content classification
 
