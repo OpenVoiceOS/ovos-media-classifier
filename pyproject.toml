@@ -56,6 +56,7 @@ where = ["."]
 include = ["ovos_media_classifier*"]
 
 # ship the bundled .voc keyword files (the no-arg KeywordMediaClassifier reads
-# ovos_media_classifier/locale/<lang>/<Vocab>.voc directly off disk)
+# ovos_media_classifier/locale/<lang>/<Vocab>.voc directly off disk) + the PEP 561
+# typing marker so downstream type-checkers see the inline type hints.
 [tool.setuptools.package-data]
-ovos_media_classifier = ["locale/*/*.voc"]
+ovos_media_classifier = ["locale/*/*.voc", "py.typed"]
