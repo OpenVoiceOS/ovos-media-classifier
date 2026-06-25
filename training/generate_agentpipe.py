@@ -39,14 +39,15 @@ PLAY_INTENTS: List[str] = sorted(AUDIO_INTENTS | VIDEO_INTENTS)
 NEGATIVE_INTENT = "not_ocp"
 
 # FREE AGENTS ONLY — never claude. Free CLI aliases (agentpipe providers):
-# opencode (the main), kilo, antigravity (agy). (mimo is intentionally excluded.)
+# opencode (the main), kilo. (mimo and antigravity/agy are intentionally
+# excluded: mimo broke, and agy fails to detect system-wide auth and spams the
+# browser for OAuth on every call.)
 # Jobs rotate the BASE provider across the primary pool and fall through the rest
 # on failure. At startup the pool is filtered to the providers that actually
 # produce output right now (see _working_pool), so a newly-authenticated free
-# agent joins automatically with no code change; agy is slow so it stays in the
-# fallback tail only.
+# agent joins automatically with no code change.
 FREE_PROVIDERS = ["opencode-free", "kilo"]
-FREE_FALLBACKS = ["opencode-free", "kilo", "antigravity-flash-medium"]
+FREE_FALLBACKS = ["opencode-free", "kilo"]
 # per-call timeout (s) for a single agent generation before failing over
 AGENT_TIMEOUT = 90
 
