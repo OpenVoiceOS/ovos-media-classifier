@@ -38,11 +38,13 @@ from training.sources import AUDIO_INTENTS, VIDEO_INTENTS, SCHEMA_COLUMNS
 PLAY_INTENTS: List[str] = sorted(AUDIO_INTENTS | VIDEO_INTENTS)
 NEGATIVE_INTENT = "not_ocp"
 
-# FREE AGENTS ONLY — never claude. All free CLI aliases (verified via
-# Agent.check_available): opencode, kilo, antigravity (agy).
-# Jobs rotate the BASE provider across the FAST pool for throughput; agy is
-# slower so it sits only in the fallback tail ("use all free providers" without
-# letting the slow one throttle concurrency).
+# FREE AGENTS ONLY — never claude. Free CLI aliases (agentpipe providers):
+# opencode (the main), kilo, antigravity (agy). (mimo is intentionally excluded.)
+# Jobs rotate the BASE provider across the primary pool and fall through the rest
+# on failure. At startup the pool is filtered to the providers that actually
+# produce output right now (see _working_pool), so a newly-authenticated free
+# agent joins automatically with no code change; agy is slow so it stays in the
+# fallback tail only.
 FREE_PROVIDERS = ["opencode-free", "kilo"]
 FREE_FALLBACKS = ["opencode-free", "kilo", "antigravity-flash-medium"]
 # per-call timeout (s) for a single agent generation before failing over
@@ -239,6 +241,34 @@ def _done_key(intent: str, lang: str, chunk_idx: int) -> str:
     return f"{lang}|{intent}|{chunk_idx}"
 
 
+async def _working_pool(candidates: List[str]) -> List[str]:
+    """Filter a provider list to the ones that actually produce output right now.
+
+    ``auth_status`` is unreliable across these CLIs (some report logged-out yet
+    generate fine), so we test each with a tiny real generation and keep the ones
+    that return a parseable result. A broken/unauthenticated agent (returns empty
+    or errors) is dropped from rotation up front instead of wasting calls on it;
+    a newly-working free agent joins automatically on the next run. Falls back to
+    the original list if every probe fails (don't strand the run with no pool).
+    """
+    from agentpipe import Agent
+    probe = ('Return ONLY a JSON array of exactly 2 short strings, e.g. ["a","b"]. '
+             'No prose.')
+    working: List[str] = []
+    for prov in candidates:
+        try:
+            raw = await asyncio.wait_for(Agent(prov, timeout=40).generate(probe), timeout=45)
+            if parse_utterances(raw):
+                working.append(prov)
+                print(f"  [probe] {prov!r}: OK", flush=True)
+            else:
+                print(f"  [probe] dropping {prov!r}: no usable output "
+                      f"(broken or not logged in)", flush=True)
+        except Exception as e:
+            print(f"  [probe] dropping {prov!r}: {type(e).__name__}", flush=True)
+    return working or candidates
+
+
 async def generate(
     langs: List[str],
     intents: List[str],
@@ -270,9 +300,15 @@ async def generate(
     done_fh = open(done_path, "a", encoding="utf-8")
 
     # provider rotation pool: the requested --provider first, then the rest of
-    # the free pool ("use all free providers"). Each chunk picks the next
-    # provider round-robin so load + model-diversity spread across the pool.
-    prov_pool = [provider] + [p for p in FREE_PROVIDERS if p != provider]
+    # the free pool ("use all free agents"). Each chunk picks the next provider
+    # round-robin so load + model-diversity spread across the pool. Filter to the
+    # agents that actually work right now (a broken/unauthenticated CLI is dropped).
+    candidates = [provider] + [p for p in FREE_FALLBACKS if p != provider]
+    working = await _working_pool(candidates)
+    prov_pool = [p for p in ([provider] + FREE_PROVIDERS) if p in working] or working
+    # de-dup preserving order
+    seen_p = set(); prov_pool = [p for p in prov_pool if not (p in seen_p or seen_p.add(p))]
+    print(f"  [probe] rotation pool: {prov_pool}; fallbacks: {working}", flush=True)
 
     # build the work list of (intent, lang, chunk_idx, prompt, base_prov, fallbacks)
     jobs: List[Tuple[str, str, int, str, str, list]] = []
@@ -286,7 +322,7 @@ async def generate(
                     continue
                 # rotate provider + prompt style by chunk for diversity
                 base_prov = prov_pool[job_idx % len(prov_pool)]
-                fallbacks = [p for p in FREE_FALLBACKS if p != base_prov]
+                fallbacks = [p for p in working if p != base_prov]
                 style = PROMPT_STYLES[ci % len(PROMPT_STYLES)]
                 seeds = _seed_examples(intent, pools, 6, rnd)
                 prompt = build_prompt(intent, lang, chunk, seeds, style)
