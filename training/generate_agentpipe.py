@@ -38,10 +38,30 @@ from training.sources import AUDIO_INTENTS, VIDEO_INTENTS, SCHEMA_COLUMNS
 PLAY_INTENTS: List[str] = sorted(AUDIO_INTENTS | VIDEO_INTENTS)
 NEGATIVE_INTENT = "not_ocp"
 
-# FREE AGENTS ONLY — never claude. Fallback chain is free providers.
-FREE_FALLBACKS = ["kilo", "opencode-free"]
+# FREE AGENTS ONLY — never claude. All free CLI aliases (verified via
+# Agent.check_available): opencode, kilo, antigravity (agy).
+# Jobs rotate the BASE provider across the FAST pool for throughput; agy is
+# slower so it sits only in the fallback tail ("use all free providers" without
+# letting the slow one throttle concurrency).
+FREE_PROVIDERS = ["opencode-free", "kilo"]
+FREE_FALLBACKS = ["opencode-free", "kilo", "antigravity-flash-medium"]
 # per-call timeout (s) for a single agent generation before failing over
 AGENT_TIMEOUT = 90
+
+# Prompt-style variants rotated per chunk so the same (intent,lang) is sampled
+# from several framings — this is the main diversity lever (the LLM otherwise
+# collapses onto a few canonical phrasings). Each entry is appended to the base
+# instruction.
+PROMPT_STYLES: List[str] = [
+    "Use casual, everyday speech with contractions and filler ('um', 'hey', 'can you').",
+    "Use short, terse imperative commands (2-5 words), like a power user barking orders.",
+    "Phrase them as polite questions ('could you', 'would you mind', 'please').",
+    "Reference a SPECIFIC named title/artist/show in most of them, drawn from the examples.",
+    "Mix in indirect/contextual phrasings ('I'm in the mood for...', 'how about...', 'let's hear...').",
+    "Write as different people would: a kid, an elderly person, a teenager — vary register.",
+    "Include some with extra qualifiers (era, genre, mood, language, 'the new one', 'that one from...').",
+    "Keep them very natural and conversational, the way someone actually talks to a smart speaker.",
+]
 
 # Human-readable descriptions so the LLM understands each intent precisely.
 INTENT_DESC: Dict[str, str] = {
@@ -150,9 +170,8 @@ def _seed_examples(intent: str, pools: Dict[str, List[str]], k: int, rnd) -> str
     return ", ".join(picks)
 
 
-def build_prompt(intent: str, lang: str, n: int, seeds: str) -> str:
+def build_prompt(intent: str, lang: str, n: int, seeds: str, style: str = "") -> str:
     desc = INTENT_DESC.get(intent, intent.replace("_", " "))
-    lang_name = lang
     seed_clause = (
         f" You may reference real examples such as: {seeds}." if seeds else ""
     )
@@ -163,12 +182,14 @@ def build_prompt(intent: str, lang: str, n: int, seeds: str) -> str:
             "train a safety classifier that BLOCKS such requests; keep them realistic "
             "but no graphic detail is needed."
         )
+    style_clause = f" {style}" if style else ""
     return (
         f"You are generating training data for a voice-assistant intent classifier. "
         f"Write {n} short, natural, varied spoken commands in the language with BCP-47 "
-        f"code '{lang}' that a person would say to: {desc}.{seed_clause}{nsfw_note} "
-        f"Vary verbs, phrasing, politeness and length. Do NOT number them. "
-        f"Return ONLY a JSON array of {n} strings, nothing else."
+        f"code '{lang}' that a person would say to: {desc}.{seed_clause}{nsfw_note}"
+        f"{style_clause} "
+        f"Vary verbs, phrasing, politeness and length; avoid repeating the same opening. "
+        f"Do NOT number them. Return ONLY a JSON array of {n} strings, nothing else."
     )
 
 
@@ -248,25 +269,33 @@ async def generate(
         writer.writeheader()
     done_fh = open(done_path, "a", encoding="utf-8")
 
-    # build the work list of (intent, lang, chunk_idx, prompt)
-    jobs: List[Tuple[str, str, int, str]] = []
+    # provider rotation pool: the requested --provider first, then the rest of
+    # the free pool ("use all free providers"). Each chunk picks the next
+    # provider round-robin so load + model-diversity spread across the pool.
+    prov_pool = [provider] + [p for p in FREE_PROVIDERS if p != provider]
+
+    # build the work list of (intent, lang, chunk_idx, prompt, base_prov, fallbacks)
+    jobs: List[Tuple[str, str, int, str, str, list]] = []
+    job_idx = 0
     for lang in langs:
-        # FREE AGENTS ONLY — never claude. base provider + free fallbacks.
-        base_prov = provider
-        fallbacks = [p for p in FREE_FALLBACKS if p != base_prov]
         for intent in intents:
             chunks = max(1, (n_per + chunk - 1) // chunk)
             for ci in range(chunks):
                 key = _done_key(intent, lang, ci)
                 if key in done:
                     continue
+                # rotate provider + prompt style by chunk for diversity
+                base_prov = prov_pool[job_idx % len(prov_pool)]
+                fallbacks = [p for p in FREE_FALLBACKS if p != base_prov]
+                style = PROMPT_STYLES[ci % len(PROMPT_STYLES)]
                 seeds = _seed_examples(intent, pools, 6, rnd)
-                prompt = build_prompt(intent, lang, chunk, seeds)
+                prompt = build_prompt(intent, lang, chunk, seeds, style)
                 jobs.append((intent, lang, ci, prompt, base_prov, fallbacks))
+                job_idx += 1
 
     sem = asyncio.Semaphore(concurrency)
     total = len(jobs)
-    counter = {"done": 0, "rows": 0}
+    counter = {"done": 0, "rows": 0, "empty": 0}
 
     async def run_job(job):
         intent, lang, ci, prompt, base_prov, fallbacks = job
@@ -281,7 +310,13 @@ async def generate(
                 "binary_label": binary_label, "playback_label": playback,
                 "media_label": media_label, "sentence": u,
             })
-        # write synchronously (single-threaded event loop, safe)
+        # write synchronously (single-threaded event loop, safe). Only checkpoint
+        # a chunk as done when it actually produced rows — an empty result means
+        # every free provider failed/rate-limited, and we want a resume to retry
+        # it rather than skip it forever.
+        if not rows:
+            counter["empty"] += 1
+            return
         for r in rows:
             writer.writerow(r)
         done_fh.write(_done_key(intent, lang, ci) + "\n")
@@ -289,12 +324,13 @@ async def generate(
         counter["done"] += 1
         counter["rows"] += len(rows)
         if counter["done"] % 20 == 0:
-            print(f"  [{counter['done']}/{total}] chunks, {counter['rows']} rows so far",
-                  flush=True)
+            print(f"  [{counter['done']}/{total}] chunks, {counter['rows']} rows, "
+                  f"{counter['empty']} empty so far", flush=True)
 
     await asyncio.gather(*(run_job(j) for j in jobs))
     out_fh.close(); done_fh.close()
-    print(f"Done: {counter['done']} chunks, {counter['rows']} rows → {out_csv}")
+    print(f"Done: {counter['done']} chunks, {counter['rows']} rows, "
+          f"{counter['empty']} empty (will retry on resume) → {out_csv}")
 
 
 def main() -> None:
