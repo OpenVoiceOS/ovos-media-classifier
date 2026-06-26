@@ -52,3 +52,16 @@
 [hey|ok|please] <lead_watch> do you have an accessible version of {movie_title} [please|for me|right now|thanks]
 <lead_watch> got any {movie_genre} movies with audio description
 [hey|ok|please] <lead_watch> got any {movie_genre} movies with audio description [please|for me|right now|thanks]
+{movie_title} with audio description, please
+the audio described version of {movie_title}, please
+{movie_title} described — put it on
+put on {movie_title} with audio description, would you?
+i could go for an audio described movie
+i'm after a {movie_genre} film with audio description
+i need {movie_title} with narration
+what about the described version of {movie_title}
+maybe a {movie_genre} movie with audio description
+we should watch {movie_title} described
+is there an accessible version of {movie_title}
+the described {movie_title} because i can't see the screen
+an audio described {movie_genre} film for the evening

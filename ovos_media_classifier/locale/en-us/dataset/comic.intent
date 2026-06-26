@@ -68,3 +68,30 @@
 [hey|ok|please] <lead_read> got any {comic_genre} graphic novels [please|for me|right now|thanks]
 <lead_read> a {comic_genre} comic for the weekend
 [hey|ok|please] <lead_read> a {comic_genre} comic for the weekend [please|for me|right now|thanks]
+{comic_title}, please
+the manga {comic_title}, please
+a {comic_genre} comic, thanks
+{comic_title} — pull it up
+{comic_title} — let's read it
+that manga {comic_title} — open it
+read {comic_title}, would you?
+open up {comic_title}, can you?
+i'm in a {comic_genre} comic mood
+in the mood for some manga
+i could go for a {comic_genre} manga
+i'm after a good graphic novel
+i need a {comic_genre} comic
+maybe a {comic_genre} manga
+maybe the next chapter of {comic_title}
+what about {comic_title}
+we should read {comic_title}
+something like {comic_title}
+another comic like {comic_title}
+any {comic_genre} manga around?
+what {comic_genre} comics do you have
+is there a manga called {comic_title}
+the latest {comic_title} issue
+the newest chapter of {comic_title}
+a {comic_genre} comic for the weekend
+some manga because i'm bored
+a graphic novel to relax with

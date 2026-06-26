@@ -58,3 +58,23 @@
 [hey|ok|please] <lead_watch> some live tv while i cook [please|for me|right now|thanks]
 <lead_watch> put something on tv
 [hey|ok|please] <lead_watch> put something on tv [please|for me|right now|thanks]
+{tv_channel}, please
+channel {tv_channel}, please
+a {tv_genre} channel, thanks
+{tv_channel} — put it on
+live tv — let's see what's on
+put on {tv_channel}, would you?
+switch to {tv_channel}, can you?
+i could go for some live tv
+i'm after a {tv_genre} channel
+i need something on in the background
+what about {tv_channel}
+what about a {tv_genre} channel
+maybe a {tv_genre} channel
+we should put on the news channel
+anything good on {tv_channel}?
+what's on {tv_genre} right now?
+my usual {tv_genre} channel
+a {tv_genre} channel because i'm bored
+some live tv while i fold laundry
+just put on whatever's on tv

@@ -39,3 +39,29 @@
 [hey|ok|please] <lead_play_audio> the audiobook version of {movie_title} [please|for me|right now|thanks]
 <lead_play_audio> {movie_title} as an audiobook
 [hey|ok|please] <lead_play_audio> {movie_title} as an audiobook [please|for me|right now|thanks]
+the audiobook {audiobook_title}, please
+{audiobook_title} by {audiobook_author}, please
+a {audiobook_genre} audiobook, thanks
+{audiobook_title} — read it to me
+that audiobook {audiobook_title} — start it
+the audiobook of {audiobook_title} — put it on
+put on the audiobook {audiobook_title}, would you?
+i'm in a {audiobook_genre} audiobook mood
+in the mood for a {audiobook_genre} audiobook
+i could go for an audiobook by {audiobook_author}
+i'm after a good {audiobook_genre} audiobook
+i need an audiobook for the trip
+what about an audiobook by {audiobook_author}
+maybe a {audiobook_genre} audiobook
+maybe the audiobook of {audiobook_title}
+we should listen to {audiobook_title}
+something like {audiobook_title}
+another audiobook by {audiobook_author}
+any {audiobook_genre} audiobooks around?
+what {audiobook_genre} audiobooks do you have
+is there an audiobook narrated by {audiobook_narrator}
+{audiobook_author}'s latest audiobook
+the audiobook everyone's talking about by {audiobook_author}
+a {audiobook_genre} audiobook for the long drive
+an audiobook narrated by {audiobook_narrator} for bedtime
+something by {audiobook_author} because i can't sleep
