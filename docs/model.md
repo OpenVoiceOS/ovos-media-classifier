@@ -206,42 +206,46 @@ result. (Source: [benchmarks/ladder_results.md](../benchmarks/ladder_results.md)
 
 | axis | rules | learned-context | learned-context+NER |
 |---|---|---|---|
-| domain | 0.833 | 0.866 | 0.986 |
-| media_type | 0.629 | 0.778 | 0.964 |
-| playback_type | 0.702 | 0.895 | 0.988 |
-| structure | 0.708 | 0.907 | 0.990 |
-| explicitness | 0.988 | 0.989 | 0.997 |
+| domain | 0.844 | 0.873 | 0.988 |
+| media_type | 0.663 | 0.786 | 0.967 |
+| playback_type | 0.717 | 0.895 | 0.990 |
+| structure | 0.738 | 0.908 | 0.992 |
+| explicitness | 0.989 | 0.989 | 0.998 |
 
 ### Multi-label axes — macro-F1
 
 | axis | rules | learned-context | learned-context+NER |
 |---|---|---|---|
-| content_form_genres | 0.706 | 0.738 | 0.975 |
-| tags | 0.000 | 0.547 | 0.581 |
-| qualifiers | 0.000 | 0.746 | 0.906 |
+| content_form_genres | 0.720 | 0.729 | 0.979 |
+| tags | 0.000 | 0.561 | 0.596 |
+| qualifiers | 0.000 | 0.780 | 0.945 |
 
 The `tags` macro-F1 is scored over the head's **modelled label space** (its
 top-`TAGS_TOP_K` namespaced labels) — the honest in-scope task, not over the
 thousands of distinct raw genre values it cannot model (§6b). Folding genre, mood
 and era into this one head lifts it from the ~0.00–0.10 the old three starved
-single-label heads scored to **0.55 → 0.58**.
+single-label heads scored to **0.56 → 0.60**.
 
 ### Content filter (driven by the `content_form_genres` axis)
 
 | rung | adult recall | hentai recall | false-block | median ms | p95 ms | size |
 |---|---|---|---|---|---|---|
-| rules | 0.481 (364/756) | 0.510 | 0.000 | 0.319 | 0.498 | — |
-| learned-context | 0.481 (364/756) | 0.510 | 0.000 | 0.211 | 0.250 | 176 KiB |
-| learned-context+NER | 0.922 (697/756) | 0.936 | 0.001 | 0.214 | 0.259 | 289 KiB |
+| rules | 0.479 (350/731) | 0.453 | 0.001 | 0.509 | 0.822 | — |
+| learned-context | 0.479 (350/731) | 0.453 | 0.000 | 0.283 | 0.519 | 380 KiB |
+| learned-context+NER | 0.932 (681/731) | 0.937 | 0.001 | 0.261 | 0.382 | 289 KiB |
 
 The headline lifts (rules → context → context+NER): `media_type` accuracy
-0.63 → 0.78 → 0.96; `playback_type` 0.70 → 0.90 → 0.99; `structure`
-0.71 → 0.91 → 0.99; `content_form_genres` macro-F1 0.71 → 0.74 → 0.98;
-`qualifiers` 0 → 0.75 → 0.91; `tags` 0 → 0.55 → 0.58; adult-block recall
-0.48 → 0.48 → 0.92; hentai recall 0.51 → 0.51 → 0.94 — at a near-zero false-block
-rate and sub-millisecond latency in a 289 KiB bundle. The **coherent bw/silent**
-qualifier data (real black-and-white / silent titles) is what lifts `qualifiers`
-recall on those filters.
+0.66 → 0.79 → 0.97; `playback_type` 0.72 → 0.90 → 0.99; `structure`
+0.74 → 0.91 → 0.99; `content_form_genres` macro-F1 0.72 → 0.73 → 0.98;
+`qualifiers` 0 → 0.78 → 0.95; `tags` 0 → 0.56 → 0.60; adult-block recall
+0.48 → 0.48 → 0.93; hentai recall 0.45 → 0.45 → 0.94 — at a near-zero false-block
+rate and sub-millisecond latency in a 289 KiB bundle. The saturated `.intent`
+templates and the enriched `kw_*` keyword vocabularies lift the **rules floor**
+itself (`media_type` 0.63 → 0.66, `structure` 0.71 → 0.74,
+`content_form_genres` 0.71 → 0.72) — the deterministic backend reads more cues —
+while the canonical UNIFIED entity sets (cross-deduplicated artists / performers)
+and the **coherent bw/silent** qualifier data (real black-and-white / silent
+titles) sharpen the learned heads, lifting `qualifiers` 0.91 → 0.95.
 
 ---
 
@@ -287,7 +291,8 @@ attached.
 **(e) Near-tie leaves where the keyword default is already right.** A handful of
 leaves share almost all of their cue features and differ only in a token the bag
 under-weights — `music` vs `music_video` is the canonical case (both fire the
-music keywords; only the *video* modality cue separates them). The trained
+music keywords; only the *video* modality cue separates them); `book` vs
+`interactive_fiction` is another (both fire `verb_read`). The trained
 `media_type` head can confuse such pairs where the deterministic keyword
 classifier, matching leaf-first on the more specific `music_video` voc chain, gets
 them right. The aggregate `media_type` accuracy is high, but on these specific

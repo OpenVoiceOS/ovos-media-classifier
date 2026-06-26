@@ -170,9 +170,14 @@ instead draws those slots from **one real record** of a `RelationalGroup`:
 names (a `media-metadata-imdb-credits` or `…-imdb-names` dataset); otherwise the
 person slots fill **independently** from the flat `movie_director` /
 `movie_writer` / `movie_actor` pools (the hook logs which path it took and
-upgrades automatically on the next run once that dataset lands). **Single-slot
-templates and confusable slots stay independent by design** — coherence is only
-coordinated when a template uses ≥ 2 slots of one group.
+upgrades automatically on the next run once that dataset lands). **No credits
+dataset exists yet**, so the current build runs on the **fallback** path —
+`movies.jsonl` carries no person fields and the movie director/writer/actor
+slots fill independently. Movie person-coherence is therefore *pending the
+credits dataset*; re-running `training.imdb_relations` once it lands upgrades
+those slots with no other change. **Single-slot templates and confusable slots
+stay independent by design** — coherence is only coordinated when a template
+uses ≥ 2 slots of one group.
 
 Two IMDb signals further shape sampling:
 

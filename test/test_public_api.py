@@ -281,13 +281,16 @@ class TestOnnxParity(unittest.TestCase):
         # The ONNX backend is run on the keyword-only runtime feature path (no
         # NER store populated — see docs/model.md §6d), where some leaves share
         # all their cue words and are NOT separable from keywords alone
-        # (music ↔ music_video both fire only ``kw_music``; game ↔
-        # interactive_fiction both fire ``kw_game``).  On the cases that DO have a
-        # distinct cue, the trained head agrees with the keyword floor.
+        # (music ↔ music_video / playlist both fire only ``kw_music``; game ↔
+        # interactive_fiction both fire ``kw_game``; book ↔ interactive_fiction
+        # both fire ``verb_read``).  On the cases that DO have a distinct cue
+        # (``kw_audiobook`` / ``kw_podcast`` / ``kw_comic`` / a movie cue), the
+        # trained head agrees with the keyword floor.
         separable = {
             "watch a movie": MediaType.MOVIE,
             "play a podcast": MediaType.PODCAST,
-            "read me a book": MediaType.BOOK,
+            "play an audiobook": MediaType.AUDIOBOOK,
+            "read me a comic": MediaType.COMIC,
         }
         for q, expected in separable.items():
             with self.subTest(query=q):

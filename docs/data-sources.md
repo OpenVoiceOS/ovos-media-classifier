@@ -13,21 +13,17 @@ capped at 200 000 per label). Sources are read from the local `metadatarr`
 scraper cache when present (the freshest, complete dump), otherwise from
 HuggingFace `TigreGotico/<id>`.
 
-The curated genre-specific archives are ingested **before** the bulk MusicBrainz
-dump so they always reach the (capped) `artist_name` pool rather than being
-crowded out.
+The **canonical UNIFIED** datasets (`media-metadata-artists`,
+`media-metadata-adult-performers`) are already cross-deduplicated across all of
+their constituent sources, so they are ingested directly into the `artist_name`
+/ `pornstar` (+ attribute) pools rather than re-merging the raw per-source sets.
 
 ### TigreGotico media-metadata collection → slot labels
 
 | HuggingFace dataset | slot label(s) | source / license |
 |---|---|---|
-| `musicbrainz-artists` | `artist_name` | MusicBrainz (CC0) |
-| `musicbrainz-releases` | `album_name`, `artist_name` | MusicBrainz (CC0) |
-| `audiodb-artists` | `artist_name`, `music_genre`, `record_label` | TheAudioDB |
-| `media-metadata-jazz-artists` | `artist_name`, `music_genre` | Jazz Music Archives |
-| `media-metadata-progarchives-artists` | `artist_name`, `music_genre` | Prog Archives |
-| `media-metadata-metal-archives` | `artist_name`, `music_genre`, `record_label` | Metal Archives |
-| `media-metadata-classical-composers` | `artist_name` | classical-composer catalogue |
+| `media-metadata-artists` | **canonical UNIFIED artist set** → `artist_name` (+ `aliases`), `style`/`tags`→`music_genre`. Cross-deduplicated across MusicBrainz / TheAudioDB / Jazz / Prog Archives / Metal Archives / classical-composer sources | MusicBrainz + others |
+| `musicbrainz-releases` | `album_name`, `artist_name` (albums + the album↔artist relation; not in the artist set above) | MusicBrainz (CC0) |
 | `media-metadata-imdb-titles` | **primary title source** — split by `titleType`: `movie`/`tvMovie`→`movie_title`, `tvSeries`/`tvMiniSeries`→`tv_show_title`, `short`/`tvShort`→`short_film_title`, `videoGame`→`game_title`; `genres`→`content_genre` (+ `movie_genre`/`tv_genre`/`game_genre`), `startYear`→`release_year`/`release_decade`; `isAdult==1` routes to `adult_title` (never the clean pools). Also the **join key** (`imdb_id`) for the relational IMDb sources below | IMDb |
 | `media-metadata-imdb-episodes` | joined (`series_id`→series title, episode `imdb_id`→episode title) into the `episodes` relation + `season_number`/`episode_number`/`episode_title` pools | IMDb |
 | `media-metadata-imdb-technical-specs` + `media-metadata-imdb-bw-silent` | joined to the real title → the `bw_movie_title` / `silent_movie_title` pools tagged `black_and_white` / `silent` (the `bw_silent` relation) | IMDb |
@@ -118,21 +114,18 @@ provide adult content.
 
 | HuggingFace dataset | slot label(s) | role |
 |---|---|---|
-| `adult-metadata-stashdb-performers` | `pornstar` + `adult_eye_color`/`adult_hair_color`/`adult_ethnicity`/`adult_body_type`/`adult_marking` | performers + physical attributes |
-| `adult-metadata-iafd-performers` | `pornstar`, `adult_title` | performers + filmography titles |
+| `media-metadata-adult-performers` | **canonical UNIFIED performer set** → `pornstar` (+ `aliases`) + `adult_eye_color`/`adult_hair_color`/`adult_ethnicity`/`adult_country`/`adult_body_type`. Cross-deduplicated across stashdb / iafd / freeones / boobpedia / thenude (+ pornhub / avn / indexxx) | performers + physical attributes |
 | `adult-metadata-iafd-titles` | `adult_title`, `adult_studio` | real adult film titles + studios |
 | `adult-metadata-iafd-distributors` | `adult_studio` | adult studios / distributors |
-| `adult-metadata-freeones-performers` | `pornstar` + `adult_country`/attributes | performers + attributes |
-| `adult-metadata-boobpedia-performers` | `pornstar` + `adult_ethnicity`/`adult_hair_color`/attributes | performers + attributes |
-| `adult-metadata-thenude-performers` | `pornstar` + attributes | performers + attributes |
 | `adult-metadata-hanime` | `hentai_title`, `hentai_studio` | hanime.tv hentai catalogue |
 | `adult-metadata-mal-hentai` | `hentai_title`, `hentai_studio` | MyAnimeList hentai |
 | `adult-metadata-hentaisea` | `hentai_title` | hentaisea hentai catalogue |
 
 These are **private** datasets — ingestion uses the HuggingFace token from the
-environment. Performer rosters overlap across stashdb / iafd / freeones /
-boobpedia / thenude, so they are **deduplicated case-insensitively into one
-`pornstar` pool** rather than summed.
+environment. The unified performer set is already **cross-deduplicated** across
+its constituent rosters (stashdb / iafd / freeones / boobpedia / thenude …), so
+the `pornstar` pool is one deduplicated set rather than the sum of overlapping
+per-source rosters.
 
 The dedicated hentai sets are the real corpus for `hentai_title` (the anilist /
 jikan `is_adult` subset is merged in too); these are kept **out of the clean
@@ -141,10 +134,10 @@ manga" template never fills an adult title. A hentai row is labelled `hentai` �
 `EPISODIC_SERIES` + `["anime", "adult"]`, so the content filter blocks it.
 
 The physical-attribute pools (`adult_eye_color`, `adult_hair_color`,
-`adult_ethnicity`, `adult_body_type`, `adult_marking`, `adult_country`) exist so
-detection fires on a **description** (*"porn with red hair"*, *"some asian porn"*,
-*"a performer with tattoos"*) and not only on a named performer — otherwise the
-filter would be trivially evaded. They are detect-to-block training signals only.
+`adult_ethnicity`, `adult_body_type`, `adult_country`) exist so detection fires
+on a **description** (*"porn with red hair"*, *"some asian porn"*) and not only
+on a named performer — otherwise the filter would be trivially evaded. They are
+detect-to-block training signals only.
 
 Every adult template is labelled `adult` / `adult_audio` / `hentai`, which map to
 a real `mediavocab.MediaType` plus the `adult` **genre** via `LABEL_TO_GENRES`.
