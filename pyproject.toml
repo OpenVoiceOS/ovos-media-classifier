@@ -41,6 +41,20 @@ huggingface = [
     "datasets",
 ]
 
+# --- training-only deps (NOT needed at runtime) ---
+# Train the ONNX bundle (``training/train_sklearn.py``) and rebuild the dataset
+# (``training/build_dataset.py``).  The runtime backend stays on
+# ``onnxruntime`` + ``numpy`` (the ``onnx`` extra); this extra only adds the
+# offline scikit-learn → ONNX toolchain.
+train = [
+    "scikit-learn",
+    "skl2onnx",
+    "onnx",
+    "onnxruntime",
+    "numpy",
+    "pandas",
+]
+
 # test deps — optional-backend deps are mocked in the suite, so [test] runs green
 test = [
     "pytest",

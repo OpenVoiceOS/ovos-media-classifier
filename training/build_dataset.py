@@ -169,6 +169,82 @@ def _label_axes(media_label: str) -> Tuple[str, List[str], str, str, str]:
             infer_structure(mt).value, "ocp")
 
 
+# ---------------------------------------------------------------------------
+# Derived multi-task axes — all free (ground-truth by construction) from the
+# template ``intent`` + the ``slot_values`` that filled the row.  Each becomes a
+# dataset column and a trained head.  See docs/model.md.
+# ---------------------------------------------------------------------------
+
+# slot names whose VALUE is a real (non-form) genre → the ``content_genre`` axis
+_GENRE_SLOTS = (
+    "music_genre", "movie_genre", "video_genre", "tv_genre", "game_genre",
+    "radio_genre", "podcast_genre", "book_genre", "comic_genre",
+    "audiobook_genre",
+)
+# slot names whose value is a mood / activity → the ``mood`` axis
+_MOOD_SLOTS = ("playlist_mood", "playlist_activity")
+# slot names carrying a release year / decade → the ``era`` axis
+_YEAR_SLOTS = ("release_year",)
+_DECADE_SLOTS = ("release_decade",)
+
+# ``intent`` aliases that are really a base media type + a result-narrowing
+# qualifier (the qualifier is the real signal; the type is the base).
+_INTENT_QUALIFIERS: Dict[str, List[str]] = {
+    "bw_movie":     ["black_and_white"],
+    "silent_movie": ["silent"],
+    "audio_description": ["audio_described"],
+    "trailer":      ["trailer"],
+    "behind_the_scenes": ["behind_the_scenes"],
+}
+_YEAR_RE = re.compile(r"\b(19|20)\d{2}\b")
+
+
+def _decade_of(year: str) -> Optional[str]:
+    m = _YEAR_RE.search(year or "")
+    if not m:
+        return None
+    y = int(m.group(0))
+    return f"{(y // 10) * 10}s"
+
+
+def _derive_axes(intent: str, genres: List[str],
+                 slot_values: Dict[str, str]) -> Dict[str, object]:
+    """Compute the free multi-task axis labels for one row.
+
+    All labels are ground-truth: ``content_genre`` / ``mood`` / ``era`` come
+    straight from the slot value that filled the template, ``qualifiers`` from
+    the intent alias, ``explicitness`` from the ``adult`` form-genre.
+    """
+    content_genre = sorted({
+        slot_values[s].lower() for s in _GENRE_SLOTS if s in slot_values
+    })
+    mood = next((slot_values[s] for s in _MOOD_SLOTS if s in slot_values), "")
+    era = next((slot_values[s] for s in _YEAR_SLOTS if s in slot_values), "")
+    decade = next((slot_values[s] for s in _DECADE_SLOTS if s in slot_values), "")
+    if not decade and era:
+        decade = _decade_of(era) or ""
+
+    qualifiers = list(_INTENT_QUALIFIERS.get(intent, []))
+
+    is_adult = "adult" in genres
+    explicitness = "adult" if is_adult else "clean"
+
+    return {
+        # multi-label sensitive/form genres — what the content filter reads
+        "content_form_genres": json.dumps(list(genres)),
+        # multi-label real genre (rock/jazz/action/…)
+        "content_genre": json.dumps(content_genre),
+        "mood": mood,
+        "era": era,
+        "decade": decade,
+        "explicitness": explicitness,
+        # multi-label result-narrowing qualifiers (bw / silent / …)
+        "qualifiers": json.dumps(qualifiers),
+        # control axis — play rows carry no control intent
+        "control_intent": "",
+    }
+
+
 def fill_slots(
     sample: str, pools: Dict[str, List[str]], rng: random.Random,
 ) -> Optional[Tuple[str, Dict[str, str]]]:
@@ -220,7 +296,7 @@ def build_rows_for_lang(
                     if key in seen_local:
                         continue
                     seen_local.add(key)
-                    rows.append({
+                    row = {
                         "sentence": sentence,
                         "lang": lang,
                         "domain": PLAY_DOMAIN,
@@ -230,12 +306,16 @@ def build_rows_for_lang(
                         "playback_type": pb,
                         "structure": struct,
                         "binary_label": binary,
+                    }
+                    row.update(_derive_axes(intent, genres, slot_values))
+                    row.update({
                         "template_id": template_id,
                         "template": line,
                         "n_slots": len(slot_values),
                         "entity_labels": json.dumps(sorted(slot_values)),
                         "slot_values": json.dumps(slot_values, ensure_ascii=False),
                     })
+                    rows.append(row)
     return rows
 
 
@@ -418,9 +498,12 @@ a normal class so the model learns to detect it without it dominating training.
 # Main
 # ---------------------------------------------------------------------------
 
-# column order: core first, then features, then provenance
+# column order: core first, then the multi-task axes, then features, provenance
 _CORE = ["sentence", "lang", "domain", "intent", "media_type", "genres",
          "playback_type", "structure", "binary_label"]
+# the free, ground-truth-by-construction multi-task axis columns (one head each)
+_AXES = ["content_form_genres", "content_genre", "mood", "era", "decade",
+         "explicitness", "qualifiers", "control_intent"]
 _PROV = ["template_id", "template", "n_slots", "entity_labels", "slot_values"]
 
 
@@ -462,7 +545,7 @@ def build(out_dir: str, entities_dir: str, langs: List[str],
     print("Splitting 80/10/10 …")
     train, val, test = split(df, seed=seed)
 
-    ordered = _CORE + _KEYWORD_COLS + _NER_COLS + _PROV
+    ordered = _CORE + _AXES + _KEYWORD_COLS + _NER_COLS + _PROV
     df = df[[c for c in ordered if c in df.columns]]
     train = train[[c for c in ordered if c in train.columns]]
     val = val[[c for c in ordered if c in val.columns]]

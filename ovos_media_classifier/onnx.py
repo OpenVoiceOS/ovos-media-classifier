@@ -7,45 +7,63 @@ only the lean ``.voc`` keyword classifier; this module is reached only when the
 no heavy ML framework — and both are imported lazily (inside ``from_path`` /
 ``__init__``), so importing this module never pulls them in by itself.
 
-Self-describing model-bundle format
------------------------------------
+Self-describing, multi-head model-bundle format
+-----------------------------------------------
 :meth:`OnnxMediaClassifier.from_path` loads a **bundle directory** that fully
-describes itself, so a future trained model can target a stable contract::
+describes itself.  The bundle is **multi-task**: one ONNX head per axis
+(``training/train_sklearn.py`` produces it).  ``from_path`` loads whatever heads
+are present; an axis with no head is *derived* the same way the keyword default
+does (so partial bundles — and old 2-head ``domain``/``play`` bundles — load)::
 
     <bundle>/
-      ├── domain.onnx   # domain head: float input → logits over domain_labels
-      ├── play.onnx     # play head:   float input → logits over play_labels
+      ├── domain.onnx              # ocp_play / not_ocp
+      ├── media_type.onnx          # the leaf mediavocab.MediaType
+      ├── playback_type.onnx       # audio / video / paged / interactive
+      ├── structure.onnx           # single / episodic / continuous / collection
+      ├── content_form_genres.onnx # MULTI-LABEL adult/anime/animation/asmr  ← content filter
+      ├── content_genre.onnx       # MULTI-LABEL rock/jazz/action/…
+      ├── qualifiers.onnx          # MULTI-LABEL black_and_white/silent/live/…
+      ├── mood.onnx / era.onnx / explicitness.onnx   # (when trained)
+      ├── play.onnx                # back-compat alias of the media_type head
       └── meta.json
 
-``meta.json`` carries everything the runtime needs (no hard-coded assumptions)::
+``meta.json`` carries everything the runtime needs::
 
     {
       "feature_names": ["kw_music", "kw_movie", ...],   # ORDERED feature columns
-      "domain_labels": {"0": "ocp_play", "1": "ocp_control", "2": "not_ocp"},
-      "play_labels":   {"0": "music", "1": "movie", ...},  # idx -> raw media label
-      "input_name":    "features",   # optional; defaults to each session's 1st input
-      "domain_threshold": 0.5,       # optional; falls back to constants.py defaults
-      "play_threshold":   0.3
+      "input_name": "input",
+      "heads": {
+        "domain":      {"onnx": "domain.onnx", "kind": "single",
+                        "labels": {"0": "ocp_play", "1": "not_ocp"}},
+        "media_type":  {"onnx": "media_type.onnx", "kind": "single",
+                        "labels": {"0": "music", "1": "movie", ...}},
+        "content_form_genres": {"onnx": "content_form_genres.onnx", "kind": "multi",
+                        "labels": {"0": "adult", "1": "anime", ...}, "threshold": 0.5},
+        ...
+      },
+      # legacy keys (a pre-multihead loader still works):
+      "domain_labels": {...}, "play_labels": {...},
+      "domain_threshold": 0.5, "play_threshold": 0.3
     }
 
-* ``feature_names`` — the ordered list of categorical feature columns the model
-  was trained on.  At inference the sparse feature dict from
+* ``feature_names`` — ordered categorical feature columns the model was trained
+  on.  At inference the sparse feature dict from
   :class:`~ovos_media_classifier.features.CategoricalFeatureExtractor` is
-  vectorized into a dense ``float32`` row in exactly this order (present → 1.0,
-  absent → 0.0).
-* ``domain_labels`` / ``play_labels`` — maps from *output index* (string keys,
-  as JSON has no int keys) to the label string.  ``domain_labels`` values are
-  :class:`~ovos_media_classifier.intents.OCPDomain` values; ``play_labels``
-  values are raw media labels (``"music"``, ``"movie"``, ``"adult"``, …), mapped
-  to :class:`mediavocab.MediaType` / genres via ``LABEL_TO_MEDIA_TYPE`` /
-  ``LABEL_TO_GENRES``.
+  vectorized into a dense ``float32`` row in this exact order.
+* ``heads`` — one entry per trained axis.  ``kind == "single"`` heads argmax over
+  their ``labels``; ``kind == "multi"`` heads keep every label whose probability
+  is ≥ ``threshold`` (sigmoid-style multi-label).  ``media_type`` labels are raw
+  media labels resolved to :class:`mediavocab.MediaType` + genres via
+  ``LABEL_TO_MEDIA_TYPE`` / ``LABEL_TO_GENRES``.
 
-Inference pipeline per utterance:
-  1. ``CategoricalFeatureExtractor.extract()`` → sparse ``{feature: "1"}`` dict
-  2. vectorize → ``float32`` row in ``feature_names`` order
-  3. domain head → softmax → argmax → ``OCPDomain`` (+ confidence)
-  4. if ``ocp_play``: play head → softmax → argmax → play label
-  5. play label → ``mediavocab.MediaType`` + genres; coarse axes derived.
+Per-axis methods (``classify`` / ``classify_domain`` / ``classify_genres`` /
+``classify_content_form_genres`` / ``classify_content_genres`` /
+``classify_playback_type`` / ``classify_structure`` / ``classify_mood`` /
+``classify_era`` / ``classify_qualifiers``) each use their head when the bundle
+carries it, else fall back to the inherited derive/empty default — so a backend
+can **soft-gate**: trust an axis head even when the leaf is uncertain (the whole
+point of the multi-task design, and what makes content-filter blocking robust —
+``content_form_genres`` can flag ``adult`` independently of the leaf).
 """
 from __future__ import annotations
 
@@ -114,6 +132,7 @@ class OnnxMediaClassifier(AbstractMediaClassifier):
         input_name: Optional[str] = None,
         domain_threshold: float = DEFAULT_DOMAIN_THRESHOLD,
         play_threshold: float = DEFAULT_PLAY_THRESHOLD,
+        extra_heads: Optional[Dict[str, dict]] = None,
     ) -> None:
         self._domain_session = domain_session
         self._play_session = play_session
@@ -124,6 +143,10 @@ class OnnxMediaClassifier(AbstractMediaClassifier):
         self._input_name = input_name
         self._domain_thresh = domain_threshold
         self._play_thresh = play_threshold
+        # axis -> {"session", "kind", "labels": {idx: label}, "threshold"}
+        # for the extended multi-task heads (media_type/playback_type/structure/
+        # content_form_genres/content_genre/qualifiers/mood/era/explicitness).
+        self._heads: Dict[str, dict] = extra_heads or {}
 
     # ------------------------------------------------------------------
     # Factory
@@ -180,6 +203,27 @@ class OnnxMediaClassifier(AbstractMediaClassifier):
 
         extractor = CategoricalFeatureExtractor.from_locale_dir(locale_dir)
 
+        # ---- load the extended multi-task heads (when present) ----
+        # ``meta["heads"]`` is the multi-head manifest; each entry names its own
+        # .onnx file, kind (single/multi), labels, and (for multi) threshold. A
+        # head whose file is missing is skipped (the axis falls back to derive).
+        extra_heads: Dict[str, dict] = {}
+        for axis, spec in (meta.get("heads") or {}).items():
+            if axis == "domain":  # already loaded as the dedicated domain head
+                continue
+            onnx_file = spec.get("onnx", f"{axis}.onnx")
+            path = os.path.join(model_dir, onnx_file)
+            if not os.path.isfile(path):
+                LOG.warning(f"bundle head {axis!r} missing file {onnx_file}; "
+                            "axis will be derived")
+                continue
+            extra_heads[axis] = {
+                "session": onnxruntime.InferenceSession(path),
+                "kind": spec.get("kind", "single"),
+                "labels": {int(k): v for k, v in spec.get("labels", {}).items()},
+                "threshold": float(spec.get("threshold", 0.5)),
+            }
+
         return cls(
             domain_session=domain_session,
             play_session=play_session,
@@ -190,6 +234,7 @@ class OnnxMediaClassifier(AbstractMediaClassifier):
             input_name=meta.get("input_name"),
             domain_threshold=float(meta.get("domain_threshold", DEFAULT_DOMAIN_THRESHOLD)),
             play_threshold=float(meta.get("play_threshold", DEFAULT_PLAY_THRESHOLD)),
+            extra_heads=extra_heads,
         )
 
     # ------------------------------------------------------------------
@@ -207,17 +252,43 @@ class OnnxMediaClassifier(AbstractMediaClassifier):
         return row
 
     def _run(self, session, row) -> "list":
-        """Run a head and return its softmax probabilities (1-D numpy array)."""
-        name = self._input_name or session.get_inputs()[0].name
-        outputs = session.run(None, {name: row})
-        logits = outputs[0]
-        # outputs[0] is shape (1, n_classes) (or (n_classes,)); take row 0
+        """Run a head and return a 1-D probability array over its classes.
+
+        Handles both graph shapes the bundle contract allows:
+
+        * a **single numeric output** of raw logits — softmax is applied
+          (a hand-built / guided-embeddings style head); and
+        * the scikit-learn → ONNX shape ``[label_tensor, probability_tensor]``
+          (``skl2onnx`` with ``zipmap=False``) — the probability tensor is
+          already a normalised distribution and is returned as-is.
+
+        The numeric ``(·, n_classes)`` output is located by scanning the outputs
+        (an sklearn classifier graph's first output is the predicted *label*,
+        often a string), so a bundle trained with ``training/train_sklearn.py``
+        loads unchanged.
+        """
         import numpy as np
 
-        logits = np.asarray(logits)
-        if logits.ndim == 2:
-            logits = logits[0]
-        return _softmax(logits)
+        name = self._input_name or session.get_inputs()[0].name
+        outputs = session.run(None, {name: row})
+
+        probs = None
+        for out in outputs:
+            arr = np.asarray(out)
+            if arr.dtype.kind in "fiu" and arr.ndim >= 1 and arr.shape[-1] > 1:
+                probs = arr
+                break
+        if probs is None:  # no numeric vector output — fall back to the first
+            probs = np.asarray(outputs[0])
+        if probs.ndim == 2:
+            probs = probs[0]
+        probs = probs.astype("float64").reshape(-1)
+
+        # A genuine probability distribution (sklearn predict_proba) is
+        # non-negative and sums to ~1; raw logits are not — softmax those.
+        if probs.min() < 0.0 or not np.isclose(probs.sum(), 1.0, atol=1e-3):
+            return _softmax(probs)
+        return probs
 
     def _predict_domain(self, feat: Dict[str, str]) -> Tuple[OCPDomain, float]:
         try:
@@ -263,6 +334,72 @@ class OnnxMediaClassifier(AbstractMediaClassifier):
         return label, pconf, domain
 
     # ------------------------------------------------------------------
+    # Extended multi-task heads — run a named head when the bundle carries it.
+    # ------------------------------------------------------------------
+
+    def _has_head(self, axis: str) -> bool:
+        return axis in self._heads
+
+    def _single_head(self, axis: str, query: str, lang: str) -> Optional[Tuple[str, float]]:
+        """Argmax a single-label head → ``(label, confidence)`` or ``None``."""
+        head = self._heads.get(axis)
+        if head is None:
+            return None
+        import numpy as np
+
+        feat = self._extractor.extract(query, lang)
+        try:
+            probs = self._run(head["session"], self._vectorize(feat))
+        except Exception as exc:
+            LOG.error(f"OnnxMediaClassifier {axis} head failed: {exc}")
+            return None
+        idx = int(np.argmax(probs))
+        return head["labels"].get(idx, ""), float(probs[idx])
+
+    def _multi_head(self, axis: str, query: str, lang: str) -> Optional[List[str]]:
+        """Threshold a multi-label head → list of labels ≥ threshold, or ``None``.
+
+        Multi-label graphs may emit per-label probabilities as either a single
+        ``(1, n_labels)`` tensor or a list of ``(1, 2)`` per-label tensors (one
+        OvR estimator each); both are handled here.
+        """
+        head = self._heads.get(axis)
+        if head is None:
+            return None
+        import numpy as np
+
+        feat = self._extractor.extract(query, lang)
+        row = self._vectorize(feat)
+        thr = head["threshold"]
+        labels = head["labels"]
+        name = self._input_name or head["session"].get_inputs()[0].name
+        try:
+            outputs = head["session"].run(None, {name: row})
+        except Exception as exc:
+            LOG.error(f"OnnxMediaClassifier {axis} multi-head failed: {exc}")
+            return None
+
+        n = len(labels)
+        arrays = [np.asarray(o) for o in outputs]
+
+        # The OneVsRest → ONNX graph emits ``[label(1,n) int, probabilities(1,n)
+        # float]``; prefer the FLOAT (·, n) tensor (per-label positive prob).
+        per_label: List[float] = []
+        prob = next((a for a in arrays
+                     if a.dtype.kind == "f" and a.reshape(1, -1).shape[-1] == n),
+                    None)
+        if prob is not None:
+            per_label = [float(x) for x in prob.reshape(-1)[:n]]
+        else:
+            # fallback: one (1,2) tensor per label → positive column
+            for a in arrays:
+                if a.dtype.kind in "fiu":
+                    row2 = a.reshape(a.shape[0] if a.ndim > 1 else 1, -1)
+                    per_label.append(float(row2[0, -1]))
+        return [labels[i] for i in range(n)
+                if i < len(per_label) and per_label[i] >= thr]
+
+    # ------------------------------------------------------------------
     # AbstractMediaClassifier implementation
     # ------------------------------------------------------------------
 
@@ -270,6 +407,27 @@ class OnnxMediaClassifier(AbstractMediaClassifier):
         """Classify the OCP domain via the dedicated domain head."""
         feat = self._extractor.extract(query, lang)
         return self._predict_domain(feat)
+
+    def _media_type_from_head(self, query: str, lang: str):
+        """``(MediaType, conf)`` from the dedicated media_type head, or ``None``.
+
+        The media_type head predicts the mediavocab leaf value directly (e.g.
+        ``"movie"``); it is domain-gated so a non-OCP query returns GENERIC.
+        """
+        if not self._has_head("media_type"):
+            return None
+        feat = self._extractor.extract(query, lang)
+        domain, _ = self._predict_domain(feat)
+        if domain != OCPDomain.OCP_PLAY:
+            return MediaType.GENERIC, 0.0
+        res = self._single_head("media_type", query, lang)
+        if res is None:
+            return None
+        label, conf = res
+        try:
+            return MediaType(label), conf
+        except ValueError:
+            return LABEL_TO_MEDIA_TYPE.get(label, MediaType.GENERIC), conf
 
     def classify(
         self,
@@ -279,42 +437,131 @@ class OnnxMediaClassifier(AbstractMediaClassifier):
     ) -> Tuple[MediaType, float]:
         """Return (MediaType, confidence) for an ocp_play utterance.
 
-        Falls back to (GENERIC, 0.0) when the domain is not ocp_play, the play
-        confidence is below threshold, or the predicted type is not in
-        *valid_labels*.
+        Uses the dedicated ``media_type`` head when the bundle carries it,
+        otherwise the legacy play-label head.  Falls back to (GENERIC, 0.0) when
+        the domain is not ocp_play, the confidence is below threshold, or the
+        predicted type is not in *valid_labels*.
         """
-        label, conf, _ = self._play_label(query, lang)
-        media_type = LABEL_TO_MEDIA_TYPE.get(label, MediaType.GENERIC)
+        from_head = self._media_type_from_head(query, lang)
+        if from_head is not None:
+            media_type, conf = from_head
+        else:
+            label, conf, _ = self._play_label(query, lang)
+            media_type = LABEL_TO_MEDIA_TYPE.get(label, MediaType.GENERIC)
         if media_type == MediaType.GENERIC:
             return MediaType.GENERIC, 0.0
         if valid_labels is not None and media_type not in valid_labels:
             return MediaType.GENERIC, 0.0
         return media_type, conf
 
+    # ------------------------------------------------------------------
+    # Per-axis output — use a head when the bundle has one, else derive.
+    # ------------------------------------------------------------------
+
+    def classify_content_form_genres(self, query: str, lang: str) -> List[str]:
+        """Sensitive / content-form genres (the content-filter axis).
+
+        Prefers the dedicated ``content_form_genres`` multi-label head — so it
+        can flag ``adult`` independently of the (uncertain) leaf — and falls back
+        to the play-label genres otherwise.
+        """
+        if self._has_head("content_form_genres"):
+            out = self._multi_head("content_form_genres", query, lang)
+            if out is not None:
+                return out
+        return self.classify_genres(query, lang)
+
     def classify_genres(self, query: str, lang: str) -> List[str]:
-        """Return mediavocab genre tags implied by the winning play label."""
+        """Content-form genre tags (``adult`` / ``anime`` / …).
+
+        Prefers the ``content_form_genres`` head; else the play-label genres.
+        """
+        if self._has_head("content_form_genres"):
+            out = self._multi_head("content_form_genres", query, lang)
+            if out is not None:
+                return out
         label, _, _ = self._play_label(query, lang)
         return list(LABEL_TO_GENRES.get(label, []))
 
+    def classify_content_genres(self, query: str, lang: str) -> List[str]:
+        """The real genre(s) (rock/jazz/action/…) from the ``content_genre`` head."""
+        if self._has_head("content_genre"):
+            out = self._multi_head("content_genre", query, lang)
+            if out is not None:
+                return out
+        return []
+
+    def classify_qualifiers(self, query: str, lang: str) -> List[str]:
+        """Result-narrowing qualifiers from the ``qualifiers`` head."""
+        if self._has_head("qualifiers"):
+            out = self._multi_head("qualifiers", query, lang)
+            if out is not None:
+                return out
+        return []
+
+    def classify_playback_type(self, query: str, lang: str):
+        """PlaybackType from the head when present, else derived from the leaf."""
+        from mediavocab import PlaybackType
+        res = self._single_head("playback_type", query, lang)
+        if res is not None and res[0]:
+            try:
+                return PlaybackType(res[0])
+            except ValueError:
+                pass
+        return super().classify_playback_type(query, lang)
+
+    def classify_structure(self, query: str, lang: str):
+        """Structure from the head when present, else derived from the leaf."""
+        from ovos_media_classifier.axes import Structure
+        res = self._single_head("structure", query, lang)
+        if res is not None and res[0]:
+            try:
+                return Structure(res[0])
+            except ValueError:
+                pass
+        return super().classify_structure(query, lang)
+
+    def classify_mood(self, query: str, lang: str) -> Optional[str]:
+        """Mood / activity from the ``mood`` head (``None`` when absent/empty)."""
+        res = self._single_head("mood", query, lang)
+        if res is not None and res[0]:
+            return res[0]
+        return None
+
+    def classify_era(self, query: str, lang: str) -> Optional[str]:
+        """Release era / decade from the ``era`` head (``None`` when absent)."""
+        res = self._single_head("era", query, lang)
+        if res is not None and res[0]:
+            return res[0]
+        return None
+
+    def classify_explicitness(self, query: str, lang: str) -> str:
+        """Explicitness from the head when present, else derived from the form genres."""
+        res = self._single_head("explicitness", query, lang)
+        if res is not None and res[0]:
+            return res[0]
+        return super().classify_explicitness(query, lang)
+
     def classify_full(self, query: str, lang: str):
-        """Full multi-axis result.
+        """Full multi-axis result, predicting each axis from its own head.
 
-        The model predicts ``domain`` and the fine-grained play label (→
-        ``MediaType`` + genres) directly; the coarse axes (``playback_type`` and
-        ``structure``) are derived from the predicted ``MediaType`` via
-        ``mediavocab.infer_playback_type`` / :func:`axes.infer_structure`.
+        Each axis uses its dedicated head when the bundle carries one and
+        otherwise derives (so partial / old bundles still produce a full result).
+        The content-form genres come from the ``content_form_genres`` head, so a
+        request can be flagged ``adult`` even when the leaf is uncertain
+        (soft-gating).
         """
-        from mediavocab import infer_playback_type
+        media_type, conf = self.classify(query, lang)
+        domain, _ = self.classify_domain(query, lang)
+        playback = self.classify_playback_type(query, lang)
+        structure = self.classify_structure(query, lang)
+        genres = self.classify_content_form_genres(query, lang)
 
-        from ovos_media_classifier.axes import MediaClassification, infer_structure
-
-        label, conf, domain = self._play_label(query, lang)
-        media_type = LABEL_TO_MEDIA_TYPE.get(label, MediaType.GENERIC)
-        genres = list(LABEL_TO_GENRES.get(label, []))
+        from ovos_media_classifier.axes import MediaClassification
         return MediaClassification(
             media_type=media_type,
-            playback_type=infer_playback_type(media_type),
-            structure=infer_structure(media_type),
+            playback_type=playback,
+            structure=structure,
             domain=domain,
             genres=genres,
             confidence=conf,
