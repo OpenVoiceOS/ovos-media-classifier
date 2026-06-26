@@ -67,11 +67,25 @@
 <lead_watch> the {episode_title} episode of {tv_show_title}
 [hey|ok|please] <lead_watch> the {episode_title} episode of {tv_show_title} [please|for me|right now|thanks]
 <lead_watch> episode {episode_number} season {season_number} of {tv_show_title}
-<lead_watch> the next episode of {tv_show_title}
-<lead_watch> the latest episode of {tv_show_title}
-[hey|ok|please] <lead_watch> the latest episode of {tv_show_title} [please|for me|right now|thanks]
 <lead_watch> the next episode of season {season_number} of {tv_show_title}
 <lead_watch> {tv_show_title} episode {episode_number}
 <lead_watch> the first episode of {tv_show_title}
 <lead_watch> the season {season_number} finale of {tv_show_title}
 <lead_watch> the {episode_title} episode
+the next episode of {tv_show_title}, please
+episode {episode_number} of {tv_show_title}, please
+the next episode — put it on
+season {season_number} episode {episode_number} of {tv_show_title} — let's go
+put on the next episode of {tv_show_title}, would you?
+i could go for the next episode of {tv_show_title}
+i'm after more episodes of {tv_show_title}
+i need the next episode of {tv_show_title}
+what about episode {episode_number} of {tv_show_title}
+maybe another episode of {tv_show_title}
+we should watch the next episode of {tv_show_title}
+something like that web series
+where were we in {tv_show_title}?
+pick up {tv_show_title} where we left off
+the {episode_title} episode of {tv_show_title}, please
+more {tv_show_title} because i'm hooked
+a few episodes of {tv_show_title} to binge

@@ -52,3 +52,19 @@
 [hey|ok|please] <lead_watch> a short film while i wait [please|for me|right now|thanks]
 <lead_watch> got any {movie_genre} short films
 [hey|ok|please] <lead_watch> got any {movie_genre} short films [please|for me|right now|thanks]
+{short_film_title}, please
+the short film {short_film_title}, please
+a short film, thanks
+{short_film_title} — put it on
+put on the short film {short_film_title}, would you?
+i could go for a short film
+i'm after a quick short film
+i need something short to watch
+what about {short_film_title}
+maybe a {movie_genre} short film
+we should watch {short_film_title}
+something like {short_film_title}
+any good short films around?
+the award-winning short {short_film_title}
+a short film while i wait
+an animated short because i only have a minute

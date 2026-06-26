@@ -74,3 +74,34 @@
 <lead_watch> a movie from the {release_decade}
 <lead_watch> a {movie_genre} film from the {release_decade}
 [hey|ok|please] <lead_watch> a {movie_genre} film from the {release_decade} [please|for me|right now|thanks]
+{movie_title}, please
+the movie {movie_title}, please
+a {movie_genre} film, thanks
+{movie_title} — put it on
+{movie_title} — let's watch it
+that film {movie_title} — start it up
+put on {movie_title}, would you?
+throw on a {movie_genre} movie, can you?
+i'm in a {movie_genre} mood
+in the mood for a {movie_genre} movie
+i could go for a {movie_genre} film
+i'm after a good {movie_genre} movie
+i need a {movie_genre} film tonight
+what about {movie_title}
+what about a {movie_genre} film with {movie_actor}
+maybe a {movie_genre} movie
+maybe something with {movie_actor}
+we should watch {movie_title}
+something like {movie_title}
+something in the vein of {movie_director}
+another film like {movie_title}
+any {movie_genre} movies around?
+what {movie_genre} films do you have
+is there a movie with {movie_actor}
+{movie_director}'s best film
+{movie_actor}'s most famous movie
+that classic {movie_genre} film
+a {movie_genre} movie for movie night
+something with {movie_actor} to relax to
+a {movie_genre} film because it's raining
+the {movie_genre} one directed by {movie_director}

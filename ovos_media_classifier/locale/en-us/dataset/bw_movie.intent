@@ -52,3 +52,20 @@
 [hey|ok|please] <lead_watch> a black and white film for a cozy night [please|for me|right now|thanks]
 <lead_watch> got any {movie_genre} black and white films
 [hey|ok|please] <lead_watch> got any {movie_genre} black and white films [please|for me|right now|thanks]
+{bw_movie_title}, please
+the black and white movie {bw_movie_title}, please
+a black and white film, thanks
+{bw_movie_title} — put it on
+that black and white classic — let's watch it
+put on the black and white film {bw_movie_title}, would you?
+i could go for a black and white film
+i'm after a classic black and white movie
+i need something old in black and white
+what about {bw_movie_title}
+maybe a {movie_genre} black and white movie
+we should watch {bw_movie_title}
+something like {bw_movie_title}
+any black and white films around?
+a black and white classic for a cozy night
+a monochrome film because i'm feeling nostalgic
+the old {bw_movie_title} in black and white

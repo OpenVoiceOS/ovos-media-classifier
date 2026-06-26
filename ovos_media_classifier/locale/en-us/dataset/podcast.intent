@@ -39,3 +39,30 @@
 [hey|ok|please] <lead_play_audio> a podcast about {movie_title} [please|for me|right now|thanks]
 <lead_play_audio> the podcast about {movie_actor}
 [hey|ok|please] <lead_play_audio> the podcast about {movie_actor} [please|for me|right now|thanks]
+{podcast_title}, please
+the {podcast_title} podcast, please
+a {podcast_genre} podcast, thanks
+{podcast_title} — put it on
+the latest {podcast_title} — let's hear it
+that podcast {podcast_title} — start it
+put on {podcast_title}, would you?
+queue up {podcast_host}'s podcast, can you?
+i'm in a {podcast_genre} podcast mood
+in the mood for a {podcast_genre} podcast
+i could go for a {podcast_genre} podcast
+i'm after a good {podcast_genre} podcast
+i need a {podcast_genre} podcast for the drive
+what about {podcast_host}'s podcast
+maybe a {podcast_genre} podcast
+maybe an episode of {podcast_title}
+we should listen to {podcast_title}
+something like {podcast_title}
+another podcast like {podcast_title}
+any {podcast_genre} podcasts around?
+what {podcast_genre} podcasts do you have
+is there a podcast with {podcast_host}
+the newest {podcast_title} episode
+{podcast_host}'s most recent episode
+a {podcast_genre} podcast while i commute
+something with {podcast_host} for the road
+a {podcast_genre} podcast because i'm bored
