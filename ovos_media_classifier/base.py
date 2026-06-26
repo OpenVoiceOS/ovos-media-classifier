@@ -44,14 +44,18 @@ class AbstractMediaClassifier(ABC):
     def classify_domain(self, query: str, lang: str) -> Tuple[OCPDomain, float]:
         """Classify the top-level OCP domain: ocp_play / ocp_control / not_ocp.
 
-        The default implementation delegates to classify() — if a non-GENERIC
-        MediaType is returned it infers OCP_PLAY; otherwise NOT_OCP.
+        The default implementation first consults ``classify_control`` — a
+        transport-control intent (pause / stop / next / …) routes to
+        ``OCP_CONTROL``.  Otherwise it delegates to ``classify``: a non-GENERIC
+        MediaType infers ``OCP_PLAY``; else ``NOT_OCP``.
 
         Subclasses with a dedicated domain head (M2V, padatious domain
         container, sklearn domain model) should override this for better
-        accuracy, especially to detect OCP_CONTROL intents.
+        accuracy.
         """
         media_type, conf = self.classify(query, lang)
+        if self.classify_control(query, lang) is not None:
+            return OCPDomain.OCP_CONTROL, conf
         if media_type != MediaType.GENERIC:
             return OCPDomain.OCP_PLAY, conf
         return OCPDomain.NOT_OCP, 0.0
@@ -130,8 +134,8 @@ class AbstractMediaClassifier(ABC):
 
         This is the classifier's primary output for the OCP pipeline: *all* the
         NLP (classification + the coarse axes) lives here, and the pipeline
-        forwards the returned ``Signals`` straight to ``MediaProvider.serves`` /
-        ``search`` without doing any parsing of its own.
+        forwards the returned ``Signals`` straight to ``MediaProvider.search``
+        without doing any parsing of its own.
 
         The base populates the classification axes (``medium`` /
         ``playback_type`` / ``content_genres``) plus the raw ``title``; backends

@@ -46,20 +46,18 @@ Usage::
 import os
 import re
 from functools import lru_cache
-from typing import Callable, Dict, List, Optional, Set, Tuple
+from typing import Callable, Dict, List, Optional, Tuple
 
 from ovos_spec_tools import LocaleResources
 
 from mediavocab import (
     MediaType,
     PlaybackType,
-    MEDIA_TYPE_TO_PLAYBACK_TYPE,
     infer_playback_type,
 )
 
 from ovos_media_classifier.axes import (
     Structure,
-    MEDIA_TYPE_TO_STRUCTURE,
     infer_structure,
     MediaClassification,
 )
@@ -127,27 +125,9 @@ class _VocMatcher:
 
 
 # ---------------------------------------------------------------------------
-# Precomputed axis inversions: MediaType ←→ (PlaybackType, Structure)
-# ---------------------------------------------------------------------------
-
-def _invert(mapping: Dict[MediaType, object]) -> Dict[object, Set[MediaType]]:
-    out: Dict[object, Set[MediaType]] = {}
-    for mt, axis in mapping.items():
-        out.setdefault(axis, set()).add(mt)
-    return out
-
-
-# PlaybackType -> {MediaType...}, Structure -> {MediaType...}
-_PLAYBACK_TO_MEDIA_TYPES: Dict[PlaybackType, Set[MediaType]] = _invert(
-    MEDIA_TYPE_TO_PLAYBACK_TYPE
-)
-_STRUCTURE_TO_MEDIA_TYPES: Dict[Structure, Set[MediaType]] = _invert(
-    MEDIA_TYPE_TO_STRUCTURE
-)
-
 # Default leaf MediaType per (modality, structure) cell — used when the
 # constrained leaf chain matches no specific ``*Keyword`` voc but the coarse
-# axes are confident.  This is the "sensible fallback" the maintainer asked for.
+# axes are confident.  This is the sensible per-cell fallback leaf.
 _DEFAULT_LEAF: Dict[Tuple[PlaybackType, Structure], MediaType] = {
     (PlaybackType.AUDIO, Structure.SINGLE): MediaType.MUSIC,
     (PlaybackType.AUDIO, Structure.EPISODIC): MediaType.PODCAST,
@@ -611,27 +591,6 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
     # ------------------------------------------------------------------
     # Constrained leaf resolution
     # ------------------------------------------------------------------
-
-    def _candidate_media_types(
-        self, modality: PlaybackType, structure: Structure
-    ) -> Optional[Set[MediaType]]:
-        """Build the leaf candidate set from the predicted coarse axes.
-
-        Candidates are the MediaTypes whose intrinsic ``infer_playback_type``
-        equals the predicted modality AND whose ``infer_structure`` is
-        compatible with the predicted structure.  Returns ``None`` when modality
-        is UNKNOWN (no constraint — leaf-only fallback).
-        """
-        if modality is PlaybackType.UNKNOWN:
-            return None
-        by_modality = _PLAYBACK_TO_MEDIA_TYPES.get(modality, set())
-        if structure is Structure.UNKNOWN:
-            return set(by_modality)
-        by_structure = _STRUCTURE_TO_MEDIA_TYPES.get(structure, set())
-        constrained = by_modality & by_structure
-        # If the modality has no type for that structure (e.g. interactive +
-        # continuous), relax the structure constraint rather than emptying out.
-        return constrained or set(by_modality)
 
     def _classify_leaf(
         self,
