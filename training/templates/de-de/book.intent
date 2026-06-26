@@ -1,11 +1,31 @@
 <lead_read> {book_title}
 <lead_read> the book {book_title}
 <lead_read> the novel {book_title}
-<lead_read> {book_title} by {book_author}
 <lead_read> a book by {book_author}
+<lead_read> anything by {book_author}
 <lead_read> a {book_genre} book
 <lead_read> a {book_genre} novel
-<lead_read> anything by {book_author}
-<lead_read> the {book_genre} book {book_title}
-<lead_read> the novel {book_title} by {book_author}
 <lead_read> a book about {book_genre}
+<lead_read> a good {book_genre} book
+<lead_read> some {book_genre}
+<lead_read> {book_title} by {book_author}
+<lead_read> the novel {book_title} by {book_author}
+<lead_read> the book {book_title} by {book_author}
+<lead_read> the {book_genre} book {book_title}
+<lead_read> a {book_genre} book by {book_author}
+<lead_read> a {book_genre} novel by {book_author}
+<lead_read> the latest book by {book_author}
+<lead_read> another {book_genre} book
+<lead_read> a chapter of {book_title}
+<lead_read> the next chapter of {book_title}
+<lead_read> more of {book_title}
+<lead_read> a short story by {book_author}
+<lead_read> the {book_genre} book {book_title} by {book_author}
+<lead_read> the {book_genre} novel {book_title} by {book_author}
+<lead_read> do you have any {book_genre} books
+<lead_read> got a good {book_genre} novel
+<lead_read> a {book_genre} book to read at bedtime
+<lead_read> do you have anything by {book_author}
+<lead_read> got a {book_genre} book
+<lead_read> a {book_genre} novel for the weekend
+<lead_read> something by {book_author} to relax

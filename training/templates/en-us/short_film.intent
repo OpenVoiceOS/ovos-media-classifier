@@ -10,3 +10,45 @@
 [hey|ok|please] <lead_watch> the short {short_film_title} [please|for me|right now|thanks]
 <lead_watch> an award-winning short film
 [hey|ok|please] <lead_watch> an award-winning short film [please|for me|right now|thanks]
+<lead_watch> an animated short
+[hey|ok|please] <lead_watch> an animated short [please|for me|right now|thanks]
+<lead_watch> a {movie_genre} short film
+[hey|ok|please] <lead_watch> a {movie_genre} short film [please|for me|right now|thanks]
+<lead_watch> a short {movie_genre} film
+[hey|ok|please] <lead_watch> a short {movie_genre} film [please|for me|right now|thanks]
+<lead_watch> a quick short film
+[hey|ok|please] <lead_watch> a quick short film [please|for me|right now|thanks]
+<lead_watch> a short movie
+[hey|ok|please] <lead_watch> a short movie [please|for me|right now|thanks]
+<lead_watch> an oscar-nominated short film
+[hey|ok|please] <lead_watch> an oscar-nominated short film [please|for me|right now|thanks]
+<lead_watch> a live action short
+[hey|ok|please] <lead_watch> a live action short [please|for me|right now|thanks]
+<lead_watch> the short film called {short_film_title}
+[hey|ok|please] <lead_watch> the short film called {short_film_title} [please|for me|right now|thanks]
+<lead_watch> a festival short film
+[hey|ok|please] <lead_watch> a festival short film [please|for me|right now|thanks]
+<lead_watch> an indie short film
+[hey|ok|please] <lead_watch> an indie short film [please|for me|right now|thanks]
+<lead_watch> a student short film
+[hey|ok|please] <lead_watch> a student short film [please|for me|right now|thanks]
+<lead_watch> a {movie_genre} short
+[hey|ok|please] <lead_watch> a {movie_genre} short [please|for me|right now|thanks]
+<lead_watch> another short film
+[hey|ok|please] <lead_watch> another short film [please|for me|right now|thanks]
+<lead_watch> a short film by an indie director
+[hey|ok|please] <lead_watch> a short film by an indie director [please|for me|right now|thanks]
+<lead_watch> the short {movie_genre} film {short_film_title}
+[hey|ok|please] <lead_watch> the short {movie_genre} film {short_film_title} [please|for me|right now|thanks]
+<lead_watch> do you have any short films
+[hey|ok|please] <lead_watch> do you have any short films [please|for me|right now|thanks]
+<lead_watch> got a good short film
+[hey|ok|please] <lead_watch> got a good short film [please|for me|right now|thanks]
+<lead_watch> a short film for a quick break
+[hey|ok|please] <lead_watch> a short film for a quick break [please|for me|right now|thanks]
+<lead_watch> something short to watch
+[hey|ok|please] <lead_watch> something short to watch [please|for me|right now|thanks]
+<lead_watch> a short film while i wait
+[hey|ok|please] <lead_watch> a short film while i wait [please|for me|right now|thanks]
+<lead_watch> got any {movie_genre} short films
+[hey|ok|please] <lead_watch> got any {movie_genre} short films [please|for me|right now|thanks]

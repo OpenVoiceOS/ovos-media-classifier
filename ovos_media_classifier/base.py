@@ -23,6 +23,16 @@ class AbstractMediaClassifier(ABC):
     is_ocp_query() to return True for control intents too.  Subclasses that can
     surface genre signal (keyword, guided, m2v) should override
     classify_genres() so the content filter can block on it.
+
+    Axes vs tags
+    ------------
+    The single-label **axes** (``domain`` / ``media_type`` / ``playback_type`` /
+    ``structure`` / ``explicitness`` / ``is_ocp_query`` / ``control_intent``) each
+    have one answer per query.  The multi-label **tags** axis
+    (:meth:`classify_tags`) collapses the open-vocabulary descriptive signals —
+    genre, mood and era — into ONE namespaced label space
+    (``genre:rock`` / ``mood:chill`` / ``era:1980s``); ``content_form_genres``
+    (the content-filter axis) and ``qualifiers`` (Signals) stay separate.
     """
 
     @abstractmethod
@@ -134,26 +144,68 @@ class AbstractMediaClassifier(ABC):
         """
         return self.classify_genres(query, lang)
 
+    def classify_tags(self, query: str, lang: str) -> List[str]:
+        """The **namespaced descriptive tags** (multi-label) for the query.
+
+        A single multi-label axis that collapses the open-vocabulary *genre*,
+        *mood* and *era* signals into one namespaced label space::
+
+            ["genre:rock", "mood:chill", "era:1980s"]
+
+        Returns the empty set when no descriptive tag is implied.  The namespace
+        prefix (``genre:`` / ``mood:`` / ``era:``) keeps the three orthogonal
+        signals distinguishable while letting one head model them together (they
+        all live in the slot *value text*, not in a cue word).
+
+        Default: derived from the legacy :meth:`classify_content_genres` /
+        :meth:`classify_mood` / :meth:`classify_era` helpers, so untrained
+        backends still surface whatever they can.  A trained backend overrides
+        with its dedicated multi-label ``tags`` head.
+        """
+        tags: List[str] = []
+        for g in self.classify_content_genres(query, lang):
+            tags.append(f"genre:{g}")
+        mood = self.classify_mood(query, lang)
+        if mood:
+            tags.append(f"mood:{mood}")
+        era = self.classify_era(query, lang)
+        if era:
+            tags.append(f"era:{era}")
+        return list(dict.fromkeys(tags))
+
+    @staticmethod
+    def tags_namespace(tags: List[str], namespace: str) -> List[str]:
+        """The bare values of one ``namespace:`` slice of a ``tags`` list.
+
+        ``tags_namespace(["genre:rock", "mood:chill"], "genre") == ["rock"]`` —
+        the ``genre:`` slice is the *genre-classifier* view of the tags head.
+        """
+        pre = f"{namespace}:"
+        return [t[len(pre):] for t in tags if t.startswith(pre)]
+
     def classify_content_genres(self, query: str, lang: str) -> List[str]:
         """The **real** genre(s) — rock/jazz/action/comedy/horror/… (multi-label).
 
-        Orthogonal to the content-form tags.  Default: ``[]`` (the keyword
-        backend does not model open-vocabulary genre); a trained backend
-        overrides with its ``content_genre`` head.
+        Orthogonal to the content-form tags.  This is the **genre-classifier**
+        view of the ``tags`` axis: the bare values of its ``genre:`` slice.
+        Default: ``[]`` (the keyword backend does not model open-vocabulary
+        genre); a trained backend surfaces it from the ``tags`` head.
         """
         return []
 
     def classify_mood(self, query: str, lang: str) -> Optional[str]:
         """The mood / activity (chill/workout/study/party/sleep/…) or ``None``.
 
-        Default: ``None`` — a trained backend overrides with its ``mood`` head.
+        The ``mood:`` slice of the ``tags`` axis (first value).  Default:
+        ``None`` — a trained backend surfaces it from the ``tags`` head.
         """
         return None
 
     def classify_era(self, query: str, lang: str) -> Optional[str]:
         """The release era / decade (e.g. ``"1980s"``) or ``None``.
 
-        Default: ``None`` — a trained backend overrides with its ``era`` head.
+        The ``era:`` slice of the ``tags`` axis (first value).  Default:
+        ``None`` — a trained backend surfaces it from the ``tags`` head.
         """
         return None
 

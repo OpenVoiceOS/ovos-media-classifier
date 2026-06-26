@@ -35,6 +35,9 @@ import sys
 from collections import defaultdict
 from typing import Callable, Dict, Iterable, List, Optional
 
+_HERE = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT = os.path.dirname(_HERE)
+
 # the local metadatarr scraper cache (jsonl dumps, one object per line)
 METADATARR_CACHE = os.path.join(
     os.path.expanduser("~"), ".cache", "metadatarr", "scrapers"
@@ -60,11 +63,25 @@ def _clean(v) -> str:
 
 
 def _maybe_list(v) -> List[str]:
-    """Coerce a field that may be a python/json list-string or a scalar."""
+    """Coerce a field that may be a python/json list-string or a scalar.
+
+    Tolerates ``numpy.ndarray`` (HF parquet often loads multi-valued columns —
+    e.g. IMDb ``genres`` — as ``ndarray`` of ``object``), python/json
+    list-strings, and ``sep``-joined scalars.
+    """
     if v is None:
         return []
+    try:
+        import numpy as np
+        if isinstance(v, np.ndarray):
+            v = v.tolist()
+    except ImportError:
+        pass
     if isinstance(v, (list, tuple)):
         return [_clean(x) for x in v if _clean(x)]
+    # a scalar NaN (float) is not a list
+    if isinstance(v, float):
+        return []
     s = str(v).strip()
     if not s or s.lower() in ("nan", "none", "null"):
         return []
@@ -710,6 +727,194 @@ SOURCE_SPECS: List[Spec] = [
 
 
 # ---------------------------------------------------------------------------
+# Relational record emitters
+#
+# Besides the flat per-label pools, the multi-field sources below also emit ONE
+# coherent record per row so a template that fills several slots of a domain
+# ("{album_name} by {artist_name}") can draw them from the SAME real entity.
+# Each emitter yields ``(group_name, record_dict)`` where the record's keys are
+# the *template field names* the matching ``RelationalGroup`` in build_dataset
+# binds to slots.  Sources with no usable multi-field record yield nothing.
+# ---------------------------------------------------------------------------
+
+def rel_musicbrainz_releases(row):
+    title = _clean(row.get("title"))
+    artists = _maybe_list(row.get("artist_names"))
+    if title and artists:
+        rec = {"album": title, "artist": artists[0]}
+        yr = re.search(r"(\d{4})", _clean(row.get("date") or row.get("first_release_date")))
+        if yr:
+            rec["year"] = yr.group(1)
+        yield ("music", rec)
+
+
+def rel_anilist(row):
+    if _is_hentai(row):
+        return
+    title = (_clean(row.get("title_english")) or _clean(row.get("title_romaji"))
+             or _clean(row.get("anime_title")))
+    studios = _maybe_list(row.get("studios"))
+    if not title:
+        return
+    rec = {"anime_title": title}
+    if studios:
+        rec["anime_studio"] = studios[0]
+    yr = re.search(r"(\d{4})", _clean(row.get("season_year")))
+    if yr:
+        rec["year"] = yr.group(1)
+    for g in _maybe_list(row.get("genres"))[:1]:
+        rec["anime_genre"] = g
+    if len(rec) > 1:
+        yield ("anime", rec)
+
+
+def rel_tvmaze(row):
+    show = _clean(row.get("name")) or _clean(row.get("tv_show_title"))
+    net = _clean(row.get("network_name"))
+    if not show:
+        return
+    rec = {"tv_show": show}
+    if net:
+        rec["tv_network"] = net
+    for g in _maybe_list(row.get("genres"))[:1]:
+        rec["tv_genre"] = g
+    yr = re.search(r"(\d{4})", _clean(row.get("premiered")))
+    if yr:
+        rec["year"] = yr.group(1)
+    if len(rec) > 1:
+        yield ("tv", rec)
+
+
+def _person_name(v) -> str:
+    """Format a person field that may be a ``{first_name,last_name}`` dict."""
+    if isinstance(v, dict):
+        nm = " ".join(p for p in (_clean(v.get("first_name")),
+                                  _clean(v.get("last_name"))) if p)
+        return nm or _clean(v.get("name"))
+    return _clean(v)
+
+
+def _first_person(v) -> str:
+    """First person name from a list/ndarray/json of names-or-name-dicts."""
+    try:
+        import numpy as np
+        if isinstance(v, np.ndarray):
+            v = v.tolist()
+    except ImportError:
+        pass
+    if isinstance(v, (list, tuple)):
+        for x in v:
+            nm = _person_name(x)
+            if nm:
+                return nm
+        return ""
+    s = str(v).strip()
+    if s.startswith("[") or s.startswith("{"):
+        try:
+            parsed = ast.literal_eval(s)
+            return _first_person(parsed if isinstance(parsed, list) else [parsed])
+        except (ValueError, SyntaxError):
+            pass
+    return _clean(v)
+
+
+def rel_librivox(row):
+    title = _clean(row.get("title")) or _clean(row.get("audiobook_title"))
+    author = _first_person(row.get("authors") or row.get("author"))
+    reader = _first_person(row.get("readers"))
+    if not title:
+        return
+    rec = {"audiobook_title": title}
+    if author:
+        rec["audiobook_author"] = author
+    if reader:
+        rec["audiobook_narrator"] = reader
+    for g in _maybe_list(row.get("genres"))[:1]:
+        rec["audiobook_genre"] = g
+    if len(rec) > 1:
+        yield ("audiobook", rec)
+
+
+def rel_books(row):
+    title = _clean(row.get("title")) or _clean(row.get("book_title"))
+    author = _first_person(row.get("authors") or row.get("author"))
+    if not (title and author):
+        return
+    rec = {"book_title": title, "book_author": author}
+    for s in _maybe_list(row.get("subjects"))[:1]:
+        rec["book_genre"] = s
+    m = re.search(r"(\d{4})", _clean(row.get("first_publish_year")))
+    if m:
+        rec["year"] = m.group(1)
+    yield ("book", rec)
+
+
+def rel_podcasts(row):
+    title = _clean(row.get("title")) or _clean(row.get("podcast_title"))
+    host = _clean(row.get("author")) or _clean(row.get("podcast_host"))
+    if not (title and host):
+        return
+    rec = {"podcast_title": title, "podcast_host": host}
+    for g in _maybe_list(row.get("genres"))[:1]:
+        rec["podcast_genre"] = g
+    yield ("podcast", rec)
+
+
+# spec-name -> relational emitter (only the multi-field sources have one)
+RELATIONAL_EMITTERS: Dict[str, Callable] = {
+    "musicbrainz-releases": rel_musicbrainz_releases,
+    "anilist-anime": rel_anilist,
+    "tvmaze-shows": rel_tvmaze,
+    "librivox-audiobooks": rel_librivox,
+    "openlibrary-books": rel_books,
+    "gutenberg-books": rel_books,
+    "podcastindex-podcasts": rel_podcasts,
+    "listennotes-podcasts": rel_podcasts,
+}
+
+
+def build_relations(relational_dir: str, cap: int = 300_000,
+                    prefer_local: bool = True) -> Dict[str, int]:
+    """Write ``data/relational/<group>.jsonl`` coherent records per domain.
+
+    Iterates only the multi-field sources (RELATIONAL_EMITTERS), de-duplicating
+    each group's records on their title-ish first field, capped.  These power the
+    coherent multi-slot fills in build_dataset (music album↔artist, tv show↔
+    network, audiobook title↔author↔narrator, …).  IMDb movie/episode relations
+    are built separately by ``training/imdb_relations.py``.
+    """
+    os.makedirs(relational_dir, exist_ok=True)
+    groups: Dict[str, Dict[str, dict]] = defaultdict(dict)
+    by_name = {s.name: s for s in SOURCE_SPECS}
+    for name, emit in RELATIONAL_EMITTERS.items():
+        spec = by_name.get(name)
+        if spec is None:
+            continue
+        n = 0
+        try:
+            for row in iter_source(spec, prefer_local=prefer_local):
+                for group, rec in emit(row):
+                    g = groups[group]
+                    if len(g) >= cap:
+                        continue
+                    key = next(iter(rec.values())).lower()
+                    g.setdefault(key, rec)
+                    n += 1
+        except Exception as exc:  # noqa: BLE001
+            print(f"[rel:{name}] ERROR {type(exc).__name__}: {exc}", flush=True)
+        print(f"[rel:{name}] {n:,} records", flush=True)
+    counts: Dict[str, int] = {}
+    for group, recs in sorted(groups.items()):
+        path = os.path.join(relational_dir, f"{group}.jsonl")
+        with open(path, "w", encoding="utf-8") as fh:
+            for rec in recs.values():
+                fh.write(json.dumps(rec, ensure_ascii=False) + "\n")
+        counts[group] = len(recs)
+        print(f"  {group:<12}: {len(recs):>9,} → {path}", flush=True)
+    return counts
+
+
+# ---------------------------------------------------------------------------
 # Source iterators
 # ---------------------------------------------------------------------------
 
@@ -866,12 +1071,24 @@ def main() -> None:
                     help="max entities per label (default: 200000)")
     ap.add_argument("--no-local", action="store_true",
                     help="ignore the metadatarr cache; always read from HuggingFace")
+    ap.add_argument("--relations", action="store_true",
+                    help="also write data/relational/<group>.jsonl coherent records")
+    ap.add_argument("--relational-dir",
+                    default=os.path.join(REPO_ROOT, "data", "relational"),
+                    help="output dir for relational jsonl (default: data/relational)")
     args = ap.parse_args()
 
     counts = ingest(args.output, only=args.only, cap=args.cap,
                     prefer_local=not args.no_local)
     total = sum(counts.values())
     print(f"\nDone: {total:,} entities across {len(counts)} labels → {args.output}")
+
+    if args.relations:
+        print("\nBuilding relational records …")
+        rc = build_relations(args.relational_dir, cap=args.cap,
+                             prefer_local=not args.no_local)
+        print(f"Relational groups: {sum(rc.values()):,} records across "
+              f"{len(rc)} groups → {args.relational_dir}")
 
 
 if __name__ == "__main__":

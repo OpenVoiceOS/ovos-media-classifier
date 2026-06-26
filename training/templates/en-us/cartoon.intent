@@ -1,7 +1,6 @@
 <lead_watch> {cartoon_title}
 [hey|ok|please] <lead_watch> {cartoon_title} [please|for me|right now|thanks]
 <lead_watch> the cartoon {cartoon_title}
-[hey|ok|please] <lead_watch> the cartoon {cartoon_title} [please|for me|right now|thanks]
 <lead_watch> some cartoons
 [hey|ok|please] <lead_watch> some cartoons [please|for me|right now|thanks]
 <lead_watch> an episode of {cartoon_title}
@@ -10,3 +9,49 @@
 [hey|ok|please] <lead_watch> a kids cartoon [please|for me|right now|thanks]
 <lead_watch> the show {cartoon_title}
 [hey|ok|please] <lead_watch> the show {cartoon_title} [please|for me|right now|thanks]
+<lead_watch> a saturday morning cartoon
+[hey|ok|please] <lead_watch> a saturday morning cartoon [please|for me|right now|thanks]
+<lead_watch> an old cartoon
+[hey|ok|please] <lead_watch> an old cartoon [please|for me|right now|thanks]
+<lead_watch> the next episode of {cartoon_title}
+[hey|ok|please] <lead_watch> the next episode of {cartoon_title} [please|for me|right now|thanks]
+<lead_watch> a classic cartoon
+[hey|ok|please] <lead_watch> a classic cartoon [please|for me|right now|thanks]
+<lead_watch> a funny cartoon
+[hey|ok|please] <lead_watch> a funny cartoon [please|for me|right now|thanks]
+<lead_watch> an animated show
+[hey|ok|please] <lead_watch> an animated show [please|for me|right now|thanks]
+<lead_watch> the animated series {cartoon_title}
+[hey|ok|please] <lead_watch> the animated series {cartoon_title} [please|for me|right now|thanks]
+<lead_watch> another episode of {cartoon_title}
+[hey|ok|please] <lead_watch> another episode of {cartoon_title} [please|for me|right now|thanks]
+<lead_watch> a cartoon show
+[hey|ok|please] <lead_watch> a cartoon show [please|for me|right now|thanks]
+<lead_watch> some classic cartoons
+[hey|ok|please] <lead_watch> some classic cartoons [please|for me|right now|thanks]
+<lead_watch> a vintage cartoon
+[hey|ok|please] <lead_watch> a vintage cartoon [please|for me|right now|thanks]
+<lead_watch> the new {cartoon_title} episode
+[hey|ok|please] <lead_watch> the new {cartoon_title} episode [please|for me|right now|thanks]
+<lead_watch> a kids animated show
+[hey|ok|please] <lead_watch> a kids animated show [please|for me|right now|thanks]
+<lead_watch> the {cartoon_title} cartoon
+[hey|ok|please] <lead_watch> the {cartoon_title} cartoon [please|for me|right now|thanks]
+<lead_watch> a cartoon for children
+[hey|ok|please] <lead_watch> a cartoon for children [please|for me|right now|thanks]
+<lead_watch> an episode of that cartoon
+[hey|ok|please] <lead_watch> an episode of that cartoon [please|for me|right now|thanks]
+<lead_watch> more {cartoon_title}
+[hey|ok|please] <lead_watch> more {cartoon_title} [please|for me|right now|thanks]
+<lead_watch> do you have any cartoons
+[hey|ok|please] <lead_watch> do you have any cartoons [please|for me|right now|thanks]
+<lead_watch> got any {cartoon_title} episodes
+[hey|ok|please] <lead_watch> got any {cartoon_title} episodes [please|for me|right now|thanks]
+<lead_watch> a cartoon for the kids
+[hey|ok|please] <lead_watch> a cartoon for the kids [please|for me|right now|thanks]
+<lead_watch> something animated for saturday morning
+[hey|ok|please] <lead_watch> something animated for saturday morning [please|for me|right now|thanks]
+<lead_watch> a cartoon to keep the kids busy
+[hey|ok|please] <lead_watch> a cartoon to keep the kids busy [please|for me|right now|thanks]
+<lead_watch> got a funny cartoon
+[hey|ok|please] <lead_watch> got a funny cartoon [please|for me|right now|thanks]

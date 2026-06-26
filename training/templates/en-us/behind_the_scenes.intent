@@ -1,13 +1,53 @@
 <lead_watch> behind the scenes of {bts_title}
 [hey|ok|please] <lead_watch> behind the scenes of {bts_title} [please|for me|right now|thanks]
 <lead_watch> the making of {bts_title}
-[hey|ok|please] <lead_watch> the making of {bts_title} [please|for me|right now|thanks]
 <lead_watch> {bts_title} behind the scenes
 [hey|ok|please] <lead_watch> {bts_title} behind the scenes [please|for me|right now|thanks]
 <lead_watch> some behind the scenes footage
 [hey|ok|please] <lead_watch> some behind the scenes footage [please|for me|right now|thanks]
 <lead_watch> the {bts_title} featurette
 [hey|ok|please] <lead_watch> the {bts_title} featurette [please|for me|right now|thanks]
+<lead_watch> the making-of for {bts_title}
+[hey|ok|please] <lead_watch> the making-of for {bts_title} [please|for me|right now|thanks]
+<lead_watch> a behind the scenes video
+[hey|ok|please] <lead_watch> a behind the scenes video [please|for me|right now|thanks]
+<lead_watch> the bonus features for {bts_title}
+[hey|ok|please] <lead_watch> the bonus features for {bts_title} [please|for me|right now|thanks]
+<lead_watch> the {bts_title} bloopers
+[hey|ok|please] <lead_watch> the {bts_title} bloopers [please|for me|right now|thanks]
+<lead_watch> some bonus footage
+[hey|ok|please] <lead_watch> some bonus footage [please|for me|right now|thanks]
+<lead_watch> the gag reel for {bts_title}
+[hey|ok|please] <lead_watch> the gag reel for {bts_title} [please|for me|right now|thanks]
+<lead_watch> a making-of documentary
+[hey|ok|please] <lead_watch> a making-of documentary [please|for me|right now|thanks]
+<lead_watch> the behind the scenes of {bts_title}
+[hey|ok|please] <lead_watch> the behind the scenes of {bts_title} [please|for me|right now|thanks]
+<lead_watch> the {bts_title} extras
+[hey|ok|please] <lead_watch> the {bts_title} extras [please|for me|right now|thanks]
+<lead_watch> some deleted scenes from {bts_title}
+[hey|ok|please] <lead_watch> some deleted scenes from {bts_title} [please|for me|right now|thanks]
+<lead_watch> the {bts_title} commentary
+[hey|ok|please] <lead_watch> the {bts_title} commentary [please|for me|right now|thanks]
+<lead_watch> an on-set featurette
+<lead_watch> the {bts_title} making of
+[hey|ok|please] <lead_watch> the {bts_title} making of [please|for me|right now|thanks]
+<lead_watch> behind the scenes footage of {bts_title}
+[hey|ok|please] <lead_watch> behind the scenes footage of {bts_title} [please|for me|right now|thanks]
+<lead_watch> the {bts_title} bonus content
+[hey|ok|please] <lead_watch> the {bts_title} bonus content [please|for me|right now|thanks]
+<lead_watch> do you have the making of {bts_title}
+[hey|ok|please] <lead_watch> do you have the making of {bts_title} [please|for me|right now|thanks]
+<lead_watch> got any behind the scenes for {bts_title}
+[hey|ok|please] <lead_watch> got any behind the scenes for {bts_title} [please|for me|right now|thanks]
+<lead_watch> some behind the scenes to watch
+[hey|ok|please] <lead_watch> some behind the scenes to watch [please|for me|right now|thanks]
+<lead_watch> do you have the bloopers for {bts_title}
+[hey|ok|please] <lead_watch> do you have the bloopers for {bts_title} [please|for me|right now|thanks]
+<lead_watch> got the featurette for {bts_title}
+[hey|ok|please] <lead_watch> got the featurette for {bts_title} [please|for me|right now|thanks]
+<lead_watch> some bonus footage to watch
+[hey|ok|please] <lead_watch> some bonus footage to watch [please|for me|right now|thanks]
 <lead_watch> behind the scenes of {movie_title}
 [hey|ok|please] <lead_watch> behind the scenes of {movie_title} [please|for me|right now|thanks]
 <lead_watch> the making of {movie_title}

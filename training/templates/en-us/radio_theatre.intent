@@ -10,3 +10,21 @@
 [hey|ok|please] <lead_play_audio> some radio theatre [please|for me|right now|thanks]
 <lead_play_audio> the audio drama {radio_drama_title}
 [hey|ok|please] <lead_play_audio> the audio drama {radio_drama_title} [please|for me|right now|thanks]
+<lead_play_audio> a radio drama
+[hey|ok|please] <lead_play_audio> a radio drama [please|for me|right now|thanks]
+<lead_play_audio> an old time radio show
+[hey|ok|please] <lead_play_audio> an old time radio show [please|for me|right now|thanks]
+<lead_play_audio> the radio play {radio_drama_title}
+[hey|ok|please] <lead_play_audio> the radio play {radio_drama_title} [please|for me|right now|thanks]
+<lead_play_audio> a {radio_genre} radio drama
+[hey|ok|please] <lead_play_audio> a {radio_genre} radio drama [please|for me|right now|thanks]
+<lead_play_audio> some old time radio
+[hey|ok|please] <lead_play_audio> some old time radio [please|for me|right now|thanks]
+<lead_play_audio> do you have any radio dramas
+[hey|ok|please] <lead_play_audio> do you have any radio dramas [please|for me|right now|thanks]
+<lead_play_audio> got a good audio drama
+[hey|ok|please] <lead_play_audio> got a good audio drama [please|for me|right now|thanks]
+<lead_play_audio> an audio drama for the evening
+[hey|ok|please] <lead_play_audio> an audio drama for the evening [please|for me|right now|thanks]
+<lead_play_audio> a radio play to wind down to
+[hey|ok|please] <lead_play_audio> a radio play to wind down to [please|for me|right now|thanks]

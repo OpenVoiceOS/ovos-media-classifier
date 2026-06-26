@@ -12,7 +12,59 @@
 [hey|ok|please] <lead_read> the comic book {comic_title} [please|for me|right now|thanks]
 <lead_read> a graphic novel
 [hey|ok|please] <lead_read> a graphic novel [please|for me|right now|thanks]
-<lead_read> the {comic_genre} manga {comic_title}
-[hey|ok|please] <lead_read> the {comic_genre} manga {comic_title} [please|for me|right now|thanks]
 <lead_read> some manga
 [hey|ok|please] <lead_read> some manga [please|for me|right now|thanks]
+<lead_read> a {comic_genre} graphic novel
+[hey|ok|please] <lead_read> a {comic_genre} graphic novel [please|for me|right now|thanks]
+<lead_read> a webcomic
+[hey|ok|please] <lead_read> a webcomic [please|for me|right now|thanks]
+<lead_read> the next chapter of {comic_title}
+[hey|ok|please] <lead_read> the next chapter of {comic_title} [please|for me|right now|thanks]
+<lead_read> the latest {comic_title} chapter
+[hey|ok|please] <lead_read> the latest {comic_title} chapter [please|for me|right now|thanks]
+<lead_read> a comic book
+[hey|ok|please] <lead_read> a comic book [please|for me|right now|thanks]
+<lead_read> the manga series {comic_title}
+[hey|ok|please] <lead_read> the manga series {comic_title} [please|for me|right now|thanks]
+<lead_read> a {comic_genre} webcomic
+[hey|ok|please] <lead_read> a {comic_genre} webcomic [please|for me|right now|thanks]
+<lead_read> the graphic novel {comic_title}
+[hey|ok|please] <lead_read> the graphic novel {comic_title} [please|for me|right now|thanks]
+<lead_read> a chapter of {comic_title}
+[hey|ok|please] <lead_read> a chapter of {comic_title} [please|for me|right now|thanks]
+<lead_read> some {comic_genre} manga
+[hey|ok|please] <lead_read> some {comic_genre} manga [please|for me|right now|thanks]
+<lead_read> a digital comic
+[hey|ok|please] <lead_read> a digital comic [please|for me|right now|thanks]
+<lead_read> the webcomic {comic_title}
+[hey|ok|please] <lead_read> the webcomic {comic_title} [please|for me|right now|thanks]
+<lead_read> a {comic_genre} manga series
+[hey|ok|please] <lead_read> a {comic_genre} manga series [please|for me|right now|thanks]
+<lead_read> more of {comic_title}
+[hey|ok|please] <lead_read> more of {comic_title} [please|for me|right now|thanks]
+<lead_read> an issue of {comic_title}
+[hey|ok|please] <lead_read> an issue of {comic_title} [please|for me|right now|thanks]
+<lead_read> a superhero comic
+[hey|ok|please] <lead_read> a superhero comic [please|for me|right now|thanks]
+<lead_read> the {comic_genre} manga {comic_title}
+[hey|ok|please] <lead_read> the {comic_genre} manga {comic_title} [please|for me|right now|thanks]
+<lead_read> the {comic_genre} comic {comic_title}
+[hey|ok|please] <lead_read> the {comic_genre} comic {comic_title} [please|for me|right now|thanks]
+<lead_read> a {comic_genre} comic called {comic_title}
+[hey|ok|please] <lead_read> a {comic_genre} comic called {comic_title} [please|for me|right now|thanks]
+<lead_read> the {comic_genre} graphic novel {comic_title}
+[hey|ok|please] <lead_read> the {comic_genre} graphic novel {comic_title} [please|for me|right now|thanks]
+<lead_read> do you have any {comic_genre} manga
+[hey|ok|please] <lead_read> do you have any {comic_genre} manga [please|for me|right now|thanks]
+<lead_read> got a good {comic_genre} comic
+[hey|ok|please] <lead_read> got a good {comic_genre} comic [please|for me|right now|thanks]
+<lead_read> a {comic_genre} comic to read tonight
+[hey|ok|please] <lead_read> a {comic_genre} comic to read tonight [please|for me|right now|thanks]
+<lead_read> some manga to read
+[hey|ok|please] <lead_read> some manga to read [please|for me|right now|thanks]
+<lead_read> do you have the manga {comic_title}
+[hey|ok|please] <lead_read> do you have the manga {comic_title} [please|for me|right now|thanks]
+<lead_read> got any {comic_genre} graphic novels
+[hey|ok|please] <lead_read> got any {comic_genre} graphic novels [please|for me|right now|thanks]
+<lead_read> a {comic_genre} comic for the weekend
+[hey|ok|please] <lead_read> a {comic_genre} comic for the weekend [please|for me|right now|thanks]

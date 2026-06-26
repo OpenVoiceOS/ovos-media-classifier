@@ -1,7 +1,6 @@
 <lead_watch> the trailer for {trailer_title}
 [hey|ok|please] <lead_watch> the trailer for {trailer_title} [please|for me|right now|thanks]
 <lead_watch> {trailer_title} trailer
-[hey|ok|please] <lead_watch> {trailer_title} trailer [please|for me|right now|thanks]
 <lead_watch> a movie trailer
 [hey|ok|please] <lead_watch> a movie trailer [please|for me|right now|thanks]
 <lead_watch> the latest trailers
@@ -10,6 +9,46 @@
 [hey|ok|please] <lead_watch> the {trailer_title} teaser [please|for me|right now|thanks]
 <lead_watch> the official trailer for {trailer_title}
 [hey|ok|please] <lead_watch> the official trailer for {trailer_title} [please|for me|right now|thanks]
+<lead_watch> a new trailer
+[hey|ok|please] <lead_watch> a new trailer [please|for me|right now|thanks]
+<lead_watch> the teaser for {trailer_title}
+[hey|ok|please] <lead_watch> the teaser for {trailer_title} [please|for me|right now|thanks]
+<lead_watch> some movie trailers
+[hey|ok|please] <lead_watch> some movie trailers [please|for me|right now|thanks]
+<lead_watch> the {trailer_title} trailer
+[hey|ok|please] <lead_watch> the {trailer_title} trailer [please|for me|right now|thanks]
+<lead_watch> the new {trailer_title} trailer
+[hey|ok|please] <lead_watch> the new {trailer_title} trailer [please|for me|right now|thanks]
+<lead_watch> a film trailer
+<lead_watch> the {trailer_title} preview
+[hey|ok|please] <lead_watch> the {trailer_title} preview [please|for me|right now|thanks]
+<lead_watch> a game trailer
+[hey|ok|please] <lead_watch> a game trailer [please|for me|right now|thanks]
+<lead_watch> the official teaser for {trailer_title}
+[hey|ok|please] <lead_watch> the official teaser for {trailer_title} [please|for me|right now|thanks]
+<lead_watch> a tv show trailer
+[hey|ok|please] <lead_watch> a tv show trailer [please|for me|right now|thanks]
+<lead_watch> the final trailer for {trailer_title}
+[hey|ok|please] <lead_watch> the final trailer for {trailer_title} [please|for me|right now|thanks]
+<lead_watch> an upcoming movie trailer
+[hey|ok|please] <lead_watch> an upcoming movie trailer [please|for me|right now|thanks]
+<lead_watch> the trailer of {trailer_title}
+[hey|ok|please] <lead_watch> the trailer of {trailer_title} [please|for me|right now|thanks]
+<lead_watch> a {trailer_title} sneak peek
+[hey|ok|please] <lead_watch> a {trailer_title} sneak peek [please|for me|right now|thanks]
+<lead_watch> do you have the trailer for {trailer_title}
+[hey|ok|please] <lead_watch> do you have the trailer for {trailer_title} [please|for me|right now|thanks]
+<lead_watch> got any new trailers
+<lead_watch> a trailer to check out
+[hey|ok|please] <lead_watch> a trailer to check out [please|for me|right now|thanks]
+<lead_watch> what trailers are new
+[hey|ok|please] <lead_watch> what trailers are new [please|for me|right now|thanks]
+<lead_watch> do you have the {trailer_title} trailer
+[hey|ok|please] <lead_watch> do you have the {trailer_title} trailer [please|for me|right now|thanks]
+<lead_watch> got the teaser for {trailer_title}
+[hey|ok|please] <lead_watch> got the teaser for {trailer_title} [please|for me|right now|thanks]
+<lead_watch> some trailers to watch
+[hey|ok|please] <lead_watch> some trailers to watch [please|for me|right now|thanks]
 <lead_watch> the {movie_title} trailer
 [hey|ok|please] <lead_watch> the {movie_title} trailer [please|for me|right now|thanks]
 <lead_watch> the trailer for {movie_title}

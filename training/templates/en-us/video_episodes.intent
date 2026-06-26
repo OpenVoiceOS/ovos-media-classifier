@@ -1,7 +1,6 @@
 <lead_watch> episodes of {tv_show_title}
 [hey|ok|please] <lead_watch> episodes of {tv_show_title} [please|for me|right now|thanks]
 <lead_watch> the next episode of {tv_show_title}
-[hey|ok|please] <lead_watch> the next episode of {tv_show_title} [please|for me|right now|thanks]
 <lead_watch> more episodes of {tv_show_title}
 [hey|ok|please] <lead_watch> more episodes of {tv_show_title} [please|for me|right now|thanks]
 <lead_watch> a web series
@@ -16,3 +15,63 @@
 [hey|ok|please] <lead_watch> the next episode [please|for me|right now|thanks]
 <lead_watch> more of that web series
 [hey|ok|please] <lead_watch> more of that web series [please|for me|right now|thanks]
+<lead_watch> the new episodes of {tv_show_title}
+[hey|ok|please] <lead_watch> the new episodes of {tv_show_title} [please|for me|right now|thanks]
+<lead_watch> another episode of {tv_show_title}
+[hey|ok|please] <lead_watch> another episode of {tv_show_title} [please|for me|right now|thanks]
+<lead_watch> a video podcast series
+[hey|ok|please] <lead_watch> a video podcast series [please|for me|right now|thanks]
+<lead_watch> the {tv_show_title} web series
+[hey|ok|please] <lead_watch> the {tv_show_title} web series [please|for me|right now|thanks]
+<lead_watch> the latest video episode
+[hey|ok|please] <lead_watch> the latest video episode [please|for me|right now|thanks]
+<lead_watch> an episode of that web series
+[hey|ok|please] <lead_watch> an episode of that web series [please|for me|right now|thanks]
+<lead_watch> a youtube series
+[hey|ok|please] <lead_watch> a youtube series [please|for me|right now|thanks]
+<lead_watch> the next part of {tv_show_title}
+<lead_watch> more video episodes
+[hey|ok|please] <lead_watch> more video episodes [please|for me|right now|thanks]
+<lead_watch> the {tv_show_title} video series
+[hey|ok|please] <lead_watch> the {tv_show_title} video series [please|for me|right now|thanks]
+<lead_watch> a streaming web series
+[hey|ok|please] <lead_watch> a streaming web series [please|for me|right now|thanks]
+<lead_watch> an episode from {tv_show_title}
+[hey|ok|please] <lead_watch> an episode from {tv_show_title} [please|for me|right now|thanks]
+<lead_watch> the newest episode of {tv_show_title}
+[hey|ok|please] <lead_watch> the newest episode of {tv_show_title} [please|for me|right now|thanks]
+<lead_watch> an online series episode
+[hey|ok|please] <lead_watch> an online series episode [please|for me|right now|thanks]
+<lead_watch> do you have more episodes of {tv_show_title}
+[hey|ok|please] <lead_watch> do you have more episodes of {tv_show_title} [please|for me|right now|thanks]
+<lead_watch> got the next episode of {tv_show_title}
+[hey|ok|please] <lead_watch> got the next episode of {tv_show_title} [please|for me|right now|thanks]
+<lead_watch> some episodes to binge
+[hey|ok|please] <lead_watch> some episodes to binge [please|for me|right now|thanks]
+<lead_watch> a web series for the evening
+[hey|ok|please] <lead_watch> a web series for the evening [please|for me|right now|thanks]
+<lead_watch> do you have the latest {tv_show_title} episode
+[hey|ok|please] <lead_watch> do you have the latest {tv_show_title} episode [please|for me|right now|thanks]
+<lead_watch> got a good web series
+[hey|ok|please] <lead_watch> got a good web series [please|for me|right now|thanks]
+<lead_watch> some video episodes to watch
+[hey|ok|please] <lead_watch> some video episodes to watch [please|for me|right now|thanks]
+<lead_watch> season {season_number} of {tv_show_title}
+[hey|ok|please] <lead_watch> season {season_number} of {tv_show_title} [please|for me|right now|thanks]
+<lead_watch> episode {episode_number} of {tv_show_title}
+[hey|ok|please] <lead_watch> episode {episode_number} of {tv_show_title} [please|for me|right now|thanks]
+<lead_watch> season {season_number} episode {episode_number} of {tv_show_title}
+[hey|ok|please] <lead_watch> season {season_number} episode {episode_number} of {tv_show_title} [please|for me|right now|thanks]
+<lead_watch> {tv_show_title} season {season_number} episode {episode_number}
+<lead_watch> {tv_show_title} s{season_number}e{episode_number}
+<lead_watch> the {episode_title} episode of {tv_show_title}
+[hey|ok|please] <lead_watch> the {episode_title} episode of {tv_show_title} [please|for me|right now|thanks]
+<lead_watch> episode {episode_number} season {season_number} of {tv_show_title}
+<lead_watch> the next episode of {tv_show_title}
+<lead_watch> the latest episode of {tv_show_title}
+[hey|ok|please] <lead_watch> the latest episode of {tv_show_title} [please|for me|right now|thanks]
+<lead_watch> the next episode of season {season_number} of {tv_show_title}
+<lead_watch> {tv_show_title} episode {episode_number}
+<lead_watch> the first episode of {tv_show_title}
+<lead_watch> the season {season_number} finale of {tv_show_title}
+<lead_watch> the {episode_title} episode

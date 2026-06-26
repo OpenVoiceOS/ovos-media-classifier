@@ -1,7 +1,6 @@
 <lead_play_audio> {ambient_sound}
 [hey|ok|please] <lead_play_audio> {ambient_sound} [please|for me|right now|thanks]
 <lead_play_audio> some {ambient_sound}
-[hey|ok|please] <lead_play_audio> some {ambient_sound} [please|for me|right now|thanks]
 <lead_play_audio> {ambient_sound} sounds
 [hey|ok|please] <lead_play_audio> {ambient_sound} sounds [please|for me|right now|thanks]
 <lead_play_audio> white noise
@@ -9,7 +8,6 @@
 <lead_play_audio> brown noise
 [hey|ok|please] <lead_play_audio> brown noise [please|for me|right now|thanks]
 <lead_play_audio> pink noise
-[hey|ok|please] <lead_play_audio> pink noise [please|for me|right now|thanks]
 <lead_play_audio> rain sounds
 [hey|ok|please] <lead_play_audio> rain sounds [please|for me|right now|thanks]
 <lead_play_audio> ocean waves
@@ -17,7 +15,6 @@
 <lead_play_audio> nature sounds
 [hey|ok|please] <lead_play_audio> nature sounds [please|for me|right now|thanks]
 <lead_play_audio> forest sounds
-[hey|ok|please] <lead_play_audio> forest sounds [please|for me|right now|thanks]
 <lead_play_audio> thunderstorm sounds
 [hey|ok|please] <lead_play_audio> thunderstorm sounds [please|for me|right now|thanks]
 <lead_play_audio> focus music
@@ -25,6 +22,23 @@
 <lead_play_audio> sleep sounds
 [hey|ok|please] <lead_play_audio> sleep sounds [please|for me|right now|thanks]
 <lead_play_audio> some ambient music
-[hey|ok|please] <lead_play_audio> some ambient music [please|for me|right now|thanks]
 <lead_play_audio> some ambient noise
 [hey|ok|please] <lead_play_audio> some ambient noise [please|for me|right now|thanks]
+<lead_play_audio> the sound of {ambient_sound}
+[hey|ok|please] <lead_play_audio> the sound of {ambient_sound} [please|for me|right now|thanks]
+<lead_play_audio> a {ambient_sound} soundscape
+[hey|ok|please] <lead_play_audio> a {ambient_sound} soundscape [please|for me|right now|thanks]
+<lead_play_audio> a loop of {ambient_sound}
+<lead_play_audio> gentle {ambient_sound}
+[hey|ok|please] <lead_play_audio> gentle {ambient_sound} [please|for me|right now|thanks]
+<lead_play_audio> some {ambient_sound} for sleep
+[hey|ok|please] <lead_play_audio> some {ambient_sound} for sleep [please|for me|right now|thanks]
+<lead_play_audio> calming {ambient_sound}
+[hey|ok|please] <lead_play_audio> calming {ambient_sound} [please|for me|right now|thanks]
+<lead_play_audio> do you have any {ambient_sound}
+<lead_play_audio> got some {ambient_sound} sounds
+[hey|ok|please] <lead_play_audio> got some {ambient_sound} sounds [please|for me|right now|thanks]
+<lead_play_audio> some {ambient_sound} to help me sleep
+[hey|ok|please] <lead_play_audio> some {ambient_sound} to help me sleep [please|for me|right now|thanks]
+<lead_play_audio> {ambient_sound} while i work
+[hey|ok|please] <lead_play_audio> {ambient_sound} while i work [please|for me|right now|thanks]

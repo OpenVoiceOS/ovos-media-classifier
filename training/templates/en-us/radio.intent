@@ -12,3 +12,57 @@
 [hey|ok|please] <lead_tune> live radio [please|for me|right now|thanks]
 <lead_tune> the {radio_genre} station
 [hey|ok|please] <lead_tune> the {radio_genre} station [please|for me|right now|thanks]
+<lead_tune> the {radio_station} stream
+[hey|ok|please] <lead_tune> the {radio_station} stream [please|for me|right now|thanks]
+<lead_tune> another {radio_genre} station
+[hey|ok|please] <lead_tune> another {radio_genre} station [please|for me|right now|thanks]
+<lead_tune> some live radio
+[hey|ok|please] <lead_tune> some live radio [please|for me|right now|thanks]
+<lead_tune> a local radio station
+[hey|ok|please] <lead_tune> a local radio station [please|for me|right now|thanks]
+<lead_tune> {radio_station} fm
+[hey|ok|please] <lead_tune> {radio_station} fm [please|for me|right now|thanks]
+<lead_tune> the fm station {radio_station}
+[hey|ok|please] <lead_tune> the fm station {radio_station} [please|for me|right now|thanks]
+<lead_tune> an internet radio station
+[hey|ok|please] <lead_tune> an internet radio station [please|for me|right now|thanks]
+<lead_tune> a {radio_genre} internet station
+[hey|ok|please] <lead_tune> a {radio_genre} internet station [please|for me|right now|thanks]
+<lead_tune> a {radio_genre} fm station
+[hey|ok|please] <lead_tune> a {radio_genre} fm station [please|for me|right now|thanks]
+<lead_tune> talk radio
+[hey|ok|please] <lead_tune> talk radio [please|for me|right now|thanks]
+<lead_tune> the {radio_genre} talk station
+[hey|ok|please] <lead_tune> the {radio_genre} talk station [please|for me|right now|thanks]
+<lead_tune> news radio
+[hey|ok|please] <lead_tune> news radio [please|for me|right now|thanks]
+<lead_tune> a music station
+[hey|ok|please] <lead_tune> a music station [please|for me|right now|thanks]
+<lead_tune> a {radio_genre} music station
+[hey|ok|please] <lead_tune> a {radio_genre} music station [please|for me|right now|thanks]
+<lead_tune> my favorite radio station
+[hey|ok|please] <lead_tune> my favorite radio station [please|for me|right now|thanks]
+<lead_tune> the morning show on {radio_station}
+[hey|ok|please] <lead_tune> the morning show on {radio_station} [please|for me|right now|thanks]
+<lead_tune> the {radio_genre} station {radio_station}
+[hey|ok|please] <lead_tune> the {radio_genre} station {radio_station} [please|for me|right now|thanks]
+<lead_tune> {radio_station}, a {radio_genre} station
+[hey|ok|please] <lead_tune> {radio_station}, a {radio_genre} station [please|for me|right now|thanks]
+<lead_tune> {radio_station} the {radio_genre} station
+[hey|ok|please] <lead_tune> {radio_station} the {radio_genre} station [please|for me|right now|thanks]
+<lead_tune> do you have any {radio_genre} radio
+[hey|ok|please] <lead_tune> do you have any {radio_genre} radio [please|for me|right now|thanks]
+<lead_tune> got any {radio_genre} stations
+[hey|ok|please] <lead_tune> got any {radio_genre} stations [please|for me|right now|thanks]
+<lead_tune> some {radio_genre} radio for the drive
+[hey|ok|please] <lead_tune> some {radio_genre} radio for the drive [please|for me|right now|thanks]
+<lead_tune> a {radio_genre} station to wake up to
+[hey|ok|please] <lead_tune> a {radio_genre} station to wake up to [please|for me|right now|thanks]
+<lead_tune> what {radio_genre} stations are there
+[hey|ok|please] <lead_tune> what {radio_genre} stations are there [please|for me|right now|thanks]
+<lead_tune> a {radio_genre} station for the background
+[hey|ok|please] <lead_tune> a {radio_genre} station for the background [please|for me|right now|thanks]
+<lead_tune> some live radio while i work
+[hey|ok|please] <lead_tune> some live radio while i work [please|for me|right now|thanks]
+<lead_tune> a {radio_genre} station for my commute
+[hey|ok|please] <lead_tune> a {radio_genre} station for my commute [please|for me|right now|thanks]

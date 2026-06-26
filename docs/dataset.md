@@ -13,10 +13,15 @@ For where the entities come from, see [data-sources.md](data-sources.md).
 ```bash
 pip install -e ".[train]"
 
-# 1. ingest the entity pools (→ data/entities/<label>.csv)
-python -m training.ingest_entities
+# 1. ingest the flat entity pools (→ data/entities/<label>.csv) AND the
+#    coherent relational records (→ data/relational/<group>.jsonl)
+python -m training.ingest_entities --relations
 
-# 2. build the dataset (→ data/release/{full,train,validation,test}.{csv,parquet})
+# 2. build the IMDb-join relations + popularity weights + bw/silent + episode
+#    pools (→ data/relational/{movies,episodes,bw_silent}.jsonl, _imdb_votes.csv)
+python -m training.imdb_relations
+
+# 3. build the dataset (→ data/release/{full,train,validation,test}.{csv,parquet})
 python -m training.build_dataset
 ```
 
@@ -51,6 +56,11 @@ Each row is one natural-language command. Columns are grouped:
 | `playback_type` | modality axis (`audio` / `video` / `paged` / `interactive`) |
 | `structure` | structure axis (`single` / `episodic` / `continuous` / `collection`) |
 | `binary_label` | `ocp` / `not_ocp` |
+| `content_form_genres` | JSON list of sensitive / content-form tags (`adult`/`anime`/`animation`/`asmr`) — the content-filter axis |
+| `tags` | JSON list of **namespaced descriptive tags** — `genre:rock` / `mood:chill` / `era:1980s` (genre + mood + era folded into one multi-label axis) |
+| `qualifiers` | JSON list of result-narrowing qualifiers (`black_and_white` / `silent` / `trailer` / …) |
+| `explicitness` | `clean` / `adult` |
+| `content_genre`, `mood`, `era`, `decade` | the unfolded genre / mood / era values kept as **provenance + benchmark ground truth** (no standalone head trains on them; `tags` does) |
 
 ### Keyword feature columns (one per `CategoricalFeatureExtractor` feature)
 
@@ -122,6 +132,46 @@ which resolves:
 The lead-in `<…>` references are the componential request openers; the inline
 alternations are the slot-pattern variants. `build_dataset` then fills each
 `{slot}` from the real entity pools.
+
+### Coherent (relational) slot-filling
+
+When a template fills **several slots of one domain** — `{album_name} by
+{artist_name}`, `episode {n} of {tv_show}`, `{audiobook_title} by
+{audiobook_author}` — filling each slot independently would yield an incoherent
+sentence (a real album credited to the wrong real artist). `build_dataset`
+instead draws those slots from **one real record** of a `RelationalGroup`:
+
+| group | coherent fields | source |
+|---|---|---|
+| `music` | album ↔ artist ↔ year | musicbrainz-releases |
+| `tv` | show ↔ network ↔ genre ↔ year | tvmaze-shows |
+| `anime` | title ↔ studio ↔ genre ↔ year | anilist-anime |
+| `audiobook` | title ↔ author ↔ narrator ↔ genre | librivox |
+| `book` | title ↔ author ↔ genre ↔ year | openlibrary |
+| `podcast` | title ↔ host ↔ genre | podcastindex |
+| `movies` | title ↔ genre ↔ year (↔ director/writer/actor *) | IMDb titles |
+| `episodes` | series ↔ season ↔ episode ↔ episode_title | IMDb episodes |
+
+`*` movie **person** slots are coherent only when the `--credits` hook resolves
+names (a `media-metadata-imdb-credits` or `…-imdb-names` dataset); otherwise the
+person slots fill **independently** from the flat `movie_director` /
+`movie_writer` / `movie_actor` pools (the hook logs which path it took and
+upgrades automatically on the next run once that dataset lands). **Single-slot
+templates and confusable slots stay independent by design** — coherence is only
+coordinated when a template uses ≥ 2 slots of one group.
+
+Two IMDb signals further shape sampling:
+
+* **popularity weighting** — `movie_title` is sampled `∝ log1p(num_votes)` (from
+  IMDb ratings) with a floor of 1.0, so popular titles dominate the realistic
+  head while the long tail still appears.
+* **real qualifier titles** — the `bw_movie_title` / `silent_movie_title` pools
+  are real black-and-white / silent films (IMDb technical-specs joined to the
+  title), so a qualifier template fills a genuine title that *is* the qualifier.
+
+The IMDb relations + the `_imdb_votes.csv` weight table are built by
+`python -m training.imdb_relations`; the other groups by
+`python -m training.ingest_entities --relations`.
 
 ### To add or translate templates
 

@@ -8,3 +8,47 @@
 [hey|ok|please] <lead_watch> the described version of {movie_title} [please|for me|right now|thanks]
 <lead_watch> a described {movie_genre} movie
 [hey|ok|please] <lead_watch> a described {movie_genre} movie [please|for me|right now|thanks]
+<lead_watch> {movie_title} described
+[hey|ok|please] <lead_watch> {movie_title} described [please|for me|right now|thanks]
+<lead_watch> a {movie_genre} movie with audio description
+[hey|ok|please] <lead_watch> a {movie_genre} movie with audio description [please|for me|right now|thanks]
+<lead_watch> an audio described film
+[hey|ok|please] <lead_watch> an audio described film [please|for me|right now|thanks]
+<lead_watch> the described {movie_title}
+[hey|ok|please] <lead_watch> the described {movie_title} [please|for me|right now|thanks]
+<lead_watch> {movie_title} with narration
+[hey|ok|please] <lead_watch> {movie_title} with narration [please|for me|right now|thanks]
+<lead_watch> an accessible version of {movie_title}
+[hey|ok|please] <lead_watch> an accessible version of {movie_title} [please|for me|right now|thanks]
+<lead_watch> the narrated version of {movie_title}
+[hey|ok|please] <lead_watch> the narrated version of {movie_title} [please|for me|right now|thanks]
+<lead_watch> a film with audio description
+[hey|ok|please] <lead_watch> a film with audio description [please|for me|right now|thanks]
+<lead_watch> a {movie_genre} film with narration
+[hey|ok|please] <lead_watch> a {movie_genre} film with narration [please|for me|right now|thanks]
+<lead_watch> {movie_title} for the blind
+[hey|ok|please] <lead_watch> {movie_title} for the blind [please|for me|right now|thanks]
+<lead_watch> an audio described {movie_genre} film
+[hey|ok|please] <lead_watch> an audio described {movie_genre} film [please|for me|right now|thanks]
+<lead_watch> the described film {movie_title}
+[hey|ok|please] <lead_watch> the described film {movie_title} [please|for me|right now|thanks]
+<lead_watch> a movie with descriptive narration
+[hey|ok|please] <lead_watch> a movie with descriptive narration [please|for me|right now|thanks]
+<lead_watch> an accessible {movie_genre} movie
+[hey|ok|please] <lead_watch> an accessible {movie_genre} movie [please|for me|right now|thanks]
+<lead_watch> a {movie_genre} film with audio description starring {movie_actor}
+[hey|ok|please] <lead_watch> a {movie_genre} film with audio description starring {movie_actor} [please|for me|right now|thanks]
+<lead_watch> {movie_title} with audio description starring {movie_actor}
+[hey|ok|please] <lead_watch> {movie_title} with audio description starring {movie_actor} [please|for me|right now|thanks]
+<lead_watch> do you have {movie_title} with audio description
+[hey|ok|please] <lead_watch> do you have {movie_title} with audio description [please|for me|right now|thanks]
+<lead_watch> got any audio described movies
+[hey|ok|please] <lead_watch> got any audio described movies [please|for me|right now|thanks]
+<lead_watch> a described movie for movie night
+[hey|ok|please] <lead_watch> a described movie for movie night [please|for me|right now|thanks]
+<lead_watch> an audio described film for the evening
+[hey|ok|please] <lead_watch> an audio described film for the evening [please|for me|right now|thanks]
+<lead_watch> do you have an accessible version of {movie_title}
+[hey|ok|please] <lead_watch> do you have an accessible version of {movie_title} [please|for me|right now|thanks]
+<lead_watch> got any {movie_genre} movies with audio description
+[hey|ok|please] <lead_watch> got any {movie_genre} movies with audio description [please|for me|right now|thanks]

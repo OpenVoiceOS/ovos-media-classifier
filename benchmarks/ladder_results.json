@@ -1,204 +1,177 @@
 {
-  "n_test_rows": 27125,
-  "data_dir": "/home/miro/AgentWorkspaces/ovos/plugins/media/ovos-media-classifier/data/release",
-  "models_dir": "/home/miro/AgentWorkspaces/ovos/plugins/media/ovos-media-classifier/data/models",
+  "n_test_rows": 34700,
+  "data_dir": "data/release",
+  "models_dir": "data/models",
   "rungs": {
     "rules": {
       "axes": {
         "domain": {
-          "n": 27125,
-          "accuracy": 0.8981,
-          "macro_f1": 0.3154
+          "n": 34700,
+          "accuracy": 0.8327,
+          "macro_f1": 0.3029
         },
         "media_type": {
-          "n": 27125,
-          "accuracy": 0.7031,
-          "macro_f1": 0.7178
+          "n": 34700,
+          "accuracy": 0.6293,
+          "macro_f1": 0.6703
         },
         "playback_type": {
-          "n": 27125,
-          "accuracy": 0.7694,
-          "macro_f1": 0.6955
+          "n": 34700,
+          "accuracy": 0.7016,
+          "macro_f1": 0.6354
         },
         "structure": {
-          "n": 27125,
-          "accuracy": 0.7546,
-          "macro_f1": 0.6678
+          "n": 34700,
+          "accuracy": 0.7076,
+          "macro_f1": 0.6514
         },
         "explicitness": {
-          "n": 27125,
-          "accuracy": 0.9861,
-          "macro_f1": 0.8237
-        },
-        "mood": {
-          "n": 1020,
-          "accuracy": 0.0,
-          "macro_f1": 0.0
-        },
-        "era": {
-          "n": 184,
-          "accuracy": 0.0,
-          "macro_f1": 0.0
+          "n": 34700,
+          "accuracy": 0.9884,
+          "macro_f1": 0.8189
         },
         "content_form_genres": {
-          "macro_f1": 0.6851,
-          "labelled_rows": 2492
+          "macro_f1": 0.7064,
+          "labelled_rows": 2366
         },
-        "content_genre": {
+        "tags": {
           "macro_f1": 0.0,
-          "labelled_rows": 3422
+          "labelled_rows": 4539,
+          "label_space_size": 80
         },
         "qualifiers": {
           "macro_f1": 0.0,
-          "labelled_rows": 840
+          "labelled_rows": 1300
         }
       },
       "content_filter": {
-        "adult_rows": 727,
-        "adult_blocked": 356,
-        "recall": 0.4897,
-        "hentai_rows": 187,
-        "hentai_blocked": 81,
-        "hentai_recall": 0.4332,
-        "non_adult_rows": 26398,
-        "non_adult_blocked": 5,
-        "false_block_rate": 0.0002
+        "adult_rows": 756,
+        "adult_blocked": 364,
+        "recall": 0.4815,
+        "hentai_rows": 298,
+        "hentai_blocked": 152,
+        "hentai_recall": 0.5101,
+        "non_adult_rows": 33944,
+        "non_adult_blocked": 11,
+        "false_block_rate": 0.0003
       },
-      "latency_ms_median": 0.30851,
-      "latency_ms_p95": 0.4946,
+      "latency_ms_median": 0.31912,
+      "latency_ms_p95": 0.49794,
       "model_bytes": 0,
       "status": "available"
     },
     "learned-context": {
       "axes": {
         "domain": {
-          "n": 27125,
-          "accuracy": 0.8561,
-          "macro_f1": 0.4612
+          "n": 34700,
+          "accuracy": 0.8657,
+          "macro_f1": 0.464
         },
         "media_type": {
-          "n": 27125,
-          "accuracy": 0.789,
-          "macro_f1": 0.8202
+          "n": 34700,
+          "accuracy": 0.7782,
+          "macro_f1": 0.8035
         },
         "playback_type": {
-          "n": 27125,
-          "accuracy": 0.9074,
-          "macro_f1": 0.9073
+          "n": 34700,
+          "accuracy": 0.8949,
+          "macro_f1": 0.8996
         },
         "structure": {
-          "n": 27125,
-          "accuracy": 0.8784,
-          "macro_f1": 0.8717
+          "n": 34700,
+          "accuracy": 0.907,
+          "macro_f1": 0.8963
         },
         "explicitness": {
-          "n": 27125,
-          "accuracy": 0.9862,
-          "macro_f1": 0.8246
-        },
-        "mood": {
-          "n": 1020,
-          "accuracy": 0.0902,
-          "macro_f1": 0.0161
-        },
-        "era": {
-          "n": 184,
-          "accuracy": 0.0978,
-          "macro_f1": 0.0647
+          "n": 34700,
+          "accuracy": 0.9886,
+          "macro_f1": 0.8206
         },
         "content_form_genres": {
-          "macro_f1": 0.6861,
-          "labelled_rows": 2492
+          "macro_f1": 0.7378,
+          "labelled_rows": 2366
         },
-        "content_genre": {
-          "macro_f1": 0.0004,
-          "labelled_rows": 3422
+        "tags": {
+          "macro_f1": 0.5472,
+          "labelled_rows": 4539,
+          "label_space_size": 80
         },
         "qualifiers": {
           "macro_f1": 0.7457,
-          "labelled_rows": 840
+          "labelled_rows": 1300
         }
       },
       "content_filter": {
-        "adult_rows": 727,
-        "adult_blocked": 356,
-        "recall": 0.4897,
-        "hentai_rows": 187,
-        "hentai_blocked": 81,
-        "hentai_recall": 0.4332,
-        "non_adult_rows": 26398,
-        "non_adult_blocked": 2,
+        "adult_rows": 756,
+        "adult_blocked": 364,
+        "recall": 0.4815,
+        "hentai_rows": 298,
+        "hentai_blocked": 152,
+        "hentai_recall": 0.5101,
+        "non_adult_rows": 33944,
+        "non_adult_blocked": 5,
         "false_block_rate": 0.0001
       },
-      "latency_ms_median": 0.18234,
-      "latency_ms_p95": 0.20905,
-      "model_bytes": 66929,
+      "latency_ms_median": 0.21086,
+      "latency_ms_p95": 0.25027,
+      "model_bytes": 180573,
       "status": "available"
     },
     "learned-context+NER": {
       "axes": {
         "domain": {
-          "n": 27125,
-          "accuracy": 0.9892,
-          "macro_f1": 0.4973
+          "n": 34700,
+          "accuracy": 0.9862,
+          "macro_f1": 0.4965
         },
         "media_type": {
-          "n": 27125,
-          "accuracy": 0.9847,
-          "macro_f1": 0.9817
+          "n": 34700,
+          "accuracy": 0.9638,
+          "macro_f1": 0.9642
         },
         "playback_type": {
-          "n": 27125,
-          "accuracy": 0.9909,
-          "macro_f1": 0.9905
+          "n": 34700,
+          "accuracy": 0.9877,
+          "macro_f1": 0.9865
         },
         "structure": {
-          "n": 27125,
-          "accuracy": 0.9945,
-          "macro_f1": 0.9908
+          "n": 34700,
+          "accuracy": 0.9903,
+          "macro_f1": 0.9853
         },
         "explicitness": {
-          "n": 27125,
-          "accuracy": 0.9976,
-          "macro_f1": 0.9757
-        },
-        "mood": {
-          "n": 1020,
-          "accuracy": 0.0794,
-          "macro_f1": 0.0298
-        },
-        "era": {
-          "n": 184,
-          "accuracy": 0.0978,
-          "macro_f1": 0.0725
+          "n": 34700,
+          "accuracy": 0.9973,
+          "macro_f1": 0.968
         },
         "content_form_genres": {
-          "macro_f1": 0.9823,
-          "labelled_rows": 2492
+          "macro_f1": 0.9746,
+          "labelled_rows": 2366
         },
-        "content_genre": {
-          "macro_f1": 0.0004,
-          "labelled_rows": 3422
+        "tags": {
+          "macro_f1": 0.581,
+          "labelled_rows": 4539,
+          "label_space_size": 80
         },
         "qualifiers": {
-          "macro_f1": 0.9185,
-          "labelled_rows": 840
+          "macro_f1": 0.9056,
+          "labelled_rows": 1300
         }
       },
       "content_filter": {
-        "adult_rows": 727,
-        "adult_blocked": 663,
-        "recall": 0.912,
-        "hentai_rows": 187,
-        "hentai_blocked": 183,
-        "hentai_recall": 0.9786,
-        "non_adult_rows": 26398,
-        "non_adult_blocked": 2,
-        "false_block_rate": 0.0001
+        "adult_rows": 756,
+        "adult_blocked": 697,
+        "recall": 0.922,
+        "hentai_rows": 298,
+        "hentai_blocked": 279,
+        "hentai_recall": 0.9362,
+        "non_adult_rows": 33944,
+        "non_adult_blocked": 34,
+        "false_block_rate": 0.001
       },
-      "latency_ms_median": 0.18525,
-      "latency_ms_p95": 0.21451,
-      "model_bytes": 158111,
+      "latency_ms_median": 0.21443,
+      "latency_ms_p95": 0.25916,
+      "model_bytes": 295484,
       "status": "available"
     }
   }

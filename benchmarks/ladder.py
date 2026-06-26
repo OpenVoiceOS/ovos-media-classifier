@@ -9,9 +9,8 @@ Evaluates the three rungs the project builds toward, on the real
 
 and reports **every axis the multi-task heads predict**:
 
-  accuracy        domain · media_type · playback_type · structure ·
-                  explicitness · mood · era
-  macro-F1        content_form_genres · content_genre · qualifiers   (multi-label)
+  accuracy        domain · media_type · playback_type · structure · explicitness
+  macro-F1        content_form_genres · tags (genre:/mood:/era:) · qualifiers
   content filter  adult / hentai recall from the content_form_genres axis
 
 The headline is the lift from rules → context-only → +NER across these axes.
@@ -61,14 +60,20 @@ SINGLE_AXES = [
     ("playback_type", "playback_type"),
     ("structure", "structure"),
     ("explicitness", "explicitness"),
-    ("mood", "mood"),
-    ("era", "decade"),
 ]
 MULTI_AXES = [
     ("content_form_genres", "content_form_genres"),
-    ("content_genre", "content_genre"),
+    # the namespaced descriptive axis — genre/mood/era folded into one head
+    ("tags", "tags"),
     ("qualifiers", "qualifiers"),
 ]
+
+# Capped (open-vocabulary) multi-label heads model only their top-K labels, so a
+# fair macro-F1 is computed over **that modelled label space**, not over the
+# thousands of distinct (mostly un-modelled, junk-tail) values present in the raw
+# truth column.  Scoring uses the bundle's own label set (recorded in meta.json),
+# applied uniformly across rungs so the comparison stays apples-to-apples.
+CAPPED_MULTI_AXES = {"tags"}
 
 
 # ---------------------------------------------------------------------------
@@ -161,10 +166,8 @@ def _collect_rules(df: pd.DataFrame) -> Dict[str, object]:
         t0 = time.perf_counter()
         full = clf.classify_full(sent, lang)
         cform = clf.classify_content_form_genres(sent, lang)
-        cgen = clf.classify_content_genres(sent, lang)
+        tags = clf.classify_tags(sent, lang)
         quals = clf.classify_qualifiers(sent, lang)
-        mood = clf.classify_mood(sent, lang)
-        era = clf.classify_era(sent, lang)
         expl = clf.classify_explicitness(sent, lang)
         lat.append((time.perf_counter() - t0) * 1000.0)
         pred["domain"].append(full.domain.value)
@@ -172,13 +175,11 @@ def _collect_rules(df: pd.DataFrame) -> Dict[str, object]:
         pred["playback_type"].append(full.playback_type.value)
         pred["structure"].append(full.structure.value)
         pred["explicitness"].append(expl)
-        pred["mood"].append(mood or "")
-        pred["era"].append(era or "")
         multi["content_form_genres"].append(cform)
-        multi["content_genre"].append(cgen)
+        multi["tags"].append(tags)
         multi["qualifiers"].append(quals)
     return {"pred": pred, "multi": multi, "lat": lat,
-            "model_bytes": 0, "status": "available"}
+            "model_bytes": 0, "status": "available", "label_space": {}}
 
 
 def _collect_onnx(df: pd.DataFrame, bundle_dir: str) -> Dict[str, object]:
@@ -231,10 +232,8 @@ def _collect_onnx(df: pd.DataFrame, bundle_dir: str) -> Dict[str, object]:
         pb = _single("playback_type") or "unknown"
         st = _single("structure") or "unknown"
         expl = _single("explicitness") or "clean"
-        mood = _single("mood") or ""
-        era = _single("era") or ""
         cform = _multi("content_form_genres")
-        cgen = _multi("content_genre")
+        tags = _multi("tags")
         quals = _multi("qualifiers")
         lat.append((time.perf_counter() - t0) * 1000.0)
         pred["domain"].append(domain)
@@ -242,16 +241,18 @@ def _collect_onnx(df: pd.DataFrame, bundle_dir: str) -> Dict[str, object]:
         pred["playback_type"].append(pb)
         pred["structure"].append(st)
         pred["explicitness"].append(expl)
-        pred["mood"].append(mood)
-        pred["era"].append(era)
         multi["content_form_genres"].append(cform)
-        multi["content_genre"].append(cgen)
+        multi["tags"].append(tags)
         multi["qualifiers"].append(quals)
 
     size = sum(os.path.getsize(os.path.join(bundle_dir, f))
                for f in os.listdir(bundle_dir))
+    # the modelled label space for each capped multi-label head (for fair scoring)
+    label_space = {axis: set(clf._heads[axis]["labels"].values())
+                   for axis in CAPPED_MULTI_AXES if axis in clf._heads}
     return {"pred": pred, "multi": multi, "lat": lat,
-            "model_bytes": size, "status": "available"}
+            "model_bytes": size, "status": "available",
+            "label_space": label_space}
 
 
 # ---------------------------------------------------------------------------
@@ -272,13 +273,21 @@ def _score_collected(df: pd.DataFrame, c: Dict[str, object]) -> Dict[str, object
         axes[axis] = {"n": len(pairs),
                       "accuracy": round(_accuracy(list(t2), list(p2)), 4),
                       "macro_f1": round(_macro_f1_single(list(t2), list(p2)), 4)}
+    label_space = c.get("label_space", {})
     for axis, col in MULTI_AXES:
         truths = [_json_list(v) for v in df[col]]
         preds = c["multi"][axis]
+        space = label_space.get(axis)
+        if axis in CAPPED_MULTI_AXES and space:
+            # score only over the head's modelled label space (the in-scope task)
+            truths = [[g for g in row if g in space] for row in truths]
+            preds = [[g for g in row if g in space] for row in preds]
         axes[axis] = {
             "macro_f1": round(_multilabel_macro_f1(truths, preds), 4),
             "labelled_rows": sum(1 for t in truths if t),
         }
+        if axis in CAPPED_MULTI_AXES:
+            axes[axis]["label_space_size"] = len(space) if space else None
     lat = c["lat"]
     return {
         "axes": axes,
@@ -338,26 +347,46 @@ RUNGS = [
 
 def run(data_dir: str, models_dir: str, limit: int = 0) -> Dict[str, object]:
     df = load_test(data_dir, limit=limit)
-    rungs: Dict[str, object] = {}
+
+    # Collect raw predictions first so the capped multi-label label space (from a
+    # trained bundle's meta) can be shared with the rules rung for a fair,
+    # apples-to-apples macro-F1 on the in-scope task (see CAPPED_MULTI_AXES).
+    collected: Dict[str, Dict[str, object]] = {}
     for name, fs in RUNGS:
         if fs is None:
             print(f"[{name}] rules backend on {len(df):,} rows …")
-            rungs[name] = _score_collected(df, _collect_rules(df))
+            collected[name] = _collect_rules(df)
             continue
         bundle = os.path.join(models_dir, fs)
         if not os.path.isfile(os.path.join(bundle, "meta.json")):
-            rungs[name] = {"status": "unavailable",
-                           "reason": f"no bundle at {bundle}; "
-                                     f"run python -m training.train_sklearn"}
+            collected[name] = {"status": "unavailable",
+                               "reason": f"no bundle at {bundle}; "
+                                         f"run python -m training.train_sklearn"}
             print(f"[{name}] unavailable (no bundle)")
             continue
         print(f"[{name}] ONNX bundle {bundle} on {len(df):,} rows …")
         try:
-            rungs[name] = _score_collected(df, _collect_onnx(df, bundle))
+            collected[name] = _collect_onnx(df, bundle)
         except Exception as e:  # noqa: BLE001
-            rungs[name] = {"status": "unavailable",
-                           "reason": f"{type(e).__name__}: {e}"}
+            collected[name] = {"status": "unavailable",
+                               "reason": f"{type(e).__name__}: {e}"}
             print(f"  failed: {e}")
+
+    shared_space: Dict[str, set] = {}
+    for c in collected.values():
+        for axis, sp in (c.get("label_space") or {}).items():
+            if sp and len(sp) > len(shared_space.get(axis, set())):
+                shared_space[axis] = sp
+
+    rungs: Dict[str, object] = {}
+    for name, c in collected.items():
+        if c.get("status") == "unavailable":
+            rungs[name] = c
+            continue
+        c.setdefault("label_space", {})
+        for axis, sp in shared_space.items():
+            c["label_space"].setdefault(axis, sp)
+        rungs[name] = _score_collected(df, c)
     return {"n_test_rows": len(df), "data_dir": data_dir,
             "models_dir": models_dir, "rungs": rungs}
 

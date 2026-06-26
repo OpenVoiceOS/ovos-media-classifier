@@ -21,9 +21,9 @@ does (so partial bundles — and old 2-head ``domain``/``play`` bundles — load
       ├── playback_type.onnx       # audio / video / paged / interactive
       ├── structure.onnx           # single / episodic / continuous / collection
       ├── content_form_genres.onnx # MULTI-LABEL adult/anime/animation/asmr  ← content filter
-      ├── content_genre.onnx       # MULTI-LABEL rock/jazz/action/…
+      ├── tags.onnx                # MULTI-LABEL genre:rock/mood:chill/era:1980s
       ├── qualifiers.onnx          # MULTI-LABEL black_and_white/silent/live/…
-      ├── mood.onnx / era.onnx / explicitness.onnx   # (when trained)
+      ├── explicitness.onnx        # clean / adult  (when trained)
       ├── play.onnx                # back-compat alias of the media_type head
       └── meta.json
 
@@ -57,10 +57,11 @@ does (so partial bundles — and old 2-head ``domain``/``play`` bundles — load
   ``LABEL_TO_MEDIA_TYPE`` / ``LABEL_TO_GENRES``.
 
 Per-axis methods (``classify`` / ``classify_domain`` / ``classify_genres`` /
-``classify_content_form_genres`` / ``classify_content_genres`` /
-``classify_playback_type`` / ``classify_structure`` / ``classify_mood`` /
-``classify_era`` / ``classify_qualifiers``) each use their head when the bundle
-carries it, else fall back to the inherited derive/empty default — so a backend
+``classify_content_form_genres`` / ``classify_tags`` / ``classify_content_genres``
+(the ``genre:`` slice) / ``classify_playback_type`` / ``classify_structure`` /
+``classify_mood`` / ``classify_era`` / ``classify_qualifiers``) each use their
+head when the bundle carries it, else fall back to the inherited derive/empty
+default — so a backend
 can **soft-gate**: trust an axis head even when the leaf is uncertain (the whole
 point of the multi-task design, and what makes content-filter blocking robust —
 ``content_form_genres`` can flag ``adult`` independently of the leaf).
@@ -483,12 +484,23 @@ class OnnxMediaClassifier(AbstractMediaClassifier):
         label, _, _ = self._play_label(query, lang)
         return list(LABEL_TO_GENRES.get(label, []))
 
-    def classify_content_genres(self, query: str, lang: str) -> List[str]:
-        """The real genre(s) (rock/jazz/action/…) from the ``content_genre`` head."""
-        if self._has_head("content_genre"):
-            out = self._multi_head("content_genre", query, lang)
+    def classify_tags(self, query: str, lang: str) -> List[str]:
+        """The namespaced descriptive tags (``genre:`` / ``mood:`` / ``era:``).
+
+        Prefers the dedicated multi-label ``tags`` head (genre/mood/era folded
+        into one); falls back to the base derivation from the legacy per-axis
+        helpers when the bundle carries no ``tags`` head.
+        """
+        if self._has_head("tags"):
+            out = self._multi_head("tags", query, lang)
             if out is not None:
                 return out
+        return super().classify_tags(query, lang)
+
+    def classify_content_genres(self, query: str, lang: str) -> List[str]:
+        """The real genre(s) (rock/jazz/action/…) — the ``genre:`` slice of tags."""
+        if self._has_head("tags"):
+            return self.tags_namespace(self.classify_tags(query, lang), "genre")
         return []
 
     def classify_qualifiers(self, query: str, lang: str) -> List[str]:
@@ -522,17 +534,17 @@ class OnnxMediaClassifier(AbstractMediaClassifier):
         return super().classify_structure(query, lang)
 
     def classify_mood(self, query: str, lang: str) -> Optional[str]:
-        """Mood / activity from the ``mood`` head (``None`` when absent/empty)."""
-        res = self._single_head("mood", query, lang)
-        if res is not None and res[0]:
-            return res[0]
+        """Mood / activity — the ``mood:`` slice of the ``tags`` head (first value)."""
+        if self._has_head("tags"):
+            vals = self.tags_namespace(self.classify_tags(query, lang), "mood")
+            return vals[0] if vals else None
         return None
 
     def classify_era(self, query: str, lang: str) -> Optional[str]:
-        """Release era / decade from the ``era`` head (``None`` when absent)."""
-        res = self._single_head("era", query, lang)
-        if res is not None and res[0]:
-            return res[0]
+        """Release era / decade — the ``era:`` slice of the ``tags`` head."""
+        if self._has_head("tags"):
+            vals = self.tags_namespace(self.classify_tags(query, lang), "era")
+            return vals[0] if vals else None
         return None
 
     def classify_explicitness(self, query: str, lang: str) -> str:

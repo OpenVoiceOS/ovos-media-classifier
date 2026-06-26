@@ -3,21 +3,42 @@
 <lead_watch> the film {movie_title}
 <lead_watch> a {movie_genre} movie
 <lead_watch> a {movie_genre} film
+<lead_watch> some {movie_genre} movie
+<lead_watch> an old {movie_genre} movie
+<lead_watch> a classic {movie_genre} movie
+<lead_watch> a good {movie_genre} film
 <lead_watch> something with {movie_actor}
 <lead_watch> a movie with {movie_actor}
 <lead_watch> a film starring {movie_actor}
+<lead_watch> anything with {movie_actor}
 <lead_watch> a movie directed by {movie_director}
 <lead_watch> a film by {movie_director}
 <lead_watch> a movie produced by {movie_producer}
-<lead_watch> {movie_title} with {movie_actor}
-<lead_watch> an old {movie_genre} movie
-<lead_watch> a classic {movie_genre} movie
-<lead_watch> {movie_title} starring {movie_actor}
-<lead_watch> {movie_title} directed by {movie_director}
-<lead_watch> a film produced by {movie_producer}
 <lead_watch> a movie written by {movie_writer}
 <lead_watch> a film written by {movie_writer}
 <lead_watch> a movie scored by {movie_composer}
+<lead_watch> a film with music by {movie_composer}
+<lead_watch> {movie_title} with {movie_actor}
+<lead_watch> {movie_title} starring {movie_actor}
+<lead_watch> {movie_title} directed by {movie_director}
 <lead_watch> the film {movie_title} by {movie_director}
 <lead_watch> a {movie_genre} film with {movie_actor}
-<lead_watch> a film with music by {movie_composer}
+<lead_watch> a {movie_genre} movie directed by {movie_director}
+<lead_watch> a {movie_genre} film by {movie_director}
+<lead_watch> a movie with {movie_actor} directed by {movie_director}
+<lead_watch> a film starring {movie_actor} and {movie_director}
+<lead_watch> a {movie_genre} movie from {release_year}
+<lead_watch> a {movie_genre} film from {media_country}
+<lead_watch> a {movie_genre} film directed by {movie_director} starring {movie_actor}
+<lead_watch> {movie_title} directed by {movie_director} starring {movie_actor}
+<lead_watch> a {movie_genre} movie with {movie_actor} from {release_year}
+<lead_watch> a movie directed by {movie_director} written by {movie_writer} starring {movie_actor}
+<lead_watch> a {movie_genre} film from {media_country} starring {movie_actor}
+<lead_watch> {movie_title} directed by {movie_director} starring {movie_actor}, a {movie_genre} film
+<lead_watch> a {movie_genre} film directed by {movie_director} starring {movie_actor} from {release_year}
+<lead_watch> {movie_title} directed by {movie_director} starring {movie_actor}, a {movie_genre} film from {release_year}
+<lead_watch> do you have any {movie_genre} movies
+<lead_watch> got a good {movie_genre} film
+<lead_watch> do you have anything with {movie_actor}
+<lead_watch> something {movie_genre} for movie night
+<lead_watch> a {movie_genre} movie to watch with the kids

@@ -13,3 +13,13 @@
 <lead_play_audio> sleep sounds
 <lead_play_audio> some ambient music
 <lead_play_audio> some ambient noise
+<lead_play_audio> the sound of {ambient_sound}
+<lead_play_audio> a {ambient_sound} soundscape
+<lead_play_audio> a loop of {ambient_sound}
+<lead_play_audio> gentle {ambient_sound}
+<lead_play_audio> some {ambient_sound} for sleep
+<lead_play_audio> calming {ambient_sound}
+<lead_play_audio> do you have any {ambient_sound}
+<lead_play_audio> got some {ambient_sound} sounds
+<lead_play_audio> some {ambient_sound} to help me sleep
+<lead_play_audio> {ambient_sound} while i work

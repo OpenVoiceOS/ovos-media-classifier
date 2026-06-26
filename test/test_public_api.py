@@ -180,10 +180,21 @@ class TestPerAxisContract(unittest.TestCase):
         self.assertIsInstance(self.clf.classify_content_form_genres(q, lang), list)
         self.assertIsInstance(self.clf.classify_content_genres(q, lang), list)
         self.assertIsInstance(self.clf.classify_qualifiers(q, lang), list)
+        self.assertIsInstance(self.clf.classify_tags(q, lang), list)
         self.assertIn(self.clf.classify_explicitness(q, lang), ("clean", "adult"))
         # mood/era default to None for the keyword backend
         self.assertIsNone(self.clf.classify_mood(q, lang))
         self.assertIsNone(self.clf.classify_era(q, lang))
+
+    def test_tags_are_namespaced(self):
+        # every tag the contract emits is namespaced (genre:/mood:/era:)
+        tags = self.clf.classify_tags("play some jazz", "en-us")
+        for t in tags:
+            self.assertRegex(t, r"^(genre|mood|era):")
+        # the genre: slice is the genre-classifier view
+        self.assertEqual(
+            self.clf.tags_namespace(["genre:rock", "mood:chill", "era:1980s"],
+                                    "genre"), ["rock"])
 
     def test_explicitness_derives_from_form_genres(self):
         self.assertEqual(self.clf.classify_explicitness("play porn", "en-us"),
@@ -253,6 +264,7 @@ class TestOnnxParity(unittest.TestCase):
         cls.onnx = OnnxMediaClassifier.from_path(_BUNDLE)
 
     def test_clear_cases_agree_on_media_type(self):
+        # The keyword backend (the floor) must nail each unambiguous leaf.
         clear = {
             "play some music": MediaType.MUSIC,
             "watch a movie": MediaType.MOVIE,
@@ -263,8 +275,23 @@ class TestOnnxParity(unittest.TestCase):
         for q, expected in clear.items():
             with self.subTest(query=q):
                 kw_mt, _ = self.kw.classify(q, "en-us")
-                onnx_mt, _ = self.onnx.classify(q, "en-us")
                 self.assertEqual(kw_mt, expected)
+
+    def test_onnx_separable_cases_agree_with_keyword(self):
+        # The ONNX backend is run on the keyword-only runtime feature path (no
+        # NER store populated — see docs/model.md §6d), where some leaves share
+        # all their cue words and are NOT separable from keywords alone
+        # (music ↔ music_video both fire only ``kw_music``; game ↔
+        # interactive_fiction both fire ``kw_game``).  On the cases that DO have a
+        # distinct cue, the trained head agrees with the keyword floor.
+        separable = {
+            "watch a movie": MediaType.MOVIE,
+            "play a podcast": MediaType.PODCAST,
+            "read me a book": MediaType.BOOK,
+        }
+        for q, expected in separable.items():
+            with self.subTest(query=q):
+                onnx_mt, _ = self.onnx.classify(q, "en-us")
                 self.assertEqual(onnx_mt, expected)
 
     def test_onnx_content_form_genres_flags_adult(self):

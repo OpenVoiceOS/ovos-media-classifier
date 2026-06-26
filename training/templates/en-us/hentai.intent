@@ -1,7 +1,6 @@
 <lead_watch> some hentai
 [hey|ok|please] <lead_watch> some hentai [please|for me|right now|thanks]
 <lead_watch> an adult anime
-[hey|ok|please] <lead_watch> an adult anime [please|for me|right now|thanks]
 <lead_watch> nsfw anime
 [hey|ok|please] <lead_watch> nsfw anime [please|for me|right now|thanks]
 <lead_watch> a hentai episode
@@ -14,6 +13,25 @@
 [hey|ok|please] <lead_watch> an uncensored hentai [please|for me|right now|thanks]
 <lead_watch> hentai on {adult_streaming_service}
 [hey|ok|please] <lead_watch> hentai on {adult_streaming_service} [please|for me|right now|thanks]
+<lead_watch> more hentai
+[hey|ok|please] <lead_watch> more hentai [please|for me|right now|thanks]
+<lead_watch> an ecchi anime
+[hey|ok|please] <lead_watch> an ecchi anime [please|for me|right now|thanks]
+<lead_watch> a lewd anime
+[hey|ok|please] <lead_watch> a lewd anime [please|for me|right now|thanks]
+<lead_watch> an adult animated series
+[hey|ok|please] <lead_watch> an adult animated series [please|for me|right now|thanks]
+<lead_watch> an x-rated anime
+[hey|ok|please] <lead_watch> an x-rated anime [please|for me|right now|thanks]
+<lead_watch> some uncensored hentai
+[hey|ok|please] <lead_watch> some uncensored hentai [please|for me|right now|thanks]
+<lead_watch> a hentai series
+[hey|ok|please] <lead_watch> a hentai series [please|for me|right now|thanks]
+<lead_watch> an explicit hentai
+[hey|ok|please] <lead_watch> an explicit hentai [please|for me|right now|thanks]
+<lead_watch> an adult cartoon
+<lead_watch> a mature anime
+[hey|ok|please] <lead_watch> a mature anime [please|for me|right now|thanks]
 <lead_watch> {hentai_title}
 [hey|ok|please] <lead_watch> {hentai_title} [please|for me|right now|thanks]
 <lead_watch> the hentai {hentai_title}
@@ -30,3 +48,11 @@
 [hey|ok|please] <lead_watch> adult anime {hentai_title} [please|for me|right now|thanks]
 <lead_watch> {hentai_title} on {adult_streaming_service}
 [hey|ok|please] <lead_watch> {hentai_title} on {adult_streaming_service} [please|for me|right now|thanks]
+<lead_watch> the {hentai_studio} hentai {hentai_title}
+[hey|ok|please] <lead_watch> the {hentai_studio} hentai {hentai_title} [please|for me|right now|thanks]
+<lead_watch> more {hentai_title}
+[hey|ok|please] <lead_watch> more {hentai_title} [please|for me|right now|thanks]
+<lead_watch> another episode of {hentai_title}
+[hey|ok|please] <lead_watch> another episode of {hentai_title} [please|for me|right now|thanks]
+<lead_watch> a hentai by {hentai_studio}
+[hey|ok|please] <lead_watch> a hentai by {hentai_studio} [please|for me|right now|thanks]

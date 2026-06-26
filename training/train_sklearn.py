@@ -13,9 +13,10 @@ backend predicts each axis directly (and can soft-gate — trust an axis head ev
 when the leaf is uncertain) instead of deriving everything from the leaf:
 
   single-label heads   domain · media_type · playback_type · structure ·
-                       mood · era (decade) · explicitness
+                       explicitness · control_intent
   multi-label  heads   content_form_genres (adult/anime/animation/asmr — the
-                       content-filter axis) · content_genre (rock/jazz/action/…) ·
+                       content-filter axis) · tags (namespaced genre:/mood:/era:
+                       — genre/mood/era folded into one head) ·
                        qualifiers (black_and_white/silent/live/subtitled/…)
 
 A head is **skipped** when its column is degenerate (a single class) on the
@@ -64,22 +65,28 @@ from ovos_media_classifier.constants import (
     DEFAULT_DOMAIN_THRESHOLD,
     DEFAULT_PLAY_THRESHOLD,
 )
-from ovos_media_classifier.features import _KEYWORD_VOCABS
+from ovos_media_classifier.features import _KEYWORD_VOCABS, VALUE_FEATURE_COLS
 from ovos_media_classifier.intents import OCPDomain
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 REPO_ROOT = os.path.dirname(_HERE)
 
 # Keyword (context) feature columns — the order the runtime extractor uses.
-KEYWORD_COLS: List[str] = [col for _voc, col in _KEYWORD_VOCABS]
+# Plain .voc presence flags + the per-value genre/mood/era flags so the
+# content_genre / mood / era heads can learn *which* value was named.
+KEYWORD_COLS: List[str] = ([col for _voc, col in _KEYWORD_VOCABS]
+                           + list(VALUE_FEATURE_COLS))
 
 FEATURE_SETS = ("context", "context_ner")
 
 # Default per-label threshold for the multi-label (sigmoid) heads.
 DEFAULT_MULTILABEL_THRESHOLD = 0.5
-# Cap the open-vocabulary content_genre head to its most frequent labels so it
-# stays a tractable multi-label problem (the long tail collapses to "no genre").
+# Cap the open-vocabulary descriptive heads to their most frequent labels so they
+# stay a tractable multi-label problem (the long tail collapses to "no tag").  The
+# ``tags`` head carries the namespaced genre/mood/era values, so it gets a larger
+# cap than the old standalone content_genre head did.
 CONTENT_GENRE_TOP_K = 40
+TAGS_TOP_K = 80
 
 
 # ---------------------------------------------------------------------------
@@ -99,12 +106,13 @@ HEAD_SPECS: List[Tuple[str, str, str]] = [
     ("media_type", "media_type", "single"),
     ("playback_type", "playback_type", "single"),
     ("structure", "structure", "single"),
-    ("mood", "mood", "single"),
-    ("era", "decade", "single"),          # decade = the trainable era bucket
     ("explicitness", "explicitness", "single"),
     ("control_intent", "control_intent", "single"),
     ("content_form_genres", "content_form_genres", "multi"),
-    ("content_genre", "content_genre", "multi"),
+    # the namespaced descriptive axis — genre/mood/era folded into ONE multi-label
+    # head (``genre:rock`` / ``mood:chill`` / ``era:1980s``).  The standalone
+    # mood / era / content_genre heads were demoted to this single tags head.
+    ("tags", "tags", "multi"),
     ("qualifiers", "qualifiers", "multi"),
 ]
 
@@ -365,6 +373,12 @@ def export_bundle(out_dir, feature_names, feature_set, heads, extra_meta):
     os.makedirs(out_dir, exist_ok=True)
     n = len(feature_names)
 
+    # Clear any stale head .onnx files from a previous run so the bundle dir only
+    # ever contains the heads this run trained (a demoted head must not linger).
+    for fn in os.listdir(out_dir):
+        if fn.endswith(".onnx"):
+            os.remove(os.path.join(out_dir, fn))
+
     head_meta: Dict[str, dict] = {}
     for axis, info in heads.items():
         if info.get("status") == "skipped" or "model" not in info:
@@ -450,7 +464,8 @@ def train(data_dir, out_dir, seed=42):
             if kind == "single":
                 info = train_single_head(axis, column, train_df, val_df, cols)
             else:
-                top_k = CONTENT_GENRE_TOP_K if axis == "content_genre" else None
+                top_k = {"content_genre": CONTENT_GENRE_TOP_K,
+                         "tags": TAGS_TOP_K}.get(axis)
                 info = train_multi_head(axis, column, train_df, val_df, cols,
                                         top_k=top_k)
             heads[axis] = info
