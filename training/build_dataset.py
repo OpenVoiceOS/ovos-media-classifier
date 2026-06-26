@@ -24,10 +24,11 @@ Everything downstream is deterministic for a fixed ``--seed`` (default 42).
 
 How to extend the set
 ---------------------
-* **More/translated templates** — edit ``training/templates/<lang>/<intent>.intent``
-  (and the shared ``vocab/<lang>/<Lead*>.voc`` lead-ins).  The user manages and
-  translates these through ovos-localize; ``build_dataset`` picks them up with no
-  code change.
+* **More/translated templates** — edit the translatable locale resources
+  ``ovos_media_classifier/locale/<lang>/dataset/<intent>.intent`` (and the shared
+  ``ovos_media_classifier/locale/<lang>/<lead_*>.voc`` lead-ins).  The user manages
+  and translates these through ovos-localize; ``build_dataset`` picks them up with
+  no code change.
 * **More entities** — re-run ``python -m training.ingest_entities`` to refresh
   ``data/entities/<label>.csv``, or drop curated values into
   ``training/seed_entities/<label>.csv``.
@@ -47,7 +48,7 @@ from typing import Dict, List, Optional, Sequence, Tuple
 
 import pandas as pd
 
-from ovos_spec_tools import expand
+from ovos_spec_tools import expand, find_lang_dir
 
 from mediavocab import MediaType, infer_playback_type
 from ovos_media_classifier.axes import infer_structure
@@ -63,14 +64,25 @@ from ovos_media_classifier.features import (
 )
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
-TEMPLATES_DIR = os.path.join(_HERE, "templates")
+# Templates + lead-in vocabularies are translatable locale resources, resolved
+# from the package ``locale/`` the same way the runtime keyword classifier reads
+# its ``.voc`` files (ovos-localize translates them).  Per language:
+#   locale/<lang>/dataset/<intent>.intent   one file per media label (templates)
+#   locale/<lang>/<lead_*>.voc              shared lead-in vocabularies
+# The ``dataset/`` subdir namespaces the dataset templates away from the runtime
+# OCP control intents (play.intent, featured.intent …) that live at the locale
+# root; ``ovos_spec_tools`` resolves resources recursively under ``<lang>/``.
+LOCALE_DIR = os.path.join(
+    os.path.dirname(_HERE), "ovos_media_classifier", "locale")
+DATASET_TEMPLATE_SUBDIR = "dataset"
 SEED_ENTITIES_DIR = os.path.join(_HERE, "seed_entities")
 DEFAULT_ENTITIES_DIR = os.path.join(os.path.dirname(_HERE), "data", "entities")
 DEFAULT_RELATIONAL_DIR = os.path.join(os.path.dirname(_HERE), "data", "relational")
 
 csv.field_size_limit(min(sys.maxsize, 2 ** 31 - 1))
 
-# Languages with authored lead-in vocabularies (see author_templates.LEADINS).
+# Languages with authored lead-in vocabularies + dataset templates under
+# ``ovos_media_classifier/locale/<lang>/``.
 CORE_LANGS = ["en-us", "pt-pt", "es-es", "fr-fr", "de-de", "it-it", "nl-nl"]
 
 # The full set of OCPEntityLabel string values (for the NER-by-construction
@@ -276,34 +288,45 @@ def load_vote_weights(entities_dir: str) -> Dict[str, float]:
 
 
 def load_leadin_vocabs(lang: str) -> Dict[str, Sequence[str]]:
-    """Load the shared lead-in ``.voc`` members for ``expand()``."""
+    """Load the shared lead-in ``.voc`` members for ``expand()``.
+
+    The lead-in vocabularies (``lead_play_audio``, ``lead_watch`` …) are
+    translatable locale resources at ``locale/<lang>/<lead_*>.voc``, resolved
+    language-aware via :func:`ovos_spec_tools.find_lang_dir` (so ``en`` finds
+    an ``en-us/`` tree, etc.).
+    """
     vocs: Dict[str, Sequence[str]] = {}
-    voc_dir = os.path.join(TEMPLATES_DIR, "vocab", lang)
-    if not os.path.isdir(voc_dir):
+    lang_dir = find_lang_dir(LOCALE_DIR, lang)
+    if lang_dir is None:
         return vocs
-    for fn in os.listdir(voc_dir):
-        if not fn.endswith(".voc"):
-            continue
-        with open(os.path.join(voc_dir, fn), encoding="utf-8") as fh:
-            members = [ln.strip() for ln in fh if ln.strip()]
+    for path in sorted(lang_dir.glob("lead_*.voc")):
+        members = [ln.strip() for ln in path.read_text(encoding="utf-8").splitlines()
+                   if ln.strip()]
         if members:
-            vocs[fn[:-4]] = members
+            vocs[path.stem] = members
     return vocs
 
 
 def load_intent_templates(lang: str) -> Dict[str, List[str]]:
-    """Return ``{intent: [template lines]}`` for a language."""
-    lang_dir = os.path.join(TEMPLATES_DIR, lang)
+    """Return ``{intent: [template lines]}`` for a language.
+
+    The per-intent templates are translatable locale resources at
+    ``locale/<lang>/dataset/<intent>.intent``, resolved language-aware via
+    :func:`ovos_spec_tools.find_lang_dir`.  The ``dataset/`` subdir namespaces
+    them away from the runtime OCP control intents at the locale root.
+    """
     out: Dict[str, List[str]] = {}
-    if not os.path.isdir(lang_dir):
+    lang_dir = find_lang_dir(LOCALE_DIR, lang)
+    if lang_dir is None:
         return out
-    for fn in sorted(os.listdir(lang_dir)):
-        if not fn.endswith(".intent"):
-            continue
-        with open(os.path.join(lang_dir, fn), encoding="utf-8") as fh:
-            lines = [ln.strip() for ln in fh if ln.strip()]
+    template_dir = lang_dir / DATASET_TEMPLATE_SUBDIR
+    if not template_dir.is_dir():
+        return out
+    for path in sorted(template_dir.glob("*.intent")):
+        lines = [ln.strip() for ln in path.read_text(encoding="utf-8").splitlines()
+                 if ln.strip()]
         if lines:
-            out[fn[:-len(".intent")]] = lines
+            out[path.stem] = lines
     return out
 
 

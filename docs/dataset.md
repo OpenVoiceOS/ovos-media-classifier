@@ -114,16 +114,26 @@ slot_values    : {"movie_title": "The Dark Knight"}
 template       : "<lead_play_audio> the soundtrack to {movie_title}"
 ```
 
-## Templates: `.intent` + `.voc`, managed via ovos-localize
+## Templates: `.intent` + `.voc` translatable locale resources
 
-Templates are **translatable OVOS-INTENT-1 files**, not a hard-coded list, so the
-user manages and translates them through ovos-localize:
+Templates are **hand-authored, translatable OVOS-INTENT-1 files** under the
+package `locale/`, not a hard-coded Python list — so ovos-localize discovers and
+translates them like any other locale resource, and the translations stick (no
+generator regenerates or overwrites them):
 
 ```
-training/templates/
-  vocab/<lang>/<lead_*>.voc       shared lead-ins (lead_play_audio, lead_watch, …)
-  <lang>/<intent>.intent          one file per media label
+ovos_media_classifier/locale/
+  <lang>/<lead_*>.voc             shared lead-ins (lead_play_audio, lead_watch, …)
+  <lang>/dataset/<intent>.intent  one file per media label
 ```
+
+The `dataset/` subdir keeps the dataset templates separate from the runtime OCP
+control intents (`play.intent`, `featured.intent`, …) at the locale root;
+`ovos_spec_tools` resolves resources recursively under `<lang>/`, so a
+`<lead_play_audio>` reference inside `dataset/music.intent` still expands from
+`<lang>/lead_play_audio.voc` in the parent language directory. `build_dataset`
+reads them via the `ovos_spec_tools` locale helpers (`find_lang_dir`), the same
+way the runtime keyword classifier resolves its `.voc` files.
 
 Each `.intent` line is expanded by `ovos_spec_tools.expand(template, vocabularies)`,
 which resolves:
@@ -179,11 +189,16 @@ The IMDb relations + the `_imdb_votes.csv` weight table are built by
 
 ### To add or translate templates
 
-* **New phrasings** — add lines to `training/templates/<lang>/<intent>.intent`.
-* **New language** — add `training/templates/<lang>/` with translated `.intent`
-  files and a `vocab/<lang>/` of translated lead-in `.voc` files.
-* **Regenerate the bundled English set** from the authoring source —
-  `python -m training.author_templates`.
+These files are the **source of truth** — edit them directly (or translate them
+through ovos-localize); nothing regenerates them.
+
+* **New phrasings** — add lines to
+  `ovos_media_classifier/locale/<lang>/dataset/<intent>.intent`. Optional
+  decorations are themselves translatable grammar, e.g.
+  `[hey|ok|please] <lead_play_audio> {artist_name} [please|for me]`.
+* **New language** — add `ovos_media_classifier/locale/<lang>/dataset/` with
+  translated `.intent` files and `ovos_media_classifier/locale/<lang>/<lead_*>.voc`
+  translated lead-in `.voc` files.
 
 `build_dataset` picks up any new files with no code change.
 
