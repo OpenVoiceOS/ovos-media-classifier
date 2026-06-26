@@ -28,6 +28,7 @@ crowded out.
 | `media-metadata-progarchives-artists` | `artist_name`, `music_genre` | Prog Archives |
 | `media-metadata-metal-archives` | `artist_name`, `music_genre`, `record_label` | Metal Archives |
 | `media-metadata-classical-composers` | `artist_name` | classical-composer catalogue |
+| `media-metadata-imdb-titles` | **primary title source** — split by `titleType`: `movie`/`tvMovie`→`movie_title`, `tvSeries`/`tvMiniSeries`→`tv_show_title`, `short`/`tvShort`→`short_film_title`, `videoGame`→`game_title`; `genres`→`content_genre` (+ `movie_genre`/`tv_genre`/`game_genre`), `startYear`→`release_year`/`release_decade`; `isAdult==1` routes to `adult_title` (never the clean pools) | IMDb |
 | `media-metadata-tvmaze-shows` | `tv_show_title`, `tv_genre`, `tv_network` | TVmaze |
 | `media-metadata-anilist-anime` | `anime_title`, `anime_studio` (the `is_adult` / Hentai subset → `hentai_title`/`hentai_studio`) | AniList |
 | `media-metadata-jikan-manga` | `comic_title`, `comic_genre` (manga is **read** → COMIC; the Hentai subset → `hentai_title`) | Jikan / MyAnimeList |
@@ -45,8 +46,16 @@ crowded out.
 | `movie_writers` | `movie_writer` | TigreGotico movie-role set |
 | `movie_composers` | `movie_composer` | TigreGotico movie-role set |
 
-The Wikidata `entity_type` split is what gives `movie_title` **real film titles**
-(rather than fabricated strings) — see `WIKIDATA_TYPE_TO_LABEL` in
+**IMDb** (`media-metadata-imdb-titles`) is the authoritative title source: it is
+far larger than the Wikidata split and carries the `titleType` distinction, so it
+fills `movie_title` / `tv_show_title` / `short_film_title` / `game_title` from the
+right rows and keeps `isAdult` titles out of the clean pools. It is listed first
+in `SOURCE_SPECS` so its values populate the (capped) pools ahead of the smaller
+Wikidata fallback. The `titleType`→slot map is `_IMDB_TYPE_TO_SLOT` in
+`training/ingest_entities.py`.
+
+The Wikidata `entity_type` split is the fallback for `movie_title` **real film
+titles** (rather than fabricated strings) — see `WIKIDATA_TYPE_TO_LABEL` in
 `training/ingest_entities.py` for the full type→label map.
 
 ### book vs audiobook vs comic (read vs play)
