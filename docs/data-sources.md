@@ -28,7 +28,11 @@ crowded out.
 | `media-metadata-progarchives-artists` | `artist_name`, `music_genre` | Prog Archives |
 | `media-metadata-metal-archives` | `artist_name`, `music_genre`, `record_label` | Metal Archives |
 | `media-metadata-classical-composers` | `artist_name` | classical-composer catalogue |
-| `media-metadata-imdb-titles` | **primary title source** — split by `titleType`: `movie`/`tvMovie`→`movie_title`, `tvSeries`/`tvMiniSeries`→`tv_show_title`, `short`/`tvShort`→`short_film_title`, `videoGame`→`game_title`; `genres`→`content_genre` (+ `movie_genre`/`tv_genre`/`game_genre`), `startYear`→`release_year`/`release_decade`; `isAdult==1` routes to `adult_title` (never the clean pools) | IMDb |
+| `media-metadata-imdb-titles` | **primary title source** — split by `titleType`: `movie`/`tvMovie`→`movie_title`, `tvSeries`/`tvMiniSeries`→`tv_show_title`, `short`/`tvShort`→`short_film_title`, `videoGame`→`game_title`; `genres`→`content_genre` (+ `movie_genre`/`tv_genre`/`game_genre`), `startYear`→`release_year`/`release_decade`; `isAdult==1` routes to `adult_title` (never the clean pools). Also the **join key** (`imdb_id`) for the relational IMDb sources below | IMDb |
+| `media-metadata-imdb-episodes` | joined (`series_id`→series title, episode `imdb_id`→episode title) into the `episodes` relation + `season_number`/`episode_number`/`episode_title` pools | IMDb |
+| `media-metadata-imdb-technical-specs` + `media-metadata-imdb-bw-silent` | joined to the real title → the `bw_movie_title` / `silent_movie_title` pools tagged `black_and_white` / `silent` (the `bw_silent` relation) | IMDb |
+| `media-metadata-imdb-ratings` | `num_votes` → **popularity-weighted** `movie_title` sampling (`_imdb_votes.csv`) | IMDb |
+| `media-metadata-imdb-crew` (+ `…-imdb-credits` / `…-imdb-names` when present) | the `--credits` hook: resolves `(movie, director, writer, actor)` coherently; absent today → person slots fill independently | IMDb |
 | `media-metadata-tvmaze-shows` | `tv_show_title`, `tv_genre`, `tv_network` | TVmaze |
 | `media-metadata-anilist-anime` | `anime_title`, `anime_studio` (the `is_adult` / Hentai subset → `hentai_title`/`hentai_studio`) | AniList |
 | `media-metadata-jikan-manga` | `comic_title`, `comic_genre` (manga is **read** → COMIC; the Hentai subset → `hentai_title`) | Jikan / MyAnimeList |

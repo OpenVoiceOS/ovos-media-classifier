@@ -373,6 +373,12 @@ def export_bundle(out_dir, feature_names, feature_set, heads, extra_meta):
     os.makedirs(out_dir, exist_ok=True)
     n = len(feature_names)
 
+    # Clear any stale head .onnx files from a previous run so the bundle dir only
+    # ever contains the heads this run trained (a demoted head must not linger).
+    for fn in os.listdir(out_dir):
+        if fn.endswith(".onnx"):
+            os.remove(os.path.join(out_dir, fn))
+
     head_meta: Dict[str, dict] = {}
     for axis, info in heads.items():
         if info.get("status") == "skipped" or "model" not in info:

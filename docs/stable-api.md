@@ -89,6 +89,19 @@ derived from `classify()` via `infer_structure`.
 clf.classify_structure("put on the radio", "en-us")     # <Structure.CONTINUOUS: 'continuous'>
 ```
 
+### `classify_tags(query, lang) -> list[str]`
+
+Returns the **namespaced descriptive tags** (multi-label) — genre, mood and era
+folded into one axis: `["genre:rock", "mood:chill", "era:1980s"]`, empty when
+none apply. `tags_namespace(tags, "genre")` extracts the bare values of one
+slice; `classify_content_genres` / `classify_mood` / `classify_era` are the
+`genre:` / `mood:` / `era:` slices. Default: derived from those helpers; a trained
+backend overrides with its dedicated multi-label `tags` head.
+
+```python
+clf.classify_tags("play some 80s rock", "en-us")   # ['genre:rock', 'era:1980s']
+```
+
 ### `classify_full(query, lang) -> MediaClassification`
 
 Returns **all axes at once** in a `MediaClassification` dataclass: `media_type`,
@@ -117,6 +130,7 @@ This ABC is both the interface the bundled keyword classifier implements and the
 | `classify_genres` | optional override | returns `[]` |
 | `classify_playback_type` | optional override | derives from `classify()` |
 | `classify_structure` | optional override | derives from `classify()` |
+| `classify_tags` | optional override | derives from `classify_content_genres`/`classify_mood`/`classify_era` |
 | `classify_full` | optional override | combines the above (derive-from-leaf) |
 
 Override guidance (for plugin authors — the bundled keyword classifier only

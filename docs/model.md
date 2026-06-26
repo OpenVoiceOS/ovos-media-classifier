@@ -72,8 +72,7 @@ runs whichever heads the bundle carries.
 | `playback_type` | modality | `audio` / `video` / `paged` / `interactive` |
 | `structure` | temporal shape | `single` / `episodic` / `continuous` / `collection` |
 | `explicitness` | clean vs adult | `clean` / `adult` |
-| `mood` | activity | chill / workout / study / party / sleep / … |
-| `era` | decade bucket | `1980s`, `1990s`, … (trained on the `decade` column) |
+| `control_intent` | transport control | `play` / `pause` / `next` / … (degenerate in a play-only bundle — skipped) |
 
 **Multi-label heads** — a `OneVsRestClassifier` of logistic regressions emitting
 per-label probabilities; the runtime keeps every label whose probability is
@@ -82,8 +81,15 @@ per-label probabilities; the runtime keeps every label whose probability is
 | head | axis | label space |
 |---|---|---|
 | `content_form_genres` | sensitive / content-form tags | `adult` / `anime` / `animation` / `asmr` |
-| `content_genre` | the *real* open-vocab genre | rock / jazz / action / comedy / horror / … (capped to the top-K most frequent, `CONTENT_GENRE_TOP_K = 40`) |
+| `tags` | the **namespaced descriptive axis** — genre, mood and era folded into one | `genre:rock` / `genre:action` / `mood:chill` / `era:1980s` / … (capped to the top-K most frequent, `TAGS_TOP_K = 80`) |
 | `qualifiers` | result-narrowing filters | `black_and_white` / `silent` / `live` / `subtitled` / `dubbed` / `audio_described` / `trailer` / … |
+
+**Axes vs tags.** The single-label heads above are the **axes** — one answer per
+query. `tags` is the multi-label catch-all for the open-vocabulary *descriptive*
+signals (genre, mood, era) that all live in slot *value text*: rather than three
+starved single-label heads, they are one namespaced multi-label head. The
+`classify_content_genres` / `classify_mood` / `classify_era` convenience methods
+read the `genre:` / `mood:` / `era:` slice of this one head.
 
 The `content_form_genres` head is the one the **content filter reads**. Because it
 is its own head, it can flag `adult` **independently of the leaf** — a request can
@@ -146,9 +152,9 @@ out-of-band knowledge of what it trained on:
   ├── playback_type.onnx       # audio / video / paged / interactive
   ├── structure.onnx           # single / episodic / continuous / collection
   ├── content_form_genres.onnx # MULTI-LABEL adult/anime/animation/asmr  ← content filter
-  ├── content_genre.onnx       # MULTI-LABEL rock/jazz/action/…
+  ├── tags.onnx                # MULTI-LABEL genre:rock/mood:chill/era:1980s
   ├── qualifiers.onnx          # MULTI-LABEL black_and_white/silent/live/…
-  ├── mood.onnx / era.onnx / explicitness.onnx   # (when trained)
+  ├── explicitness.onnx        # clean / adult  (when trained)
   ├── play.onnx                # back-compat alias of the media_type head
   └── meta.json
 ```
@@ -171,7 +177,7 @@ installable via the `[train]` extra. End-to-end retraining — including adding 
 
 ## 5. Benchmark
 
-Held-out **test split: 27,125 utterances**. Per axis, the lift across the three
+Held-out **test split: 34,700 utterances**. Per axis, the lift across the three
 implemented rungs (**rules → learned context-only → learned context+NER**) is the
 result. (Source: [benchmarks/ladder_results.md](../benchmarks/ladder_results.md).)
 
@@ -179,36 +185,42 @@ result. (Source: [benchmarks/ladder_results.md](../benchmarks/ladder_results.md)
 
 | axis | rules | learned-context | learned-context+NER |
 |---|---|---|---|
-| domain | 0.898 | 0.856 | 0.989 |
-| media_type | 0.703 | 0.789 | 0.985 |
-| playback_type | 0.769 | 0.907 | 0.991 |
-| structure | 0.755 | 0.878 | 0.995 |
-| explicitness | 0.986 | 0.986 | 0.998 |
-| mood | 0.000 | 0.090 | 0.079 |
-| era | 0.000 | 0.098 | 0.098 |
+| domain | 0.833 | 0.866 | 0.986 |
+| media_type | 0.629 | 0.778 | 0.964 |
+| playback_type | 0.702 | 0.895 | 0.988 |
+| structure | 0.708 | 0.907 | 0.990 |
+| explicitness | 0.988 | 0.989 | 0.997 |
 
 ### Multi-label axes — macro-F1
 
 | axis | rules | learned-context | learned-context+NER |
 |---|---|---|---|
-| content_form_genres | 0.685 | 0.686 | 0.982 |
-| content_genre | 0.000 | 0.000 | 0.000 |
-| qualifiers | 0.000 | 0.746 | 0.918 |
+| content_form_genres | 0.706 | 0.738 | 0.975 |
+| tags | 0.000 | 0.547 | 0.581 |
+| qualifiers | 0.000 | 0.746 | 0.906 |
+
+The `tags` macro-F1 is scored over the head's **modelled label space** (its
+top-`TAGS_TOP_K` namespaced labels) — the honest in-scope task, not over the
+thousands of distinct raw genre values it cannot model (§6b). Folding genre, mood
+and era into this one head lifts it from the ~0.00–0.10 the old three starved
+single-label heads scored to **0.55 → 0.58**.
 
 ### Content filter (driven by the `content_form_genres` axis)
 
 | rung | adult recall | hentai recall | false-block | median ms | p95 ms | size |
 |---|---|---|---|---|---|---|
-| rules | 0.490 (356/727) | 0.433 | 0.000 | 0.3085 | 0.4946 | — |
-| learned-context | 0.490 (356/727) | 0.433 | 0.000 | 0.1823 | 0.2091 | 65 KiB |
-| learned-context+NER | 0.912 (663/727) | 0.979 | 0.000 | 0.1852 | 0.2145 | 154 KiB |
+| rules | 0.481 (364/756) | 0.510 | 0.000 | 0.319 | 0.498 | — |
+| learned-context | 0.481 (364/756) | 0.510 | 0.000 | 0.211 | 0.250 | 176 KiB |
+| learned-context+NER | 0.922 (697/756) | 0.936 | 0.001 | 0.214 | 0.259 | 289 KiB |
 
 The headline lifts (rules → context → context+NER): `media_type` accuracy
-0.70 → 0.79 → 0.99; `playback_type` 0.77 → 0.91 → 0.99; `structure`
-0.76 → 0.88 → 0.99; `content_form_genres` macro-F1 0.69 → 0.69 → 0.98;
-`qualifiers` 0 → 0.75 → 0.92; adult-block recall 0.49 → 0.49 → 0.91; hentai recall
-0.43 → 0.43 → 0.98 — all at a **false-block rate of 0.000** and sub-millisecond
-latency in a 154 KiB bundle.
+0.63 → 0.78 → 0.96; `playback_type` 0.70 → 0.90 → 0.99; `structure`
+0.71 → 0.91 → 0.99; `content_form_genres` macro-F1 0.71 → 0.74 → 0.98;
+`qualifiers` 0 → 0.75 → 0.91; `tags` 0 → 0.55 → 0.58; adult-block recall
+0.48 → 0.48 → 0.92; hentai recall 0.51 → 0.51 → 0.94 — at a near-zero false-block
+rate and sub-millisecond latency in a 289 KiB bundle. The **coherent bw/silent**
+qualifier data (real black-and-white / silent titles) is what lifts `qualifiers`
+recall on those filters.
 
 ---
 
@@ -223,14 +235,16 @@ ground truth lives in the slot value — not in a cue word — is fundamentally
 under-determined by these features. This is a property of the representation, not
 of the chosen estimator; a bigger model on the same features hits the same wall.
 
-**(b) `mood`, `era`, `content_genre` are starved.** These three score roughly
-0.02–0.10 macro-F1/accuracy and barely move from context to context+NER, because
-their signal is exactly the value text the features drop: the decade is *in* the
-year string, the mood is *in* the activity phrase, the real genre is *in* the
-genre slot value. They are the direct motivation for the **semantic** rung (§3):
-embedding the surface string is the only way to recover them. The columns and
-heads are shipped so the rung is ready to train, not because the current features
-predict them well.
+**(b) the `tags` axis (genre / mood / era) is starved.** The folded `tags` head
+scores low and barely moves from context to context+NER, because its signal is
+exactly the value text the features drop: the decade is *in* the year string, the
+mood is *in* the activity phrase, the real genre is *in* the genre slot value.
+Folding the three into one namespaced multi-label head (instead of three starved
+single-label heads) keeps the axis count honest, but does not by itself recover
+the signal — that is the direct motivation for the **semantic** rung (§3):
+embedding the surface string is the only way to read which genre / mood / era was
+named. The head is shipped so the rung is ready to train, not because the current
+features predict it well.
 
 **(c) Synthetic / degenerate label regions.** The `domain` head's negative class
 is **synthetic** — the all-zero feature vector (no keyword or NER evidence)
