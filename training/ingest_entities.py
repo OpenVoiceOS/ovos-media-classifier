@@ -99,37 +99,6 @@ def _maybe_list(v) -> List[str]:
     return [_clean(s)] if _clean(s) else []
 
 
-def _iter_dicts(v) -> List[dict]:
-    """Coerce a field that may be a list / ndarray / json-string of dicts."""
-    if v is None:
-        return []
-    try:
-        import numpy as np
-        if isinstance(v, np.ndarray):
-            v = v.tolist()
-    except ImportError:
-        pass
-    if isinstance(v, (list, tuple)):
-        return [x for x in v if isinstance(x, dict)]
-    s = str(v).strip()
-    if s.startswith("["):
-        try:
-            parsed = ast.literal_eval(s)
-            if isinstance(parsed, list):
-                return [x for x in parsed if isinstance(x, dict)]
-        except (ValueError, SyntaxError):
-            pass
-    return []
-
-
-def _emit_artist(name_field: str) -> Callable:
-    def emit(row):
-        v = _clean(row.get(name_field))
-        if v:
-            yield ("artist_name", v)
-    return emit
-
-
 def _decade_of(year_val) -> str:
     s = _clean(year_val)
     m = re.search(r"(\d{4})", s)
@@ -138,12 +107,31 @@ def _decade_of(year_val) -> str:
     return f"{int(m.group(1)) // 10 * 10}s"
 
 
-def emit_musicbrainz_artists(row):
+def emit_unified_artists(row):
+    """``TigreGotico/media-metadata-artists`` — the canonical UNIFIED artist set.
+
+    Supersedes the per-source musicbrainz / audiodb / jazz / prog / metal /
+    classical merges: this dataset is already cross-deduplicated across all those
+    sources (the ``sources`` array records provenance).  ``name`` + ``aliases`` →
+    ``artist_name``; ``style`` / ``tags`` → ``music_genre`` (when usable).
+    """
     v = _clean(row.get("name"))
     if v:
         yield ("artist_name", v)
     for a in _maybe_list(row.get("aliases")):
         yield ("artist_name", a)
+    g = _clean(row.get("style"))
+    if g:
+        # ``style`` may be a slash/comma compound ("Rock/Pop") — split it
+        for part in re.split(r"[/,;|]", g):
+            part = _clean(part)
+            if part:
+                yield ("music_genre", part)
+    # a couple of free-text genre tags (skip the long-tail noise)
+    for t in _maybe_list(row.get("tags"))[:2]:
+        t = _clean(t)
+        if t and len(t) > 2:
+            yield ("music_genre", t)
 
 
 def emit_musicbrainz_releases(row):
@@ -153,59 +141,6 @@ def emit_musicbrainz_releases(row):
         yield ("album_name", title)
     for a in _maybe_list(row.get("artist_names")):
         yield ("artist_name", a)
-
-
-def emit_audiodb_artists(row):
-    v = _clean(row.get("name"))
-    if v:
-        yield ("artist_name", v)
-    alt = _clean(row.get("alternate_name"))
-    if alt:
-        yield ("artist_name", alt)
-    g = _clean(row.get("genre")) or _clean(row.get("style"))
-    if g:
-        yield ("music_genre", g)
-    lbl = _clean(row.get("label"))
-    if lbl:
-        yield ("record_label", lbl)
-
-
-def emit_jazz_artists(row):
-    v = _clean(row.get("artist")) or _clean(row.get("name"))
-    if v:
-        yield ("artist_name", v)
-    g = _clean(row.get("genre"))
-    if g:
-        yield ("music_genre", g)
-
-
-def emit_prog_artists(row):
-    v = _clean(row.get("artist")) or _clean(row.get("name"))
-    if v:
-        yield ("artist_name", v)
-    g = _clean(row.get("genre"))
-    if g:
-        yield ("music_genre", g)
-
-
-def emit_metal_archives(row):
-    v = (_clean(row.get("name")) or _clean(row.get("band_name"))
-         or _clean(row.get("artist")) or _clean(row.get("band")))
-    if v:
-        yield ("artist_name", v)
-    g = _clean(row.get("genre"))
-    if g:
-        yield ("music_genre", g)
-    lbl = _clean(row.get("label"))
-    if lbl:
-        yield ("record_label", lbl)
-
-
-def emit_classical_composers(row):
-    v = (_clean(row.get("name")) or _clean(row.get("composer"))
-         or _clean(row.get("artist")))
-    if v:
-        yield ("artist_name", v)
 
 
 def emit_tvmaze_shows(row):
@@ -484,7 +419,17 @@ def _enum_clean(v) -> str:
     return s.replace("_", " ").lower()
 
 
-def emit_stashdb_performers(row):
+def emit_unified_performers(row):
+    """``TigreGotico/media-metadata-adult-performers`` — canonical UNIFIED set.
+
+    Supersedes the per-source stashdb / iafd / freeones / boobpedia / thenude
+    performer merges: this dataset is already cross-deduplicated across all those
+    sources (the ``sources`` array records provenance).  ``name`` + ``aliases`` →
+    ``pornstar``; the physical-attribute columns feed the detect-to-block
+    description pools so the content filter fires on a DESCRIPTION
+    ("porn with red hair"), not only on a named performer.  Detect-to-block
+    training signals only — never content provision.
+    """
     v = _clean(row.get("name"))
     if v:
         yield ("pornstar", v)
@@ -498,87 +443,10 @@ def emit_stashdb_performers(row):
         val = _enum_clean(row.get(col))
         if val:
             yield (label, val)
-    # tattoos / piercings are list-ish; emit a generic descriptor when present
-    if _maybe_list(row.get("tattoos")):
-        yield ("adult_marking", "tattoos")
-    if _maybe_list(row.get("piercings")):
-        yield ("adult_marking", "piercings")
-
-
-def emit_iafd_performers(row):
-    v = _clean(row.get("name"))
-    if v:
-        yield ("pornstar", v)
-    for a in _maybe_list(row.get("aliases")):
-        yield ("pornstar", a)
-    # filmography titles → adult_title (detect-to-block titles)
-    for it in _iter_dicts(row.get("filmography"))[:20]:
-        t = _clean(it.get("title"))
-        if t:
-            yield ("adult_title", t)
-
-
-# Ethnicity / hair / eye hints found inside free-text category / description
-# blobs (boobpedia ``categories``, freeones ``professions``, etc.).
-_ETHNICITY_HINTS = ("caucasian", "asian", "black", "latina", "latin", "ebony",
-                    "hispanic", "indian", "arab", "interracial", "white")
-_HAIR_HINTS = ("blonde", "brunette", "redhead", "black hair", "brown hair",
-               "raven", "ginger")
-
-
-def _emit_performer(row):
-    """Shared emitter for the freeones / boobpedia / thenude performer sets.
-
-    Mines name + aliases → ``pornstar`` and every usable physical / descriptive
-    attribute into its pool (detect-to-block training signals only). Robust to
-    column-name differences across the three sources.
-    """
-    for col in ("name",):
-        v = _clean(row.get(col))
-        if v:
-            yield ("pornstar", v)
-    for col in ("aliases", "all_names"):
-        for a in _maybe_list(row.get(col)):
-            yield ("pornstar", a)
-    nat = _enum_clean(row.get("nationality")) or _enum_clean(row.get("ethnicity"))
-    if nat and len(nat) > 2:
-        yield ("adult_country", nat)
-    for col in ("eye_color", "hair_color", "ethnicity", "build", "body_type"):
-        val = _enum_clean(row.get(col))
-        if not val:
-            continue
-        if "eye" in col:
-            yield ("adult_eye_color", val)
-        elif "hair" in col:
-            yield ("adult_hair_color", val)
-        elif col == "ethnicity":
-            yield ("adult_ethnicity", val)
-        else:
-            yield ("adult_body_type", val)
-    # mine free-text blobs (categories / description / professions / tags)
-    blob = " ".join(str(row.get(c, "")) for c in
-                    ("categories", "description", "professions", "tags",
-                     "performances")).lower()
-    for hint in _ETHNICITY_HINTS:
-        if hint in blob:
-            yield ("adult_ethnicity", "latina" if hint == "latin" else hint)
-            break
-    for hint in _HAIR_HINTS:
-        if hint in blob:
-            yield ("adult_hair_color", hint.replace(" hair", ""))
-            break
-
-
-def emit_freeones_performers(row):
-    yield from _emit_performer(row)
-
-
-def emit_boobpedia_performers(row):
-    yield from _emit_performer(row)
-
-
-def emit_thenude_performers(row):
-    yield from _emit_performer(row)
+    # cup size is a body descriptor too (e.g. "DD") — emit lower-cased
+    cup = _enum_clean(row.get("cup_size"))
+    if cup and len(cup) <= 4:
+        yield ("adult_body_type", cup)
 
 
 def emit_iafd_titles(row):
@@ -643,21 +511,13 @@ class Spec:
 
 SOURCE_SPECS: List[Spec] = [
     # ---- music artists / releases ----
-    # The curated genre-specific archives are listed BEFORE the bulk MusicBrainz
-    # dump so they always make it into the (capped) ``artist_name`` pool — the
-    # 1.5 M-row MusicBrainz set would otherwise saturate the cap on its own and
-    # crowd out jazz / prog / metal / classical diversity.
-    Spec("jazz-artists", emit_jazz_artists, hf="media-metadata-jazz-artists"),
-    Spec("progarchives-artists", emit_prog_artists,
-         hf="media-metadata-progarchives-artists"),
-    Spec("metal-archives", emit_metal_archives,
-         hf="media-metadata-metal-archives"),
-    Spec("classical-composers", emit_classical_composers,
-         hf="media-metadata-classical-composers"),
-    Spec("audiodb-artists", emit_audiodb_artists,
-         local="audiodb_artists", hf="audiodb-artists"),
-    Spec("musicbrainz-artists", emit_musicbrainz_artists,
-         local="musicbrainz_artists", hf="musicbrainz-artists"),
+    # The canonical UNIFIED artist set replaces the per-source musicbrainz /
+    # audiodb / jazz / prog / metal / classical merge: it is already
+    # cross-deduplicated across all those sources, so we ingest it directly into
+    # ``artist_name`` (+ ``music_genre``) instead of re-merging the raw sources.
+    Spec("unified-artists", emit_unified_artists, hf="media-metadata-artists"),
+    # MusicBrainz *releases* are kept (albums + the album↔artist relation feed) —
+    # they are NOT in the artist set above.
     Spec("musicbrainz-releases", emit_musicbrainz_releases,
          local="musicbrainz_releases", hf="musicbrainz-releases"),
     # ---- video / shows / anime ----
@@ -706,23 +566,17 @@ SOURCE_SPECS: List[Spec] = [
     Spec("hentaisea", emit_hentaisea,
          hf="adult-metadata-hentaisea", adult=True),
     # ---- adult (content-filter detect-to-block ONLY) ----
-    # Performer sets are deduplicated into one ``pornstar`` pool (case-insensitive),
-    # so overlapping rosters across stashdb / iafd / freeones / boobpedia / thenude
-    # do not inflate the pool.
-    Spec("stashdb-performers", emit_stashdb_performers,
-         hf="adult-metadata-stashdb-performers", adult=True),
-    Spec("iafd-performers", emit_iafd_performers,
-         hf="adult-metadata-iafd-performers", adult=True),
+    # The canonical UNIFIED performer set replaces the per-source stashdb / iafd /
+    # freeones / boobpedia / thenude performer merge: it is already
+    # cross-deduplicated across all those rosters, so we ingest it directly into
+    # the ``pornstar`` + physical-attribute pools.  iafd TITLES / DISTRIBUTORS
+    # (adult_title / adult_studio) are NOT in the performer set and are kept.
+    Spec("unified-performers", emit_unified_performers,
+         hf="media-metadata-adult-performers", adult=True),
     Spec("iafd-titles", emit_iafd_titles,
          hf="adult-metadata-iafd-titles", adult=True),
     Spec("iafd-distributors", emit_iafd_distributors,
          hf="adult-metadata-iafd-distributors", adult=True),
-    Spec("freeones-performers", emit_freeones_performers,
-         hf="adult-metadata-freeones-performers", adult=True),
-    Spec("boobpedia-performers", emit_boobpedia_performers,
-         hf="adult-metadata-boobpedia-performers", adult=True),
-    Spec("thenude-performers", emit_thenude_performers,
-         hf="adult-metadata-thenude-performers", adult=True),
 ]
 
 
