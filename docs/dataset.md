@@ -28,6 +28,10 @@ python -m training.build_dataset
 `build_dataset` is the single entry point. Everything downstream of the entity
 pools is deterministic for a fixed `--seed` (default 42).
 
+Once a release is built, `python -m training.dataset_plots` renders the dataset
+characterization plots (rows per media type, the slot×media-type heatmap, axis
+distributions, entity-pool sizes) into [`docs/plots/dataset/`](plots/dataset/).
+
 Useful options:
 
 | flag | meaning | default |

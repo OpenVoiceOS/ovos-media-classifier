@@ -366,21 +366,24 @@ matches; the content axes are `unknown` and the request is routed away from OCP.
 
 The axes are not just an inference-time convenience — the **dataset carries them
 as columns** so backends can train one head per axis. The canonical
-`TigreGotico/ocp-media-intents` dataset (built by `training/build_and_publish.py`)
+`TigreGotico/ocp-media-intents` dataset (built by `training/build_dataset.py`)
 ships, per row:
 
 | Column | Axis | Derivation |
 |---|---|---|
-| `mediavocab_type` | Axis 3 (leaf) | `LABEL_TO_MEDIA_TYPE[media_label]` |
-| `playback_type` | Axis 1 (modality) | `infer_playback_type(mediavocab_type)` |
-| `structure` | Axis 2 (structure) | `infer_structure(mediavocab_type)` |
-| `genres` | tags | `LABEL_TO_GENRES[media_label]` (`;`-joined; carries `adult`) |
+| `media_type` | Axis 3 (leaf) | `LABEL_TO_MEDIA_TYPE[intent]` |
+| `playback_type` | Axis 1 (modality) | `infer_playback_type(media_type)` |
+| `structure` | Axis 2 (structure) | `infer_structure(media_type)` |
+| `genres` / `content_form_genres` | content-form tags | `LABEL_TO_GENRES[intent]` (carries `adult`) |
+| `tags` | descriptive (multi-label) | `genre:` / `mood:` / `era:` from the filled slot values |
+| `qualifiers` | result-narrowing (multi-label) | the intent alias (`black_and_white` / `silent` / …) |
 
 Because every coarse column is derived from the same `infer_*` functions the
 runtime uses (§4.1), a model trained on these columns and a model that derives at
 runtime agree by construction on the defaults — and a multi-head model is free to
 learn the per-utterance overrides on top. See [taxonomy.md](taxonomy.md) for the
-label → type/genre projection and `training/README` for the dataset build.
+label → type/genre projection and [dataset.md](dataset.md) for the full column set
+and the build.
 
 ---
 

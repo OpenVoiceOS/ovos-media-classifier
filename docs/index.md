@@ -1,12 +1,14 @@
 # ovos-media-classifier documentation
 
 `ovos-media-classifier` provides media-type **command/intent** classification for
-OCP (OVOS Common Play). It maps a spoken command onto a small set of
-**orthogonal axes** — domain (play / control / not-OCP), modality
+OCP (OVOS Common Play). It is **multi-task**: it maps a spoken command onto a set
+of **orthogonal axes** at once — domain (play / control / not-OCP), modality
 (`playback_type`: audio / video / paged / interactive), structure
-(single / episodic / continuous / collection), and the concrete
-`mediavocab.MediaType` leaf — plus orthogonal genre tags. A detect-to-block
-content filter sits on top so OVOS can refuse sensitive requests by default.
+(single / episodic / continuous / collection), explicitness (clean / adult), and
+the concrete `mediavocab.MediaType` leaf — plus a multi-label, namespaced **`tags`**
+axis (genre / mood / era), result-narrowing **qualifiers**, and the content-form
+genre tags. A detect-to-block content filter sits on top so OVOS can refuse
+sensitive requests by default.
 
 This classifies *voice commands*. It is distinct from `mediavocab.text.classify`,
 which classifies *catalog content* — see
@@ -55,6 +57,7 @@ New to the vocabulary (OCP, OPM, domain, axis, NER, …)? Read
 | [entity-lists.md](entity-lists.md) | Entity lists (`label → list of strings`): the source-agnostic store (runtime / `.csv` / `.tsv` / `.jsonl` / HuggingFace / media-server / inline) the NER backend consumes |
 | [dataset.md](dataset.md) | The canonical `ocp-media-intents` dataset and its on-demand generator: every column, the rebuild command, the `.intent`/`.voc` templates, confusables, and the content-filter slice |
 | [data-sources.md](data-sources.md) | Every HF dataset + local scraper feeding the entity pools, the slot label each feeds, licenses, and how the training set is assembled |
+| [plots/dataset/](plots/dataset/) | Dataset characterization plots — rows per media type, the slot×media-type heatmap, axis distributions, entity-pool sizes (regenerate with `python -m training.dataset_plots`) |
 | [contextual-classification.md](contextual-classification.md) | How the media you actually have biases prediction, via keyword feature slots |
 | [content-filtering.md](content-filtering.md) | `ContentFilter`: detect-to-block content moderation / parental control |
 | [external-plugins.md](external-plugins.md) | Registering a third-party classifier via the `opm.media.classifier` entry-point group |

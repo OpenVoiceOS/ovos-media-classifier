@@ -107,12 +107,16 @@ pip install ovos-media-classifier[onnx]
 load_media_classifier({"media_classifier_onnx_model": "/models/ocp-bundle"})
 ```
 
-A trained classifier backed by two ONNX heads — a **domain** head and a **play**
-head — plus `numpy`. It depends on raw `onnxruntime` + `numpy` only. The factory
-loads it from a self-describing **model-bundle directory** containing
-`domain.onnx`, `play.onnx` and `meta.json` (the meta file carries the ordered
-feature names, the label maps and the confidence thresholds, so the runtime makes
-no hard-coded assumptions). Set `media_classifier_onnx_model` to that directory.
+A trained classifier with **one ONNX head per axis** — `domain`, `media_type`,
+`playback_type`, `structure`, `explicitness` (single-label) and
+`content_form_genres`, `tags`, `qualifiers` (multi-label) — plus `numpy`. It
+depends on raw `onnxruntime` + `numpy` only. The factory loads it from a
+self-describing **model-bundle directory** of `<axis>.onnx` files plus a
+`meta.json` manifest (which carries the ordered feature names, the per-head
+index→label maps and the multi-label thresholds, so the runtime makes no
+hard-coded assumptions and loads whichever heads the bundle ships — a missing head
+simply derives its axis). Set `media_classifier_onnx_model` to that directory. The
+full bundle layout and retrain contract are in [model.md](model.md#4-self-describing-bundle--retrain-contract).
 
 A trained model predicts each axis with its own head and can capture
 per-utterance nuance the keyword backend cannot — see
