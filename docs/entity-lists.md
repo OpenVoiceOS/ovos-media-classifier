@@ -13,17 +13,13 @@ own or stream — captured as plain strings under an
 [`OCPEntityLabel`](taxonomy.md). The store that holds them is
 [`EntitiesContainer`](#api).
 
-Entity lists are **shared infrastructure**, not specific to one classifier. The
-same lists feed:
-
-- the **NER backend** — [`AhocorasickMediaClassifier`](backends.md), which loads
-  the lists into an Aho-Corasick automaton for fast exact substring matching
-  ("play *Inception*" → `MOVIE`);
-- the (future) **guided-embeddings** classifier — which consumes the same lists
-  as *categorical NER features* (a known `movie_title` token in the utterance is
-  a strong signal for the `MOVIE` axis).
-
-Build the lists once; use them with either strategy.
+Entity lists feed the **NER backend** —
+[`AhocorasickMediaClassifier`](backends.md), which loads the lists into an
+Aho-Corasick automaton for fast exact substring matching ("play *Inception*" →
+`MOVIE`). They are also the natural input for any classifier that uses the user's
+known entities as features (a known `movie_title` token in the utterance is a
+strong signal for the `MOVIE` axis), so the same lists serve more than one
+strategy — build them once.
 
 ## Where entity lists come from
 
@@ -139,9 +135,9 @@ The factory selects the NER backend when any of `media_classifier_entities`,
 }
 ```
 
-The original structured keys (`csv`, `wordlists`, `huggingface`, and the
-per-server `radarr`/`sonarr`/`lidarr`/`jellyfin`/`music_assistant` keys) remain
-supported for back-compatibility and are merged in addition to `entity_lists`.
+The structured keys (`csv`, `wordlists`, `huggingface`, and the per-server
+`radarr`/`sonarr`/`lidarr`/`jellyfin`/`music_assistant` keys) are also accepted and
+merged in addition to `entity_lists`.
 
 ## Performance / memory tradeoff
 
@@ -152,9 +148,8 @@ holds every entity string in memory, and every entity added widens the matcher:
 - **the more entities loaded, the larger** the memory footprint.
 
 So load the user's *actual* library (typically a few thousand titles) — not an
-open-ended public catalogue. The same caution applies to the guided-embeddings
-features: a bloated categorical vocabulary dilutes the signal rather than
-sharpening it. Prefer a handful of focused lists over one giant dump.
+open-ended public catalogue. A bloated entity vocabulary dilutes the signal
+rather than sharpening it. Prefer a handful of focused lists over one giant dump.
 
 ## API
 
@@ -166,7 +161,7 @@ sharpening it. Prefer a handful of focused lists over one giant dump.
 | `load_source(spec)` | dispatch a single source spec by shape |
 | `load_lists(specs)` | load a list of source specs (instance method) |
 | `EntitiesContainer.from_sources(specs)` | build a container from a list of specs |
-| `EntitiesContainer.from_config(cfg)` | build from a config dict (`entity_lists` + legacy keys) |
+| `EntitiesContainer.from_config(cfg)` | build from a config dict (`entity_lists` + the structured keys) |
 | `wordlists` / `stats` | `{label: [values]}` snapshot / per-label counts |
 
 See also: [backends.md](backends.md) (the NER backend that consumes these

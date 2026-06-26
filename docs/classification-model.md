@@ -1,9 +1,8 @@
 # The multi-axis classification model
 
-This page is the design rationale behind `ovos-media-classifier`: **why media
-classification is modelled as a set of orthogonal axes rather than one strict
-tree**, what each axis is, and how both the bundled keyword classifier and future
-trained plugins are expected to produce it.
+This page explains the classification model: **why media classification is a set
+of orthogonal axes rather than one strict tree**, what each axis is, and how both
+the keyword classifier and trained backends produce it.
 
 It is the conceptual companion to the API docs ([stable-api.md](stable-api.md),
 [taxonomy.md](taxonomy.md)). Read this when you want to understand *the shape of
@@ -21,9 +20,9 @@ useful distinctions between them are not one-dimensional. _"a music video"_ is
 as **audio**. Forcing those into a single label loses information that a
 downstream skill needs.
 
-So instead of predicting one label, the classifier predicts a **point in a small
-product space**. Each coordinate (axis) is a coarse, high-signal question; the
-combination is the full answer, returned as one
+So instead of one label, the classifier predicts a **point in a small product
+space**. Each coordinate (axis) is a coarse, high-signal question; the combination
+is the full answer, returned as one
 [`MediaClassification`](#7-the-mediaclassification-result).
 
 ---
@@ -113,9 +112,9 @@ Not axes of the product space but free-standing labels attached to the result:
 
 ## 3. Why orthogonal axes, not a strict tree
 
-The tempting design is a single decision tree: pick audio-vs-video, then
-narrow, then narrow again, down to the leaf. We deliberately **do not** do that.
-Two failures kill the tree:
+An obvious alternative is a single decision tree: pick audio-vs-video, then
+narrow, then narrow again, down to the leaf. Two failures make the tree the wrong
+model:
 
 ### 3.1 Cross-product "double citizens"
 
@@ -189,22 +188,23 @@ domain + genres          ◀── classify_domain() / classify_genres()
 
 The coarse axes (modality, structure) are predicted from their own voc evidence
 and reported as **orthogonal axes** — they are NOT used as a hard gate on the leaf.
-The leaf is chosen **leaf-first** (the specific-leaf voc chain), because an
-empirical check on the neutral HF test split showed that *constraining* the leaf to
-the predicted axes **regressed** real-query macro-F1: when modality prediction is
-noisy (and on natural language it often is), a hard constraint suppresses an
-otherwise-correct leaf. So a predicted axis and the leaf may legitimately differ —
-_"watch the news"_ → a news-derived leaf **with** a predicted **video** modality
-("video news"); the player consumes the `playback_type` axis, the leaf carries the
-content identity. The `(modality, structure)` **default leaf** is used only when no
-specific leaf voc matched at all (audio+single→`music`, video+continuous→`tv`, …).
+The leaf is chosen **leaf-first** (the specific-leaf voc chain): constraining the
+leaf to the predicted axes regresses real-query macro-F1, because when modality
+prediction is noisy (and on natural language it often is) a hard constraint
+suppresses an otherwise-correct leaf. So a predicted axis and the leaf may
+legitimately differ — _"watch the news"_ → a news-derived leaf **with** a predicted
+**video** modality ("video news"); the player consumes the `playback_type` axis,
+the leaf carries the content identity. The `(modality, structure)` **default leaf**
+is used only when no specific leaf voc matched at all (audio+single→`music`,
+video+continuous→`tv`, …).
 
-> **Honesty note.** This keyword backend is a deterministic **floor** (~0.29 acc on
-> the neutral HF split; ~0.99 on the synthetic set is vocabulary coverage, not
-> generalization — see `benchmarks/README.md`). Coarse-to-fine as a hard *search-space
-> constraint* pays off in a **trained** classifier (where it prunes a probabilistic
-> leaf distribution); in the deterministic keyword matcher it is value-neutral on real
-> data, so we predict the axes for output but select the leaf leaf-first.
+> The keyword backend is a deterministic **floor** (~0.29 accuracy on the neutral
+> HF split; ~0.99 on the synthetic set is vocabulary coverage, not generalization —
+> see [benchmarks](../benchmarks/README.md)). Coarse-to-fine as a hard
+> *search-space constraint* pays off in a **trained** classifier (where it prunes a
+> probabilistic leaf distribution); in the deterministic keyword matcher it is
+> value-neutral on real data, so the axes are predicted for output but the leaf is
+> selected leaf-first.
 
 This logic lives in `ovos_media_classifier/keyword.py` (`_predict_modality`,
 `_predict_structure`, `_candidate_media_types`, `_classify_intent`); the per-axis
@@ -251,11 +251,11 @@ report a genuine per-axis confidence for the pipeline to threshold. The base-cla
 defaults (derive-from-leaf) are always available as a fallback, so a plugin only
 overrides the axes it actually models.
 
-Both entity-driven strategies — the NER backend (Aho-Corasick exact match) and
-the future guided-embeddings classifier (which uses the user's known entities as
-categorical features) — read from the *same* **entity lists**
-(`label → list of strings`). That shared store, its source specs and the
-perf/memory tradeoff are documented in [entity-lists.md](entity-lists.md).
+Entity-driven strategies — the NER backend (Aho-Corasick exact match) and any
+classifier that uses the user's known entities as categorical features — read from
+the *same* **entity lists** (`label → list of strings`). That shared store, its
+source specs and the perf/memory tradeoff are documented in
+[entity-lists.md](entity-lists.md).
 
 ---
 
@@ -345,22 +345,20 @@ result.domain          # <OCPDomain.OCP_PLAY: 'ocp_play'>                 (Axis 
 result.genres          # []                                              (tags)
 result.confidence      # 0.6
 result.as_dict()
-# {'media_type': 'episodic_series', 'playback_type': 'video',
-#  'structure': 'episodic', 'domain': 'ocp_play', 'genres': [], 'confidence': 0.6}
+# {'media_type': 'episodic_series', 'playback_type': 'video', 'structure': 'episodic',
+#  'domain': 'ocp_play', 'genres': [], 'confidence': 0.6, 'control_intent': None}
 ```
 
 A non-media request collapses every content axis cleanly:
 
 ```python
-clf.classify_full("turn off the kitchen lights", "en-us").as_dict()
-# {'media_type': 'generic', 'playback_type': 'unknown',
-#  'structure': 'unknown', 'domain': 'not_ocp', 'genres': [], 'confidence': 0.0}
+clf.classify_full("what time is it", "en-us").as_dict()
+# {'media_type': 'generic', 'playback_type': 'unknown', 'structure': 'unknown',
+#  'domain': 'not_ocp', 'genres': [], 'confidence': 0.0, 'control_intent': None}
 ```
 
-(The keyword classifier reports `not_ocp` / `generic` here because no media
-keyword matches; a trained domain head would distinguish `not_media` IoT control
-from a genuinely ambiguous miss — but either way the content axes are `unknown`
-and the request is routed away from OCP.)
+(The keyword classifier reports `not_ocp` / `generic` because no media keyword
+matches; the content axes are `unknown` and the request is routed away from OCP.)
 
 ---
 
