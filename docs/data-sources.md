@@ -29,11 +29,11 @@ crowded out.
 | `media-metadata-metal-archives` | `artist_name`, `music_genre`, `record_label` | Metal Archives |
 | `media-metadata-classical-composers` | `artist_name` | classical-composer catalogue |
 | `media-metadata-tvmaze-shows` | `tv_show_title`, `tv_genre`, `tv_network` | TVmaze |
-| `media-metadata-anilist-anime` | `anime_title`, `anime_studio` | AniList |
-| `media-metadata-jikan-manga` | `anime_title` | Jikan / MyAnimeList |
-| `media-metadata-gutenberg-books` | `audiobook_title`, `audiobook_author` | Project Gutenberg |
-| `media-metadata-librivox-audiobooks` | `audiobook_title`, `audiobook_author`, `audiobook_narrator` | LibriVox (public domain) |
-| `media-metadata-openlibrary-books` | `audiobook_title`, `audiobook_author` | Open Library |
+| `media-metadata-anilist-anime` | `anime_title`, `anime_studio` (the `is_adult` / Hentai subset → `hentai_title`/`hentai_studio`) | AniList |
+| `media-metadata-jikan-manga` | `comic_title`, `comic_genre` (manga is **read** → COMIC; the Hentai subset → `hentai_title`) | Jikan / MyAnimeList |
+| `media-metadata-gutenberg-books` | `book_title`, `book_author`, `book_genre` (readable text → **BOOK**) | Project Gutenberg |
+| `media-metadata-librivox-audiobooks` | `audiobook_title`, `audiobook_author`, **`audiobook_narrator`**, `audiobook_genre` (narrated → **AUDIOBOOK**) | LibriVox (public domain) |
+| `media-metadata-openlibrary-books` | `book_title`, `book_author`, `book_genre`, `record_label` (publisher), `release_year` (readable text → **BOOK**) | Open Library |
 | `media-metadata-steam-games` | `game_title`, `game_genre` | Steam |
 | `media-metadata-radiobrowser-stations` | `radio_station`, `radio_genre` | Radio Browser (CC0) |
 | `media-metadata-podcastindex-podcasts` | `podcast_title`, `podcast_host`, `podcast_genre` | Podcast Index |
@@ -48,6 +48,17 @@ crowded out.
 The Wikidata `entity_type` split is what gives `movie_title` **real film titles**
 (rather than fabricated strings) — see `WIKIDATA_TYPE_TO_LABEL` in
 `training/ingest_entities.py` for the full type→label map.
+
+### book vs audiobook vs comic (read vs play)
+
+The book sources are routed by **how they are consumed**, matching the
+`mediavocab` taxonomy:
+
+* **LibriVox** is narrated audio → `audiobook_*` (`AUDIOBOOK`); its `readers`
+  column populates `audiobook_narrator`.
+* **Gutenberg / Open Library** are readable texts → `book_*` (`BOOK`, TTS-read).
+* **Jikan manga** is read → `comic_*` (`COMIC`); **AniList anime** is watched →
+  `anime_*` (`EPISODIC_SERIES`). The adult subset of either → `hentai_*`.
 
 ### Descriptive attribute pools
 
@@ -74,7 +85,9 @@ Radio Browser, Podcast Index, Listen Notes, AudioDB, and Wikidata.
 A few slots have no metadata dump (provider / platform names). Small curated
 lists ship in `training/seed_entities/<label>.csv` and are merged into the pools:
 `news_provider`, `news_category`, `game_platform`, `asmr_artist`,
-`adult_streaming_service`, `hentai_name`.
+`adult_streaming_service`, `media_country`, plus the taxonomy-completion slots
+`playlist_mood`, `playlist_activity`, `sound_name`, `ambient_sound`,
+`comic_genre`.
 
 ### Slot aliases
 
@@ -92,13 +105,31 @@ provide adult content.
 
 | HuggingFace dataset | slot label(s) | role |
 |---|---|---|
-| `adult-metadata-stashdb-performers` | `pornstar`, `adult_eye_color`, `adult_hair_color`, `adult_ethnicity`, `adult_body_type`, `adult_marking` | performer names + **physical-attribute** pools |
+| `adult-metadata-stashdb-performers` | `pornstar` + `adult_eye_color`/`adult_hair_color`/`adult_ethnicity`/`adult_body_type`/`adult_marking` | performers + physical attributes |
 | `adult-metadata-iafd-performers` | `pornstar`, `adult_title` | performers + filmography titles |
+| `adult-metadata-iafd-titles` | `adult_title`, `adult_studio` | real adult film titles + studios |
 | `adult-metadata-iafd-distributors` | `adult_studio` | adult studios / distributors |
+| `adult-metadata-freeones-performers` | `pornstar` + `adult_country`/attributes | performers + attributes |
+| `adult-metadata-boobpedia-performers` | `pornstar` + `adult_ethnicity`/`adult_hair_color`/attributes | performers + attributes |
+| `adult-metadata-thenude-performers` | `pornstar` + attributes | performers + attributes |
+| `adult-metadata-hanime` | `hentai_title`, `hentai_studio` | hanime.tv hentai catalogue |
+| `adult-metadata-mal-hentai` | `hentai_title`, `hentai_studio` | MyAnimeList hentai |
+| `adult-metadata-hentaisea` | `hentai_title` | hentaisea hentai catalogue |
+
+These are **private** datasets — ingestion uses the HuggingFace token from the
+environment. Performer rosters overlap across stashdb / iafd / freeones /
+boobpedia / thenude, so they are **deduplicated case-insensitively into one
+`pornstar` pool** rather than summed.
+
+The dedicated hentai sets are the real corpus for `hentai_title` (the anilist /
+jikan `is_adult` subset is merged in too); these are kept **out of the clean
+`anime_title` / `comic_title` pools** so a normal "watch an anime" / "read a
+manga" template never fills an adult title. A hentai row is labelled `hentai` →
+`EPISODIC_SERIES` + `["anime", "adult"]`, so the content filter blocks it.
 
 The physical-attribute pools (`adult_eye_color`, `adult_hair_color`,
-`adult_ethnicity`, `adult_body_type`, `adult_marking`) exist so detection fires
-on a **description** (*"porn with red hair"*, *"some asian porn"*,
+`adult_ethnicity`, `adult_body_type`, `adult_marking`, `adult_country`) exist so
+detection fires on a **description** (*"porn with red hair"*, *"some asian porn"*,
 *"a performer with tattoos"*) and not only on a named performer — otherwise the
 filter would be trivially evaded. They are detect-to-block training signals only.
 

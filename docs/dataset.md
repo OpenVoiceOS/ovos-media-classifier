@@ -153,11 +153,21 @@ context words are themselves keyword features (`kw_soundtrack`, `kw_trailer`,
 `kw_bts`, `kw_documentary`, `kw_music_video`, `attr_topic`, `kw_audiobook`), so
 the keyword/NER model can learn the override.
 
+## Taxonomy coverage
+
+Every non-sentinel `mediavocab.MediaType` is exercised by at least one intent, so
+the dataset covers the whole taxonomy — including the read-vs-play distinctions
+(`book` vs `audiobook`, `comic`/manga vs `anime`) and the previously unreachable
+`playlist`, `sound_effect`, `interactive_fiction`, and non-asmr `ambient`
+(`PROCEDURAL_AMBIENT`). See [taxonomy.md](taxonomy.md).
+
 ## Content-filter slice
 
 The `adult` / `adult_audio` / `hentai` intents are slot-filled with **real adult
-performer / title entities** so the slice is diverse, then kept a deliberate
-minority (`--adult-cap`). Every adult row carries the `adult` genre via
-`LABEL_TO_GENRES`; the [content filter](content-filtering.md) blocks on that
-genre. The entities exist for detect-to-block only — never for provision. See
+performer / title / hentai entities** so the slice is diverse, then kept a
+deliberate minority (`--adult-cap`). Every adult row carries the `adult` genre via
+`LABEL_TO_GENRES` (hentai → `["anime", "adult"]`); the
+[content filter](content-filtering.md) blocks on that genre, including descriptive
+forms (*"an adult video with a brunette performer"*). The entities exist for
+detect-to-block only — never for provision. See
 [data-sources.md](data-sources.md#content-filter-data-adult-detect-to-block).
