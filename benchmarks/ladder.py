@@ -1,0 +1,462 @@
+"""Benchmark the multi-task classifier **ladder**, per axis, on the test split.
+
+Evaluates the three rungs the project builds toward, on the real
+``ocp-media-intents`` held-out test split:
+
+    rules                → KeywordMediaClassifier (zero-ML, the default install)
+    learned-context      → ONNX bundle trained on keyword features only (no NER)
+    learned-context+NER  → ONNX bundle trained on keyword + ner_* features
+
+and reports **every axis the multi-task heads predict**:
+
+  accuracy        domain · media_type · playback_type · structure ·
+                  explicitness · mood · era
+  macro-F1        content_form_genres · content_genre · qualifiers   (multi-label)
+  content filter  adult / hentai recall from the content_form_genres axis
+
+The headline is the lift from rules → context-only → +NER across these axes.
+
+The two ONNX bundles are loaded from ``data/models/<rung>/``; a missing bundle
+is reported as ``unavailable`` rather than crashing.  Each backend predicts from
+the **precomputed feature columns** in the split, so the comparison is
+apples-to-apples on the identical rows.
+
+Outputs::
+
+    benchmarks/ladder_results.json   machine-readable
+    benchmarks/ladder_results.md     the markdown tables
+
+Run it (needs ``[onnx]``; the test split under ``data/release``)::
+
+    python -m benchmarks.ladder
+    python -m benchmarks.ladder --limit 5000      # quick smoke
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import time
+from typing import Callable, Dict, List, Optional, Tuple
+
+import numpy as np
+import pandas as pd
+
+from mediavocab import MediaType
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT = os.path.dirname(HERE)
+DEFAULT_DATA_DIR = os.path.join(REPO_ROOT, "data", "release")
+DEFAULT_MODELS_DIR = os.path.join(REPO_ROOT, "data", "models")
+RESULTS_JSON = os.path.join(HERE, "ladder_results.json")
+RESULTS_MD = os.path.join(HERE, "ladder_results.md")
+
+ADULT_GENRE = "adult"
+
+# axis -> (dataset column, kind) for scoring.  single → accuracy + macro-F1;
+# multi → multi-label macro-F1 over a JSON-list column.
+SINGLE_AXES = [
+    ("domain", "domain"),
+    ("media_type", "media_type"),
+    ("playback_type", "playback_type"),
+    ("structure", "structure"),
+    ("explicitness", "explicitness"),
+    ("mood", "mood"),
+    ("era", "decade"),
+]
+MULTI_AXES = [
+    ("content_form_genres", "content_form_genres"),
+    ("content_genre", "content_genre"),
+    ("qualifiers", "qualifiers"),
+]
+
+
+# ---------------------------------------------------------------------------
+# Data
+# ---------------------------------------------------------------------------
+
+def load_test(data_dir: str, limit: int = 0) -> pd.DataFrame:
+    pq = os.path.join(data_dir, "test.parquet")
+    csv = os.path.join(data_dir, "test.csv")
+    if os.path.isfile(pq):
+        df = pd.read_parquet(pq)
+    elif os.path.isfile(csv):
+        df = pd.read_csv(csv)
+    else:
+        raise FileNotFoundError(
+            f"no test split in {data_dir}; run python -m training.build_dataset")
+    if limit:
+        df = df.head(limit).reset_index(drop=True)
+    return df
+
+
+def _json_list(raw: object) -> List[str]:
+    try:
+        return [g for g in json.loads(raw) if g]
+    except Exception:
+        return []
+
+
+# ---------------------------------------------------------------------------
+# Metrics
+# ---------------------------------------------------------------------------
+
+def _percentile(values: List[float], pct: float) -> float:
+    if not values:
+        return 0.0
+    s = sorted(values)
+    k = (len(s) - 1) * pct
+    lo = int(k)
+    hi = min(lo + 1, len(s) - 1)
+    return s[lo] * (1 - (k - lo)) + s[hi] * (k - lo)
+
+
+def _macro_f1_single(truths: List[str], preds: List[str]) -> float:
+    labels = sorted(set(truths) | set(preds))
+    f1s = []
+    for l in labels:
+        tp = sum(1 for t, p in zip(truths, preds) if t == l and p == l)
+        fp = sum(1 for t, p in zip(truths, preds) if t != l and p == l)
+        fn = sum(1 for t, p in zip(truths, preds) if t == l and p != l)
+        prec = tp / (tp + fp) if (tp + fp) else 0.0
+        rec = tp / (tp + fn) if (tp + fn) else 0.0
+        f1s.append(2 * prec * rec / (prec + rec) if (prec + rec) else 0.0)
+    return sum(f1s) / len(f1s) if f1s else 0.0
+
+
+def _accuracy(truths: List[str], preds: List[str]) -> float:
+    if not truths:
+        return 0.0
+    return sum(1 for t, p in zip(truths, preds) if t == p) / len(truths)
+
+
+def _multilabel_macro_f1(truths: List[List[str]], preds: List[List[str]]) -> float:
+    labels = sorted({l for row in truths for l in row}
+                    | {l for row in preds for l in row})
+    if not labels:
+        return 0.0
+    f1s = []
+    for l in labels:
+        tp = sum(1 for t, p in zip(truths, preds) if l in t and l in p)
+        fp = sum(1 for t, p in zip(truths, preds) if l not in t and l in p)
+        fn = sum(1 for t, p in zip(truths, preds) if l in t and l not in p)
+        prec = tp / (tp + fp) if (tp + fp) else 0.0
+        rec = tp / (tp + fn) if (tp + fn) else 0.0
+        f1s.append(2 * prec * rec / (prec + rec) if (prec + rec) else 0.0)
+    return sum(f1s) / len(f1s)
+
+
+# ---------------------------------------------------------------------------
+# Prediction collection
+# ---------------------------------------------------------------------------
+
+def _collect_rules(df: pd.DataFrame) -> Dict[str, object]:
+    """KeywordMediaClassifier over the raw ``sentence`` — predicts each axis."""
+    from ovos_media_classifier import KeywordMediaClassifier
+    clf = KeywordMediaClassifier()
+    pred: Dict[str, list] = {a: [] for a, _ in SINGLE_AXES}
+    multi: Dict[str, list] = {a: [] for a, _ in MULTI_AXES}
+    lat = []
+    for sent, lang in zip(df["sentence"], df["lang"]):
+        t0 = time.perf_counter()
+        full = clf.classify_full(sent, lang)
+        cform = clf.classify_content_form_genres(sent, lang)
+        cgen = clf.classify_content_genres(sent, lang)
+        quals = clf.classify_qualifiers(sent, lang)
+        mood = clf.classify_mood(sent, lang)
+        era = clf.classify_era(sent, lang)
+        expl = clf.classify_explicitness(sent, lang)
+        lat.append((time.perf_counter() - t0) * 1000.0)
+        pred["domain"].append(full.domain.value)
+        pred["media_type"].append(full.media_type.value)
+        pred["playback_type"].append(full.playback_type.value)
+        pred["structure"].append(full.structure.value)
+        pred["explicitness"].append(expl)
+        pred["mood"].append(mood or "")
+        pred["era"].append(era or "")
+        multi["content_form_genres"].append(cform)
+        multi["content_genre"].append(cgen)
+        multi["qualifiers"].append(quals)
+    return {"pred": pred, "multi": multi, "lat": lat,
+            "model_bytes": 0, "status": "available"}
+
+
+def _collect_onnx(df: pd.DataFrame, bundle_dir: str) -> Dict[str, object]:
+    """ONNX bundle over the precomputed feature columns; predicts each axis."""
+    from ovos_media_classifier.onnx import OnnxMediaClassifier
+
+    clf = OnnxMediaClassifier.from_path(bundle_dir)
+    feat_names = clf._feature_names
+    missing = [c for c in feat_names if c not in df.columns]
+    if missing:
+        raise ValueError(f"test split missing {len(missing)} feature cols "
+                         f"(e.g. {missing[:3]})")
+    X = df[feat_names].to_numpy(dtype="float32")
+
+    pred: Dict[str, list] = {a: [] for a, _ in SINGLE_AXES}
+    multi: Dict[str, list] = {a: [] for a, _ in MULTI_AXES}
+    lat = []
+
+    def _single(axis):
+        h = clf._heads.get(axis)
+        if h is None:
+            return None
+        out = h["session"].run(None, {"input": row})
+        arr = next(np.asarray(o) for o in out
+                   if np.asarray(o).dtype.kind in "fiu"
+                   and np.asarray(o).reshape(1, -1).shape[-1] == len(h["labels"]))
+        return h["labels"].get(int(np.argmax(arr.reshape(-1))), "")
+
+    def _multi(axis):
+        h = clf._heads.get(axis)
+        if h is None:
+            return []
+        out = h["session"].run(None, {"input": row})
+        prob = next((np.asarray(o) for o in out if np.asarray(o).dtype.kind == "f"
+                     and np.asarray(o).reshape(1, -1).shape[-1] == len(h["labels"])),
+                    None)
+        if prob is None:
+            return []
+        v = prob.reshape(-1)
+        return [h["labels"][i] for i in range(len(h["labels"]))
+                if v[i] >= h["threshold"]]
+
+    # domain head label set (legacy domain head)
+    for i in range(len(df)):
+        row = X[i:i + 1]
+        t0 = time.perf_counter()
+        dprob = clf._run(clf._domain_session, row)
+        domain = clf._domain_labels.get(int(np.argmax(dprob)), "not_ocp")
+        mt = _single("media_type") or "generic"
+        pb = _single("playback_type") or "unknown"
+        st = _single("structure") or "unknown"
+        expl = _single("explicitness") or "clean"
+        mood = _single("mood") or ""
+        era = _single("era") or ""
+        cform = _multi("content_form_genres")
+        cgen = _multi("content_genre")
+        quals = _multi("qualifiers")
+        lat.append((time.perf_counter() - t0) * 1000.0)
+        pred["domain"].append(domain)
+        pred["media_type"].append(mt)
+        pred["playback_type"].append(pb)
+        pred["structure"].append(st)
+        pred["explicitness"].append(expl)
+        pred["mood"].append(mood)
+        pred["era"].append(era)
+        multi["content_form_genres"].append(cform)
+        multi["content_genre"].append(cgen)
+        multi["qualifiers"].append(quals)
+
+    size = sum(os.path.getsize(os.path.join(bundle_dir, f))
+               for f in os.listdir(bundle_dir))
+    return {"pred": pred, "multi": multi, "lat": lat,
+            "model_bytes": size, "status": "available"}
+
+
+# ---------------------------------------------------------------------------
+# Scoring
+# ---------------------------------------------------------------------------
+
+def _score_collected(df: pd.DataFrame, c: Dict[str, object]) -> Dict[str, object]:
+    axes: Dict[str, dict] = {}
+    for axis, col in SINGLE_AXES:
+        truths = df[col].astype(str).tolist()
+        preds = [str(x) for x in c["pred"][axis]]
+        # only score rows that HAVE a label for that axis (mood/era are sparse)
+        pairs = [(t, p) for t, p in zip(truths, preds) if t != ""]
+        if not pairs:
+            axes[axis] = {"n": 0, "accuracy": None, "macro_f1": None}
+            continue
+        t2, p2 = zip(*pairs)
+        axes[axis] = {"n": len(pairs),
+                      "accuracy": round(_accuracy(list(t2), list(p2)), 4),
+                      "macro_f1": round(_macro_f1_single(list(t2), list(p2)), 4)}
+    for axis, col in MULTI_AXES:
+        truths = [_json_list(v) for v in df[col]]
+        preds = c["multi"][axis]
+        axes[axis] = {
+            "macro_f1": round(_multilabel_macro_f1(truths, preds), 4),
+            "labelled_rows": sum(1 for t in truths if t),
+        }
+    lat = c["lat"]
+    return {
+        "axes": axes,
+        "content_filter": _cf_recall(df, c["multi"]["content_form_genres"]),
+        "latency_ms_median": round(_percentile(lat, 0.5), 5),
+        "latency_ms_p95": round(_percentile(lat, 0.95), 5),
+        "model_bytes": c["model_bytes"],
+        "status": "available",
+    }
+
+
+def _cf_recall(df: pd.DataFrame, form_preds: List[List[str]]) -> Dict[str, object]:
+    """Adult/hentai recall from the content_form_genres axis + false-block rate."""
+    from ovos_media_classifier import ContentFilter
+    cf = ContentFilter()
+    truth = [_json_list(v) for v in df["content_form_genres"]]
+    intents = list(df["intent"]) if "intent" in df.columns else [""] * len(df)
+
+    def blk(g):
+        b, _ = cf.is_blocked(MediaType.GENERIC, g)
+        return b
+
+    a_tot = a_blk = h_tot = h_blk = na_tot = na_blk = 0
+    for tg, pg, it in zip(truth, form_preds, intents):
+        if ADULT_GENRE in tg:
+            a_tot += 1
+            if blk(pg):
+                a_blk += 1
+            if it == "hentai":
+                h_tot += 1
+                if blk(pg):
+                    h_blk += 1
+        else:
+            na_tot += 1
+            if blk(pg):
+                na_blk += 1
+    return {
+        "adult_rows": a_tot, "adult_blocked": a_blk,
+        "recall": round(a_blk / a_tot, 4) if a_tot else 0.0,
+        "hentai_rows": h_tot, "hentai_blocked": h_blk,
+        "hentai_recall": round(h_blk / h_tot, 4) if h_tot else 0.0,
+        "non_adult_rows": na_tot, "non_adult_blocked": na_blk,
+        "false_block_rate": round(na_blk / na_tot, 4) if na_tot else 0.0,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Orchestration
+# ---------------------------------------------------------------------------
+
+RUNGS = [
+    ("rules", None),
+    ("learned-context", "context"),
+    ("learned-context+NER", "context_ner"),
+]
+
+
+def run(data_dir: str, models_dir: str, limit: int = 0) -> Dict[str, object]:
+    df = load_test(data_dir, limit=limit)
+    rungs: Dict[str, object] = {}
+    for name, fs in RUNGS:
+        if fs is None:
+            print(f"[{name}] rules backend on {len(df):,} rows …")
+            rungs[name] = _score_collected(df, _collect_rules(df))
+            continue
+        bundle = os.path.join(models_dir, fs)
+        if not os.path.isfile(os.path.join(bundle, "meta.json")):
+            rungs[name] = {"status": "unavailable",
+                           "reason": f"no bundle at {bundle}; "
+                                     f"run python -m training.train_sklearn"}
+            print(f"[{name}] unavailable (no bundle)")
+            continue
+        print(f"[{name}] ONNX bundle {bundle} on {len(df):,} rows …")
+        try:
+            rungs[name] = _score_collected(df, _collect_onnx(df, bundle))
+        except Exception as e:  # noqa: BLE001
+            rungs[name] = {"status": "unavailable",
+                           "reason": f"{type(e).__name__}: {e}"}
+            print(f"  failed: {e}")
+    return {"n_test_rows": len(df), "data_dir": data_dir,
+            "models_dir": models_dir, "rungs": rungs}
+
+
+def write_json(report, path: str = RESULTS_JSON) -> str:
+    with open(path, "w", encoding="utf-8") as fh:
+        json.dump(report, fh, indent=2)
+    return path
+
+
+def _fmt_bytes(n: int) -> str:
+    if not n:
+        return "—"
+    if n < 1024 * 1024:
+        return f"{n / 1024:.0f} KiB"
+    return f"{n / (1024 * 1024):.1f} MiB"
+
+
+def write_md(report, path: str = RESULTS_MD) -> str:
+    avail = [(n, report["rungs"][n]) for n, _ in RUNGS
+             if report["rungs"].get(n, {}).get("status") == "available"]
+    L: List[str] = []
+    L.append("# ovos-media-classifier — the multi-task ladder\n")
+    L.append(f"Held-out **test split**: {report['n_test_rows']:,} utterances. Per "
+             "axis, the lift from **rules → learned (context-only) → learned "
+             "(context+NER)** is the headline result.\n")
+
+    # per-axis accuracy table (single-label axes)
+    L.append("## Single-label axes — accuracy\n")
+    L.append("| axis | " + " | ".join(n for n, _ in avail) + " |")
+    L.append("|" + "---|" * (1 + len(avail)))
+    for axis, _col in SINGLE_AXES:
+        cells = []
+        for _n, b in avail:
+            m = b["axes"].get(axis, {})
+            acc = m.get("accuracy")
+            cells.append(f"{acc:.3f}" if acc is not None else "–")
+        L.append(f"| {axis} | " + " | ".join(cells) + " |")
+    L.append("")
+
+    # multi-label axes — macro-F1
+    L.append("## Multi-label axes — macro-F1\n")
+    L.append("| axis | " + " | ".join(n for n, _ in avail) + " |")
+    L.append("|" + "---|" * (1 + len(avail)))
+    for axis, _col in MULTI_AXES:
+        cells = [f"{b['axes'].get(axis, {}).get('macro_f1', 0):.3f}"
+                 for _n, b in avail]
+        L.append(f"| {axis} | " + " | ".join(cells) + " |")
+    L.append("")
+
+    # content filter
+    L.append("## Content filter (from the content_form_genres axis)\n")
+    L.append("| rung | adult recall | hentai recall | false-block | "
+             "median ms | p95 ms | size |")
+    L.append("|---|---|---|---|---|---|---|")
+    for n, b in avail:
+        cf = b["content_filter"]
+        L.append(f"| {n} | {cf['recall']:.3f} ({cf['adult_blocked']}/{cf['adult_rows']}) "
+                 f"| {cf['hentai_recall']:.3f} | {cf['false_block_rate']:.3f} | "
+                 f"{b['latency_ms_median']:.4f} | {b['latency_ms_p95']:.4f} | "
+                 f"{_fmt_bytes(b['model_bytes'])} |")
+    L.append("")
+
+    unavailable = [n for n, _ in RUNGS
+                   if report["rungs"].get(n, {}).get("status") != "available"]
+    if unavailable:
+        L.append("## Unavailable rungs\n")
+        for n in unavailable:
+            L.append(f"- **{n}**: {report['rungs'][n].get('reason', '?')}")
+        L.append("")
+
+    with open(path, "w", encoding="utf-8") as fh:
+        fh.write("\n".join(L))
+    return path
+
+
+def main(argv: Optional[List[str]] = None) -> int:
+    ap = argparse.ArgumentParser(description=__doc__,
+                                 formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--data-dir", default=DEFAULT_DATA_DIR)
+    ap.add_argument("--models-dir", default=DEFAULT_MODELS_DIR)
+    ap.add_argument("--limit", type=int, default=0)
+    args = ap.parse_args(argv)
+    report = run(args.data_dir, args.models_dir, limit=args.limit)
+    jp = write_json(report)
+    mp = write_md(report)
+    print()
+    for n, _ in RUNGS:
+        b = report["rungs"].get(n, {})
+        if b.get("status") != "available":
+            print(f"  {n:22s} unavailable")
+            continue
+        ax = b["axes"]
+        print(f"  {n:22s} media_type={ax['media_type']['accuracy']} "
+              f"form_genres_F1={ax['content_form_genres']['macro_f1']} "
+              f"CFrecall={b['content_filter']['recall']}")
+    print(f"wrote {jp}\nwrote {mp}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

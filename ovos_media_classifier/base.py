@@ -44,14 +44,18 @@ class AbstractMediaClassifier(ABC):
     def classify_domain(self, query: str, lang: str) -> Tuple[OCPDomain, float]:
         """Classify the top-level OCP domain: ocp_play / ocp_control / not_ocp.
 
-        The default implementation delegates to classify() — if a non-GENERIC
-        MediaType is returned it infers OCP_PLAY; otherwise NOT_OCP.
+        The default implementation first consults ``classify_control`` — a
+        transport-control intent (pause / stop / next / …) routes to
+        ``OCP_CONTROL``.  Otherwise it delegates to ``classify``: a non-GENERIC
+        MediaType infers ``OCP_PLAY``; else ``NOT_OCP``.
 
         Subclasses with a dedicated domain head (M2V, padatious domain
         container, sklearn domain model) should override this for better
-        accuracy, especially to detect OCP_CONTROL intents.
+        accuracy.
         """
         media_type, conf = self.classify(query, lang)
+        if self.classify_control(query, lang) is not None:
+            return OCPDomain.OCP_CONTROL, conf
         if media_type != MediaType.GENERIC:
             return OCPDomain.OCP_PLAY, conf
         return OCPDomain.NOT_OCP, 0.0
@@ -111,6 +115,73 @@ class AbstractMediaClassifier(ABC):
         media_type, _ = self.classify(query, lang)
         return infer_structure(media_type)
 
+    # ------------------------------------------------------------------
+    # Extended multi-task axes (OVOS-MEDIA-CLASSIFY).
+    #
+    # Each is a sub-task a trained backend MAY predict with its own head; the
+    # defaults here keep untrained backends (the keyword default) working by
+    # deriving from the cheaper axes or returning empty.  See docs/model.md.
+    # ------------------------------------------------------------------
+
+    def classify_content_form_genres(self, query: str, lang: str) -> List[str]:
+        """Sensitive / content-form genre tags (``adult`` / ``anime`` /
+        ``animation`` / ``asmr``) — **this is what the content filter reads**.
+
+        Default: delegates to :meth:`classify_genres` (the keyword backend
+        surfaces exactly these form tags).  A trained backend SHOULD override
+        with a dedicated multi-label head so it can flag ``adult`` even when it
+        is unsure of the exact ``MediaType`` (more robust blocking).
+        """
+        return self.classify_genres(query, lang)
+
+    def classify_content_genres(self, query: str, lang: str) -> List[str]:
+        """The **real** genre(s) — rock/jazz/action/comedy/horror/… (multi-label).
+
+        Orthogonal to the content-form tags.  Default: ``[]`` (the keyword
+        backend does not model open-vocabulary genre); a trained backend
+        overrides with its ``content_genre`` head.
+        """
+        return []
+
+    def classify_mood(self, query: str, lang: str) -> Optional[str]:
+        """The mood / activity (chill/workout/study/party/sleep/…) or ``None``.
+
+        Default: ``None`` — a trained backend overrides with its ``mood`` head.
+        """
+        return None
+
+    def classify_era(self, query: str, lang: str) -> Optional[str]:
+        """The release era / decade (e.g. ``"1980s"``) or ``None``.
+
+        Default: ``None`` — a trained backend overrides with its ``era`` head.
+        """
+        return None
+
+    def classify_explicitness(self, query: str, lang: str) -> str:
+        """``"adult"`` when an adult content-form tag is present, else ``"clean"``.
+
+        Default: derived from :meth:`classify_content_form_genres`.
+        """
+        return "adult" if "adult" in self.classify_content_form_genres(query, lang) \
+            else "clean"
+
+    def classify_qualifiers(self, query: str, lang: str) -> List[str]:
+        """Result-narrowing qualifiers (multi-label): ``black_and_white`` /
+        ``silent`` / ``live`` / ``subtitled`` / ``dubbed`` / ``audio_described`` /
+        ``trailer`` / … — strong filter signals that are *not* media types.
+
+        Default: ``[]`` — backends that surface them (keyword via ``BWKeyword`` /
+        ``SilentKeyword`` / …, trained ``qualifiers`` head) override this.
+        """
+        return []
+
+    def classify_control_intent(self, query: str, lang: str):
+        """The :class:`~ovos_media_classifier.intents.OCPControlIntent`, or ``None``.
+
+        Default: delegates to :meth:`classify_control`.
+        """
+        return self.classify_control(query, lang)
+
     def classify_full(self, query: str, lang: str):
         """Return the full multi-axis :class:`~ovos_media_classifier.axes.MediaClassification`.
 
@@ -130,21 +201,34 @@ class AbstractMediaClassifier(ABC):
 
         This is the classifier's primary output for the OCP pipeline: *all* the
         NLP (classification + the coarse axes) lives here, and the pipeline
-        forwards the returned ``Signals`` straight to ``MediaProvider.serves`` /
-        ``search`` without doing any parsing of its own.
+        forwards the returned ``Signals`` straight to ``MediaProvider.search``
+        without doing any parsing of its own.
 
         The base populates the classification axes (``medium`` /
         ``playback_type`` / ``content_genres``) plus the raw ``title``; backends
         that extract entities (artist / year / season / episode) should override
         to enrich the ``Signals`` further.
+
+        ``content_genres`` carries both the **content-form** tags (``adult`` /
+        ``anime`` / …) and the **real** genres (rock / action / …) so a provider
+        can filter on either.  The result-narrowing **qualifiers**
+        (``black_and_white`` / ``silent`` / ``subtitled`` / …) are joined into
+        the ``edition`` filter field — a strong cut on the candidate set.
         """
         from mediavocab import Signals, MediaType
         full = self.classify_full(query, lang)
         sentinels = {MediaType.GENERIC, MediaType.NOT_MEDIA, MediaType.CONTROL}
+
+        # form genres (the content-filter axis) + the real genre(s)
+        genres = list(dict.fromkeys(
+            list(full.genres) + list(self.classify_content_genres(query, lang))))
+        qualifiers = self.classify_qualifiers(query, lang)
+
         return Signals.as_query(
             title=query or None,
             medium=full.media_type if full.media_type not in sentinels else None,
             playback_type=full.playback_type,
-            content_genres=list(full.genres),
+            content_genres=genres,
+            edition=", ".join(qualifiers) or None,
             language=(lang.split("-")[0] if lang else None),
         )

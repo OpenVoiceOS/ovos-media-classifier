@@ -36,7 +36,8 @@ clf.classify_full("play a podcast", "en-us").as_dict()
 | **An operator tuning backends** | [backends.md](backends.md) (selection + config keys), [entity-lists.md](entity-lists.md), [contextual-classification.md](contextual-classification.md) |
 | **Blocking content** | [content-filtering.md](content-filtering.md) |
 | **A plugin author** writing an external classifier | [external-plugins.md](external-plugins.md), then [stable-api.md](stable-api.md) for the contract |
-| **A contributor** training a model | [classification-model.md](classification-model.md) (the multi-head model), [dataset.md](dataset.md) (the data + its generator), and [benchmarks](../benchmarks/README.md) |
+| **A contributor** training a model | [model.md](model.md) (the multi-task model + the ladder + limitations), [dataset.md](dataset.md) (the data + its generator), and [benchmarks](../benchmarks/README.md) |
+| **An ML engineer** extending it | [extending.md](extending.md) (add a backend, retrain, add a new axis/head), then [model.md](model.md) |
 
 New to the vocabulary (OCP, OPM, domain, axis, NER, …)? Read
 [glossary.md](glossary.md) first.
@@ -47,6 +48,8 @@ New to the vocabulary (OCP, OPM, domain, axis, NER, …)? Read
 |---|---|
 | [glossary.md](glossary.md) | Every term and acronym, the 30-second mental model, and the command-vs-content distinction |
 | [classification-model.md](classification-model.md) | The multi-axis model: the four axes + tags, why orthogonal axes rather than a strict tree, and the `MediaType`→(playback_type, structure) defaults |
+| [model.md](model.md) | The trained model for an ML engineer: the feature representation, the multi-task per-axis heads + soft-gating, the rules→context→context+NER ladder, the self-describing bundle/retrain contract, the benchmark table, and the honest limitations |
+| [extending.md](extending.md) | Step-by-step: implement a new `AbstractMediaClassifier` backend + register it under `opm.media.classifier`, retrain the ONNX bundle with `train_sklearn.py`, and add a new axis/head end-to-end |
 | [taxonomy.md](taxonomy.md) | `mediavocab.MediaType` enforcement, the raw label→type/genre mapping, and the query-vs-content distinction |
 | [backends.md](backends.md) | The keyword, NER and ONNX backends, how `load_media_classifier` selects between them, and adding an external classifier |
 | [entity-lists.md](entity-lists.md) | Entity lists (`label → list of strings`): the source-agnostic store (runtime / `.csv` / `.tsv` / `.jsonl` / HuggingFace / media-server / inline) the NER backend consumes |

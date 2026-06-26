@@ -86,10 +86,10 @@ read the [glossary](docs/glossary.md) first if the terms are new.
 
 - New here → [glossary](docs/glossary.md) · [index](docs/index.md) · [examples/](examples/)
 - API reference → [stable API](docs/stable-api.md)
-- The model → [classification model](docs/classification-model.md) · [taxonomy](docs/taxonomy.md)
+- The model → [classification model](docs/classification-model.md) · [the trained model](docs/model.md) · [taxonomy](docs/taxonomy.md)
 - Tuning backends → [backends](docs/backends.md) · [entity lists](docs/entity-lists.md) · [contextual classification](docs/contextual-classification.md)
 - Moderation → [content filtering](docs/content-filtering.md)
-- Writing a classifier → [external plugins](docs/external-plugins.md)
+- Writing / training a classifier → [external plugins](docs/external-plugins.md) · [extending](docs/extending.md)
 - Measuring → [benchmarks](benchmarks/README.md)
 
 ## Credits

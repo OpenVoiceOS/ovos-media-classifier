@@ -208,6 +208,73 @@ def emit_tvmaze_shows(row):
         yield ("release_year", yr.group(1))
 
 
+# IMDb ``title.basics``-style ``titleType`` → slot label.  ``movie``/``tvMovie``
+# → movie_title, the series types → tv_show_title, shorts → short_film_title,
+# games → game_title.  Other types (tvEpisode, video, …) are ignored.
+_IMDB_TYPE_TO_SLOT: Dict[str, str] = {
+    "movie": "movie_title",
+    "tvmovie": "movie_title",
+    "tvseries": "tv_show_title",
+    "tvminiseries": "tv_show_title",
+    "short": "short_film_title",
+    "tvshort": "short_film_title",
+    "videogame": "game_title",
+}
+# slot → the genre pool a title's IMDb ``genres`` feed (besides content_genre)
+_IMDB_SLOT_TO_GENRE_POOL: Dict[str, str] = {
+    "movie_title": "movie_genre",
+    "tv_show_title": "tv_genre",
+    "game_title": "game_genre",
+}
+
+
+def emit_imdb_titles(row):
+    """IMDb title.basics-style rows → the right title slot by ``titleType``.
+
+    The authoritative, type-split title source (far larger than the wikidata
+    fallback).  ``isAdult == 1`` titles are routed to the adult pool (kept OUT of
+    the clean movie/tv pools); ``genres`` feed ``content_genre`` (+ the per-type
+    genre pool) and ``startYear`` feeds ``release_year`` / ``release_decade``.
+
+    Tolerant of column-name variants (``titleType``/``title_type``,
+    ``primaryTitle``/``title``) so it keeps working as the upload firms up.
+    """
+    ttype = str(row.get("titleType") or row.get("title_type") or "").strip().lower()
+    slot = _IMDB_TYPE_TO_SLOT.get(ttype)
+    if not slot:
+        return
+    title = (_clean(row.get("primaryTitle")) or _clean(row.get("primary_title"))
+             or _clean(row.get("title")) or _clean(row.get("originalTitle")))
+    if not title:
+        return
+
+    is_adult = str(row.get("isAdult") or row.get("is_adult") or "").strip() in (
+        "1", "true", "True")
+    if is_adult:
+        # never leak adult titles into the clean pools
+        yield ("adult_title", title)
+    else:
+        yield (slot, title)
+        genre_pool = _IMDB_SLOT_TO_GENRE_POOL.get(slot)
+        # IMDb ``genres`` is a comma-joined string ("Sci-Fi,Thriller"); split it.
+        raw_genres = row.get("genres")
+        parts = []
+        for chunk in _maybe_list(raw_genres):
+            parts.extend(str(chunk).split(","))
+        for g in parts:
+            g = _clean(g)
+            if not g or g == "\\N":
+                continue
+            yield ("content_genre", g)
+            if genre_pool:
+                yield (genre_pool, g)
+        year = _clean(row.get("startYear") or row.get("start_year"))
+        m = re.search(r"(\d{4})", year)
+        if m and m.group(1) != "0000":
+            yield ("release_year", m.group(1))
+            yield ("release_decade", f"{(int(m.group(1)) // 10) * 10}s")
+
+
 def _is_hentai(row) -> bool:
     """True for adult anime/manga — splits the adult subset out of anime_title.
 
@@ -577,6 +644,12 @@ SOURCE_SPECS: List[Spec] = [
     Spec("musicbrainz-releases", emit_musicbrainz_releases,
          local="musicbrainz_releases", hf="musicbrainz-releases"),
     # ---- video / shows / anime ----
+    # IMDb is the authoritative, type-split title source — listed FIRST so its
+    # movie_title / tv_show_title / short_film_title / game_title fill the
+    # (capped) pools before the smaller wikidata fallback.  The dataset may be
+    # empty while it is still uploading; ``ingest`` tolerates that (it yields no
+    # rows and the existing pools are used unchanged).
+    Spec("imdb-titles", emit_imdb_titles, hf="media-metadata-imdb-titles"),
     Spec("tvmaze-shows", emit_tvmaze_shows,
          local="tvmaze_shows", hf="media-metadata-tvmaze-shows"),
     Spec("anilist-anime", emit_anilist_anime,
