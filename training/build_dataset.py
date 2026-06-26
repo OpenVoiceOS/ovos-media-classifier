@@ -66,6 +66,7 @@ _HERE = os.path.dirname(os.path.abspath(__file__))
 TEMPLATES_DIR = os.path.join(_HERE, "templates")
 SEED_ENTITIES_DIR = os.path.join(_HERE, "seed_entities")
 DEFAULT_ENTITIES_DIR = os.path.join(os.path.dirname(_HERE), "data", "entities")
+DEFAULT_RELATIONAL_DIR = os.path.join(os.path.dirname(_HERE), "data", "relational")
 
 csv.field_size_limit(min(sys.maxsize, 2 ** 31 - 1))
 
@@ -91,6 +92,101 @@ SLOT_ALIASES: Dict[str, str] = {
 
 # Every media-template row is a play request.
 PLAY_DOMAIN = "ocp_play"
+
+
+# ---------------------------------------------------------------------------
+# Relational (coherent) slot groups.
+#
+# When a template fills MULTIPLE slots that belong to the same group, they are
+# drawn from ONE real record so the surface text is coherent (a real album by a
+# real artist; episode N of a real series with its real episode title).  Each
+# group binds a relational source (``data/relational/<file>.jsonl`` or a set of
+# per-label entity pools that share an index) to a ``{slot: field}`` map.
+#
+# Single-slot templates and CONFUSABLE slots (where coherence would *narrow*
+# the lexical diversity the model needs) deliberately stay independent — only
+# the multi-slot groups below are coherent.  Sources that are not present are
+# skipped and those slots fall back to independent per-pool sampling.
+# ---------------------------------------------------------------------------
+
+class RelationalGroup:
+    """A set of template slots filled coherently from one real record."""
+
+    def __init__(self, name: str, jsonl: Optional[str],
+                 slot_to_field: Dict[str, str]):
+        self.name = name
+        self.jsonl = jsonl                 # data/relational/<jsonl>.jsonl
+        self.slot_to_field = slot_to_field  # template slot -> record field
+        self.records: List[dict] = []
+
+    @property
+    def slots(self) -> set:
+        return set(self.slot_to_field)
+
+
+# IMDb-join relational sources (built by ``training/imdb_relations.py``).
+RELATIONAL_GROUPS: List[RelationalGroup] = [
+    # movies: coherent (title, genre, year); director/writer are coherent ONLY
+    # when the credits hook resolved persons (else those fields are absent and
+    # the person slots fall back to independent per-pool fill — by design).
+    RelationalGroup("movies", "movies", {
+        "movie_title": "title",
+        "movie_genre": "genre",
+        "release_year": "year",
+        "movie_director": "director",
+        "movie_writer": "writer",
+        "movie_actor": "actor",
+    }),
+    # episodic: season N / episode N of a real series (+ its real episode title).
+    RelationalGroup("episodes", "episodes", {
+        "tv_show_title": "tv_show",
+        "season_number": "season",
+        "episode_number": "episode",
+        "episode_title": "episode_title",
+    }),
+    # NB: bw/silent coherence is handled by the REAL bw_movie_title /
+    # silent_movie_title pools that imdb_relations.py fills (each title is a real
+    # black-and-white / silent film), so the bw_movie / silent_movie intents fill
+    # a genuine qualifier-matched title via the normal per-pool path — no
+    # multi-slot record coordination is needed there.
+
+    # ---- non-IMDb domains (records from training.ingest_entities --relations) --
+    RelationalGroup("music", "music", {
+        "album_name": "album",
+        "track_name": "track",
+        "artist_name": "artist",
+        "release_year": "year",
+    }),
+    RelationalGroup("anime", "anime", {
+        "anime_title": "anime_title",
+        "anime_studio": "anime_studio",
+        "anime_genre": "anime_genre",
+        "release_year": "year",
+    }),
+    RelationalGroup("tv", "tv", {
+        "tv_show_title": "tv_show",
+        "tv_network": "tv_network",
+        "tv_genre": "tv_genre",
+        "release_year": "year",
+    }),
+    RelationalGroup("audiobook", "audiobook", {
+        "audiobook_title": "audiobook_title",
+        "audiobook_author": "audiobook_author",
+        "audiobook_narrator": "audiobook_narrator",
+        "audiobook_genre": "audiobook_genre",
+    }),
+    RelationalGroup("book", "book", {
+        "book_title": "book_title",
+        "book_author": "book_author",
+        "book_genre": "book_genre",
+        "release_year": "year",
+    }),
+    RelationalGroup("podcast", "podcast", {
+        "podcast_title": "podcast_title",
+        "podcast_host": "podcast_host",
+        "podcast_genre": "podcast_genre",
+    }),
+]
 
 
 # ---------------------------------------------------------------------------
@@ -125,6 +221,58 @@ def load_entity_pools(entities_dir: str) -> Dict[str, List[str]]:
         if slot not in pools and target in pools:
             pools[slot] = pools[target]
     return pools
+
+
+def load_relational_groups(relational_dir: str) -> List[RelationalGroup]:
+    """Populate each ``RelationalGroup`` from its ``data/relational/*.jsonl``.
+
+    Groups with no file are returned with an empty ``records`` list (their slots
+    then fall back to independent per-pool sampling).
+    """
+    groups: List[RelationalGroup] = []
+    for g in RELATIONAL_GROUPS:
+        recs: List[dict] = []
+        if g.jsonl:
+            path = os.path.join(relational_dir, f"{g.jsonl}.jsonl")
+            if os.path.isfile(path):
+                with open(path, encoding="utf-8") as fh:
+                    for line in fh:
+                        line = line.strip()
+                        if line:
+                            try:
+                                recs.append(json.loads(line))
+                            except json.JSONDecodeError:
+                                continue
+        g.records = recs
+        if recs:
+            print(f"  relational[{g.name}]: {len(recs):,} records")
+        groups.append(g)
+    return groups
+
+
+def load_vote_weights(entities_dir: str) -> Dict[str, float]:
+    """Load ``_imdb_votes.csv`` → ``{title_lower: weight}`` (popularity sampling).
+
+    Weight is ``log1p(num_votes)`` so the popular head is favoured without the
+    tail vanishing (a floor of 1.0 keeps every title sampleable).
+    """
+    import math
+    path = os.path.join(entities_dir, "_imdb_votes.csv")
+    weights: Dict[str, float] = {}
+    if not os.path.isfile(path):
+        return weights
+    try:
+        df = pd.read_csv(path, dtype=str, keep_default_na=False)
+    except Exception:
+        return weights
+    for value, nv in zip(df.get("value", []), df.get("num_votes", [])):
+        try:
+            weights[str(value).lower()] = 1.0 + math.log1p(float(nv or 0))
+        except (TypeError, ValueError):
+            continue
+    if weights:
+        print(f"  popularity weights: {len(weights):,} titles")
+    return weights
 
 
 def load_leadin_vocabs(lang: str) -> Dict[str, Sequence[str]]:
@@ -262,22 +410,69 @@ def _derive_axes(intent: str, genres: List[str],
     }
 
 
+# slots whose value text is popularity-weighted when a vote table is present.
+_WEIGHTED_SLOTS = ("movie_title",)
+
+
+def _weighted_choice(slot: str, pool: List[str], rng: random.Random,
+                     weights: Optional[Dict[str, float]]) -> str:
+    """Sample a value from a pool, popularity-weighted when ``weights`` apply.
+
+    Uses a small candidate sample (so weighting stays O(k), not O(pool)) and
+    keeps a floor weight so the long tail still appears.
+    """
+    if not weights or slot not in _WEIGHTED_SLOTS or len(pool) <= 2:
+        return rng.choice(pool)
+    k = min(64, len(pool))
+    cands = rng.sample(pool, k)
+    ws = [weights.get(c.lower(), 1.0) for c in cands]
+    return rng.choices(cands, weights=ws, k=1)[0]
+
+
 def fill_slots(
     sample: str, pools: Dict[str, List[str]], rng: random.Random,
+    groups: Optional[List[RelationalGroup]] = None,
+    weights: Optional[Dict[str, float]] = None,
 ) -> Optional[Tuple[str, Dict[str, str]]]:
-    """Replace each ``{slot}`` with a sampled real entity.
+    """Replace each ``{slot}`` with a sampled real entity (coherent where possible).
+
+    When several slots in the sample belong to one :class:`RelationalGroup` that
+    has records loaded, ONE record is drawn and those slots are filled from it so
+    the surface text is coherent.  Slots the record cannot fill (and slots in no
+    group) fall back to independent per-pool sampling — popularity-weighted for
+    ``movie_title`` when a vote table is supplied.
 
     Returns ``(filled_sentence, {slot: value})`` or ``None`` if a required slot
     pool is empty (the sample is skipped — never emit a literal ``{slot}``).
     """
+    sample_slots = set(_SLOT_RE.findall(sample))
     chosen: Dict[str, str] = {}
+
+    # ---- coherent multi-slot fills from relational records ----
+    if groups:
+        for g in groups:
+            if not g.records:
+                continue
+            hit = sample_slots & g.slots
+            # only coordinate when the template uses MORE THAN ONE of the
+            # group's slots (a single slot stays independent by design).
+            if len(hit) < 2:
+                continue
+            rec = rng.choice(g.records)
+            for slot in hit:
+                field = g.slot_to_field.get(slot)
+                val = str(rec.get(field, "")).strip() if field else ""
+                if val:
+                    chosen[slot] = val
+            # remaining group slots fall through to independent fill below
+
     filled = sample
     for slot in _SLOT_RE.findall(sample):
-        pool = pools.get(slot)
-        if not pool:
-            return None
         if slot not in chosen:
-            chosen[slot] = rng.choice(pool)
+            pool = pools.get(slot)
+            if not pool:
+                return None
+            chosen[slot] = _weighted_choice(slot, pool, rng, weights)
         filled = filled.replace("{" + slot + "}", chosen[slot], 1)
     return " ".join(filled.split()), chosen
 
@@ -285,6 +480,8 @@ def fill_slots(
 def build_rows_for_lang(
     lang: str, pools: Dict[str, List[str]],
     fills_per_template: int, rng: random.Random,
+    groups: Optional[List[RelationalGroup]] = None,
+    weights: Optional[Dict[str, float]] = None,
 ) -> List[dict]:
     """Expand + slot-fill all templates for one language into labelled rows."""
     vocs = load_leadin_vocabs(lang)
@@ -305,7 +502,8 @@ def build_rows_for_lang(
                 n_fills = fills_per_template if _SLOT_RE.search(sample) else 1
                 seen_local: set = set()
                 for _ in range(n_fills):
-                    res = fill_slots(sample, pools, rng)
+                    res = fill_slots(sample, pools, rng, groups=groups,
+                                     weights=weights)
                     if res is None:
                         break
                     sentence, slot_values = res
@@ -532,7 +730,8 @@ def build(out_dir: str, entities_dir: str, langs: List[str],
           fills_per_template: int, target_per_type: int, adult_cap: int,
           seed: int, push: bool = False,
           repo: str = "TigreGotico/ocp-media-intents",
-          private: bool = False) -> None:
+          private: bool = False,
+          relational_dir: str = DEFAULT_RELATIONAL_DIR) -> None:
     os.makedirs(out_dir, exist_ok=True)
     rng = random.Random(seed)
 
@@ -540,9 +739,14 @@ def build(out_dir: str, entities_dir: str, langs: List[str],
     pools = load_entity_pools(entities_dir)
     print(f"  {len(pools)} pools; {sum(len(v) for v in pools.values()):,} entities")
 
+    print(f"Loading relational records from {relational_dir} …")
+    groups = load_relational_groups(relational_dir)
+    weights = load_vote_weights(entities_dir)
+
     all_rows: List[dict] = []
     for lang in langs:
-        rows = build_rows_for_lang(lang, pools, fills_per_template, rng)
+        rows = build_rows_for_lang(lang, pools, fills_per_template, rng,
+                                   groups=groups, weights=weights)
         print(f"  {lang}: {len(rows):,} filled rows")
         all_rows.extend(rows)
 
@@ -607,6 +811,7 @@ def main() -> None:
         formatter_class=argparse.RawDescriptionHelpFormatter, epilog=__doc__)
     ap.add_argument("--out-dir", default="data/release")
     ap.add_argument("--entities-dir", default=DEFAULT_ENTITIES_DIR)
+    ap.add_argument("--relational-dir", default=DEFAULT_RELATIONAL_DIR)
     ap.add_argument("--langs", nargs="*", default=CORE_LANGS)
     ap.add_argument("--fills-per-template", type=int, default=6,
                     help="entity fills per expanded slotted sample (default: 6)")
@@ -623,7 +828,8 @@ def main() -> None:
     build(out_dir=args.out_dir, entities_dir=args.entities_dir, langs=args.langs,
           fills_per_template=args.fills_per_template,
           target_per_type=args.target_per_type, adult_cap=args.adult_cap,
-          seed=args.seed, push=args.push, repo=args.repo, private=args.private)
+          seed=args.seed, push=args.push, repo=args.repo, private=args.private,
+          relational_dir=args.relational_dir)
 
 
 if __name__ == "__main__":
