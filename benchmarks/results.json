@@ -1,26 +1,26 @@
 {
   "dataset": {
-    "total": 875,
+    "total": 1571,
     "by_lang": {
-      "de-de": 277,
-      "en-us": 360,
-      "pt-pt": 238
+      "de-de": 292,
+      "en-us": 1026,
+      "pt-pt": 253
     },
     "by_type": {
-      "audio_drama": 24,
-      "audiobook": 84,
-      "comic": 36,
-      "episodic_series": 148,
-      "game": 18,
-      "movie": 222,
-      "music": 78,
-      "music_video": 56,
-      "podcast": 21,
+      "audio_drama": 54,
+      "audiobook": 90,
+      "comic": 96,
+      "episodic_series": 238,
+      "game": 48,
+      "movie": 432,
+      "music": 192,
+      "music_video": 74,
+      "podcast": 33,
       "procedural_ambient": 27,
-      "radio": 45,
-      "tv": 116
+      "radio": 135,
+      "tv": 152
     },
-    "adult_rows": 64
+    "adult_rows": 124
   },
   "available_backends": [
     "keyword",
@@ -34,66 +34,66 @@
   ],
   "backends": {
     "keyword": {
-      "n": 875,
-      "accuracy": 0.9897,
-      "macro_f1": 0.9839,
-      "latency_ms_median": 0.0274,
-      "latency_ms_p95": 0.0423,
-      "rows_per_sec": 7831.8,
+      "n": 1571,
+      "accuracy": 0.9917,
+      "macro_f1": 0.9904,
+      "latency_ms_median": 0.044,
+      "latency_ms_p95": 0.0925,
+      "rows_per_sec": 7044.3,
       "per_type": {
         "audio_drama": {
           "precision": 1.0,
           "recall": 1.0,
           "f1": 1.0,
-          "support": 24
+          "support": 54
         },
         "audiobook": {
-          "precision": 0.9032,
+          "precision": 0.9184,
           "recall": 1.0,
-          "f1": 0.9492,
-          "support": 84
+          "f1": 0.9574,
+          "support": 90
         },
         "comic": {
           "precision": 1.0,
-          "recall": 0.75,
-          "f1": 0.8571,
-          "support": 36
+          "recall": 0.8646,
+          "f1": 0.9274,
+          "support": 96
         },
         "episodic_series": {
           "precision": 1.0,
           "recall": 1.0,
           "f1": 1.0,
-          "support": 148
+          "support": 238
         },
         "game": {
           "precision": 1.0,
           "recall": 1.0,
           "f1": 1.0,
-          "support": 18
+          "support": 48
         },
         "movie": {
           "precision": 1.0,
           "recall": 1.0,
           "f1": 1.0,
-          "support": 222
+          "support": 432
         },
         "music": {
           "precision": 1.0,
           "recall": 1.0,
           "f1": 1.0,
-          "support": 78
+          "support": 192
         },
         "music_video": {
           "precision": 1.0,
           "recall": 1.0,
           "f1": 1.0,
-          "support": 56
+          "support": 74
         },
         "podcast": {
           "precision": 1.0,
           "recall": 1.0,
           "f1": 1.0,
-          "support": 21
+          "support": 33
         },
         "procedural_ambient": {
           "precision": 1.0,
@@ -105,13 +105,13 @@
           "precision": 1.0,
           "recall": 1.0,
           "f1": 1.0,
-          "support": 45
+          "support": 135
         },
         "tv": {
           "precision": 1.0,
           "recall": 1.0,
           "f1": 1.0,
-          "support": 116
+          "support": 152
         }
       },
       "labels": [
@@ -131,6 +131,7 @@
       "pred_labels": [
         "audio_drama",
         "audiobook",
+        "book",
         "comic",
         "episodic_series",
         "game",
@@ -144,7 +145,23 @@
       ],
       "confusion": [
         [
-          24,
+          54,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          90,
           0,
           0,
           0,
@@ -159,8 +176,9 @@
         ],
         [
           0,
-          84,
-          0,
+          8,
+          5,
+          83,
           0,
           0,
           0,
@@ -173,128 +191,107 @@
         ],
         [
           0,
-          9,
+          0,
+          0,
+          0,
+          238,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          48,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          432,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          192,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          74,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          33,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
           27,
           0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        [
-          0,
-          0,
-          0,
-          148,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        [
-          0,
-          0,
-          0,
-          0,
-          18,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        [
-          0,
-          0,
-          0,
-          0,
-          0,
-          222,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        [
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          78,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        [
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          56,
-          0,
-          0,
-          0,
-          0
-        ],
-        [
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          21,
-          0,
-          0,
-          0
-        ],
-        [
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          27,
-          0,
-          0
-        ],
-        [
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          45,
           0
         ],
         [
@@ -309,80 +306,96 @@
           0,
           0,
           0,
-          116
+          135,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          152
         ]
       ],
       "status": "available",
       "content_filter": {
-        "adult_rows": 64,
-        "adult_blocked": 64,
+        "adult_rows": 124,
+        "adult_blocked": 124,
         "recall": 1.0,
-        "non_adult_rows": 811,
+        "non_adult_rows": 1447,
         "non_adult_blocked": 0,
         "false_block_rate": 0.0
       }
     },
     "ahocorasick": {
-      "n": 875,
-      "accuracy": 0.4949,
-      "macro_f1": 0.6285,
-      "latency_ms_median": 0.0029,
-      "latency_ms_p95": 0.0047,
-      "rows_per_sec": 408710.8,
+      "n": 1571,
+      "accuracy": 0.6919,
+      "macro_f1": 0.7835,
+      "latency_ms_median": 0.0035,
+      "latency_ms_p95": 0.0063,
+      "rows_per_sec": 283080.6,
       "per_type": {
         "audio_drama": {
           "precision": 1.0,
-          "recall": 0.75,
-          "f1": 0.8571,
-          "support": 24
+          "recall": 0.7778,
+          "f1": 0.875,
+          "support": 54
         },
         "audiobook": {
           "precision": 1.0,
-          "recall": 0.2857,
-          "f1": 0.4444,
-          "support": 84
+          "recall": 0.4667,
+          "f1": 0.6364,
+          "support": 90
         },
         "comic": {
           "precision": 1.0,
-          "recall": 0.6667,
-          "f1": 0.8,
-          "support": 36
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 96
         },
         "episodic_series": {
           "precision": 1.0,
-          "recall": 0.5405,
-          "f1": 0.7018,
-          "support": 148
+          "recall": 0.7143,
+          "f1": 0.8333,
+          "support": 238
         },
         "game": {
-          "precision": 0.0,
-          "recall": 0.0,
-          "f1": 0.0,
-          "support": 18
+          "precision": 1.0,
+          "recall": 0.625,
+          "f1": 0.7692,
+          "support": 48
         },
         "movie": {
-          "precision": 0.9672,
-          "recall": 0.5315,
-          "f1": 0.686,
-          "support": 222
+          "precision": 0.9865,
+          "recall": 0.6759,
+          "f1": 0.8022,
+          "support": 432
         },
         "music": {
-          "precision": 0.8276,
-          "recall": 0.6154,
-          "f1": 0.7059,
-          "support": 78
+          "precision": 0.9375,
+          "recall": 0.7812,
+          "f1": 0.8523,
+          "support": 192
         },
         "music_video": {
           "precision": 1.0,
-          "recall": 0.5357,
-          "f1": 0.6977,
-          "support": 56
+          "recall": 0.6486,
+          "f1": 0.7869,
+          "support": 74
         },
         "podcast": {
           "precision": 1.0,
-          "recall": 1.0,
-          "f1": 1.0,
-          "support": 21
+          "recall": 0.6364,
+          "f1": 0.7778,
+          "support": 33
         },
         "procedural_ambient": {
           "precision": 1.0,
@@ -392,15 +405,15 @@
         },
         "radio": {
           "precision": 1.0,
-          "recall": 0.4667,
-          "f1": 0.6364,
-          "support": 45
+          "recall": 0.8222,
+          "f1": 0.9024,
+          "support": 135
         },
         "tv": {
           "precision": 1.0,
-          "recall": 0.3448,
-          "f1": 0.5128,
-          "support": 116
+          "recall": 0.5,
+          "f1": 0.6667,
+          "support": 152
         }
       },
       "labels": [
@@ -434,39 +447,9 @@
       ],
       "confusion": [
         [
-          18,
+          42,
           0,
           0,
-          0,
-          0,
-          6,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        [
-          0,
-          24,
-          0,
-          0,
-          0,
-          54,
-          0,
-          6,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        [
-          0,
-          0,
-          24,
           0,
           0,
           12,
@@ -480,9 +463,39 @@
         ],
         [
           0,
+          42,
           0,
           0,
-          80,
+          0,
+          42,
+          0,
+          6,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          96,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          170,
           0,
           68,
           0,
@@ -498,7 +511,7 @@
           0,
           0,
           0,
-          0,
+          30,
           18,
           0,
           0,
@@ -514,8 +527,8 @@
           0,
           0,
           0,
-          100,
-          118,
+          136,
+          292,
           4,
           0,
           0,
@@ -529,9 +542,9 @@
           0,
           0,
           0,
-          30,
+          42,
           0,
-          48,
+          150,
           0,
           0,
           0,
@@ -547,7 +560,7 @@
           22,
           4,
           0,
-          30,
+          48,
           0,
           0,
           0,
@@ -559,7 +572,7 @@
           0,
           0,
           0,
-          0,
+          12,
           0,
           0,
           0,
@@ -595,7 +608,7 @@
           0,
           0,
           0,
-          21,
+          111,
           0
         ],
         [
@@ -611,15 +624,15 @@
           0,
           0,
           0,
-          40
+          76
         ]
       ],
       "status": "available",
       "content_filter": {
-        "adult_rows": 64,
-        "adult_blocked": 30,
-        "recall": 0.4688,
-        "non_adult_rows": 811,
+        "adult_rows": 124,
+        "adult_blocked": 78,
+        "recall": 0.629,
+        "non_adult_rows": 1447,
         "non_adult_blocked": 0,
         "false_block_rate": 0.0
       }

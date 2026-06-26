@@ -1,62 +1,62 @@
 {
   "n_test_rows": 34700,
-  "data_dir": "data/release",
-  "models_dir": "data/models",
+  "data_dir": "/home/miro/AgentWorkspaces/ovos/plugins/media/ovos-media-classifier/data/release",
+  "models_dir": "/home/miro/AgentWorkspaces/ovos/plugins/media/ovos-media-classifier/data/models",
   "rungs": {
     "rules": {
       "axes": {
         "domain": {
           "n": 34700,
-          "accuracy": 0.8327,
-          "macro_f1": 0.3029
+          "accuracy": 0.8444,
+          "macro_f1": 0.3052
         },
         "media_type": {
           "n": 34700,
-          "accuracy": 0.6293,
-          "macro_f1": 0.6703
+          "accuracy": 0.663,
+          "macro_f1": 0.6982
         },
         "playback_type": {
           "n": 34700,
-          "accuracy": 0.7016,
-          "macro_f1": 0.6354
+          "accuracy": 0.7173,
+          "macro_f1": 0.644
         },
         "structure": {
           "n": 34700,
-          "accuracy": 0.7076,
-          "macro_f1": 0.6514
+          "accuracy": 0.7384,
+          "macro_f1": 0.673
         },
         "explicitness": {
           "n": 34700,
-          "accuracy": 0.9884,
-          "macro_f1": 0.8189
+          "accuracy": 0.9886,
+          "macro_f1": 0.8161
         },
         "content_form_genres": {
-          "macro_f1": 0.7064,
-          "labelled_rows": 2366
+          "macro_f1": 0.7201,
+          "labelled_rows": 2383
         },
         "tags": {
           "macro_f1": 0.0,
-          "labelled_rows": 4539,
+          "labelled_rows": 4581,
           "label_space_size": 80
         },
         "qualifiers": {
           "macro_f1": 0.0,
-          "labelled_rows": 1300
+          "labelled_rows": 1310
         }
       },
       "content_filter": {
-        "adult_rows": 756,
-        "adult_blocked": 364,
-        "recall": 0.4815,
-        "hentai_rows": 298,
-        "hentai_blocked": 152,
-        "hentai_recall": 0.5101,
-        "non_adult_rows": 33944,
-        "non_adult_blocked": 11,
-        "false_block_rate": 0.0003
+        "adult_rows": 731,
+        "adult_blocked": 350,
+        "recall": 0.4788,
+        "hentai_rows": 254,
+        "hentai_blocked": 115,
+        "hentai_recall": 0.4528,
+        "non_adult_rows": 33969,
+        "non_adult_blocked": 16,
+        "false_block_rate": 0.0005
       },
-      "latency_ms_median": 0.31912,
-      "latency_ms_p95": 0.49794,
+      "latency_ms_median": 0.50895,
+      "latency_ms_p95": 0.82219,
       "model_bytes": 0,
       "status": "available"
     },
@@ -64,114 +64,114 @@
       "axes": {
         "domain": {
           "n": 34700,
-          "accuracy": 0.8657,
-          "macro_f1": 0.464
+          "accuracy": 0.8733,
+          "macro_f1": 0.4662
         },
         "media_type": {
           "n": 34700,
-          "accuracy": 0.7782,
-          "macro_f1": 0.8035
+          "accuracy": 0.7862,
+          "macro_f1": 0.8095
         },
         "playback_type": {
           "n": 34700,
-          "accuracy": 0.8949,
-          "macro_f1": 0.8996
+          "accuracy": 0.8947,
+          "macro_f1": 0.8983
         },
         "structure": {
           "n": 34700,
-          "accuracy": 0.907,
-          "macro_f1": 0.8963
+          "accuracy": 0.908,
+          "macro_f1": 0.8989
         },
         "explicitness": {
           "n": 34700,
-          "accuracy": 0.9886,
-          "macro_f1": 0.8206
+          "accuracy": 0.9893,
+          "macro_f1": 0.8285
         },
         "content_form_genres": {
-          "macro_f1": 0.7378,
-          "labelled_rows": 2366
+          "macro_f1": 0.7294,
+          "labelled_rows": 2383
         },
         "tags": {
-          "macro_f1": 0.5472,
-          "labelled_rows": 4539,
+          "macro_f1": 0.5606,
+          "labelled_rows": 4581,
           "label_space_size": 80
         },
         "qualifiers": {
-          "macro_f1": 0.7457,
-          "labelled_rows": 1300
+          "macro_f1": 0.7804,
+          "labelled_rows": 1310
         }
       },
       "content_filter": {
-        "adult_rows": 756,
-        "adult_blocked": 364,
-        "recall": 0.4815,
-        "hentai_rows": 298,
-        "hentai_blocked": 152,
-        "hentai_recall": 0.5101,
-        "non_adult_rows": 33944,
-        "non_adult_blocked": 5,
-        "false_block_rate": 0.0001
+        "adult_rows": 731,
+        "adult_blocked": 350,
+        "recall": 0.4788,
+        "hentai_rows": 254,
+        "hentai_blocked": 115,
+        "hentai_recall": 0.4528,
+        "non_adult_rows": 33969,
+        "non_adult_blocked": 10,
+        "false_block_rate": 0.0003
       },
-      "latency_ms_median": 0.21086,
-      "latency_ms_p95": 0.25027,
-      "model_bytes": 180573,
+      "latency_ms_median": 0.28269,
+      "latency_ms_p95": 0.51862,
+      "model_bytes": 389103,
       "status": "available"
     },
     "learned-context+NER": {
       "axes": {
         "domain": {
           "n": 34700,
-          "accuracy": 0.9862,
-          "macro_f1": 0.4965
+          "accuracy": 0.9878,
+          "macro_f1": 0.4969
         },
         "media_type": {
           "n": 34700,
-          "accuracy": 0.9638,
-          "macro_f1": 0.9642
+          "accuracy": 0.9672,
+          "macro_f1": 0.9673
         },
         "playback_type": {
           "n": 34700,
-          "accuracy": 0.9877,
-          "macro_f1": 0.9865
+          "accuracy": 0.9898,
+          "macro_f1": 0.9895
         },
         "structure": {
           "n": 34700,
-          "accuracy": 0.9903,
-          "macro_f1": 0.9853
+          "accuracy": 0.9921,
+          "macro_f1": 0.9884
         },
         "explicitness": {
           "n": 34700,
-          "accuracy": 0.9973,
-          "macro_f1": 0.968
+          "accuracy": 0.9977,
+          "macro_f1": 0.972
         },
         "content_form_genres": {
-          "macro_f1": 0.9746,
-          "labelled_rows": 2366
+          "macro_f1": 0.9793,
+          "labelled_rows": 2383
         },
         "tags": {
-          "macro_f1": 0.581,
-          "labelled_rows": 4539,
+          "macro_f1": 0.5955,
+          "labelled_rows": 4581,
           "label_space_size": 80
         },
         "qualifiers": {
-          "macro_f1": 0.9056,
-          "labelled_rows": 1300
+          "macro_f1": 0.9448,
+          "labelled_rows": 1310
         }
       },
       "content_filter": {
-        "adult_rows": 756,
-        "adult_blocked": 697,
-        "recall": 0.922,
-        "hentai_rows": 298,
-        "hentai_blocked": 279,
-        "hentai_recall": 0.9362,
-        "non_adult_rows": 33944,
-        "non_adult_blocked": 34,
-        "false_block_rate": 0.001
+        "adult_rows": 731,
+        "adult_blocked": 681,
+        "recall": 0.9316,
+        "hentai_rows": 254,
+        "hentai_blocked": 238,
+        "hentai_recall": 0.937,
+        "non_adult_rows": 33969,
+        "non_adult_blocked": 29,
+        "false_block_rate": 0.0009
       },
-      "latency_ms_median": 0.21443,
-      "latency_ms_p95": 0.25916,
-      "model_bytes": 295484,
+      "latency_ms_median": 0.26087,
+      "latency_ms_p95": 0.38167,
+      "model_bytes": 295485,
       "status": "available"
     }
   }
