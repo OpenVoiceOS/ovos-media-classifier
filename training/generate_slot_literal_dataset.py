@@ -33,7 +33,7 @@ def _classify(intent: str) -> tuple[str, str, str]:
     """Return ``(domain, binary_label, playback_label)`` for an intent string.
 
     Args:
-        intent: OCPPlayIntent string value.
+        intent: raw media label string (a ``LABEL_TO_MEDIA_TYPE`` key).
 
     Returns:
         Tuple of (domain, binary_label, playback_label).

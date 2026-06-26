@@ -29,7 +29,7 @@ No lint or typecheck config in `pyproject.toml`. A `.ruff_cache/` is present (ru
 ## Layout
 
 - `ovos_media_classifier/base.py` — `AbstractMediaClassifier` (the interface).
-- `ovos_media_classifier/intents.py` — authoritative `MediaType`, `OCPDomain`, `OCPPlayIntent`, `OCPControlIntent`, `OCPEntityLabel` taxonomy and `PLAY_INTENT_TO_MEDIA_TYPE` map. The canonical taxonomy lives here, not in ovos-utils.
+- `ovos_media_classifier/intents.py` — authoritative `MediaType`, `OCPDomain`, `OCPControlIntent`, `OCPEntityLabel` taxonomy and the raw-label → `(MediaType, genres)` maps (`LABEL_TO_MEDIA_TYPE` / `LABEL_TO_GENRES` / `NER_LABEL_TO_MEDIA_TYPE` / `NER_LABEL_TO_GENRES`). The canonical taxonomy lives here, not in ovos-utils.
 - Backends: `keyword.py`, `ahocorasick.py` (NER), `sklearn.py`, `padatious.py`, `m2v.py` (neural Model2Vec), `guided.py` (ONNX categorical embeddings), `features.py` (categorical feature extraction).
 - `entities.py` — `EntitiesContainer` with runtime loaders: `load_radarr/sonarr/lidarr/jellyfin/whisparr/stash/music_assistant/huggingface/csv`.
 - `__init__.py` — `load_media_classifier()` factory; selects backend by config key priority (m2v → guided → sklearn → padatious → ahocorasick → keyword/voc → bundled locale).

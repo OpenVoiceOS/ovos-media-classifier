@@ -47,7 +47,7 @@ New to the vocabulary (OCP, OPM, domain, axis, NER, …)? Read
 |---|---|
 | [glossary.md](glossary.md) | Every term and acronym, the 30-second mental model, and the command-vs-content distinction |
 | [classification-model.md](classification-model.md) | The multi-axis model: the four axes + tags, why orthogonal axes rather than a strict tree, and the `MediaType`→(playback_type, structure) defaults |
-| [taxonomy.md](taxonomy.md) | `mediavocab.MediaType` enforcement, the internal `OCPPlayIntent`→type/genre mapping, and the query-vs-content distinction |
+| [taxonomy.md](taxonomy.md) | `mediavocab.MediaType` enforcement, the raw label→type/genre mapping, and the query-vs-content distinction |
 | [backends.md](backends.md) | The keyword, NER and ONNX backends, how `load_media_classifier` selects between them, and adding an external classifier |
 | [entity-lists.md](entity-lists.md) | Entity lists (`label → list of strings`): the source-agnostic store (runtime / `.csv` / `.tsv` / `.jsonl` / HuggingFace / media-server / inline) the NER backend consumes |
 | [contextual-classification.md](contextual-classification.md) | How the media you actually have biases prediction, via keyword feature slots |
@@ -70,7 +70,7 @@ from ovos_media_classifier import (
     MediaType,                      # re-exported mediavocab taxonomy (the leaf axis)
     Structure,                      # the structure axis (single/episodic/continuous/collection)
     MediaClassification,            # the full multi-axis result (classify_full)
-    OCPDomain, OCPPlayIntent, OCPEntityLabel,
+    OCPDomain, OCPControlIntent, OCPEntityLabel,
 )
 ```
 

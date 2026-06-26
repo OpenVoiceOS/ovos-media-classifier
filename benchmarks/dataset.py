@@ -5,12 +5,11 @@ The eval set is sourced entirely from the bundled ``.voc`` keyword files so the
 no network, no randomness that varies run-to-run (a fixed seed gates the small
 amount of template/keyword sampling done to keep the set a few hundred rows).
 
-For every ``<Type>Keyword.voc`` we know which :class:`OCPPlayIntent` the keyword
-backend resolves it to (``_VOC_TO_INTENT`` below mirrors the branch order in
-``keyword.KeywordMediaClassifier._classify_intent``), and from that the canonical
-``mediavocab.MediaType`` (via ``PLAY_INTENT_TO_MEDIA_TYPE``) and genre tags (via
-``PLAY_INTENT_TO_GENRES``).  Each keyword phrase is dropped into a handful of
-play-style templates to produce realistic utterances.
+For every ``<Type>Keyword.voc`` we know the ``mediavocab.MediaType`` and genre
+tags the keyword backend resolves it to (``_VOC_TO_MEDIA_TYPE`` /
+``_VOC_TO_GENRES`` below mirror the branch outcomes in
+``keyword.KeywordMediaClassifier._classify_leaf``).  Each keyword phrase is
+dropped into a handful of play-style templates to produce realistic utterances.
 
 The result is written to ``benchmarks/eval_set.csv`` with columns::
 
@@ -30,12 +29,7 @@ from typing import Dict, List, Optional, Tuple
 
 from mediavocab import PlaybackType, infer_playback_type
 
-from ovos_media_classifier.intents import (
-    MediaType,
-    OCPPlayIntent,
-    PLAY_INTENT_TO_GENRES,
-    PLAY_INTENT_TO_MEDIA_TYPE,
-)
+from ovos_media_classifier.intents import MediaType
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO_ROOT = os.path.dirname(HERE)
@@ -48,42 +42,55 @@ SEED = 42
 LANGS = ["en-us", "de-de", "pt-pt"]
 
 # ---------------------------------------------------------------------------
-# voc filename -> OCPPlayIntent it resolves to in the keyword backend.
+# voc filename -> (MediaType, genres) the keyword backend resolves it to.
 #
 # Only "unambiguous single-keyword" types are listed: types whose keyword
 # branch in KeywordMediaClassifier fires on a single .voc match without needing
 # a co-occurring keyword (e.g. SHORT_FILM needs MovieKeyword+ShortKeyword, so it
 # is intentionally excluded — a bare "short film" template would be mislabeled).
 #
-# The order here is irrelevant (we label by file); correctness comes from each
-# keyword phrase only ever matching its own branch first.  Phrases that would be
-# shadowed by an earlier branch are filtered out at build time (see _build_rows).
+# Several vocs collapse onto the same MediaType but carry distinct genres
+# (anime → EPISODIC_SERIES + ["anime"]; cartoon → EPISODIC_SERIES +
+# ["animation"]); ``_VOC_TO_GENRES`` keeps that signal for content-filter recall.
+#
+# Correctness comes from each keyword phrase only ever matching its own branch
+# first.  Phrases that would be shadowed by an earlier branch (a different media
+# type) are filtered out at build time (see _build_rows).
 # ---------------------------------------------------------------------------
-_VOC_TO_INTENT: Dict[str, OCPPlayIntent] = {
-    "DocumentaryKeyword": OCPPlayIntent.DOCUMENTARY,
-    "AudioBookKeyword": OCPPlayIntent.AUDIOBOOK,
-    "NewsKeyword": OCPPlayIntent.NEWS,
-    "AnimeKeyword": OCPPlayIntent.ANIME,
-    "CartoonKeyword": OCPPlayIntent.CARTOON,
-    "PodcastKeyword": OCPPlayIntent.PODCAST,
-    "AudioDramaKeyword": OCPPlayIntent.RADIO_THEATRE,
-    "RadioKeyword": OCPPlayIntent.RADIO,
-    "MusicVideoKeyword": OCPPlayIntent.MUSIC_VIDEO,
-    "MusicKeyword": OCPPlayIntent.MUSIC,
-    "IPTVKeyword": OCPPlayIntent.TV,
-    "TVKeyword": OCPPlayIntent.TV,
-    "SeriesKeyword": OCPPlayIntent.VIDEO_EPISODES,
-    "MovieKeyword": OCPPlayIntent.MOVIE,
-    "TrailerKeyword": OCPPlayIntent.TRAILER,
-    "BehindTheScenesKeyword": OCPPlayIntent.BEHIND_THE_SCENES,
-    "ComicBookKeyword": OCPPlayIntent.VISUAL_STORY,
-    "GameKeyword": OCPPlayIntent.GAME,
-    "ADKeyword": OCPPlayIntent.AUDIO_DESCRIPTION,
-    "ASMRKeyword": OCPPlayIntent.ASMR,
-    "AdultKeyword": OCPPlayIntent.ADULT,
-    "HentaiKeyword": OCPPlayIntent.HENTAI,
-    "VideoKeyword": OCPPlayIntent.VIDEO,
-    "AudioKeyword": OCPPlayIntent.AUDIO,
+_VOC_TO_MEDIA_TYPE: Dict[str, MediaType] = {
+    "DocumentaryKeyword": MediaType.MOVIE,
+    "AudioBookKeyword": MediaType.AUDIOBOOK,
+    "NewsKeyword": MediaType.RADIO,
+    "AnimeKeyword": MediaType.EPISODIC_SERIES,
+    "CartoonKeyword": MediaType.EPISODIC_SERIES,
+    "PodcastKeyword": MediaType.PODCAST,
+    "AudioDramaKeyword": MediaType.AUDIO_DRAMA,
+    "RadioKeyword": MediaType.RADIO,
+    "MusicVideoKeyword": MediaType.MUSIC_VIDEO,
+    "MusicKeyword": MediaType.MUSIC,
+    "IPTVKeyword": MediaType.TV,
+    "TVKeyword": MediaType.TV,
+    "SeriesKeyword": MediaType.EPISODIC_SERIES,
+    "MovieKeyword": MediaType.MOVIE,
+    "TrailerKeyword": MediaType.MOVIE,
+    "BehindTheScenesKeyword": MediaType.MOVIE,
+    "ComicBookKeyword": MediaType.COMIC,
+    "GameKeyword": MediaType.GAME,
+    "ADKeyword": MediaType.MOVIE,
+    "ASMRKeyword": MediaType.PROCEDURAL_AMBIENT,
+    "AdultKeyword": MediaType.MOVIE,
+    "HentaiKeyword": MediaType.EPISODIC_SERIES,
+    "VideoKeyword": MediaType.MOVIE,
+    "AudioKeyword": MediaType.MUSIC,
+}
+
+# voc filename -> genre tags it surfaces (empty for genre-neutral leaves).
+_VOC_TO_GENRES: Dict[str, List[str]] = {
+    "AnimeKeyword": ["anime"],
+    "CartoonKeyword": ["animation"],
+    "ASMRKeyword": ["asmr"],
+    "AdultKeyword": ["adult"],
+    "HentaiKeyword": ["anime", "adult"],
 }
 
 # Adult slice vocs (used to measure content-filter recall).
@@ -169,13 +176,13 @@ def _build_rows(lang: str, rng: random.Random) -> List[EvalRow]:
 
     To avoid mislabeling from the keyword backend's priority chain we drop any
     keyword phrase that is a substring of (or contains) a *higher-priority*
-    keyword for a different intent — those would be shadowed and never resolve
-    to the file's own intent.  This keeps the ground truth honest without
+    keyword for a different media type — those would be shadowed and never
+    resolve to the file's own type.  This keeps the ground truth honest without
     hard-coding the backend's exact behaviour.
     """
     # Pre-load all vocs for this lang, skip empties (lang may lack a file).
     voc_phrases: Dict[str, List[str]] = {}
-    for voc in _VOC_TO_INTENT:
+    for voc in _VOC_TO_MEDIA_TYPE:
         phrases = _load_voc(voc, lang)
         if phrases:
             voc_phrases[voc] = phrases
@@ -190,9 +197,8 @@ def _build_rows(lang: str, rng: random.Random) -> List[EvalRow]:
 
     rows: List[EvalRow] = []
     for voc, phrases in voc_phrases.items():
-        intent = _VOC_TO_INTENT[voc]
-        mtype: MediaType = PLAY_INTENT_TO_MEDIA_TYPE.get(intent, MediaType.GENERIC)
-        genres: List[str] = list(PLAY_INTENT_TO_GENRES.get(intent, []))
+        mtype: MediaType = _VOC_TO_MEDIA_TYPE.get(voc, MediaType.GENERIC)
+        genres: List[str] = list(_VOC_TO_GENRES.get(voc, []))
 
         # Modality-consistent carriers for this leaf (verb agrees with modality).
         templates = _templates_for(lang, mtype)
@@ -201,7 +207,7 @@ def _build_rows(lang: str, rng: random.Random) -> List[EvalRow]:
             owners = owner.get(phrase, {voc})
             # ambiguous keyword shared across different media types -> skip
             mts = {
-                PLAY_INTENT_TO_MEDIA_TYPE.get(_VOC_TO_INTENT[o], MediaType.GENERIC)
+                _VOC_TO_MEDIA_TYPE.get(o, MediaType.GENERIC)
                 for o in owners
             }
             if len(mts) > 1:

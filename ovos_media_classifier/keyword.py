@@ -71,10 +71,7 @@ from ovos_media_classifier.constants import (
 )
 from ovos_media_classifier.intents import (
     OCPDomain,
-    OCPPlayIntent,
     OCPControlIntent,
-    PLAY_INTENT_TO_MEDIA_TYPE,
-    PLAY_INTENT_TO_GENRES,
 )
 
 # Bundled locale directory (ported from ovos-ocp-pipeline-plugin)
@@ -274,8 +271,8 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
         candidate set, and returns the constrained ``mediavocab.MediaType``.
         Falls back to (GENERIC, 0.0) when nothing media-ish matches.
         """
-        intent, conf = self._classify_intent(query, lang, valid_labels)
-        return PLAY_INTENT_TO_MEDIA_TYPE.get(intent, MediaType.GENERIC), conf
+        media_type, _genres, conf = self._classify_leaf(query, lang, valid_labels)
+        return media_type, conf
 
     def classify_domain(self, query: str, lang: str) -> Tuple[OCPDomain, float]:
         """Domain axis: ocp_control / ocp_play / not_ocp.
@@ -401,8 +398,8 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
         ``MediaType`` is a generic ``MOVIE`` / ``EPISODIC_SERIES``).  Adult
         precedence is preserved so adult/hentai/porn cues are never lost.
         """
-        intent, _ = self._classify_intent(query, lang, None)
-        return list(PLAY_INTENT_TO_GENRES.get(intent, []))
+        _media_type, genres, _ = self._classify_leaf(query, lang, None)
+        return list(genres)
 
     # ------------------------------------------------------------------
     # Multi-axis output — PREDICT each axis top-down (do not derive from leaf).
@@ -444,9 +441,8 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
         """
         modality, _ = self._predict_modality(query, lang)
         structure = self._predict_structure(query, lang, modality)
-        intent, conf = self._classify_intent(query, lang, None)
-        media_type = PLAY_INTENT_TO_MEDIA_TYPE.get(intent, MediaType.GENERIC)
-        genres = list(PLAY_INTENT_TO_GENRES.get(intent, []))
+        media_type, leaf_genres, conf = self._classify_leaf(query, lang, None)
+        genres = list(leaf_genres)
 
         # The domain head owns the play-vs-control precedence (see
         # ``classify_domain``); keep ``classify_full`` consistent with it.
@@ -635,170 +631,160 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
         # continuous), relax the structure constraint rather than emptying out.
         return constrained or set(by_modality)
 
-    def _classify_intent(
+    def _classify_leaf(
         self,
         query: str,
         lang: str,
         valid_labels: Optional[List[MediaType]],
-    ) -> Tuple[OCPPlayIntent, float]:
-        """Resolve the play intent coarse-to-fine.
+    ) -> Tuple[MediaType, List[str], float]:
+        """Resolve the leaf ``(MediaType, genres, confidence)`` coarse-to-fine.
 
         1. Adult family FIRST. Word-boundary matching (via ovos-spec-tools)
            already prevents the old substring collisions (German "sexfilm" no
            longer leaks "film"), so this gate is no longer a collision guard —
            it stays because it owns the adult/hentai/audio routing: it maps the
-           adult cues to the correct adult intent so the ``adult`` (and, for
-           hentai, ``anime``) genre tag is always emitted for the content filter.
+           adult cues to the correct type + ``adult`` (and, for hentai,
+           ``anime``) genre tag so the content filter always sees the signal.
         2. Predict modality, then structure.
         3. Constrain the leaf candidates to those axes and run the specific-leaf
-           voc chain *gated to the candidate set*; the first match wins.
+           voc chain; the first match wins.
         4. If no specific leaf matched but the coarse axes are confident, emit
            the DEFAULT leaf for that (modality, structure) cell.
 
-        ``valid_labels`` (mediavocab types) gate every branch via the
-        intent→type map, exactly as before.
+        ``valid_labels`` (mediavocab types) gate every branch by MediaType.
         """
         valid = set(valid_labels) if valid_labels is not None else None
-        I = OCPPlayIntent
         m = self._match
         q = query
 
-        def _ok(intent: OCPPlayIntent) -> bool:
-            return valid is None or PLAY_INTENT_TO_MEDIA_TYPE.get(intent) in valid
+        def _ok(media_type: MediaType) -> bool:
+            return valid is None or media_type in valid
 
         # --- 1. Adult family (owns adult/hentai genre routing) ----------------
-        adult_intents = {I.ADULT, I.HENTAI, I.ADULT_AUDIO}
-        if any(_ok(t) for t in adult_intents) and (
-                m(q, "AdultKeyword", lang) or m(q, "HentaiKeyword", lang)):
-            if (_ok(I.HENTAI) and
+        # adult → MOVIE + ["adult"]; adult_audio → MUSIC + ["adult"];
+        # hentai → EPISODIC_SERIES + ["anime", "adult"].
+        if (m(q, "AdultKeyword", lang) or m(q, "HentaiKeyword", lang)):
+            if (_ok(MediaType.EPISODIC_SERIES) and
                     (m(q, "HentaiKeyword", lang) or
                      m(q, "CartoonKeyword", lang) or
                      m(q, "AnimeKeyword", lang))):
-                return I.HENTAI, DEFAULT_KEYWORD_LOW_CONFIDENCE
-            if (_ok(I.ADULT_AUDIO) and
+                return (MediaType.EPISODIC_SERIES, ["anime", "adult"],
+                        DEFAULT_KEYWORD_LOW_CONFIDENCE)
+            if (_ok(MediaType.MUSIC) and
                     (m(q, "AudioKeyword", lang) or m(q, "ASMRKeyword", lang))):
-                return I.ADULT_AUDIO, DEFAULT_KEYWORD_LOW_CONFIDENCE
-            if _ok(I.ADULT):
-                return I.ADULT, DEFAULT_KEYWORD_LOW_CONFIDENCE
+                return MediaType.MUSIC, ["adult"], DEFAULT_KEYWORD_LOW_CONFIDENCE
+            if _ok(MediaType.MOVIE):
+                return MediaType.MOVIE, ["adult"], DEFAULT_KEYWORD_LOW_CONFIDENCE
 
         # --- 2. Predict the coarse axes ---------------------------------------
         modality, _strength = self._predict_modality(q, lang)
         structure = self._predict_structure(q, lang, modality)
-        candidates = self._candidate_media_types(modality, structure)
 
-        def _in_set(intent: OCPPlayIntent) -> bool:
-            """The intent's leaf MediaType is within the constrained candidate set."""
-            if candidates is None:
-                return True
-            return PLAY_INTENT_TO_MEDIA_TYPE.get(intent) in candidates
-
-        def _allow(intent: OCPPlayIntent) -> bool:
-            return _ok(intent) and _in_set(intent)
-
-        # --- 3. Specific-leaf chain: constraint is a PREFERENCE, not a gate ----
-        # First run the leaf chain gated to the predicted (modality, structure)
-        # candidate set; if nothing matches there, retry WITHOUT the constraint.
-        # A direct specific-leaf voc match is strong evidence and must override a
-        # *mispredicted* coarse axis — so the constraint only breaks ties between
-        # competing leaves, it never suppresses an otherwise-certain leaf. This
+        # --- 3. Specific-leaf chain: a direct voc match is strong evidence -----
+        # A direct specific-leaf voc match must override a *mispredicted* coarse
+        # axis, so the chain runs leaf-first gated only by ``valid_labels``. This
         # keeps real-query accuracy at least on par with flat leaf-first matching
-        # (a hard gate regressed macro-F1 when modality prediction was noisy).
+        # (a hard axis gate regressed macro-F1 when modality prediction was noisy).
         hit = self._match_leaf_chain(q, lang, _ok)
         if hit is not None:
             return hit
 
         # --- 4. Default leaf for the (modality, structure) cell ---------------
-        # No specific leaf voc matched inside the constrained set, but the coarse
-        # axes carry evidence — emit the sensible default leaf so a strong
-        # modality verb ("listen", "watch") still resolves to *something*.
+        # No specific leaf voc matched, but the coarse axes carry evidence — emit
+        # the sensible default leaf so a strong modality verb ("listen", "watch")
+        # still resolves to *something*.
         if modality is not PlaybackType.UNKNOWN:
             default = _DEFAULT_LEAF.get(
                 (modality, structure),
                 _MODALITY_DEFAULT_LEAF.get(modality),
             )
             if default is not None:
-                intent = self._intent_for_default(default)
-                if intent is not None and _ok(intent):
-                    return intent, DEFAULT_KEYWORD_LOW_CONFIDENCE
+                leaf = self._default_leaf_type(default)
+                if leaf is not None and _ok(leaf):
+                    return leaf, [], DEFAULT_KEYWORD_LOW_CONFIDENCE
 
-        return I.GENERIC, 0.0
+        return MediaType.GENERIC, [], 0.0
 
     def _match_leaf_chain(
-        self, q: str, lang: str, allow: Callable[[OCPPlayIntent], bool]
-    ) -> Optional[Tuple[OCPPlayIntent, float]]:
+        self, q: str, lang: str, allow: Callable[[MediaType], bool]
+    ) -> Optional[Tuple[MediaType, List[str], float]]:
         """Specific-leaf voc priority chain (most-specific first).
 
-        ``allow(intent)`` decides whether a branch may fire — pass the constrained
-        ``_allow`` for the axis-gated pass, or the bare ``_ok`` for the unconstrained
-        leaf-first fallback. Returns ``(intent, confidence)`` on the first match,
-        else ``None``.
-        """
-        I = OCPPlayIntent
-        m = self._match
-        if allow(I.DOCUMENTARY) and m(q, "DocumentaryKeyword", lang):
-            return I.DOCUMENTARY, DEFAULT_KEYWORD_CONFIDENCE
-        if allow(I.AUDIOBOOK) and m(q, "AudioBookKeyword", lang):
-            return I.AUDIOBOOK, DEFAULT_KEYWORD_CONFIDENCE
-        if allow(I.NEWS) and m(q, "NewsKeyword", lang):
-            return I.NEWS, DEFAULT_KEYWORD_CONFIDENCE
-        if allow(I.ANIME) and m(q, "AnimeKeyword", lang):
-            return I.ANIME, DEFAULT_KEYWORD_CONFIDENCE
-        if allow(I.CARTOON) and m(q, "CartoonKeyword", lang):
-            return I.CARTOON, DEFAULT_KEYWORD_CONFIDENCE
-        if allow(I.PODCAST) and m(q, "PodcastKeyword", lang):
-            return I.PODCAST, DEFAULT_KEYWORD_CONFIDENCE
-        if allow(I.RADIO_THEATRE) and m(q, "AudioDramaKeyword", lang):
-            return I.RADIO_THEATRE, DEFAULT_KEYWORD_CONFIDENCE
-        if allow(I.RADIO) and m(q, "RadioKeyword", lang):
-            return I.RADIO, DEFAULT_KEYWORD_CONFIDENCE
-        if allow(I.MUSIC_VIDEO) and m(q, "MusicVideoKeyword", lang):
-            return I.MUSIC_VIDEO, DEFAULT_KEYWORD_HIGH_CONFIDENCE
-        if allow(I.MUSIC) and m(q, "MusicKeyword", lang):
-            return I.MUSIC, DEFAULT_KEYWORD_CONFIDENCE
-        if allow(I.TV) and m(q, "IPTVKeyword", lang):
-            return I.TV, DEFAULT_KEYWORD_CONFIDENCE
-        if allow(I.VIDEO_EPISODES) and m(q, "SeriesKeyword", lang):
-            return I.VIDEO_EPISODES, DEFAULT_KEYWORD_CONFIDENCE
-        if allow(I.TV) and m(q, "TVKeyword", lang):
-            return I.TV, DEFAULT_KEYWORD_CONFIDENCE
+        ``allow(media_type)`` decides whether a branch may fire (the
+        ``valid_labels`` gate). Returns ``(MediaType, genres, confidence)`` on
+        the first match, else ``None``.
 
-        movie_intents = {I.MOVIE, I.SHORT_FILM, I.SILENT_MOVIE, I.BW_MOVIE}
-        if any(allow(t) for t in movie_intents) and m(q, "MovieKeyword", lang):
-            if allow(I.SHORT_FILM) and m(q, "ShortKeyword", lang):
-                return I.SHORT_FILM, DEFAULT_KEYWORD_HIGH_CONFIDENCE
-            if allow(I.SILENT_MOVIE) and m(q, "SilentKeyword", lang):
-                return I.SILENT_MOVIE, DEFAULT_KEYWORD_HIGH_CONFIDENCE
-            if allow(I.BW_MOVIE) and m(q, "BWKeyword", lang):
-                return I.BW_MOVIE, DEFAULT_KEYWORD_HIGH_CONFIDENCE
-            if allow(I.MOVIE):
-                return I.MOVIE, DEFAULT_KEYWORD_CONFIDENCE
-        if allow(I.TRAILER) and m(q, "TrailerKeyword", lang):
-            return I.TRAILER, DEFAULT_KEYWORD_HIGH_CONFIDENCE
-        if allow(I.BEHIND_THE_SCENES) and m(q, "BehindTheScenesKeyword", lang):
-            return I.BEHIND_THE_SCENES, DEFAULT_KEYWORD_HIGH_CONFIDENCE
-        if allow(I.VISUAL_STORY) and m(q, "ComicBookKeyword", lang):
-            return I.VISUAL_STORY, DEFAULT_KEYWORD_LOW_CONFIDENCE
-        if allow(I.GAME) and m(q, "GameKeyword", lang):
-            return I.GAME, DEFAULT_KEYWORD_LOW_CONFIDENCE
-        if allow(I.AUDIO_DESCRIPTION) and m(q, "ADKeyword", lang):
-            return I.AUDIO_DESCRIPTION, DEFAULT_KEYWORD_LOW_CONFIDENCE
-        if allow(I.ASMR) and m(q, "ASMRKeyword", lang):
-            return I.ASMR, DEFAULT_KEYWORD_LOW_CONFIDENCE
-        if allow(I.VIDEO) and m(q, "VideoKeyword", lang):
-            return I.VIDEO, DEFAULT_KEYWORD_LOW_CONFIDENCE
-        if allow(I.AUDIO) and m(q, "AudioKeyword", lang):
-            return I.AUDIO, DEFAULT_KEYWORD_LOW_CONFIDENCE
+        Several leaves collapse onto one ``MediaType`` but carry distinct genre
+        tags (anime → EPISODIC_SERIES + ["anime"]; cartoon → EPISODIC_SERIES +
+        ["animation"]) or distinct confidences (documentary / trailer / bts all
+        → MOVIE) — the chain emits the right ``(type, genres)`` pair directly.
+        """
+        m = self._match
+        T = MediaType
+        if allow(T.MOVIE) and m(q, "DocumentaryKeyword", lang):
+            return T.MOVIE, [], DEFAULT_KEYWORD_CONFIDENCE
+        if allow(T.AUDIOBOOK) and m(q, "AudioBookKeyword", lang):
+            return T.AUDIOBOOK, [], DEFAULT_KEYWORD_CONFIDENCE
+        if allow(T.RADIO) and m(q, "NewsKeyword", lang):
+            return T.RADIO, [], DEFAULT_KEYWORD_CONFIDENCE
+        if allow(T.EPISODIC_SERIES) and m(q, "AnimeKeyword", lang):
+            return T.EPISODIC_SERIES, ["anime"], DEFAULT_KEYWORD_CONFIDENCE
+        if allow(T.EPISODIC_SERIES) and m(q, "CartoonKeyword", lang):
+            return T.EPISODIC_SERIES, ["animation"], DEFAULT_KEYWORD_CONFIDENCE
+        if allow(T.PODCAST) and m(q, "PodcastKeyword", lang):
+            return T.PODCAST, [], DEFAULT_KEYWORD_CONFIDENCE
+        if allow(T.AUDIO_DRAMA) and m(q, "AudioDramaKeyword", lang):
+            return T.AUDIO_DRAMA, [], DEFAULT_KEYWORD_CONFIDENCE
+        if allow(T.RADIO) and m(q, "RadioKeyword", lang):
+            return T.RADIO, [], DEFAULT_KEYWORD_CONFIDENCE
+        if allow(T.MUSIC_VIDEO) and m(q, "MusicVideoKeyword", lang):
+            return T.MUSIC_VIDEO, [], DEFAULT_KEYWORD_HIGH_CONFIDENCE
+        if allow(T.MUSIC) and m(q, "MusicKeyword", lang):
+            return T.MUSIC, [], DEFAULT_KEYWORD_CONFIDENCE
+        if allow(T.TV) and m(q, "IPTVKeyword", lang):
+            return T.TV, [], DEFAULT_KEYWORD_CONFIDENCE
+        if allow(T.EPISODIC_SERIES) and m(q, "SeriesKeyword", lang):
+            return T.EPISODIC_SERIES, [], DEFAULT_KEYWORD_CONFIDENCE
+        if allow(T.TV) and m(q, "TVKeyword", lang):
+            return T.TV, [], DEFAULT_KEYWORD_CONFIDENCE
+
+        # Movie family: MOVIE and SHORT_FILM are distinct types; silent / b&w are
+        # MOVIE with no extra genre but a higher (more specific) confidence.
+        if (allow(T.MOVIE) or allow(T.SHORT_FILM)) and m(q, "MovieKeyword", lang):
+            if allow(T.SHORT_FILM) and m(q, "ShortKeyword", lang):
+                return T.SHORT_FILM, [], DEFAULT_KEYWORD_HIGH_CONFIDENCE
+            if allow(T.MOVIE) and m(q, "SilentKeyword", lang):
+                return T.MOVIE, [], DEFAULT_KEYWORD_HIGH_CONFIDENCE
+            if allow(T.MOVIE) and m(q, "BWKeyword", lang):
+                return T.MOVIE, [], DEFAULT_KEYWORD_HIGH_CONFIDENCE
+            if allow(T.MOVIE):
+                return T.MOVIE, [], DEFAULT_KEYWORD_CONFIDENCE
+        if allow(T.MOVIE) and m(q, "TrailerKeyword", lang):
+            return T.MOVIE, [], DEFAULT_KEYWORD_HIGH_CONFIDENCE
+        if allow(T.MOVIE) and m(q, "BehindTheScenesKeyword", lang):
+            return T.MOVIE, [], DEFAULT_KEYWORD_HIGH_CONFIDENCE
+        if allow(T.COMIC) and m(q, "ComicBookKeyword", lang):
+            return T.COMIC, [], DEFAULT_KEYWORD_LOW_CONFIDENCE
+        if allow(T.GAME) and m(q, "GameKeyword", lang):
+            return T.GAME, [], DEFAULT_KEYWORD_LOW_CONFIDENCE
+        if allow(T.MOVIE) and m(q, "ADKeyword", lang):
+            return T.MOVIE, [], DEFAULT_KEYWORD_LOW_CONFIDENCE
+        if allow(T.PROCEDURAL_AMBIENT) and m(q, "ASMRKeyword", lang):
+            return T.PROCEDURAL_AMBIENT, ["asmr"], DEFAULT_KEYWORD_LOW_CONFIDENCE
+        if allow(T.MOVIE) and m(q, "VideoKeyword", lang):
+            return T.MOVIE, [], DEFAULT_KEYWORD_LOW_CONFIDENCE
+        if allow(T.MUSIC) and m(q, "AudioKeyword", lang):
+            return T.MUSIC, [], DEFAULT_KEYWORD_LOW_CONFIDENCE
         return None
 
     @staticmethod
-    def _intent_for_default(media_type: MediaType) -> Optional[OCPPlayIntent]:
-        """Pick a representative play intent for a default leaf MediaType."""
-        from ovos_media_classifier.intents import MEDIA_TYPE_TO_PLAY_INTENT
-        intent = MEDIA_TYPE_TO_PLAY_INTENT.get(media_type)
-        if intent is not None:
-            return intent
-        # BOOK has no dedicated OCPPlayIntent — closest paged intent is the comic
-        # (visual story); audiobook would change the modality, so use VISUAL_STORY.
-        if media_type in (MediaType.BOOK, MediaType.COMIC):
-            return OCPPlayIntent.VISUAL_STORY
-        return None
+    def _default_leaf_type(media_type: MediaType) -> Optional[MediaType]:
+        """Resolve a default-cell leaf to a concrete public ``MediaType``.
+
+        ``BOOK`` has no dedicated keyword leaf — the closest paged leaf the
+        keyword backend models is the comic (visual story); audiobook would
+        change the modality, so map BOOK → COMIC.
+        """
+        if media_type is MediaType.BOOK:
+            return MediaType.COMIC
+        return media_type

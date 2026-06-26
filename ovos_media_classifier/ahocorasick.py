@@ -53,12 +53,11 @@ from typing import TYPE_CHECKING, Dict, List, Optional, Tuple
 from ovos_utils.log import LOG
 
 from ovos_media_classifier.base import AbstractMediaClassifier
-from ovos_media_classifier.intents import MediaType
 from ovos_media_classifier.intents import (
+    MediaType,
     OCPDomain,
-    NER_LABEL_TO_PLAY_INTENT,
-    PLAY_INTENT_TO_MEDIA_TYPE,
-    OCPPlayIntent,
+    NER_LABEL_TO_MEDIA_TYPE,
+    NER_LABEL_TO_GENRES,
 )
 
 if TYPE_CHECKING:
@@ -67,48 +66,29 @@ if TYPE_CHECKING:
 from ovos_media_classifier.constants import DEFAULT_NER_HIT_CONFIDENCE
 
 # Priority order for resolving multiple entity hits in one utterance.
-# More specific / higher-confidence types rank first.
-_INTENT_PRIORITY: List[OCPPlayIntent] = [
-    # High-specificity audio
-    OCPPlayIntent.DOCUMENTARY,
-    OCPPlayIntent.AUDIOBOOK,
-    OCPPlayIntent.NEWS,
-    OCPPlayIntent.ANIME,
-    OCPPlayIntent.CARTOON,
-    OCPPlayIntent.PODCAST,
-    OCPPlayIntent.RADIO_THEATRE,
-    OCPPlayIntent.RADIO,
-    # Live TV (specific channel name beats generic TV_SHOW)
-    OCPPlayIntent.TV,
-    OCPPlayIntent.MUSIC,
-    OCPPlayIntent.MUSIC_VIDEO,
-    # Episodic
-    OCPPlayIntent.TV_SHOW,
-    OCPPlayIntent.VIDEO_EPISODES,
-    # Film family
-    OCPPlayIntent.SHORT_FILM,
-    OCPPlayIntent.SILENT_MOVIE,
-    OCPPlayIntent.BW_MOVIE,
-    OCPPlayIntent.TRAILER,
-    OCPPlayIntent.BEHIND_THE_SCENES,
-    OCPPlayIntent.MOVIE,
-    # Other
-    OCPPlayIntent.VISUAL_STORY,
-    OCPPlayIntent.GAME,
-    OCPPlayIntent.AUDIO_DESCRIPTION,
-    OCPPlayIntent.ASMR,
-    # Adult (checked last)
-    OCPPlayIntent.HENTAI,
-    OCPPlayIntent.ADULT_AUDIO,
-    OCPPlayIntent.ADULT,
-    # Generic fallbacks
-    OCPPlayIntent.VIDEO,
-    OCPPlayIntent.AUDIO,
-    OCPPlayIntent.GENERIC,
+# More specific / higher-confidence types rank first (lower index wins).
+# Distinctions that are *not* media types (documentary, anime, adult, …) are
+# carried as genre tags via ``NER_LABEL_TO_GENRES``; the type priority below
+# reflects the representative ordering (e.g. a music hit beats a movie hit).
+_MEDIA_TYPE_PRIORITY: List[MediaType] = [
+    MediaType.AUDIOBOOK,
+    MediaType.RADIO,
+    MediaType.PODCAST,
+    MediaType.AUDIO_DRAMA,
+    MediaType.TV,
+    MediaType.MUSIC,
+    MediaType.MUSIC_VIDEO,
+    MediaType.EPISODIC_SERIES,
+    MediaType.SHORT_FILM,
+    MediaType.MOVIE,
+    MediaType.COMIC,
+    MediaType.GAME,
+    MediaType.PROCEDURAL_AMBIENT,
+    MediaType.GENERIC,
 ]
 
-_INTENT_RANK: Dict[OCPPlayIntent, int] = {
-    intent: rank for rank, intent in enumerate(_INTENT_PRIORITY)
+_MEDIA_TYPE_RANK: Dict[MediaType, int] = {
+    mt: rank for rank, mt in enumerate(_MEDIA_TYPE_PRIORITY)
 }
 
 # Confidence returned when an entity hit yields a match
@@ -118,9 +98,9 @@ _HIT_CONFIDENCE = DEFAULT_NER_HIT_CONFIDENCE
 class AhocorasickMediaClassifier(AbstractMediaClassifier):
     """Media classifier backed by an AhocorasickNER instance.
 
-    The NER labels are mapped to OCPPlayIntent values via
-    ``NER_LABEL_TO_PLAY_INTENT``.  Custom label names are supported by
-    passing a *label_map* override.
+    The NER labels are mapped to ``mediavocab.MediaType`` values via
+    ``NER_LABEL_TO_MEDIA_TYPE`` (and to genre tags via ``NER_LABEL_TO_GENRES``).
+    Custom label names are supported by passing a *label_map* override.
 
     When constructed from an :class:`~ovos_media_classifier.entities.EntitiesContainer`
     (via :meth:`from_container`) the classifier is *runtime-aware*: any
@@ -135,14 +115,15 @@ class AhocorasickMediaClassifier(AbstractMediaClassifier):
             When a container is passed its ``ner`` property is used and
             the container is retained so callers can continue registering
             entities after construction.
-        label_map: Override mapping from NER label strings to OCPPlayIntent.
-                   Merged on top of the default ``NER_LABEL_TO_PLAY_INTENT``.
+        label_map: Override mapping from NER label strings to
+                   ``mediavocab.MediaType``.  Merged on top of the default
+                   ``NER_LABEL_TO_MEDIA_TYPE``.
     """
 
     def __init__(
         self,
         ner_or_container,
-        label_map: Optional[Dict[str, OCPPlayIntent]] = None,
+        label_map: Optional[Dict[str, MediaType]] = None,
     ) -> None:
         try:
             from ahocorasick_ner import AhocorasickNER  # noqa: F401
@@ -158,7 +139,7 @@ class AhocorasickMediaClassifier(AbstractMediaClassifier):
         else:
             self._container = None
             self._ner = ner_or_container
-        self._label_map: Dict[str, OCPPlayIntent] = {**NER_LABEL_TO_PLAY_INTENT}
+        self._label_map: Dict[str, MediaType] = {**NER_LABEL_TO_MEDIA_TYPE}
         if label_map:
             self._label_map.update(label_map)
 
@@ -176,7 +157,7 @@ class AhocorasickMediaClassifier(AbstractMediaClassifier):
     def from_container(
         cls,
         container: "EntitiesContainer",
-        label_map: Optional[Dict[str, OCPPlayIntent]] = None,
+        label_map: Optional[Dict[str, MediaType]] = None,
     ) -> "AhocorasickMediaClassifier":
         """Build a runtime-aware classifier from an :class:`~ovos_media_classifier.entities.EntitiesContainer`.
 
@@ -199,12 +180,12 @@ class AhocorasickMediaClassifier(AbstractMediaClassifier):
     def from_wordlists(
         cls,
         wordlists: Dict[str, List[str]],
-        label_map: Optional[Dict[str, OCPPlayIntent]] = None,
+        label_map: Optional[Dict[str, MediaType]] = None,
     ) -> "AhocorasickMediaClassifier":
         """Build a classifier from a dict mapping label → list of keywords.
 
-        Keys may be either OCPPlayIntent values ("music", "movie", …) or
-        any of the pipeline NER label names ("music_streaming_service", …).
+        Keys may be either raw media labels ("music", "movie", …) or any of the
+        pipeline NER label names ("music_streaming_service", …).
 
         Example::
 
@@ -228,7 +209,7 @@ class AhocorasickMediaClassifier(AbstractMediaClassifier):
         label_col: int = 0,
         value_col: int = 1,
         skip_header: bool = True,
-        label_map: Optional[Dict[str, OCPPlayIntent]] = None,
+        label_map: Optional[Dict[str, MediaType]] = None,
     ) -> "AhocorasickMediaClassifier":
         """Build from a CSV file with columns (label, keyword).
 
@@ -269,19 +250,24 @@ class AhocorasickMediaClassifier(AbstractMediaClassifier):
     # Classification
     # ------------------------------------------------------------------
 
-    def _entities_to_intent(
+    def _entities_to_media_type(
         self, entities: Dict[str, str]
-    ) -> Optional[OCPPlayIntent]:
-        """Pick the highest-priority intent from a set of NER entity labels."""
-        hits: List[OCPPlayIntent] = []
+    ) -> Optional[MediaType]:
+        """Pick the highest-priority MediaType from a set of NER entity labels."""
+        hits: List[MediaType] = []
         for label in entities:
-            intent = self._label_map.get(label)
-            if intent is not None:
-                hits.append(intent)
+            media_type = self._label_map.get(label)
+            if media_type is not None:
+                hits.append(media_type)
         if not hits:
             return None
         # Return the highest-priority hit (lowest rank index)
-        return min(hits, key=lambda i: _INTENT_RANK.get(i, 999))
+        return min(hits, key=lambda mt: _MEDIA_TYPE_RANK.get(mt, 999))
+
+    def _winning_labels(self, entities: Dict[str, str], media_type: MediaType) -> List[str]:
+        """The entity labels that map to the winning MediaType (for genre lookup)."""
+        return [label for label in entities
+                if self._label_map.get(label) == media_type]
 
     def classify(
         self,
@@ -296,11 +282,9 @@ class AhocorasickMediaClassifier(AbstractMediaClassifier):
             LOG.error(f"AhocorasickMediaClassifier NER failed: {e}")
             return MediaType.GENERIC, 0.0
 
-        intent = self._entities_to_intent(entities)
-        if intent is None:
+        media_type = self._entities_to_media_type(entities)
+        if media_type is None:
             return MediaType.GENERIC, 0.0
-
-        media_type = PLAY_INTENT_TO_MEDIA_TYPE.get(intent, MediaType.GENERIC)
 
         if valid_labels is not None and media_type not in valid_labels:
             return MediaType.GENERIC, 0.0
@@ -308,21 +292,28 @@ class AhocorasickMediaClassifier(AbstractMediaClassifier):
         return media_type, _HIT_CONFIDENCE
 
     def classify_genres(self, query: str, lang: str) -> List[str]:
-        """Genre tags implied by the matched NER intent (e.g. adult/anime/asmr).
+        """Genre tags implied by the matched NER entities (e.g. adult/anime/asmr).
 
         Without this override the content filter would have no genre signal from
         the NER backend and could not block adult entities (pornstar, etc.).
+        Genres are gathered from every label that maps to the winning MediaType,
+        so an ``adult_title`` (MOVIE) still surfaces ``adult`` even though MOVIE
+        itself is genre-neutral.
         """
-        from ovos_media_classifier.intents import PLAY_INTENT_TO_GENRES
         try:
             raw = self._ner.tag(query)
             entities = {e["label"]: e["word"] for e in raw}
         except Exception:
             return []
-        intent = self._entities_to_intent(entities)
-        if intent is None:
+        media_type = self._entities_to_media_type(entities)
+        if media_type is None:
             return []
-        return list(PLAY_INTENT_TO_GENRES.get(intent, []))
+        genres: List[str] = []
+        for label in self._winning_labels(entities, media_type):
+            for g in NER_LABEL_TO_GENRES.get(label, []):
+                if g not in genres:
+                    genres.append(g)
+        return genres
 
     def classify_domain(self, query: str, lang: str) -> Tuple[OCPDomain, float]:
         """Domain is OCP_PLAY when any known entity is found, NOT_OCP otherwise."""
@@ -333,7 +324,7 @@ class AhocorasickMediaClassifier(AbstractMediaClassifier):
             LOG.error(f"AhocorasickMediaClassifier NER failed: {e}")
             return OCPDomain.NOT_OCP, 0.0
 
-        intent = self._entities_to_intent(entities)
-        if intent is None:
+        media_type = self._entities_to_media_type(entities)
+        if media_type is None:
             return OCPDomain.NOT_OCP, 0.0
         return OCPDomain.OCP_PLAY, _HIT_CONFIDENCE

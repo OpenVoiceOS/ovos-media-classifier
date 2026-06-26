@@ -22,7 +22,7 @@ import unittest
 from typing import Dict, List, Optional
 from unittest.mock import MagicMock, patch
 
-from ovos_media_classifier.intents import MediaType, OCPDomain, OCPPlayIntent
+from ovos_media_classifier.intents import MediaType, OCPDomain
 
 
 # ---------------------------------------------------------------------------
@@ -167,7 +167,7 @@ class TestAhocorasickClassify(_NERTestCase):
 
         ner = self._ner_returning([("custom_label", "value")])
         clf = AhocorasickMediaClassifier(ner,
-                                         label_map={"custom_label": OCPPlayIntent.TV})
+                                         label_map={"custom_label": MediaType.TV})
         mt, _ = clf.classify("value", "en-us")
         self.assertEqual(mt, MediaType.TV)
 

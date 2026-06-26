@@ -34,7 +34,7 @@ from typing import Dict, List, Optional, Tuple
 
 from training.sources import AUDIO_INTENTS, VIDEO_INTENTS, SCHEMA_COLUMNS
 
-# Intents we synthesize for (OCPPlayIntent string values) + the not_ocp negative.
+# Media labels we synthesize for (LABEL_TO_MEDIA_TYPE keys) + the not_ocp negative.
 PLAY_INTENTS: List[str] = sorted(AUDIO_INTENTS | VIDEO_INTENTS)
 NEGATIVE_INTENT = "not_ocp"
 

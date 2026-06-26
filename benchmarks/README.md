@@ -43,11 +43,10 @@ The ground truth is sourced **entirely from the bundled `.voc` keyword files** �
 the same vocabulary the keyword backend ships with — so the benchmark needs no
 network and no external dataset. For each `<Type>Keyword.voc`:
 
-1. The voc file name maps to an `OCPPlayIntent` (mirroring the branch order in
-   `KeywordMediaClassifier._classify_intent`).
-2. That intent maps to a canonical `mediavocab.MediaType` via
-   `PLAY_INTENT_TO_MEDIA_TYPE`, and to genre tags via `PLAY_INTENT_TO_GENRES`
-   (this is where the `adult` signal comes from).
+1. The voc file name maps directly to a canonical `mediavocab.MediaType` and any
+   genre tags (`_VOC_TO_MEDIA_TYPE` / `_VOC_TO_GENRES`, mirroring the branch
+   outcomes in `KeywordMediaClassifier._classify_leaf`) — this is where the
+   `adult` signal comes from.
 3. Each keyword phrase is dropped into **modality-consistent** play-style
    templates. The keyword backend is hierarchical (coarse-to-fine): it predicts
    the playback modality from the carrier verb FIRST and constrains the leaf to

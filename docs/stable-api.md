@@ -144,10 +144,12 @@ overrides `classify_genres()` and derives every coarse axis from the leaf):
 | genre tags | `list[str]` | members of `mediavocab` `KNOWN_GENRES` |
 | confidence | `float` | in `[0, 1]` |
 
-`OCPPlayIntent`, `OCPControlIntent`, and `OCPEntityLabel` are exported for
-backends and tooling but are **internal** label spaces, not part of the public
-classification output — that output is always `mediavocab.MediaType` + genres. See
-[taxonomy.md](taxonomy.md).
+`OCPControlIntent` and `OCPEntityLabel` are exported for backends and tooling but
+are **internal** label spaces, not part of the public classification output —
+that output is always `mediavocab.MediaType` + genres. The raw-label →
+`(MediaType, genres)` maps (`LABEL_TO_MEDIA_TYPE`, `LABEL_TO_GENRES`,
+`NER_LABEL_TO_MEDIA_TYPE`, `NER_LABEL_TO_GENRES`) are exported for the same use.
+See [taxonomy.md](taxonomy.md).
 
 ## Content filter
 

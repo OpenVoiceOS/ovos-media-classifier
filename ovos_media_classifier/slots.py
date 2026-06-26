@@ -28,9 +28,9 @@ entities contributes nothing. It is the principled form of "constrain the leaf"
 — grounded in real inventory rather than a noisy modality guess.
 
 ``KEYWORD_FEATURE_SLOTS`` is derived from the canonical
-``NER_LABEL_TO_PLAY_INTENT`` + ``PLAY_INTENT_TO_MEDIA_TYPE`` +
-``PLAY_INTENT_TO_GENRES`` maps, so it is a formalized *view* of the existing
-taxonomy with no second source of truth to drift.
+``NER_LABEL_TO_MEDIA_TYPE`` + ``NER_LABEL_TO_GENRES`` maps, so it is a
+formalized *view* of the existing taxonomy with no second source of truth to
+drift.
 """
 from dataclasses import dataclass, field
 from typing import Dict, List, Tuple
@@ -39,9 +39,8 @@ from mediavocab import MediaType, PlaybackType, infer_playback_type
 
 from ovos_media_classifier.intents import (
     OCPEntityLabel,
-    NER_LABEL_TO_PLAY_INTENT,
-    PLAY_INTENT_TO_MEDIA_TYPE,
-    PLAY_INTENT_TO_GENRES,
+    NER_LABEL_TO_MEDIA_TYPE,
+    NER_LABEL_TO_GENRES,
 )
 
 __all__ = [
@@ -73,9 +72,8 @@ class KeywordFeatureSlot:
 
 def _build() -> List[KeywordFeatureSlot]:
     slots: List[KeywordFeatureSlot] = []
-    for label, intent in NER_LABEL_TO_PLAY_INTENT.items():
-        mt = PLAY_INTENT_TO_MEDIA_TYPE.get(intent, MediaType.GENERIC)
-        genres = tuple(PLAY_INTENT_TO_GENRES.get(intent, ()))
+    for label, mt in NER_LABEL_TO_MEDIA_TYPE.items():
+        genres = tuple(NER_LABEL_TO_GENRES.get(label, ()))
         slots.append(KeywordFeatureSlot(
             label=getattr(label, "value", label),
             media_type=mt,
