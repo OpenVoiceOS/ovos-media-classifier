@@ -9,9 +9,8 @@ Evaluates the three rungs the project builds toward, on the real
 
 and reports **every axis the multi-task heads predict**:
 
-  accuracy        domain · media_type · playback_type · structure ·
-                  explicitness · mood · era
-  macro-F1        content_form_genres · content_genre · qualifiers   (multi-label)
+  accuracy        domain · media_type · playback_type · structure · explicitness
+  macro-F1        content_form_genres · tags (genre:/mood:/era:) · qualifiers
   content filter  adult / hentai recall from the content_form_genres axis
 
 The headline is the lift from rules → context-only → +NER across these axes.
@@ -61,12 +60,11 @@ SINGLE_AXES = [
     ("playback_type", "playback_type"),
     ("structure", "structure"),
     ("explicitness", "explicitness"),
-    ("mood", "mood"),
-    ("era", "decade"),
 ]
 MULTI_AXES = [
     ("content_form_genres", "content_form_genres"),
-    ("content_genre", "content_genre"),
+    # the namespaced descriptive axis — genre/mood/era folded into one head
+    ("tags", "tags"),
     ("qualifiers", "qualifiers"),
 ]
 
@@ -161,10 +159,8 @@ def _collect_rules(df: pd.DataFrame) -> Dict[str, object]:
         t0 = time.perf_counter()
         full = clf.classify_full(sent, lang)
         cform = clf.classify_content_form_genres(sent, lang)
-        cgen = clf.classify_content_genres(sent, lang)
+        tags = clf.classify_tags(sent, lang)
         quals = clf.classify_qualifiers(sent, lang)
-        mood = clf.classify_mood(sent, lang)
-        era = clf.classify_era(sent, lang)
         expl = clf.classify_explicitness(sent, lang)
         lat.append((time.perf_counter() - t0) * 1000.0)
         pred["domain"].append(full.domain.value)
@@ -172,10 +168,8 @@ def _collect_rules(df: pd.DataFrame) -> Dict[str, object]:
         pred["playback_type"].append(full.playback_type.value)
         pred["structure"].append(full.structure.value)
         pred["explicitness"].append(expl)
-        pred["mood"].append(mood or "")
-        pred["era"].append(era or "")
         multi["content_form_genres"].append(cform)
-        multi["content_genre"].append(cgen)
+        multi["tags"].append(tags)
         multi["qualifiers"].append(quals)
     return {"pred": pred, "multi": multi, "lat": lat,
             "model_bytes": 0, "status": "available"}
@@ -231,10 +225,8 @@ def _collect_onnx(df: pd.DataFrame, bundle_dir: str) -> Dict[str, object]:
         pb = _single("playback_type") or "unknown"
         st = _single("structure") or "unknown"
         expl = _single("explicitness") or "clean"
-        mood = _single("mood") or ""
-        era = _single("era") or ""
         cform = _multi("content_form_genres")
-        cgen = _multi("content_genre")
+        tags = _multi("tags")
         quals = _multi("qualifiers")
         lat.append((time.perf_counter() - t0) * 1000.0)
         pred["domain"].append(domain)
@@ -242,10 +234,8 @@ def _collect_onnx(df: pd.DataFrame, bundle_dir: str) -> Dict[str, object]:
         pred["playback_type"].append(pb)
         pred["structure"].append(st)
         pred["explicitness"].append(expl)
-        pred["mood"].append(mood)
-        pred["era"].append(era)
         multi["content_form_genres"].append(cform)
-        multi["content_genre"].append(cgen)
+        multi["tags"].append(tags)
         multi["qualifiers"].append(quals)
 
     size = sum(os.path.getsize(os.path.join(bundle_dir, f))

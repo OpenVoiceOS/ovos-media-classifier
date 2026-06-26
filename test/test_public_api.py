@@ -180,10 +180,21 @@ class TestPerAxisContract(unittest.TestCase):
         self.assertIsInstance(self.clf.classify_content_form_genres(q, lang), list)
         self.assertIsInstance(self.clf.classify_content_genres(q, lang), list)
         self.assertIsInstance(self.clf.classify_qualifiers(q, lang), list)
+        self.assertIsInstance(self.clf.classify_tags(q, lang), list)
         self.assertIn(self.clf.classify_explicitness(q, lang), ("clean", "adult"))
         # mood/era default to None for the keyword backend
         self.assertIsNone(self.clf.classify_mood(q, lang))
         self.assertIsNone(self.clf.classify_era(q, lang))
+
+    def test_tags_are_namespaced(self):
+        # every tag the contract emits is namespaced (genre:/mood:/era:)
+        tags = self.clf.classify_tags("play some jazz", "en-us")
+        for t in tags:
+            self.assertRegex(t, r"^(genre|mood|era):")
+        # the genre: slice is the genre-classifier view
+        self.assertEqual(
+            self.clf.tags_namespace(["genre:rock", "mood:chill", "era:1980s"],
+                                    "genre"), ["rock"])
 
     def test_explicitness_derives_from_form_genres(self):
         self.assertEqual(self.clf.classify_explicitness("play porn", "en-us"),

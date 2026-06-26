@@ -234,10 +234,22 @@ def _derive_axes(intent: str, genres: List[str],
     is_adult = "adult" in genres
     explicitness = "adult" if is_adult else "clean"
 
+    # The multi-label, namespaced ``tags`` axis collapses the open-vocabulary
+    # genre / mood / era signals into ONE head: ``genre:rock`` / ``mood:chill`` /
+    # ``era:1980s``.  Empty set when none apply.  (The standalone content_genre /
+    # mood / era / decade columns are kept as provenance + benchmark ground truth.)
+    tags: List[str] = [f"genre:{g}" for g in content_genre]
+    if mood:
+        tags.append(f"mood:{mood.lower()}")
+    if decade:
+        tags.append(f"era:{decade}")
+
     return {
         # multi-label sensitive/form genres — what the content filter reads
         "content_form_genres": json.dumps(list(genres)),
-        # multi-label real genre (rock/jazz/action/…)
+        # the namespaced multi-label descriptive axis (genre/mood/era in one head)
+        "tags": json.dumps(list(dict.fromkeys(tags))),
+        # provenance / benchmark ground truth for the three folded signals
         "content_genre": json.dumps(content_genre),
         "mood": mood,
         "era": era,
@@ -509,7 +521,9 @@ a normal class so the model learns to detect it without it dominating training.
 _CORE = ["sentence", "lang", "domain", "intent", "media_type", "genres",
          "playback_type", "structure", "binary_label"]
 # the free, ground-truth-by-construction multi-task axis columns (one head each)
-_AXES = ["content_form_genres", "content_genre", "mood", "era", "decade",
+# ``tags`` is the namespaced multi-label head; content_genre/mood/era/decade are
+# kept as provenance + benchmark ground truth (no standalone head trains on them).
+_AXES = ["content_form_genres", "tags", "content_genre", "mood", "era", "decade",
          "explicitness", "qualifiers", "control_intent"]
 _PROV = ["template_id", "template", "n_slots", "entity_labels", "slot_values"]
 
