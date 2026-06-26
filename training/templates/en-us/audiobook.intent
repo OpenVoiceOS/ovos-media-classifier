@@ -1,28 +1,24 @@
-<lead_read> {audiobook_title}
-[hey|ok|please] <lead_read> {audiobook_title} [please|for me|right now|thanks]
-<lead_read> the audiobook {audiobook_title}
-[hey|ok|please] <lead_read> the audiobook {audiobook_title} [please|for me|right now|thanks]
-<lead_read> {audiobook_title} by {audiobook_author}
-[hey|ok|please] <lead_read> {audiobook_title} by {audiobook_author} [please|for me|right now|thanks]
-<lead_read> a book by {audiobook_author}
-[hey|ok|please] <lead_read> a book by {audiobook_author} [please|for me|right now|thanks]
-<lead_read> {audiobook_title} narrated by {audiobook_narrator}
-[hey|ok|please] <lead_read> {audiobook_title} narrated by {audiobook_narrator} [please|for me|right now|thanks]
-<lead_read> the novel {audiobook_title}
-[hey|ok|please] <lead_read> the novel {audiobook_title} [please|for me|right now|thanks]
-<lead_read> anything by {audiobook_author}
-[hey|ok|please] <lead_read> anything by {audiobook_author} [please|for me|right now|thanks]
-<lead_read> a book narrated by {audiobook_narrator}
-[hey|ok|please] <lead_read> a book narrated by {audiobook_narrator} [please|for me|right now|thanks]
-<lead_read> {audiobook_title} written by {audiobook_author}
-[hey|ok|please] <lead_read> {audiobook_title} written by {audiobook_author} [please|for me|right now|thanks]
-<lead_read> {audiobook_title} read by {audiobook_narrator}
-[hey|ok|please] <lead_read> {audiobook_title} read by {audiobook_narrator} [please|for me|right now|thanks]
-<lead_read> an audiobook by {audiobook_author} narrated by {audiobook_narrator}
-[hey|ok|please] <lead_read> an audiobook by {audiobook_author} narrated by {audiobook_narrator} [please|for me|right now|thanks]
-<lead_read> the audiobook of {movie_title}
-[hey|ok|please] <lead_read> the audiobook of {movie_title} [please|for me|right now|thanks]
-<lead_read> the audiobook version of {movie_title}
-[hey|ok|please] <lead_read> the audiobook version of {movie_title} [please|for me|right now|thanks]
-<lead_read> {movie_title} as an audiobook
-[hey|ok|please] <lead_read> {movie_title} as an audiobook [please|for me|right now|thanks]
+<lead_play_audio> the audiobook {audiobook_title}
+[hey|ok|please] <lead_play_audio> the audiobook {audiobook_title} [please|for me|right now|thanks]
+<lead_play_audio> the audiobook of {audiobook_title}
+[hey|ok|please] <lead_play_audio> the audiobook of {audiobook_title} [please|for me|right now|thanks]
+<lead_play_audio> the audiobook {audiobook_title} by {audiobook_author}
+[hey|ok|please] <lead_play_audio> the audiobook {audiobook_title} by {audiobook_author} [please|for me|right now|thanks]
+<lead_play_audio> the audiobook {audiobook_title} narrated by {audiobook_narrator}
+[hey|ok|please] <lead_play_audio> the audiobook {audiobook_title} narrated by {audiobook_narrator} [please|for me|right now|thanks]
+<lead_play_audio> an audiobook by {audiobook_author}
+[hey|ok|please] <lead_play_audio> an audiobook by {audiobook_author} [please|for me|right now|thanks]
+<lead_play_audio> an audiobook narrated by {audiobook_narrator}
+[hey|ok|please] <lead_play_audio> an audiobook narrated by {audiobook_narrator} [please|for me|right now|thanks]
+<lead_play_audio> an audiobook by {audiobook_author} narrated by {audiobook_narrator}
+[hey|ok|please] <lead_play_audio> an audiobook by {audiobook_author} narrated by {audiobook_narrator} [please|for me|right now|thanks]
+<lead_play_audio> a {audiobook_genre} audiobook
+[hey|ok|please] <lead_play_audio> a {audiobook_genre} audiobook [please|for me|right now|thanks]
+<lead_play_audio> the audiobook version of {audiobook_title}
+[hey|ok|please] <lead_play_audio> the audiobook version of {audiobook_title} [please|for me|right now|thanks]
+<lead_play_audio> the audiobook of {movie_title}
+[hey|ok|please] <lead_play_audio> the audiobook of {movie_title} [please|for me|right now|thanks]
+<lead_play_audio> the audiobook version of {movie_title}
+[hey|ok|please] <lead_play_audio> the audiobook version of {movie_title} [please|for me|right now|thanks]
+<lead_play_audio> {movie_title} as an audiobook
+[hey|ok|please] <lead_play_audio> {movie_title} as an audiobook [please|for me|right now|thanks]

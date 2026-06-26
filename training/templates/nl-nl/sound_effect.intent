@@ -1,0 +1,6 @@
+<lead_play_audio> a {sound_name} sound
+<lead_play_audio> a {sound_name} sound effect
+<lead_play_audio> the sound of {sound_name}
+<lead_play_audio> a {sound_name} noise
+<lead_play_audio> the {sound_name} sound effect
+<lead_play_audio> some {sound_name} sounds

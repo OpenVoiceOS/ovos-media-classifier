@@ -439,6 +439,12 @@ class TestLabelToMediaTypeMapping(unittest.TestCase):
         "adult":             MediaType.MOVIE,
         "adult_audio":       MediaType.MUSIC,
         "hentai":            MediaType.EPISODIC_SERIES,
+        "book":              MediaType.BOOK,
+        "playlist":          MediaType.PLAYLIST,
+        "sound_effect":      MediaType.SOUND_EFFECT,
+        "interactive_fiction": MediaType.INTERACTIVE_FICTION,
+        "ambient":           MediaType.PROCEDURAL_AMBIENT,
+        "comic":             MediaType.COMIC,
         "generic":           MediaType.GENERIC,
     }
 

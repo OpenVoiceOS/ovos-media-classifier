@@ -1,0 +1,18 @@
+<lead_read> the manga {comic_title}
+[hey|ok|please] <lead_read> the manga {comic_title} [please|for me|right now|thanks]
+<lead_read> the comic {comic_title}
+[hey|ok|please] <lead_read> the comic {comic_title} [please|for me|right now|thanks]
+<lead_read> {comic_title}
+[hey|ok|please] <lead_read> {comic_title} [please|for me|right now|thanks]
+<lead_read> a {comic_genre} manga
+[hey|ok|please] <lead_read> a {comic_genre} manga [please|for me|right now|thanks]
+<lead_read> a {comic_genre} comic
+[hey|ok|please] <lead_read> a {comic_genre} comic [please|for me|right now|thanks]
+<lead_read> the comic book {comic_title}
+[hey|ok|please] <lead_read> the comic book {comic_title} [please|for me|right now|thanks]
+<lead_read> a graphic novel
+[hey|ok|please] <lead_read> a graphic novel [please|for me|right now|thanks]
+<lead_read> the {comic_genre} manga {comic_title}
+[hey|ok|please] <lead_read> the {comic_genre} manga {comic_title} [please|for me|right now|thanks]
+<lead_read> some manga
+[hey|ok|please] <lead_read> some manga [please|for me|right now|thanks]

@@ -1,0 +1,30 @@
+<lead_read> {book_title}
+[hey|ok|please] <lead_read> {book_title} [please|for me|right now|thanks]
+<lead_read> the book {book_title}
+[hey|ok|please] <lead_read> the book {book_title} [please|for me|right now|thanks]
+<lead_read> the novel {book_title}
+[hey|ok|please] <lead_read> the novel {book_title} [please|for me|right now|thanks]
+<lead_read> {book_title} by {book_author}
+[hey|ok|please] <lead_read> {book_title} by {book_author} [please|for me|right now|thanks]
+<lead_read> a book by {book_author}
+[hey|ok|please] <lead_read> a book by {book_author} [please|for me|right now|thanks]
+<lead_read> a {book_genre} book
+[hey|ok|please] <lead_read> a {book_genre} book [please|for me|right now|thanks]
+<lead_read> a {book_genre} novel
+[hey|ok|please] <lead_read> a {book_genre} novel [please|for me|right now|thanks]
+<lead_read> anything by {book_author}
+[hey|ok|please] <lead_read> anything by {book_author} [please|for me|right now|thanks]
+<lead_read> the {book_genre} book {book_title}
+[hey|ok|please] <lead_read> the {book_genre} book {book_title} [please|for me|right now|thanks]
+<lead_read> the novel {book_title} by {book_author}
+[hey|ok|please] <lead_read> the novel {book_title} by {book_author} [please|for me|right now|thanks]
+<lead_read> a book about {book_genre}
+[hey|ok|please] <lead_read> a book about {book_genre} [please|for me|right now|thanks]
+<lead_read> the {movie_title} novel
+[hey|ok|please] <lead_read> the {movie_title} novel [please|for me|right now|thanks]
+<lead_read> the novel {movie_title}
+[hey|ok|please] <lead_read> the novel {movie_title} [please|for me|right now|thanks]
+<lead_read> the book {movie_title}
+[hey|ok|please] <lead_read> the book {movie_title} [please|for me|right now|thanks]
+<lead_read> {movie_title} the novel
+[hey|ok|please] <lead_read> {movie_title} the novel [please|for me|right now|thanks]

@@ -1,0 +1,12 @@
+<lead_play_audio> a {sound_name} sound
+[hey|ok|please] <lead_play_audio> a {sound_name} sound [please|for me|right now|thanks]
+<lead_play_audio> a {sound_name} sound effect
+[hey|ok|please] <lead_play_audio> a {sound_name} sound effect [please|for me|right now|thanks]
+<lead_play_audio> the sound of {sound_name}
+[hey|ok|please] <lead_play_audio> the sound of {sound_name} [please|for me|right now|thanks]
+<lead_play_audio> a {sound_name} noise
+[hey|ok|please] <lead_play_audio> a {sound_name} noise [please|for me|right now|thanks]
+<lead_play_audio> the {sound_name} sound effect
+[hey|ok|please] <lead_play_audio> the {sound_name} sound effect [please|for me|right now|thanks]
+<lead_play_audio> some {sound_name} sounds
+[hey|ok|please] <lead_play_audio> some {sound_name} sounds [please|for me|right now|thanks]

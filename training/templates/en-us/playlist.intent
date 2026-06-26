@@ -1,0 +1,24 @@
+<lead_play_audio> my playlist
+[hey|ok|please] <lead_play_audio> my playlist [please|for me|right now|thanks]
+<lead_play_audio> my liked songs
+[hey|ok|please] <lead_play_audio> my liked songs [please|for me|right now|thanks]
+<lead_play_audio> my favorites
+[hey|ok|please] <lead_play_audio> my favorites [please|for me|right now|thanks]
+<lead_play_audio> my favourites
+[hey|ok|please] <lead_play_audio> my favourites [please|for me|right now|thanks]
+<lead_play_audio> a {playlist_mood} playlist
+[hey|ok|please] <lead_play_audio> a {playlist_mood} playlist [please|for me|right now|thanks]
+<lead_play_audio> a {playlist_mood} mix
+[hey|ok|please] <lead_play_audio> a {playlist_mood} mix [please|for me|right now|thanks]
+<lead_play_audio> my {playlist_activity} mix
+[hey|ok|please] <lead_play_audio> my {playlist_activity} mix [please|for me|right now|thanks]
+<lead_play_audio> my {playlist_activity} playlist
+[hey|ok|please] <lead_play_audio> my {playlist_activity} playlist [please|for me|right now|thanks]
+<lead_play_audio> a {playlist_mood} {playlist_activity} playlist
+[hey|ok|please] <lead_play_audio> a {playlist_mood} {playlist_activity} playlist [please|for me|right now|thanks]
+<lead_play_audio> my saved songs
+[hey|ok|please] <lead_play_audio> my saved songs [please|for me|right now|thanks]
+<lead_play_audio> the {playlist_mood} playlist
+[hey|ok|please] <lead_play_audio> the {playlist_mood} playlist [please|for me|right now|thanks]
+<lead_play_audio> my daily mix
+[hey|ok|please] <lead_play_audio> my daily mix [please|for me|right now|thanks]

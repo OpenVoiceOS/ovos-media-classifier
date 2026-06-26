@@ -32,6 +32,7 @@ from ovos_media_classifier.keyword import _LOCALE_DIR, _VocMatcher
 _KEYWORD_VOCABS: List[Tuple[str, str]] = [
     ("DocumentaryKeyword",     "kw_documentary"),
     ("AudioBookKeyword",       "kw_audiobook"),
+    ("BookKeyword",            "kw_book"),
     ("NewsKeyword",            "kw_news"),
     ("AnimeKeyword",           "kw_anime"),
     ("CartoonKeyword",         "kw_cartoon"),
@@ -56,6 +57,10 @@ _KEYWORD_VOCABS: List[Tuple[str, str]] = [
     ("ASMRKeyword",            "kw_asmr"),
     ("AdultKeyword",           "kw_adult"),
     ("HentaiKeyword",          "kw_hentai"),
+    ("PlaylistKeyword",        "kw_playlist"),
+    ("SoundEffectKeyword",     "kw_sound_effect"),
+    ("InteractiveFictionKeyword", "kw_interactive_fiction"),
+    ("AmbientKeyword",         "kw_ambient"),
     ("VideoKeyword",           "kw_video"),
     ("AudioKeyword",           "kw_audio"),
     # Linguistically-motivated verb and discourse features

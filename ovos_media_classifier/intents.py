@@ -154,6 +154,15 @@ class OCPEntityLabel(str, Enum):
     AUDIOBOOK_TITLE  = "audiobook_title"
     AUDIOBOOK_AUTHOR = "audiobook_author"
     AUDIOBOOK_NARRATOR = "audiobook_narrator"
+    BOOK_TITLE       = "book_title"
+    BOOK_AUTHOR      = "book_author"
+    BOOK_GENRE       = "book_genre"
+    COMIC_TITLE      = "comic_title"
+    COMIC_GENRE      = "comic_genre"
+    SOUND_NAME       = "sound_name"
+    AMBIENT_SOUND    = "ambient_sound"
+    PLAYLIST_MOOD    = "playlist_mood"
+    PLAYLIST_ACTIVITY = "playlist_activity"
     NEWS_CATEGORY    = "news_category"
     GAME_TITLE       = "game_title"
     GAME_GENRE       = "game_genre"
@@ -172,6 +181,12 @@ class OCPEntityLabel(str, Enum):
     PODCAST_KEYWORD            = "podcast"
     RADIO_KEYWORD              = "radio"
     AUDIOBOOK_KEYWORD          = "audiobook"
+    BOOK_KEYWORD               = "book"
+    PLAYLIST_KEYWORD           = "playlist"
+    SOUND_EFFECT_KEYWORD       = "sound_effect"
+    INTERACTIVE_FICTION_KEYWORD = "interactive_fiction"
+    AMBIENT_KEYWORD            = "ambient"
+    COMIC_KEYWORD              = "comic"
     NEWS_KEYWORD               = "news"
     MOVIE_KEYWORD              = "movie"
     TV_KEYWORD                 = "tv"
@@ -219,6 +234,12 @@ LABEL_TO_MEDIA_TYPE: Dict[str, MediaType] = {
     "podcast":            MediaType.PODCAST,
     "radio":              MediaType.RADIO,
     "audiobook":          MediaType.AUDIOBOOK,
+    "book":               MediaType.BOOK,
+    "playlist":           MediaType.PLAYLIST,
+    "sound_effect":       MediaType.SOUND_EFFECT,
+    "interactive_fiction": MediaType.INTERACTIVE_FICTION,
+    "ambient":            MediaType.PROCEDURAL_AMBIENT,
+    "comic":              MediaType.COMIC,
     "news":               MediaType.RADIO,
     "movie":              MediaType.MOVIE,
     "tv":                 MediaType.TV,
@@ -337,6 +358,15 @@ NER_LABEL_TO_MEDIA_TYPE: Dict[str, MediaType] = {
     OCPEntityLabel.AUDIOBOOK_TITLE.value:    MediaType.AUDIOBOOK,
     OCPEntityLabel.AUDIOBOOK_AUTHOR.value:   MediaType.AUDIOBOOK,
     OCPEntityLabel.AUDIOBOOK_NARRATOR.value: MediaType.AUDIOBOOK,
+    OCPEntityLabel.BOOK_TITLE.value:         MediaType.BOOK,
+    OCPEntityLabel.BOOK_AUTHOR.value:        MediaType.BOOK,
+    OCPEntityLabel.BOOK_GENRE.value:         MediaType.BOOK,
+    OCPEntityLabel.COMIC_TITLE.value:        MediaType.COMIC,
+    OCPEntityLabel.COMIC_GENRE.value:        MediaType.COMIC,
+    OCPEntityLabel.SOUND_NAME.value:         MediaType.SOUND_EFFECT,
+    OCPEntityLabel.AMBIENT_SOUND.value:      MediaType.PROCEDURAL_AMBIENT,
+    OCPEntityLabel.PLAYLIST_MOOD.value:      MediaType.PLAYLIST,
+    OCPEntityLabel.PLAYLIST_ACTIVITY.value:  MediaType.PLAYLIST,
     OCPEntityLabel.NEWS_CATEGORY.value:      MediaType.RADIO,
     OCPEntityLabel.GAME_TITLE.value:         MediaType.GAME,
     OCPEntityLabel.GAME_GENRE.value:         MediaType.GAME,
@@ -353,6 +383,12 @@ NER_LABEL_TO_MEDIA_TYPE: Dict[str, MediaType] = {
     OCPEntityLabel.PODCAST_KEYWORD.value:            MediaType.PODCAST,
     OCPEntityLabel.RADIO_KEYWORD.value:              MediaType.RADIO,
     OCPEntityLabel.AUDIOBOOK_KEYWORD.value:          MediaType.AUDIOBOOK,
+    OCPEntityLabel.BOOK_KEYWORD.value:               MediaType.BOOK,
+    OCPEntityLabel.PLAYLIST_KEYWORD.value:           MediaType.PLAYLIST,
+    OCPEntityLabel.SOUND_EFFECT_KEYWORD.value:       MediaType.SOUND_EFFECT,
+    OCPEntityLabel.INTERACTIVE_FICTION_KEYWORD.value: MediaType.INTERACTIVE_FICTION,
+    OCPEntityLabel.AMBIENT_KEYWORD.value:            MediaType.PROCEDURAL_AMBIENT,
+    OCPEntityLabel.COMIC_KEYWORD.value:              MediaType.COMIC,
     OCPEntityLabel.NEWS_KEYWORD.value:               MediaType.RADIO,
     OCPEntityLabel.MOVIE_KEYWORD.value:              MediaType.MOVIE,
     OCPEntityLabel.TV_KEYWORD.value:                 MediaType.TV,

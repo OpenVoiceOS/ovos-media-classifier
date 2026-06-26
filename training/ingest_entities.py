@@ -208,13 +208,31 @@ def emit_tvmaze_shows(row):
         yield ("release_year", yr.group(1))
 
 
+def _is_hentai(row) -> bool:
+    """True for adult anime/manga — splits the adult subset out of anime_title.
+
+    Uses the explicit ``is_adult`` boolean when present, else a ``Hentai`` tag in
+    the genres / tags / themes / demographics (case-insensitive).  Keeping these
+    out of the clean ``anime_title`` pool prevents a normal "watch an anime"
+    template from filling in an adult title and being mislabelled.
+    """
+    if str(row.get("is_adult")).strip().lower() in ("true", "1"):
+        return True
+    blob = " ".join(str(row.get(f, "")) for f in
+                    ("genres", "tags", "themes", "demographics"))
+    return "hentai" in blob.lower()
+
+
 def emit_anilist_anime(row):
+    hentai = _is_hentai(row)
+    title_label = "hentai_title" if hentai else "anime_title"
+    studio_label = "hentai_studio" if hentai else "anime_studio"
     for f in ("title_romaji", "title_english", "title_native", "anime_title"):
         v = _clean(row.get(f))
         if v:
-            yield ("anime_title", v)
+            yield (title_label, v)
     for s in _maybe_list(row.get("studios")):
-        yield ("anime_studio", s)
+        yield (studio_label, s)
     yr = _clean(row.get("season_year"))
     m = re.search(r"(\d{4})", yr)
     if m:
@@ -223,25 +241,49 @@ def emit_anilist_anime(row):
 
 
 def emit_jikan_manga(row):
+    # Manga is READ (paged) → comic_title, distinct from anime (watched).
+    # Adult manga still routes to the hentai pool.
+    hentai = _is_hentai(row)
+    title_label = "hentai_title" if hentai else "comic_title"
     for f in ("title", "title_english", "anime_title"):
         v = _clean(row.get(f))
         if v:
-            yield ("anime_title", v)
+            yield (title_label, v)
     for a in _maybe_list(row.get("aliases")):
-        yield ("anime_title", a)
+        yield (title_label, a)
+    if not hentai:
+        for g in _maybe_list(row.get("genres"))[:3]:
+            yield ("comic_genre", g)
 
 
-def emit_books(row):
-    """Gutenberg / LibriVox / OpenLibrary share title + author(s)."""
+def emit_librivox(row):
+    """LibriVox = narrated audio → AUDIOBOOK (title + author + narrator)."""
     title = _clean(row.get("title")) or _clean(row.get("audiobook_title"))
     if title:
         yield ("audiobook_title", title)
-    authors = row.get("authors") or row.get("author") or row.get("audiobook_author")
-    for a in _maybe_list(authors):
-        # metadatarr author objects may be "First Last" strings already
+    for a in _maybe_list(row.get("authors") or row.get("author")):
         yield ("audiobook_author", a)
     for r in _maybe_list(row.get("readers")):
         yield ("audiobook_narrator", r)
+    for g in _maybe_list(row.get("genres")):
+        yield ("audiobook_genre", g)
+
+
+def emit_books(row):
+    """Gutenberg / OpenLibrary = readable text → BOOK (title + author + genre)."""
+    title = _clean(row.get("title")) or _clean(row.get("book_title"))
+    if title:
+        yield ("book_title", title)
+    for a in _maybe_list(row.get("authors") or row.get("author")):
+        yield ("book_author", a)
+    for s in _maybe_list(row.get("subjects"))[:3]:
+        yield ("book_genre", s)
+    m = re.search(r"(\d{4})", _clean(row.get("first_publish_year")))
+    if m:
+        yield ("release_year", m.group(1))
+    pub = _clean(row.get("publisher"))
+    if pub:
+        yield ("record_label", pub)
 
 
 def emit_steam_games(row):
@@ -392,6 +434,106 @@ def emit_iafd_performers(row):
             yield ("adult_title", t)
 
 
+# Ethnicity / hair / eye hints found inside free-text category / description
+# blobs (boobpedia ``categories``, freeones ``professions``, etc.).
+_ETHNICITY_HINTS = ("caucasian", "asian", "black", "latina", "latin", "ebony",
+                    "hispanic", "indian", "arab", "interracial", "white")
+_HAIR_HINTS = ("blonde", "brunette", "redhead", "black hair", "brown hair",
+               "raven", "ginger")
+
+
+def _emit_performer(row):
+    """Shared emitter for the freeones / boobpedia / thenude performer sets.
+
+    Mines name + aliases → ``pornstar`` and every usable physical / descriptive
+    attribute into its pool (detect-to-block training signals only). Robust to
+    column-name differences across the three sources.
+    """
+    for col in ("name",):
+        v = _clean(row.get(col))
+        if v:
+            yield ("pornstar", v)
+    for col in ("aliases", "all_names"):
+        for a in _maybe_list(row.get(col)):
+            yield ("pornstar", a)
+    nat = _enum_clean(row.get("nationality")) or _enum_clean(row.get("ethnicity"))
+    if nat and len(nat) > 2:
+        yield ("adult_country", nat)
+    for col in ("eye_color", "hair_color", "ethnicity", "build", "body_type"):
+        val = _enum_clean(row.get(col))
+        if not val:
+            continue
+        if "eye" in col:
+            yield ("adult_eye_color", val)
+        elif "hair" in col:
+            yield ("adult_hair_color", val)
+        elif col == "ethnicity":
+            yield ("adult_ethnicity", val)
+        else:
+            yield ("adult_body_type", val)
+    # mine free-text blobs (categories / description / professions / tags)
+    blob = " ".join(str(row.get(c, "")) for c in
+                    ("categories", "description", "professions", "tags",
+                     "performances")).lower()
+    for hint in _ETHNICITY_HINTS:
+        if hint in blob:
+            yield ("adult_ethnicity", "latina" if hint == "latin" else hint)
+            break
+    for hint in _HAIR_HINTS:
+        if hint in blob:
+            yield ("adult_hair_color", hint.replace(" hair", ""))
+            break
+
+
+def emit_freeones_performers(row):
+    yield from _emit_performer(row)
+
+
+def emit_boobpedia_performers(row):
+    yield from _emit_performer(row)
+
+
+def emit_thenude_performers(row):
+    yield from _emit_performer(row)
+
+
+def emit_iafd_titles(row):
+    """Real adult film titles + director/studio → adult_title / adult_studio."""
+    t = _clean(row.get("title"))
+    if t:
+        yield ("adult_title", t)
+    st = _clean(row.get("studio")) or _clean(row.get("distributor"))
+    if st:
+        yield ("adult_studio", st)
+
+
+def emit_hanime(row):
+    """hanime.tv hentai → hentai_title (+ brand → hentai_studio, tags)."""
+    t = _clean(row.get("name")) or _clean(row.get("title"))
+    if t:
+        yield ("hentai_title", t)
+    brand = _clean(row.get("brand"))
+    if brand:
+        yield ("hentai_studio", brand)
+
+
+def emit_mal_hentai(row):
+    """MyAnimeList hentai → hentai_title (+ studios → hentai_studio)."""
+    for f in ("title", "title_english"):
+        v = _clean(row.get(f))
+        if v:
+            yield ("hentai_title", v)
+    for s in _maybe_list(row.get("studios")):
+        yield ("hentai_studio", s)
+
+
+def emit_hentaisea(row):
+    """hentaisea → hentai_title."""
+    t = _clean(row.get("title"))
+    if t:
+        yield ("hentai_title", t)
+
+
 def emit_iafd_distributors(row):
     v = _clean(row.get("name"))
     if v:
@@ -444,7 +586,7 @@ SOURCE_SPECS: List[Spec] = [
     # ---- books / audiobooks ----
     Spec("gutenberg-books", emit_books,
          local="gutenberg_books", hf="media-metadata-gutenberg-books"),
-    Spec("librivox-audiobooks", emit_books,
+    Spec("librivox-audiobooks", emit_librivox,
          local="librivox_audiobooks", hf="media-metadata-librivox-audiobooks"),
     Spec("openlibrary-books", emit_books,
          local="openlibrary_books", hf="media-metadata-openlibrary-books"),
@@ -466,13 +608,31 @@ SOURCE_SPECS: List[Spec] = [
     Spec("movie_producers", _emit_movie_crew("movie_producer"), hf="movie_producers"),
     Spec("movie_writers", _emit_movie_crew("movie_writer"), hf="movie_writers"),
     Spec("movie_composers", _emit_movie_crew("movie_composer"), hf="movie_composers"),
+    # ---- dedicated hentai sets → hentai_title / hentai_studio ----
+    Spec("hanime", emit_hanime,
+         hf="adult-metadata-hanime", adult=True),
+    Spec("mal-hentai", emit_mal_hentai,
+         hf="adult-metadata-mal-hentai", adult=True),
+    Spec("hentaisea", emit_hentaisea,
+         hf="adult-metadata-hentaisea", adult=True),
     # ---- adult (content-filter detect-to-block ONLY) ----
+    # Performer sets are deduplicated into one ``pornstar`` pool (case-insensitive),
+    # so overlapping rosters across stashdb / iafd / freeones / boobpedia / thenude
+    # do not inflate the pool.
     Spec("stashdb-performers", emit_stashdb_performers,
          hf="adult-metadata-stashdb-performers", adult=True),
     Spec("iafd-performers", emit_iafd_performers,
          hf="adult-metadata-iafd-performers", adult=True),
+    Spec("iafd-titles", emit_iafd_titles,
+         hf="adult-metadata-iafd-titles", adult=True),
     Spec("iafd-distributors", emit_iafd_distributors,
          hf="adult-metadata-iafd-distributors", adult=True),
+    Spec("freeones-performers", emit_freeones_performers,
+         hf="adult-metadata-freeones-performers", adult=True),
+    Spec("boobpedia-performers", emit_boobpedia_performers,
+         hf="adult-metadata-boobpedia-performers", adult=True),
+    Spec("thenude-performers", emit_thenude_performers,
+         hf="adult-metadata-thenude-performers", adult=True),
 ]
 
 

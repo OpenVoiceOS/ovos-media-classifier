@@ -549,6 +549,8 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
         # paged
         if m(q, "ComicBookKeyword", lang):
             scores[PlaybackType.PAGED] += 1
+        if m(q, "BookKeyword", lang):
+            scores[PlaybackType.PAGED] += 1
 
         best = max(scores, key=lambda k: scores[k])
         if scores[best] == 0:
@@ -721,10 +723,26 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
         """
         m = self._match
         T = MediaType
+        # High-specificity leaves first (unambiguous keyword cues).  Ambient is
+        # tested before SoundEffect because phrases like "white noise" / "rain
+        # sounds" are ambient streams, not one-shot effects.
+        if allow(T.PROCEDURAL_AMBIENT) and m(q, "AmbientKeyword", lang):
+            return T.PROCEDURAL_AMBIENT, [], DEFAULT_KEYWORD_HIGH_CONFIDENCE
+        if allow(T.SOUND_EFFECT) and m(q, "SoundEffectKeyword", lang):
+            return T.SOUND_EFFECT, [], DEFAULT_KEYWORD_HIGH_CONFIDENCE
+        if allow(T.INTERACTIVE_FICTION) and m(q, "InteractiveFictionKeyword", lang):
+            return T.INTERACTIVE_FICTION, [], DEFAULT_KEYWORD_HIGH_CONFIDENCE
+        if allow(T.PLAYLIST) and m(q, "PlaylistKeyword", lang):
+            return T.PLAYLIST, [], DEFAULT_KEYWORD_CONFIDENCE
         if allow(T.MOVIE) and m(q, "DocumentaryKeyword", lang):
             return T.MOVIE, [], DEFAULT_KEYWORD_CONFIDENCE
         if allow(T.AUDIOBOOK) and m(q, "AudioBookKeyword", lang):
             return T.AUDIOBOOK, [], DEFAULT_KEYWORD_CONFIDENCE
+        # BOOK (TTS-read text) vs AUDIOBOOK (play a narration): a book cue
+        # ("book"/"novel") gated by a read verb routes to BOOK, *after* the more
+        # specific audiobook cue above so "play the audiobook" stays AUDIOBOOK.
+        if allow(T.BOOK) and m(q, "BookKeyword", lang) and m(q, "VerbRead", lang):
+            return T.BOOK, [], DEFAULT_KEYWORD_CONFIDENCE
         if allow(T.RADIO) and m(q, "NewsKeyword", lang):
             return T.RADIO, [], DEFAULT_KEYWORD_CONFIDENCE
         if allow(T.EPISODIC_SERIES) and m(q, "AnimeKeyword", lang):
@@ -781,10 +799,7 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
     def _default_leaf_type(media_type: MediaType) -> Optional[MediaType]:
         """Resolve a default-cell leaf to a concrete public ``MediaType``.
 
-        ``BOOK`` has no dedicated keyword leaf — the closest paged leaf the
-        keyword backend models is the comic (visual story); audiobook would
-        change the modality, so map BOOK → COMIC.
+        The paged default cell is ``BOOK`` (a TTS-read text) — e.g. a bare
+        "read me <title>" with no specific keyword voc still resolves to BOOK.
         """
-        if media_type is MediaType.BOOK:
-            return MediaType.COMIC
         return media_type

@@ -2,8 +2,15 @@
 <lead_watch> an adult anime
 <lead_watch> nsfw anime
 <lead_watch> a hentai episode
-<lead_watch> {hentai_name}
-<lead_watch> the hentai {hentai_name}
-<lead_watch> an episode of {hentai_name}
+<lead_watch> an explicit anime
+<lead_watch> an 18+ anime
+<lead_watch> an uncensored hentai
 <lead_watch> hentai on {adult_streaming_service}
-<lead_watch> adult anime {hentai_name}
+<lead_watch> {hentai_title}
+<lead_watch> the hentai {hentai_title}
+<lead_watch> an episode of {hentai_title}
+<lead_watch> the anime {hentai_title}
+<lead_watch> hentai by {hentai_studio}
+<lead_watch> a {hentai_studio} hentai
+<lead_watch> adult anime {hentai_title}
+<lead_watch> {hentai_title} on {adult_streaming_service}

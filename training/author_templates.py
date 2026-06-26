@@ -60,9 +60,9 @@ LEADINS: Dict[str, Dict[str, List[str]]] = {
                       "start watching", "i want to watch", "i'd like to watch",
                       "i feel like watching", "let's watch", "can we watch",
                       "could you play", "please put on", "how about we watch"],
-        "lead_read": ["read", "read me", "play the audiobook", "put on the audiobook",
-                     "start the audiobook", "narrate", "i want to listen to the audiobook",
-                     "can you read", "could you read"],
+        "lead_read": ["read", "read me", "read aloud", "read to me",
+                     "i want to read", "i'd like to read", "can you read",
+                     "could you read", "please read"],
         "lead_game": ["play", "launch", "open", "start", "boot up", "start a game of",
                      "let's play", "i want to play", "can we play", "i feel like playing"],
         "lead_tune": ["tune in to", "put on", "switch to", "turn on", "play",
@@ -201,16 +201,25 @@ BODIES: Dict[str, tuple] = {
         "{radio_station} radio", "some {radio_genre} radio",
         "a {radio_genre} station", "live radio", "the {radio_genre} station",
     ]),
-    "audiobook": ("lead_read", [
-        "{audiobook_title}", "the audiobook {audiobook_title}",
-        "{audiobook_title} by {audiobook_author}", "a book by {audiobook_author}",
-        "{audiobook_title} narrated by {audiobook_narrator}",
-        "the novel {audiobook_title}", "anything by {audiobook_author}",
-        "a book narrated by {audiobook_narrator}",
-        # entity-role richness
-        "{audiobook_title} written by {audiobook_author}",
-        "{audiobook_title} read by {audiobook_narrator}",
+    # AUDIOBOOK = play a NARRATION (audio).  Phrasing is audiobook-specific so it
+    # stays distinct from BOOK (TTS-read text) below.
+    "audiobook": ("lead_play_audio", [
+        "the audiobook {audiobook_title}", "the audiobook of {audiobook_title}",
+        "the audiobook {audiobook_title} by {audiobook_author}",
+        "the audiobook {audiobook_title} narrated by {audiobook_narrator}",
+        "an audiobook by {audiobook_author}",
+        "an audiobook narrated by {audiobook_narrator}",
         "an audiobook by {audiobook_author} narrated by {audiobook_narrator}",
+        "a {audiobook_genre} audiobook", "the audiobook version of {audiobook_title}",
+    ]),
+    # BOOK = TTS-read a readable text.  The "read" lead-in + book cues route this
+    # to MediaType.BOOK (paged), distinct from the audiobook narration above.
+    "book": ("lead_read", [
+        "{book_title}", "the book {book_title}", "the novel {book_title}",
+        "{book_title} by {book_author}", "a book by {book_author}",
+        "a {book_genre} book", "a {book_genre} novel", "anything by {book_author}",
+        "the {book_genre} book {book_title}", "the novel {book_title} by {book_author}",
+        "a book about {book_genre}",
     ]),
     "news": ("lead_play_audio", [
         "the news", "today's news", "the latest news",
@@ -311,6 +320,41 @@ BODIES: Dict[str, tuple] = {
         "a visual story", "the visual story {visual_story_title}",
         "a motion comic", "an interactive story",
     ]),
+    # ── playlist (PLAYLIST) ─────────────────────────────────────────────────
+    "playlist": ("lead_play_audio", [
+        "my playlist", "my liked songs", "my favorites", "my favourites",
+        "a {playlist_mood} playlist", "a {playlist_mood} mix",
+        "my {playlist_activity} mix", "my {playlist_activity} playlist",
+        "a {playlist_mood} {playlist_activity} playlist", "my saved songs",
+        "the {playlist_mood} playlist", "my daily mix",
+    ]),
+    # ── sound_effect (SOUND_EFFECT) ─────────────────────────────────────────
+    "sound_effect": ("lead_play_audio", [
+        "a {sound_name} sound", "a {sound_name} sound effect",
+        "the sound of {sound_name}", "a {sound_name} noise",
+        "the {sound_name} sound effect", "some {sound_name} sounds",
+    ]),
+    # ── interactive_fiction (INTERACTIVE_FICTION) ───────────────────────────
+    "interactive_fiction": ("lead_game", [
+        "a text adventure", "some interactive fiction",
+        "a choose your own adventure", "a choose your own adventure game",
+        "the interactive story {game_title}", "an interactive novel",
+        "a text adventure game",
+    ]),
+    # ── ambient (PROCEDURAL_AMBIENT, non-asmr) ──────────────────────────────
+    "ambient": ("lead_play_audio", [
+        "{ambient_sound}", "some {ambient_sound}", "{ambient_sound} sounds",
+        "white noise", "brown noise", "pink noise", "rain sounds",
+        "ocean waves", "nature sounds", "forest sounds", "thunderstorm sounds",
+        "focus music", "sleep sounds", "some ambient music", "some ambient noise",
+    ]),
+    # ── comic / manga (COMIC, read) ─────────────────────────────────────────
+    "comic": ("lead_read", [
+        "the manga {comic_title}", "the comic {comic_title}", "{comic_title}",
+        "a {comic_genre} manga", "a {comic_genre} comic",
+        "the comic book {comic_title}", "a graphic novel",
+        "the {comic_genre} manga {comic_title}", "some manga",
+    ]),
 }
 
 # Adult / NSFW — retained ONLY as content-filter (detect-to-block) signal.
@@ -333,9 +377,15 @@ ADULT_BODIES: Dict[str, tuple] = {
         "an erotic audiobook", "a steamy audio story",
     ]),
     "hentai": ("lead_watch", [
+        # descriptive forms — fire detection without a named title
         "some hentai", "an adult anime", "nsfw anime", "a hentai episode",
-        "{hentai_name}", "the hentai {hentai_name}", "an episode of {hentai_name}",
-        "hentai on {adult_streaming_service}", "adult anime {hentai_name}",
+        "an explicit anime", "an 18+ anime", "an uncensored hentai",
+        "hentai on {adult_streaming_service}",
+        # named forms — real hentai titles / studios (detect-to-block)
+        "{hentai_title}", "the hentai {hentai_title}",
+        "an episode of {hentai_title}", "the anime {hentai_title}",
+        "hentai by {hentai_studio}", "a {hentai_studio} hentai",
+        "adult anime {hentai_title}", "{hentai_title} on {adult_streaming_service}",
     ]),
 }
 
@@ -429,9 +479,15 @@ CONFUSABLE_BODIES: Dict[str, tuple] = {
         "the {artist_name} documentary", "a documentary on {movie_director}",
         "the documentary about {movie_title}",
     ]),
-    "audiobook": ("lead_read", [
+    # foreign movie title, but the AUDIOBOOK narration is meant (audio).
+    "audiobook": ("lead_play_audio", [
         "the audiobook of {movie_title}", "the audiobook version of {movie_title}",
         "{movie_title} as an audiobook",
+    ]),
+    # foreign movie title, but the BOOK (readable text) is meant — "read"+"novel".
+    "book": ("lead_read", [
+        "the {movie_title} novel", "the novel {movie_title}",
+        "the book {movie_title}", "{movie_title} the novel",
     ]),
     "podcast": ("lead_play_audio", [
         "a podcast about {artist_name}", "a podcast about {movie_title}",

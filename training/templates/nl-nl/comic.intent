@@ -1,0 +1,9 @@
+<lead_read> the manga {comic_title}
+<lead_read> the comic {comic_title}
+<lead_read> {comic_title}
+<lead_read> a {comic_genre} manga
+<lead_read> a {comic_genre} comic
+<lead_read> the comic book {comic_title}
+<lead_read> a graphic novel
+<lead_read> the {comic_genre} manga {comic_title}
+<lead_read> some manga
