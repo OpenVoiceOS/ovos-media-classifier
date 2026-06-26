@@ -39,6 +39,7 @@ _KEYWORD_VOCABS: List[Tuple[str, str]] = [
     ("AudioDramaKeyword",      "kw_audio_drama"),
     ("RadioKeyword",           "kw_radio"),
     ("MusicVideoKeyword",      "kw_music_video"),
+    ("SoundtrackKeyword",      "kw_soundtrack"),
     ("MusicKeyword",           "kw_music"),
     ("IPTVKeyword",            "kw_iptv"),
     ("TVKeyword",              "kw_tv"),

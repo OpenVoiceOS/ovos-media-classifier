@@ -1,0 +1,58 @@
+<lead_watch> {movie_title}
+[hey|ok|please] <lead_watch> {movie_title} [please|for me|right now|thanks]
+<lead_watch> the movie {movie_title}
+[hey|ok|please] <lead_watch> the movie {movie_title} [please|for me|right now|thanks]
+<lead_watch> the film {movie_title}
+[hey|ok|please] <lead_watch> the film {movie_title} [please|for me|right now|thanks]
+<lead_watch> a {movie_genre} movie
+[hey|ok|please] <lead_watch> a {movie_genre} movie [please|for me|right now|thanks]
+<lead_watch> a {movie_genre} film
+[hey|ok|please] <lead_watch> a {movie_genre} film [please|for me|right now|thanks]
+<lead_watch> something with {movie_actor}
+[hey|ok|please] <lead_watch> something with {movie_actor} [please|for me|right now|thanks]
+<lead_watch> a movie with {movie_actor}
+[hey|ok|please] <lead_watch> a movie with {movie_actor} [please|for me|right now|thanks]
+<lead_watch> a film starring {movie_actor}
+[hey|ok|please] <lead_watch> a film starring {movie_actor} [please|for me|right now|thanks]
+<lead_watch> a movie directed by {movie_director}
+[hey|ok|please] <lead_watch> a movie directed by {movie_director} [please|for me|right now|thanks]
+<lead_watch> a film by {movie_director}
+[hey|ok|please] <lead_watch> a film by {movie_director} [please|for me|right now|thanks]
+<lead_watch> a movie produced by {movie_producer}
+[hey|ok|please] <lead_watch> a movie produced by {movie_producer} [please|for me|right now|thanks]
+<lead_watch> {movie_title} with {movie_actor}
+[hey|ok|please] <lead_watch> {movie_title} with {movie_actor} [please|for me|right now|thanks]
+<lead_watch> an old {movie_genre} movie
+[hey|ok|please] <lead_watch> an old {movie_genre} movie [please|for me|right now|thanks]
+<lead_watch> a classic {movie_genre} movie
+[hey|ok|please] <lead_watch> a classic {movie_genre} movie [please|for me|right now|thanks]
+<lead_watch> {movie_title} starring {movie_actor}
+[hey|ok|please] <lead_watch> {movie_title} starring {movie_actor} [please|for me|right now|thanks]
+<lead_watch> {movie_title} directed by {movie_director}
+[hey|ok|please] <lead_watch> {movie_title} directed by {movie_director} [please|for me|right now|thanks]
+<lead_watch> a film produced by {movie_producer}
+[hey|ok|please] <lead_watch> a film produced by {movie_producer} [please|for me|right now|thanks]
+<lead_watch> a movie written by {movie_writer}
+[hey|ok|please] <lead_watch> a movie written by {movie_writer} [please|for me|right now|thanks]
+<lead_watch> a film written by {movie_writer}
+[hey|ok|please] <lead_watch> a film written by {movie_writer} [please|for me|right now|thanks]
+<lead_watch> a movie scored by {movie_composer}
+[hey|ok|please] <lead_watch> a movie scored by {movie_composer} [please|for me|right now|thanks]
+<lead_watch> the film {movie_title} by {movie_director}
+[hey|ok|please] <lead_watch> the film {movie_title} by {movie_director} [please|for me|right now|thanks]
+<lead_watch> a {movie_genre} film with {movie_actor}
+[hey|ok|please] <lead_watch> a {movie_genre} film with {movie_actor} [please|for me|right now|thanks]
+<lead_watch> a film with music by {movie_composer}
+[hey|ok|please] <lead_watch> a film with music by {movie_composer} [please|for me|right now|thanks]
+<lead_watch> a {movie_genre} movie from {release_year}
+[hey|ok|please] <lead_watch> a {movie_genre} movie from {release_year} [please|for me|right now|thanks]
+<lead_watch> a movie from {release_year}
+[hey|ok|please] <lead_watch> a movie from {release_year} [please|for me|right now|thanks]
+<lead_watch> a {release_decade} {movie_genre} film
+[hey|ok|please] <lead_watch> a {release_decade} {movie_genre} film [please|for me|right now|thanks]
+<lead_watch> some {media_country} cinema
+[hey|ok|please] <lead_watch> some {media_country} cinema [please|for me|right now|thanks]
+<lead_watch> a {media_country} film
+[hey|ok|please] <lead_watch> a {media_country} film [please|for me|right now|thanks]
+<lead_watch> a {movie_genre} film from {media_country}
+[hey|ok|please] <lead_watch> a {movie_genre} film from {media_country} [please|for me|right now|thanks]

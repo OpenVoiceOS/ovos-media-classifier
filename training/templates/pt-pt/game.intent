@@ -1,0 +1,8 @@
+<lead_game> {game_title}
+<lead_game> the game {game_title}
+<lead_game> a {game_genre} game
+<lead_game> a game on {game_platform}
+<lead_game> a round of {game_title}
+<lead_game> a quick {game_genre} game
+<lead_game> the {game_genre} game {game_title}
+<lead_game> some {game_genre}

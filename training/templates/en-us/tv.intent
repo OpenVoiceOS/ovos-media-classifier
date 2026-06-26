@@ -1,0 +1,18 @@
+<lead_watch> {tv_channel}
+[hey|ok|please] <lead_watch> {tv_channel} [please|for me|right now|thanks]
+<lead_watch> the channel {tv_channel}
+[hey|ok|please] <lead_watch> the channel {tv_channel} [please|for me|right now|thanks]
+<lead_watch> live tv
+[hey|ok|please] <lead_watch> live tv [please|for me|right now|thanks]
+<lead_watch> {tv_channel} live
+[hey|ok|please] <lead_watch> {tv_channel} live [please|for me|right now|thanks]
+<lead_watch> whatever's on {tv_channel}
+[hey|ok|please] <lead_watch> whatever's on {tv_channel} [please|for me|right now|thanks]
+<lead_watch> a {tv_genre} channel
+[hey|ok|please] <lead_watch> a {tv_genre} channel [please|for me|right now|thanks]
+<lead_watch> channel {tv_channel}
+[hey|ok|please] <lead_watch> channel {tv_channel} [please|for me|right now|thanks]
+<lead_watch> what's on {tv_channel}
+[hey|ok|please] <lead_watch> what's on {tv_channel} [please|for me|right now|thanks]
+<lead_watch> some live tv
+[hey|ok|please] <lead_watch> some live tv [please|for me|right now|thanks]

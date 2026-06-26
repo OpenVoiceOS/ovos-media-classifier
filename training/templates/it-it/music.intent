@@ -1,0 +1,24 @@
+<lead_play_audio> {artist_name}
+<lead_play_audio> some {artist_name}
+<lead_play_audio> {artist_name}'s music
+<lead_play_audio> music by {artist_name}
+<lead_play_audio> songs by {artist_name}
+<lead_play_audio> the best of {artist_name}
+<lead_play_audio> anything by {artist_name}
+<lead_play_audio> {track_name}
+<lead_play_audio> the song {track_name}
+<lead_play_audio> {track_name} by {artist_name}
+<lead_play_audio> the album {album_name}
+<lead_play_audio> {album_name}
+<lead_play_audio> {album_name} by {artist_name}
+<lead_play_audio> some {music_genre}
+<lead_play_audio> some {music_genre} music
+<lead_play_audio> a {music_genre} playlist
+<lead_play_audio> a {music_genre} mix
+<lead_play_audio> {record_label} artists
+<lead_play_audio> a song featuring {artist_name}
+<lead_play_audio> {track_name} featuring {artist_name}
+<lead_play_audio> music on {record_label}
+<lead_play_audio> {album_name} on {record_label}
+<lead_play_audio> the latest from {artist_name}
+<lead_play_audio> a {music_genre} song by {artist_name}

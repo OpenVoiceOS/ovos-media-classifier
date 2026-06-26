@@ -1,530 +1,525 @@
 #!/usr/bin/env python3
-"""Master dataset build script for ovos-media-classifier.
+"""Build the canonical ``ocp-media-intents`` dataset — the single entry point.
 
-Orchestrates all dataset generation steps in order:
+One reproducible command rebuilds the whole training/benchmark set on demand:
 
-  1. download   — pre-download all CSV + HuggingFace sources to local cache
-  2. gather     — normalise downloaded CSVs → ocp_dataset.csv
-  3. templates  — fill OCP Wikidata templates → ocp_templates.csv
-  4. keyword    — offline keyword-based utterances → ocp_keyword.csv
-  5. synthetic  — template + HF entity generation → ocp_synthetic.csv
-  6. merge      — concatenate all CSVs, dedup → ocp_final.csv
-  7. metrics    — compute per-intent / per-lang counts + save plots
+    .intent templates  ──expand()──►  slot-free samples
+                                          │  slot-fill {slot} from entity pools
+                                          ▼
+                                    labelled rows
+                                          │  rich columns (keyword + NER-by-
+                                          ▼  construction + axes + provenance)
+                                    balance per media_type  ──►  80/10/10 split
+                                          │
+                                          ▼   CSV + parquet + dataset card
 
-Each step writes to the configured output directory.  Steps can be skipped
-individually with --skip-* flags or selected with --only.
+Run it::
 
-Usage::
+    python -m training.build_dataset                      # default: data/release
+    python -m training.build_dataset --langs en-us pt-pt es-es
+    python -m training.build_dataset --target-per-type 20000 --adult-cap 7000
+    python -m training.build_dataset --push --repo TigreGotico/ocp-media-intents
 
-    # Full build (downloads everything)
-    uv run python build_dataset.py
+Everything downstream is deterministic for a fixed ``--seed`` (default 42).
 
-    # Quick offline build — no network after initial download
-    uv run python build_dataset.py --skip-download
+How to extend the set
+---------------------
+* **More/translated templates** — edit ``training/templates/<lang>/<intent>.intent``
+  (and the shared ``vocab/<lang>/<Lead*>.voc`` lead-ins).  The user manages and
+  translates these through ovos-localize; ``build_dataset`` picks them up with no
+  code change.
+* **More entities** — re-run ``python -m training.ingest_entities`` to refresh
+  ``data/entities/<label>.csv``, or drop curated values into
+  ``training/seed_entities/<label>.csv``.
 
-    # Produce only metrics/plots for an existing ocp_final.csv
-    uv run python build_dataset.py --only metrics
-
-    # Override cache location
-    OVOS_MEDIA_CLASSIFIER_CACHE=/data/ocp uv run python build_dataset.py
-
-    # Also pull from a local media server (env vars)
-    RADARR_URL=http://... RADARR_API_KEY=... uv run python build_dataset.py
+Columns are documented in ``docs/dataset.md``.
 """
 from __future__ import annotations
 
 import argparse
+import csv
+import json
 import os
+import random
+import re
 import sys
-import time
-from pathlib import Path
-from typing import Optional
+from typing import Dict, List, Optional, Sequence, Tuple
 
-import matplotlib
-import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
-import seaborn as sns
 
-matplotlib.use("Agg")
+from ovos_spec_tools import expand
 
-from training import get_output_dir, get_hf_cache_dir
-from training.sources import SCHEMA_COLUMNS
+from mediavocab import MediaType, infer_playback_type
+from ovos_media_classifier.axes import infer_structure
+from ovos_media_classifier.intents import (
+    LABEL_TO_MEDIA_TYPE,
+    LABEL_TO_GENRES,
+    OCPEntityLabel,
+)
+from ovos_media_classifier.features import _KEYWORD_VOCABS, CategoricalFeatureExtractor
+
+_HERE = os.path.dirname(os.path.abspath(__file__))
+TEMPLATES_DIR = os.path.join(_HERE, "templates")
+SEED_ENTITIES_DIR = os.path.join(_HERE, "seed_entities")
+DEFAULT_ENTITIES_DIR = os.path.join(os.path.dirname(_HERE), "data", "entities")
+
+csv.field_size_limit(min(sys.maxsize, 2 ** 31 - 1))
+
+# Languages with authored lead-in vocabularies (see author_templates.LEADINS).
+CORE_LANGS = ["en-us", "pt-pt", "es-es", "fr-fr", "de-de", "it-it", "nl-nl"]
+
+# The full set of OCPEntityLabel string values (for the NER-by-construction
+# columns + slot validation).
+ENTITY_LABELS: List[str] = [e.value for e in OCPEntityLabel]
+
+# Slot aliases: a few template slots have no dedicated metadata pool; fill them
+# from a closely-related real pool so the surface text stays realistic.
+SLOT_ALIASES: Dict[str, str] = {
+    "movie_genre":        "video_genre",
+    "trailer_title":      "movie_title",
+    "bts_title":          "movie_title",
+    "music_video_title":  "tv_show_title",
+    "silent_movie_title": "movie_title",
+    "bw_movie_title":     "movie_title",
+    "track_name":         "album_name",
+}
+
+# Every media-template row is a play request.
+PLAY_DOMAIN = "ocp_play"
+
 
 # ---------------------------------------------------------------------------
-# Configuration
+# Entity pools + lead-in vocabularies + templates
 # ---------------------------------------------------------------------------
 
-OUTPUT_DIR = get_output_dir()
-PLOTS_DIR = os.path.join(OUTPUT_DIR, "dataset_plots")
-
-_STEP_ORDER = [
-    "download", "gather", "gather_entities", "generate_templates",
-    "templates", "keyword", "synthetic", "slot_literal", "slot_filled",
-    "media", "merge", "metrics",
-]
-
-
-def _out(name: str) -> str:
-    return os.path.join(OUTPUT_DIR, name)
-
-
-# ---------------------------------------------------------------------------
-# Step implementations
-# ---------------------------------------------------------------------------
-
-def step_download(args: argparse.Namespace) -> None:
-    print("\n[1/8] Downloading datasets …")
-    from training import get_csv_cache_dir, get_hf_cache_dir as _hf
-    from training.sources import ALL_CSV_SOURCES, HF_DATASETS
-    from training.download_datasets import (
-        download_csv_sources, download_hf_datasets,
-    )
-    csv_cache = get_csv_cache_dir()
-    hf_cache = _hf()
-    download_csv_sources(ALL_CSV_SOURCES, csv_cache, dry_run=args.dry_run)
-    download_hf_datasets(HF_DATASETS, hf_cache, dry_run=args.dry_run)
-    print("  Download complete.")
+def load_entity_pools(entities_dir: str) -> Dict[str, List[str]]:
+    """Load ``<label>.csv`` pools (data/entities + seed_entities), with aliases."""
+    pools: Dict[str, List[str]] = {}
+    for base in (entities_dir, SEED_ENTITIES_DIR):
+        if not os.path.isdir(base):
+            continue
+        for fn in sorted(os.listdir(base)):
+            if not fn.endswith(".csv"):
+                continue
+            label = fn[:-4]
+            try:
+                df = pd.read_csv(os.path.join(base, fn), usecols=["value"],
+                                 dtype=str, keep_default_na=False)
+            except Exception:
+                continue
+            vals = [v.strip() for v in df["value"].tolist() if v and v.strip()]
+            if not vals:
+                continue
+            pool = pools.setdefault(label, [])
+            seen = {x.lower() for x in pool}
+            for v in vals:
+                if v.lower() not in seen:
+                    seen.add(v.lower())
+                    pool.append(v)
+    for slot, target in SLOT_ALIASES.items():
+        if slot not in pools and target in pools:
+            pools[slot] = pools[target]
+    return pools
 
 
-def step_gather(args: argparse.Namespace) -> str:
-    """Gather + normalise CSV sources → ocp_gathered.csv."""
-    print("\n[2/8] Gathering and normalising CSVs …")
-    from training.gather_dataset import build_dataset
-    df = build_dataset()
-    out = _out("ocp_gathered.csv")
-    df.to_csv(out, index=False)
-    print(f"  {len(df):,} rows → {out}")
-    return out
+def load_leadin_vocabs(lang: str) -> Dict[str, Sequence[str]]:
+    """Load the shared lead-in ``.voc`` members for ``expand()``."""
+    vocs: Dict[str, Sequence[str]] = {}
+    voc_dir = os.path.join(TEMPLATES_DIR, "vocab", lang)
+    if not os.path.isdir(voc_dir):
+        return vocs
+    for fn in os.listdir(voc_dir):
+        if not fn.endswith(".voc"):
+            continue
+        with open(os.path.join(voc_dir, fn), encoding="utf-8") as fh:
+            members = [ln.strip() for ln in fh if ln.strip()]
+        if members:
+            vocs[fn[:-4]] = members
+    return vocs
 
 
-def step_templates(args: argparse.Namespace, dedup_csv: Optional[str] = None) -> str:
-    """Fill OCP Wikidata templates → ocp_templates.csv."""
-    print("\n[3/8] Generating from OCP templates …")
-    from training.generate_from_ocp_templates import generate_all
-    df = generate_all(
-        n_per_template=args.templates_n,
-        dedup_against=dedup_csv,
-    )
-    out = _out("ocp_templates.csv")
-    df.to_csv(out, index=False)
-    print(f"  {len(df):,} rows → {out}")
-    return out
-
-
-def step_keyword(args: argparse.Namespace, dedup_csv: Optional[str] = None) -> str:
-    """Offline keyword-based utterances → ocp_keyword.csv."""
-    print("\n[4/8] Generating keyword utterances …")
-    from training.generate_keyword_csv import generate_all
-    df = generate_all(n=args.keyword_n, dedup_against=dedup_csv)
-    out = _out("ocp_keyword.csv")
-    df.to_csv(out, index=False)
-    print(f"  {len(df):,} rows → {out}")
-    return out
-
-
-def step_synthetic(args: argparse.Namespace, dedup_csv: Optional[str] = None) -> str:
-    """Template + HF entity generation → ocp_synthetic.csv (multilingual)."""
-    print("\n[5/8] Generating synthetic utterances …")
-    from training.generate_synthetic import generate_all
-
-    # Determine the templates root directory — __file__ is at
-    # training/build_dataset.py, so go up 2 levels.
-    train_dir = os.path.dirname(os.path.abspath(__file__))
-    repo_root = os.path.dirname(train_dir)
-    templates_root = os.path.join(repo_root, "templates")
-
-    # Parse languages
-    langs = [l.strip() for l in args.langs.split(",")]
-    all_dfs = []
-
-    for lang in langs:
-        templates_dir = os.path.join(templates_root, lang)
-        print(f"  {lang} … ", end="", flush=True)
-        df = generate_all(
-            max_per_intent=args.synthetic_n,
-            skip_hf=args.skip_hf,
-            dedup_against=dedup_csv,
-            lang=lang,
-            templates_dir=templates_dir,
-        )
-        print(f"{len(df):,} rows")
-        all_dfs.append(df)
-
-    result = pd.concat(all_dfs, ignore_index=True) if all_dfs else pd.DataFrame()
-    out = _out("ocp_synthetic.csv")
-    result.to_csv(out, index=False)
-    print(f"  Total: {len(result):,} rows → {out}")
-    return out
-
-
-def step_gather_entities(args: argparse.Namespace) -> None:
-    """Gather entity pools from all sources → per-label CSVs."""
-    print("\n[gather_entities] Gathering entity pools …")
-    from training.gather_entities import gather_all
-    sources = [s.strip() for s in args.entity_sources.split(",")] if args.entity_sources else None
-    gather_all(sources=sources, output_dir=args.entities_dir or None)
-    print("  Entity gathering complete.")
-
-
-def step_generate_templates(args: argparse.Namespace) -> str:
-    """Generate sentence template CSVs → templates_new/<lang>/<intent>.csv."""
-    print("\n[generate_templates] Generating templates …")
-    from training.generate_templates import generate_all
-    langs = [l.strip() for l in args.langs.split(",")] if args.langs else None
-    generate_all(langs=langs, output_dir=args.templates_dir or None)
-    from training.generate_templates import get_templates_dir
-    out = args.templates_dir or get_templates_dir()
-    print(f"  Templates written to {out}")
-    return out
-
-
-def step_slot_literal(args: argparse.Namespace) -> str:
-    """Generate slot-literal dataset → ocp_slot_literal.csv."""
-    print("\n[slot_literal] Generating slot-literal dataset …")
-    from training.generate_slot_literal_dataset import generate_slot_literal
-    from training.generate_templates import get_templates_dir
-    langs = [l.strip() for l in args.langs.split(",")] if args.langs else None
-    out = _out("ocp_slot_literal.csv")
-    generate_slot_literal(
-        templates_dir=args.templates_dir or get_templates_dir(),
-        output=out,
-        langs=langs,
-    )
-    return out
-
-
-def step_slot_filled(args: argparse.Namespace) -> str:
-    """Generate slot-filled dataset → ocp_slot_filled.csv."""
-    print("\n[slot_filled] Generating slot-filled dataset …")
-    from training.generate_slot_filled_dataset import generate_slot_filled
-    from training.gather_entities import get_entities_dir
-    from training.generate_templates import get_templates_dir
-    langs = [l.strip() for l in args.langs.split(",")] if args.langs else None
-    out = _out("ocp_slot_filled.csv")
-    generate_slot_filled(
-        entities_dir=args.entities_dir or get_entities_dir(),
-        templates_dir=args.templates_dir or get_templates_dir(),
-        output=out,
-        n=args.slot_filled_n,
-        langs=langs,
-    )
-    return out
-
-
-def step_media(args: argparse.Namespace) -> Optional[str]:
-    """Pull from local media servers if configured → ocp_media.csv."""
-    env_vars = {
-        "RADARR_URL": ("--radarr-url", "RADARR_API_KEY", "--radarr-api-key"),
-        "SONARR_URL": ("--sonarr-url", "SONARR_API_KEY", "--sonarr-api-key"),
-        "LIDARR_URL": ("--lidarr-url", "LIDARR_API_KEY", "--lidarr-api-key"),
-        "JELLYFIN_URL": ("--jellyfin-url", "JELLYFIN_API_KEY", "--jellyfin-api-key"),
-        "MUSIC_ASSISTANT_URL": ("--music-assistant-url", None, None),
-        "AUDIOBOOKSHELF_URL": ("--audiobookshelf-url", "AUDIOBOOKSHELF_API_KEY", "--audiobookshelf-api-key"),
-        "PODGRAB_URL": ("--podgrab-url", None, None),
-        "KAPOWARR_URL": ("--kapowarr-url", "KAPOWARR_API_KEY", "--kapowarr-api-key"),
-    }
-    cli_args = []
-    for url_var, (url_flag, key_var, key_flag) in env_vars.items():
-        url = os.environ.get(url_var, "")
-        if url:
-            cli_args += [url_flag, url]
-            if key_var:
-                key = os.environ.get(key_var, "")
-                if key:
-                    cli_args += [key_flag, key]
-
-    if not cli_args:
-        print("\n[6/8] Skipping media server step (no *_URL env vars set).")
-        print("  Set RADARR_URL, SONARR_URL, LIDARR_URL, JELLYFIN_URL, etc. to enable.")
-        return None
-
-    print("\n[6/8] Pulling from local media servers …")
-    out = _out("ocp_media.csv")
-    import subprocess
-    cmd = [
-        sys.executable, "-m", "training.generate_dataset_from_media",
-        "--output", out,
-    ] + cli_args
-    result = subprocess.run(cmd)
-    if result.returncode != 0:
-        print("  Warning: media server step failed; continuing without it.")
-        return None
-    if os.path.exists(out):
-        n = len(pd.read_csv(out))
-        print(f"  {n:,} rows → {out}")
+def load_intent_templates(lang: str) -> Dict[str, List[str]]:
+    """Return ``{intent: [template lines]}`` for a language."""
+    lang_dir = os.path.join(TEMPLATES_DIR, lang)
+    out: Dict[str, List[str]] = {}
+    if not os.path.isdir(lang_dir):
         return out
-    return None
-
-
-def step_merge(source_csvs: list[str]) -> str:
-    """Concatenate all partial CSVs, dedup on sentence → ocp_final.csv."""
-    print("\n[7/8] Merging all sources …")
-    frames: list[pd.DataFrame] = []
-    for path in source_csvs:
-        if path and os.path.exists(path):
-            df = pd.read_csv(path)
-            # Ensure all schema columns present
-            for col in SCHEMA_COLUMNS:
-                if col not in df.columns:
-                    df[col] = "undefined" if "label" in col else ""
-            frames.append(df[SCHEMA_COLUMNS])
-            print(f"  + {len(df):>8,}  {os.path.basename(path)}")
-
-    merged = pd.concat(frames, ignore_index=True)
-    before = len(merged)
-    merged.drop_duplicates(subset=["sentence"], inplace=True)
-    after = len(merged)
-    print(f"  Deduped {before - after:,} duplicates → {after:,} unique rows")
-
-    out = _out("ocp_final.csv")
-    merged.to_csv(out, index=False)
-    print(f"  Saved → {out}")
+    for fn in sorted(os.listdir(lang_dir)):
+        if not fn.endswith(".intent"):
+            continue
+        with open(os.path.join(lang_dir, fn), encoding="utf-8") as fh:
+            lines = [ln.strip() for ln in fh if ln.strip()]
+        if lines:
+            out[fn[:-len(".intent")]] = lines
     return out
 
 
-def step_metrics(final_csv: str) -> None:
-    """Compute and display counts; save plots to dataset_plots/."""
-    print("\n[8/8] Computing metrics and plots …")
-    os.makedirs(PLOTS_DIR, exist_ok=True)
-    df = pd.read_csv(final_csv)
-    total = len(df)
+# ---------------------------------------------------------------------------
+# Row construction
+# ---------------------------------------------------------------------------
 
-    print(f"\n  Total rows: {total:,}")
-    print(f"  Unique sentences: {df['sentence'].nunique():,}")
-    print(f"  Languages: {sorted(df['lang'].unique())}")
-
-    # ── Domain distribution ──────────────────────────────────────────────────
-    print("\n  Domain distribution:")
-    for domain, cnt in df["domain"].value_counts().items():
-        print(f"    {domain:<20}  {cnt:>8,}  ({100*cnt/total:.1f}%)")
-
-    # ── Media intent distribution (ocp_play only) ────────────────────────────
-    play_df = df[df["domain"] == "ocp_play"]
-    print(f"\n  Play intents ({len(play_df):,} rows):")
-    intent_counts = play_df["media_label"].value_counts()
-    for intent, cnt in intent_counts.items():
-        bar = "█" * int(40 * cnt / intent_counts.max())
-        print(f"    {intent:<25}  {cnt:>6,}  {bar}")
-
-    # ── Language coverage ────────────────────────────────────────────────────
-    print(f"\n  Language coverage:")
-    for lang, cnt in df["lang"].value_counts().items():
-        print(f"    {lang:<8}  {cnt:>8,}  ({100*cnt/total:.1f}%)")
-
-    # ── Plots ────────────────────────────────────────────────────────────────
-    _plot_intent_distribution(play_df, PLOTS_DIR)
-    _plot_domain_pie(df, PLOTS_DIR)
-    _plot_lang_heatmap(df, PLOTS_DIR)
-    _plot_playback_balance(play_df, PLOTS_DIR)
-    print(f"\n  Plots saved to {PLOTS_DIR}/")
+_SLOT_RE = re.compile(r"\{(\w+)\}")
 
 
-def _plot_intent_distribution(play_df: pd.DataFrame, plots_dir: str) -> None:
-    counts = play_df["media_label"].value_counts().sort_values(ascending=True)
-    fig, ax = plt.subplots(figsize=(10, max(6, len(counts) * 0.35)))
-    colors = plt.cm.tab20(np.linspace(0, 1, len(counts)))
-    ax.barh(counts.index, counts.values, color=colors)
-    ax.set_xlabel("Number of utterances")
-    ax.set_title("OCP Play Intent Distribution")
-    for i, (_, v) in enumerate(counts.items()):
-        ax.text(v + counts.max() * 0.005, i, f"{v:,}", va="center", fontsize=8)
-    plt.tight_layout()
-    fig.savefig(os.path.join(plots_dir, "intent_distribution.png"), dpi=150)
-    plt.close(fig)
+def _label_axes(media_label: str) -> Tuple[str, List[str], str, str, str]:
+    """Return (media_type, genres, playback_type, structure, binary_label)."""
+    mt = LABEL_TO_MEDIA_TYPE.get(media_label, MediaType.GENERIC)
+    genres = list(LABEL_TO_GENRES.get(media_label, []))
+    return (mt.value, genres, infer_playback_type(mt).value,
+            infer_structure(mt).value, "ocp")
 
 
-def _plot_domain_pie(df: pd.DataFrame, plots_dir: str) -> None:
-    counts = df["domain"].value_counts()
-    fig, ax = plt.subplots(figsize=(7, 7))
-    ax.pie(counts.values, labels=counts.index, autopct="%1.1f%%",
-           colors=["steelblue", "darkorange", "grey"])
-    ax.set_title("Domain Distribution")
-    plt.tight_layout()
-    fig.savefig(os.path.join(plots_dir, "domain_distribution.png"), dpi=150)
-    plt.close(fig)
+def fill_slots(
+    sample: str, pools: Dict[str, List[str]], rng: random.Random,
+) -> Optional[Tuple[str, Dict[str, str]]]:
+    """Replace each ``{slot}`` with a sampled real entity.
+
+    Returns ``(filled_sentence, {slot: value})`` or ``None`` if a required slot
+    pool is empty (the sample is skipped — never emit a literal ``{slot}``).
+    """
+    chosen: Dict[str, str] = {}
+    filled = sample
+    for slot in _SLOT_RE.findall(sample):
+        pool = pools.get(slot)
+        if not pool:
+            return None
+        if slot not in chosen:
+            chosen[slot] = rng.choice(pool)
+        filled = filled.replace("{" + slot + "}", chosen[slot], 1)
+    return " ".join(filled.split()), chosen
 
 
-def _plot_lang_heatmap(df: pd.DataFrame, plots_dir: str) -> None:
-    langs = df["lang"].unique()
-    intents = df["media_label"].unique()
-    matrix = pd.crosstab(df["lang"], df["media_label"]).reindex(
-        index=sorted(langs), columns=sorted(intents), fill_value=0
-    )
-    fig, ax = plt.subplots(figsize=(max(12, len(intents) * 0.6), max(6, len(langs) * 0.5)))
-    sns.heatmap(
-        matrix, ax=ax, cmap="YlOrRd", fmt="d", annot=True if len(intents) * len(langs) < 300 else False,
-        linewidths=0.5, cbar_kws={"label": "count"},
-    )
-    ax.set_title("Utterances per Language × Intent")
-    ax.set_xlabel("Intent")
-    ax.set_ylabel("Language")
-    plt.xticks(rotation=45, ha="right", fontsize=8)
-    plt.tight_layout()
-    fig.savefig(os.path.join(plots_dir, "lang_intent_heatmap.png"), dpi=150)
-    plt.close(fig)
-
-
-def _plot_playback_balance(play_df: pd.DataFrame, plots_dir: str) -> None:
-    counts = play_df["playback_label"].value_counts()
-    fig, ax = plt.subplots(figsize=(6, 4))
-    ax.bar(counts.index, counts.values, color=["steelblue", "darkorange", "grey"])
-    for i, (_, v) in enumerate(counts.items()):
-        ax.text(i, v + counts.max() * 0.01, f"{v:,}", ha="center")
-    ax.set_title("Playback Type Balance (audio / video / undefined)")
-    ax.set_ylabel("Utterances")
-    plt.tight_layout()
-    fig.savefig(os.path.join(plots_dir, "playback_balance.png"), dpi=150)
-    plt.close(fig)
+def build_rows_for_lang(
+    lang: str, pools: Dict[str, List[str]],
+    fills_per_template: int, rng: random.Random,
+) -> List[dict]:
+    """Expand + slot-fill all templates for one language into labelled rows."""
+    vocs = load_leadin_vocabs(lang)
+    templates = load_intent_templates(lang)
+    rows: List[dict] = []
+    tid = 0
+    for intent, lines in templates.items():
+        media_type, genres, pb, struct, binary = _label_axes(intent)
+        genres_json = json.dumps(genres)
+        for line in lines:
+            tid += 1
+            template_id = f"{lang}:{intent}:{tid}"
+            try:
+                samples = expand(line, vocs)
+            except Exception:
+                continue
+            for sample in samples:
+                n_fills = fills_per_template if _SLOT_RE.search(sample) else 1
+                seen_local: set = set()
+                for _ in range(n_fills):
+                    res = fill_slots(sample, pools, rng)
+                    if res is None:
+                        break
+                    sentence, slot_values = res
+                    key = sentence.lower()
+                    if key in seen_local:
+                        continue
+                    seen_local.add(key)
+                    rows.append({
+                        "sentence": sentence,
+                        "lang": lang,
+                        "domain": PLAY_DOMAIN,
+                        "intent": intent,
+                        "media_type": media_type,
+                        "genres": genres_json,
+                        "playback_type": pb,
+                        "structure": struct,
+                        "binary_label": binary,
+                        "template_id": template_id,
+                        "template": line,
+                        "n_slots": len(slot_values),
+                        "entity_labels": json.dumps(sorted(slot_values)),
+                        "slot_values": json.dumps(slot_values, ensure_ascii=False),
+                    })
+    return rows
 
 
 # ---------------------------------------------------------------------------
-# CLI
+# Rich feature columns
 # ---------------------------------------------------------------------------
 
-def parse_args() -> argparse.Namespace:
-    p = argparse.ArgumentParser(
-        description="Master OCP dataset build pipeline",
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog=__doc__,
-    )
-    p.add_argument("--only", choices=_STEP_ORDER, metavar="STEP",
-                   help="Run only this one step (skip all others)")
-    p.add_argument("--skip-download",         action="store_true", help="Skip download step")
-    p.add_argument("--skip-gather",           action="store_true", help="Skip gather step")
-    p.add_argument("--skip-gather-entities",  action="store_true", help="Skip gather_entities step")
-    p.add_argument("--skip-generate-templates", action="store_true", help="Skip generate_templates step")
-    p.add_argument("--skip-templates",        action="store_true", help="Skip templates step (Wikidata)")
-    p.add_argument("--skip-keyword",          action="store_true", help="Skip keyword step")
-    p.add_argument("--skip-synthetic",        action="store_true", help="Skip synthetic step")
-    p.add_argument("--skip-slot-literal",     action="store_true", help="Skip slot_literal step")
-    p.add_argument("--skip-slot-filled",      action="store_true", help="Skip slot_filled step")
-    p.add_argument("--skip-media",            action="store_true", help="Skip media servers step")
-    p.add_argument("--entity-sources",        default=None,
-                   help="Comma-separated entity source names for gather_entities (default: all)")
-    p.add_argument("--entities-dir",          default=None,
-                   help="Entity CSV directory override")
-    p.add_argument("--templates-dir",         default=None,
-                   help="Template CSV root directory override")
-    p.add_argument("--slot-filled-n",         type=int, default=10,
-                   help="Filled utterances per template in slot_filled step (default: 10)")
-    p.add_argument("--skip-hf",         action="store_true",
-                   help="In synthetic step: skip HuggingFace datasets, use curated lists only")
-    p.add_argument("--dry-run",         action="store_true", help="In download step: list files only")
-    p.add_argument("--templates-n",     type=int, default=20,
-                   help="Samples per Wikidata template (default: 20)")
-    p.add_argument("--keyword-n",       type=int, default=3000,
-                   help="Utterances per keyword intent (default: 3000)")
-    p.add_argument("--synthetic-n",     type=int, default=5000,
-                   help="Utterances per synthetic intent (default: 5000)")
-    p.add_argument("--langs",           default="en-us",
-                   help="Comma-separated BCP-47 lang codes for synthetic generation (default: en-us)")
-    return p.parse_args()
+_KEYWORD_COLS = [col for _voc, col in _KEYWORD_VOCABS]
+_NER_COLS = [f"ner_{label}" for label in ENTITY_LABELS]
+
+
+def add_feature_columns(df: pd.DataFrame) -> pd.DataFrame:
+    """Add keyword (CategoricalFeatureExtractor) + NER-by-construction columns.
+
+    * ``kw_*`` / ``verb_*`` / ``mod_*`` / ``fmt_*`` — computed on the realised
+      sentence by the same extractor the runtime uses, so a model trains on the
+      exact features it will see at inference (no extraction step needed).
+    * ``ner_<label>`` — 1 where ``{label}`` was filled (ground truth, not
+      predicted), so the set doubles as NER / slot-filling training data.
+    """
+    extractor = CategoricalFeatureExtractor.from_locale_dir()
+
+    kw_cache: Dict[Tuple[str, str], set] = {}
+    kw_data = {col: [] for col in _KEYWORD_COLS}
+    for sent, lang in zip(df["sentence"], df["lang"]):
+        ckey = (sent, lang)
+        fired = kw_cache.get(ckey)
+        if fired is None:
+            fired = set(extractor.extract(sent, lang=lang))
+            kw_cache[ckey] = fired
+        for col in _KEYWORD_COLS:
+            kw_data[col].append(1 if col in fired else 0)
+
+    ner_data = {f"ner_{label}": [] for label in ENTITY_LABELS}
+    for raw in df["entity_labels"]:
+        present = set(json.loads(raw)) if raw else set()
+        for label in ENTITY_LABELS:
+            ner_data[f"ner_{label}"].append(1 if label in present else 0)
+
+    # assemble all feature columns at once (avoids fragmentation)
+    feat_df = pd.DataFrame({**kw_data, **ner_data}, index=df.index)
+    return pd.concat([df, feat_df], axis=1)
+
+
+# ---------------------------------------------------------------------------
+# Balance + split
+# ---------------------------------------------------------------------------
+
+ADULT_GENRE = "adult"
+
+
+def _is_adult(genres_json: str) -> bool:
+    try:
+        return ADULT_GENRE in json.loads(genres_json)
+    except Exception:
+        return False
+
+
+def balance(df: pd.DataFrame, target_per_type: int, adult_cap: int,
+            seed: int) -> pd.DataFrame:
+    """Cap (mediavocab) type classes toward an even band; keep adult a minority.
+
+    Non-adult classes are sampled toward ``target_per_type`` each.  Adult rows
+    (any class carrying the ``adult`` genre) are sampled to at most ``adult_cap``
+    TOTAL so the content filter has enough diverse examples to learn while the
+    slice stays well below a normal class.
+    """
+    adult_mask = df["genres"].map(_is_adult)
+    adult_df = df[adult_mask]
+    main_df = df[~adult_mask]
+
+    parts: List[pd.DataFrame] = []
+    for _mt, grp in main_df.groupby("media_type"):
+        if len(grp) > target_per_type:
+            grp = grp.sample(n=target_per_type, random_state=seed)
+        parts.append(grp)
+    if len(adult_df) > adult_cap:
+        adult_df = adult_df.sample(n=adult_cap, random_state=seed)
+    parts.append(adult_df)
+
+    out = pd.concat(parts, ignore_index=True)
+    return out.sample(frac=1.0, random_state=seed).reset_index(drop=True)
+
+
+def split(df: pd.DataFrame, seed: int):
+    from sklearn.model_selection import train_test_split
+    counts = df["media_type"].value_counts()
+    rare = counts[counts < 10].index
+    strat = df["media_type"].where(~df["media_type"].isin(rare), "._rare_")
+    train, temp = train_test_split(df, test_size=0.2, random_state=seed,
+                                   stratify=strat)
+    strat_t = temp["media_type"].where(~temp["media_type"].isin(rare), "._rare_")
+    val, test = train_test_split(temp, test_size=0.5, random_state=seed,
+                                 stratify=strat_t)
+    return (train.reset_index(drop=True), val.reset_index(drop=True),
+            test.reset_index(drop=True))
+
+
+# ---------------------------------------------------------------------------
+# Dataset card
+# ---------------------------------------------------------------------------
+
+def dataset_card(repo: str, n_total: int, splits, type_counts, lang_counts,
+                 adult_n: int) -> str:
+    tc = "\n".join(f"| `{k}` | {v:,} |" for k, v in type_counts.items())
+    lc = ", ".join(f"{k} ({v:,})" for k, v in lang_counts.items())
+    langs_yaml = os.linesep.join(
+        "- " + l.split("-")[0] for l in dict.fromkeys(lang_counts))
+    return f"""---
+license: apache-2.0
+task_categories:
+- text-classification
+- token-classification
+language:
+{langs_yaml}
+tags:
+- ovos
+- ocp
+- media
+- intent-classification
+- slot-filling
+- mediavocab
+pretty_name: OCP Media Intents
+---
+
+# {repo.split('/')[-1]}
+
+Canonical training/benchmark dataset for **OVOS Common Playback (OCP)** media
+command classification. Each row is a natural-language voice command labelled
+with a media type, the orthogonal coarse axes, content-filter genres, and a full
+set of precomputed features — so it trains a classifier (or a slot-filler / NER /
+entity-linker) directly, with no feature-extraction step.
+
+**Total rows:** {n_total:,} — train {len(splits[0]):,} / validation {len(splits[1]):,} / test {len(splits[2]):,}
+(stratified 80/10/10 on `media_type`, `random_state=42`).
+
+## How it is built
+
+Reproducible from source with one command (`python -m training.build_dataset`):
+translatable OVOS-INTENT-1 `.intent` templates are expanded with
+`ovos_spec_tools.expand`, their `{{slot}}` placeholders are filled with **real
+entities** from the
+[TigreGotico media-metadata collection](https://huggingface.co/TigreGotico),
+rich feature columns are computed, the type classes are balanced, and the set is
+split. See `docs/dataset.md` and `docs/data-sources.md`.
+
+## Columns
+
+| group | columns |
+|---|---|
+| core | `sentence`, `lang`, `domain`, `intent`, `media_type`, `genres`, `playback_type`, `structure`, `binary_label` |
+| keyword features | `kw_*`, `verb_*`, `mod_*`, `fmt_*` — 0/1, computed on `sentence` by the runtime `CategoricalFeatureExtractor` |
+| NER-by-construction | `ner_<entity_label>` — 0/1 ground-truth flag set where `{{entity_label}}` was filled; `slot_values` maps each filled slot to its entity |
+| provenance | `template_id`, `template`, `n_slots`, `entity_labels` |
+
+`genres`, `entity_labels` and `slot_values` are JSON strings.
+
+## media_type distribution
+
+| type | rows |
+|---|---|
+{tc}
+
+## Languages
+
+{lc}
+
+## Content-filter slice (adult, detect-to-block)
+
+This set includes a **deliberate minority of {adult_n:,} adult rows** built from
+real adult performer / title entities. They exist **only so a default-on content
+filter can BLOCK such requests** (parental control / detect-to-block) — never for
+adult-content provision. Every adult row carries the `adult` genre (via
+`LABEL_TO_GENRES`); the filter blocks on that genre. The slice is kept far below
+a normal class so the model learns to detect it without it dominating training.
+"""
+
+
+# ---------------------------------------------------------------------------
+# Main
+# ---------------------------------------------------------------------------
+
+# column order: core first, then features, then provenance
+_CORE = ["sentence", "lang", "domain", "intent", "media_type", "genres",
+         "playback_type", "structure", "binary_label"]
+_PROV = ["template_id", "template", "n_slots", "entity_labels", "slot_values"]
+
+
+def build(out_dir: str, entities_dir: str, langs: List[str],
+          fills_per_template: int, target_per_type: int, adult_cap: int,
+          seed: int, push: bool = False,
+          repo: str = "TigreGotico/ocp-media-intents",
+          private: bool = False) -> None:
+    os.makedirs(out_dir, exist_ok=True)
+    rng = random.Random(seed)
+
+    print(f"Loading entity pools from {entities_dir} (+ seed) …")
+    pools = load_entity_pools(entities_dir)
+    print(f"  {len(pools)} pools; {sum(len(v) for v in pools.values()):,} entities")
+
+    all_rows: List[dict] = []
+    for lang in langs:
+        rows = build_rows_for_lang(lang, pools, fills_per_template, rng)
+        print(f"  {lang}: {len(rows):,} filled rows")
+        all_rows.extend(rows)
+
+    df = pd.DataFrame(all_rows)
+    before = len(df)
+    df.drop_duplicates(subset=["sentence", "lang"], inplace=True)
+    print(f"Generated {before:,} → {len(df):,} unique (sentence, lang) rows")
+
+    print("Computing feature columns …")
+    df = add_feature_columns(df)
+
+    print("Balancing …")
+    adult_total = int(df["genres"].map(_is_adult).sum())
+    df = balance(df, target_per_type, adult_cap, seed)
+    adult_kept = int(df["genres"].map(_is_adult).sum())
+    print(f"  adult rows {adult_total:,} → kept {adult_kept:,} (minority)")
+
+    type_counts = df["media_type"].value_counts().to_dict()
+    lang_counts = df["lang"].value_counts().to_dict()
+
+    print("Splitting 80/10/10 …")
+    train, val, test = split(df, seed=seed)
+
+    ordered = _CORE + _KEYWORD_COLS + _NER_COLS + _PROV
+    df = df[[c for c in ordered if c in df.columns]]
+    train = train[[c for c in ordered if c in train.columns]]
+    val = val[[c for c in ordered if c in val.columns]]
+    test = test[[c for c in ordered if c in test.columns]]
+
+    for name, d in [("full", df), ("train", train),
+                    ("validation", val), ("test", test)]:
+        d.to_csv(os.path.join(out_dir, f"{name}.csv"), index=False)
+        d.to_parquet(os.path.join(out_dir, f"{name}.parquet"), index=False)
+        print(f"  wrote {name}: {len(d):,}")
+
+    card = dataset_card(repo, len(df), (train, val, test),
+                        type_counts, lang_counts, adult_kept)
+    with open(os.path.join(out_dir, "README.md"), "w", encoding="utf-8") as fh:
+        fh.write(card)
+    print(f"  wrote dataset card → {out_dir}/README.md")
+
+    if push:
+        print(f"Pushing to {repo} (private={private}) …")
+        from datasets import Dataset, DatasetDict
+        dd = DatasetDict({
+            "train": Dataset.from_pandas(train, preserve_index=False),
+            "validation": Dataset.from_pandas(val, preserve_index=False),
+            "test": Dataset.from_pandas(test, preserve_index=False),
+        })
+        dd.push_to_hub(repo, private=private)
+        from huggingface_hub import HfApi
+        HfApi().upload_file(
+            path_or_fileobj=os.path.join(out_dir, "README.md"),
+            path_in_repo="README.md", repo_id=repo, repo_type="dataset")
+        print("  pushed.")
+    print("Done.")
 
 
 def main() -> None:
-    args = parse_args()
-    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    ap = argparse.ArgumentParser(
+        description="Build the ocp-media-intents dataset",
+        formatter_class=argparse.RawDescriptionHelpFormatter, epilog=__doc__)
+    ap.add_argument("--out-dir", default="data/release")
+    ap.add_argument("--entities-dir", default=DEFAULT_ENTITIES_DIR)
+    ap.add_argument("--langs", nargs="*", default=CORE_LANGS)
+    ap.add_argument("--fills-per-template", type=int, default=6,
+                    help="entity fills per expanded slotted sample (default: 6)")
+    ap.add_argument("--target-per-type", type=int, default=20000,
+                    help="cap per (non-adult) media_type (default: 20000)")
+    ap.add_argument("--adult-cap", type=int, default=7000,
+                    help="max adult rows total — the learnable minority (default: 7000)")
+    ap.add_argument("--seed", type=int, default=42)
+    ap.add_argument("--push", action="store_true")
+    ap.add_argument("--repo", default="TigreGotico/ocp-media-intents")
+    ap.add_argument("--private", action="store_true")
+    args = ap.parse_args()
 
-    print(f"Cache: {os.path.dirname(OUTPUT_DIR)}")
-    print(f"Output: {OUTPUT_DIR}")
-
-    only = args.only
-    t0 = time.time()
-    source_csvs: list[str] = []
-
-    # ── Step 1: Download ─────────────────────────────────────────────────────
-    if not only or only == "download":
-        if not args.skip_download:
-            step_download(args)
-
-    # ── Step 2: Gather ───────────────────────────────────────────────────────
-    if not only or only == "gather":
-        if not args.skip_gather:
-            gathered = step_gather(args)
-            source_csvs.append(gathered)
-        elif os.path.exists(_out("ocp_gathered.csv")):
-            source_csvs.append(_out("ocp_gathered.csv"))
-
-    # ── Step: Gather entities ────────────────────────────────────────────────
-    if not only or only == "gather_entities":
-        if not args.skip_gather_entities:
-            step_gather_entities(args)
-
-    # ── Step: Generate templates ─────────────────────────────────────────────
-    if not only or only == "generate_templates":
-        if not args.skip_generate_templates:
-            step_generate_templates(args)
-
-    # ── Step 3: Templates (Wikidata) ─────────────────────────────────────────
-    if not only or only == "templates":
-        if not args.skip_templates:
-            dedup = source_csvs[-1] if source_csvs else None
-            tmpl = step_templates(args, dedup_csv=dedup)
-            source_csvs.append(tmpl)
-        elif os.path.exists(_out("ocp_templates.csv")):
-            source_csvs.append(_out("ocp_templates.csv"))
-
-    # ── Step 4: Keyword ──────────────────────────────────────────────────────
-    if not only or only == "keyword":
-        if not args.skip_keyword:
-            dedup = source_csvs[-1] if source_csvs else None
-            kw = step_keyword(args, dedup_csv=dedup)
-            source_csvs.append(kw)
-        elif os.path.exists(_out("ocp_keyword.csv")):
-            source_csvs.append(_out("ocp_keyword.csv"))
-
-    # ── Step 5: Synthetic ────────────────────────────────────────────────────
-    if not only or only == "synthetic":
-        if not args.skip_synthetic:
-            dedup = source_csvs[-1] if source_csvs else None
-            syn = step_synthetic(args, dedup_csv=dedup)
-            source_csvs.append(syn)
-        elif os.path.exists(_out("ocp_synthetic.csv")):
-            source_csvs.append(_out("ocp_synthetic.csv"))
-
-    # ── Step: Slot-literal ───────────────────────────────────────────────────
-    if not only or only == "slot_literal":
-        if not args.skip_slot_literal:
-            sl = step_slot_literal(args)
-            source_csvs.append(sl)
-        elif os.path.exists(_out("ocp_slot_literal.csv")):
-            source_csvs.append(_out("ocp_slot_literal.csv"))
-
-    # ── Step: Slot-filled ────────────────────────────────────────────────────
-    if not only or only == "slot_filled":
-        if not args.skip_slot_filled:
-            sf = step_slot_filled(args)
-            source_csvs.append(sf)
-        elif os.path.exists(_out("ocp_slot_filled.csv")):
-            source_csvs.append(_out("ocp_slot_filled.csv"))
-
-    # ── Step 6: Media servers ────────────────────────────────────────────────
-    if not only or only == "media":
-        if not args.skip_media:
-            media = step_media(args)
-            if media:
-                source_csvs.append(media)
-        elif os.path.exists(_out("ocp_media.csv")):
-            source_csvs.append(_out("ocp_media.csv"))
-
-    # ── Step 7: Merge ────────────────────────────────────────────────────────
-    final_csv = _out("ocp_final.csv")
-    if not only or only == "merge":
-        if source_csvs:
-            final_csv = step_merge(source_csvs)
-        else:
-            print("\n[7/8] No sources to merge — using existing ocp_final.csv")
-
-    # ── Step 8: Metrics ──────────────────────────────────────────────────────
-    if not only or only == "metrics":
-        if os.path.exists(final_csv):
-            step_metrics(final_csv)
-        else:
-            print(f"\n[8/8] Skipping metrics — {final_csv} not found")
-
-    elapsed = time.time() - t0
-    print(f"\nDone in {elapsed:.1f}s")
+    build(out_dir=args.out_dir, entities_dir=args.entities_dir, langs=args.langs,
+          fills_per_template=args.fills_per_template,
+          target_per_type=args.target_per_type, adult_cap=args.adult_cap,
+          seed=args.seed, push=args.push, repo=args.repo, private=args.private)
 
 
 if __name__ == "__main__":

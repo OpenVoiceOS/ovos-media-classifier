@@ -1,0 +1,16 @@
+<lead_play_audio> the news
+[hey|ok|please] <lead_play_audio> the news [please|for me|right now|thanks]
+<lead_play_audio> today's news
+[hey|ok|please] <lead_play_audio> today's news [please|for me|right now|thanks]
+<lead_play_audio> the latest news
+[hey|ok|please] <lead_play_audio> the latest news [please|for me|right now|thanks]
+<lead_play_audio> the news from {news_provider}
+[hey|ok|please] <lead_play_audio> the news from {news_provider} [please|for me|right now|thanks]
+<lead_play_audio> {news_provider} news
+[hey|ok|please] <lead_play_audio> {news_provider} news [please|for me|right now|thanks]
+<lead_play_audio> the {news_category} news
+[hey|ok|please] <lead_play_audio> the {news_category} news [please|for me|right now|thanks]
+<lead_play_audio> {news_category} headlines
+[hey|ok|please] <lead_play_audio> {news_category} headlines [please|for me|right now|thanks]
+<lead_play_audio> the {news_category} headlines from {news_provider}
+[hey|ok|please] <lead_play_audio> the {news_category} headlines from {news_provider} [please|for me|right now|thanks]

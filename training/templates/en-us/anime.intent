@@ -1,0 +1,24 @@
+<lead_watch> {anime_title}
+[hey|ok|please] <lead_watch> {anime_title} [please|for me|right now|thanks]
+<lead_watch> the anime {anime_title}
+[hey|ok|please] <lead_watch> the anime {anime_title} [please|for me|right now|thanks]
+<lead_watch> an episode of {anime_title}
+[hey|ok|please] <lead_watch> an episode of {anime_title} [please|for me|right now|thanks]
+<lead_watch> some anime
+[hey|ok|please] <lead_watch> some anime [please|for me|right now|thanks]
+<lead_watch> anime by {anime_studio}
+[hey|ok|please] <lead_watch> anime by {anime_studio} [please|for me|right now|thanks]
+<lead_watch> a {anime_studio} anime
+[hey|ok|please] <lead_watch> a {anime_studio} anime [please|for me|right now|thanks]
+<lead_watch> the new season of {anime_title}
+[hey|ok|please] <lead_watch> the new season of {anime_title} [please|for me|right now|thanks]
+<lead_watch> the next episode of {anime_title}
+[hey|ok|please] <lead_watch> the next episode of {anime_title} [please|for me|right now|thanks]
+<lead_watch> the {anime_studio} anime {anime_title}
+[hey|ok|please] <lead_watch> the {anime_studio} anime {anime_title} [please|for me|right now|thanks]
+<lead_watch> {anime_title} by {anime_studio}
+[hey|ok|please] <lead_watch> {anime_title} by {anime_studio} [please|for me|right now|thanks]
+<lead_watch> a {release_decade} anime
+[hey|ok|please] <lead_watch> a {release_decade} anime [please|for me|right now|thanks]
+<lead_watch> an anime from {release_year}
+[hey|ok|please] <lead_watch> an anime from {release_year} [please|for me|right now|thanks]

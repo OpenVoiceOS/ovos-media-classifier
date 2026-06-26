@@ -1,0 +1,20 @@
+<lead_watch> the trailer for {trailer_title}
+[hey|ok|please] <lead_watch> the trailer for {trailer_title} [please|for me|right now|thanks]
+<lead_watch> {trailer_title} trailer
+[hey|ok|please] <lead_watch> {trailer_title} trailer [please|for me|right now|thanks]
+<lead_watch> a movie trailer
+[hey|ok|please] <lead_watch> a movie trailer [please|for me|right now|thanks]
+<lead_watch> the latest trailers
+[hey|ok|please] <lead_watch> the latest trailers [please|for me|right now|thanks]
+<lead_watch> the {trailer_title} teaser
+[hey|ok|please] <lead_watch> the {trailer_title} teaser [please|for me|right now|thanks]
+<lead_watch> the official trailer for {trailer_title}
+[hey|ok|please] <lead_watch> the official trailer for {trailer_title} [please|for me|right now|thanks]
+<lead_watch> the {movie_title} trailer
+[hey|ok|please] <lead_watch> the {movie_title} trailer [please|for me|right now|thanks]
+<lead_watch> the trailer for {movie_title}
+[hey|ok|please] <lead_watch> the trailer for {movie_title} [please|for me|right now|thanks]
+<lead_watch> the trailer of {tv_show_title}
+[hey|ok|please] <lead_watch> the trailer of {tv_show_title} [please|for me|right now|thanks]
+<lead_watch> the teaser for {movie_title}
+[hey|ok|please] <lead_watch> the teaser for {movie_title} [please|for me|right now|thanks]

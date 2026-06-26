@@ -1,0 +1,11 @@
+<lead_read> {audiobook_title}
+<lead_read> the audiobook {audiobook_title}
+<lead_read> {audiobook_title} by {audiobook_author}
+<lead_read> a book by {audiobook_author}
+<lead_read> {audiobook_title} narrated by {audiobook_narrator}
+<lead_read> the novel {audiobook_title}
+<lead_read> anything by {audiobook_author}
+<lead_read> a book narrated by {audiobook_narrator}
+<lead_read> {audiobook_title} written by {audiobook_author}
+<lead_read> {audiobook_title} read by {audiobook_narrator}
+<lead_read> an audiobook by {audiobook_author} narrated by {audiobook_narrator}

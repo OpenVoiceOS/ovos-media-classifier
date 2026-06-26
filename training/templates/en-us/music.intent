@@ -1,0 +1,78 @@
+<lead_play_audio> {artist_name}
+[hey|ok|please] <lead_play_audio> {artist_name} [please|for me|right now|thanks]
+<lead_play_audio> some {artist_name}
+[hey|ok|please] <lead_play_audio> some {artist_name} [please|for me|right now|thanks]
+<lead_play_audio> {artist_name}'s music
+[hey|ok|please] <lead_play_audio> {artist_name}'s music [please|for me|right now|thanks]
+<lead_play_audio> music by {artist_name}
+[hey|ok|please] <lead_play_audio> music by {artist_name} [please|for me|right now|thanks]
+<lead_play_audio> songs by {artist_name}
+[hey|ok|please] <lead_play_audio> songs by {artist_name} [please|for me|right now|thanks]
+<lead_play_audio> the best of {artist_name}
+[hey|ok|please] <lead_play_audio> the best of {artist_name} [please|for me|right now|thanks]
+<lead_play_audio> anything by {artist_name}
+[hey|ok|please] <lead_play_audio> anything by {artist_name} [please|for me|right now|thanks]
+<lead_play_audio> {track_name}
+[hey|ok|please] <lead_play_audio> {track_name} [please|for me|right now|thanks]
+<lead_play_audio> the song {track_name}
+[hey|ok|please] <lead_play_audio> the song {track_name} [please|for me|right now|thanks]
+<lead_play_audio> {track_name} by {artist_name}
+[hey|ok|please] <lead_play_audio> {track_name} by {artist_name} [please|for me|right now|thanks]
+<lead_play_audio> the album {album_name}
+[hey|ok|please] <lead_play_audio> the album {album_name} [please|for me|right now|thanks]
+<lead_play_audio> {album_name}
+[hey|ok|please] <lead_play_audio> {album_name} [please|for me|right now|thanks]
+<lead_play_audio> {album_name} by {artist_name}
+[hey|ok|please] <lead_play_audio> {album_name} by {artist_name} [please|for me|right now|thanks]
+<lead_play_audio> some {music_genre}
+[hey|ok|please] <lead_play_audio> some {music_genre} [please|for me|right now|thanks]
+<lead_play_audio> some {music_genre} music
+[hey|ok|please] <lead_play_audio> some {music_genre} music [please|for me|right now|thanks]
+<lead_play_audio> a {music_genre} playlist
+[hey|ok|please] <lead_play_audio> a {music_genre} playlist [please|for me|right now|thanks]
+<lead_play_audio> a {music_genre} mix
+[hey|ok|please] <lead_play_audio> a {music_genre} mix [please|for me|right now|thanks]
+<lead_play_audio> {record_label} artists
+[hey|ok|please] <lead_play_audio> {record_label} artists [please|for me|right now|thanks]
+<lead_play_audio> a song featuring {artist_name}
+[hey|ok|please] <lead_play_audio> a song featuring {artist_name} [please|for me|right now|thanks]
+<lead_play_audio> {track_name} featuring {artist_name}
+[hey|ok|please] <lead_play_audio> {track_name} featuring {artist_name} [please|for me|right now|thanks]
+<lead_play_audio> music on {record_label}
+[hey|ok|please] <lead_play_audio> music on {record_label} [please|for me|right now|thanks]
+<lead_play_audio> {album_name} on {record_label}
+[hey|ok|please] <lead_play_audio> {album_name} on {record_label} [please|for me|right now|thanks]
+<lead_play_audio> the latest from {artist_name}
+[hey|ok|please] <lead_play_audio> the latest from {artist_name} [please|for me|right now|thanks]
+<lead_play_audio> a {music_genre} song by {artist_name}
+[hey|ok|please] <lead_play_audio> a {music_genre} song by {artist_name} [please|for me|right now|thanks]
+<lead_play_audio> the {movie_title} soundtrack
+[hey|ok|please] <lead_play_audio> the {movie_title} soundtrack [please|for me|right now|thanks]
+<lead_play_audio> the soundtrack to {movie_title}
+[hey|ok|please] <lead_play_audio> the soundtrack to {movie_title} [please|for me|right now|thanks]
+<lead_play_audio> the soundtrack from {movie_title}
+[hey|ok|please] <lead_play_audio> the soundtrack from {movie_title} [please|for me|right now|thanks]
+<lead_play_audio> music from {movie_title}
+[hey|ok|please] <lead_play_audio> music from {movie_title} [please|for me|right now|thanks]
+<lead_play_audio> the theme song from {movie_title}
+[hey|ok|please] <lead_play_audio> the theme song from {movie_title} [please|for me|right now|thanks]
+<lead_play_audio> the theme from {movie_title}
+[hey|ok|please] <lead_play_audio> the theme from {movie_title} [please|for me|right now|thanks]
+<lead_play_audio> {movie_composer}'s score
+[hey|ok|please] <lead_play_audio> {movie_composer}'s score [please|for me|right now|thanks]
+<lead_play_audio> the score by {movie_composer}
+[hey|ok|please] <lead_play_audio> the score by {movie_composer} [please|for me|right now|thanks]
+<lead_play_audio> the {movie_title} theme
+[hey|ok|please] <lead_play_audio> the {movie_title} theme [please|for me|right now|thanks]
+<lead_play_audio> songs from {movie_title}
+[hey|ok|please] <lead_play_audio> songs from {movie_title} [please|for me|right now|thanks]
+<lead_play_audio> a {release_decade} {music_genre} playlist
+[hey|ok|please] <lead_play_audio> a {release_decade} {music_genre} playlist [please|for me|right now|thanks]
+<lead_play_audio> some {release_decade} music
+[hey|ok|please] <lead_play_audio> some {release_decade} music [please|for me|right now|thanks]
+<lead_play_audio> {music_genre} from {release_decade}
+[hey|ok|please] <lead_play_audio> {music_genre} from {release_decade} [please|for me|right now|thanks]
+<lead_play_audio> a {release_year} hit
+[hey|ok|please] <lead_play_audio> a {release_year} hit [please|for me|right now|thanks]
+<lead_play_audio> some {media_country} music
+[hey|ok|please] <lead_play_audio> some {media_country} music [please|for me|right now|thanks]
