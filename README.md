@@ -3,15 +3,29 @@
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/)
 
-Media-type classification for **OVOS Common Play (OCP)**. Given a spoken request
-— *"play some music"*, *"watch the news"* — it answers, fast and offline, **what
-kind of media is wanted**, so the OCP pipeline can route it to the right provider
-and player.
+**A self-describing, pluggable media-intent classifier for voice assistants.**
+Given a spoken request — *"play some music"*, *"watch an anime"*, *"read me a
+chapter of Dune"* — it answers, fast and offline, **what kind of media is wanted**
+so the **OVOS Common Play (OCP)** pipeline can route it to the right provider and
+player.
 
-It is the single home for OCP's media-command NLP: it classifies a request along
-orthogonal [axes](docs/classification-model.md) (domain · modality · structure ·
-media type, plus genre tags) and emits a provider-ready
-[`mediavocab.Signals`](https://github.com/TigreGotico/mediavocab).
+It is the single home for OCP's media-command NLP. It is **multi-task** — every
+request is classified along several orthogonal [axes](docs/classification-model.md)
+at once rather than into one label:
+
+- **domain** — is this a media request at all (`ocp_play` / `ocp_control` / `not_ocp`)
+- **media_type** — the concrete `mediavocab.MediaType` leaf (`music`, `movie`, `podcast`, …)
+- **playback_type** — the modality (`audio` / `video` / `paged` / `interactive`)
+- **structure** — the temporal shape (`single` / `episodic` / `continuous` / `collection`)
+- **explicitness** — `clean` / `adult`
+- **tags** — a multi-label, namespaced descriptive axis: `genre:rock` / `mood:chill` / `era:1980s`
+- **qualifiers** — result-narrowing filters: `black_and_white` / `silent` / `live` / `subtitled` / …
+- **content-form genres** — `adult` / `anime` / `animation` / `asmr` (drives the content filter)
+
+The supervision comes from translatable `.intent` templates slot-filled with
+**real entity metadata** (IMDb, MusicBrainz, AniList, LibriVox, …), and the trained
+backend ships as a **rules → learned-context → learned-context+NER ladder** in
+self-describing ONNX bundles — each rung a drop-in upgrade over the last.
 
 ## Quickstart
 
@@ -22,45 +36,88 @@ pip install ovos-media-classifier
 ```python
 from ovos_media_classifier import load_media_classifier
 
-clf = load_media_classifier()                  # bundled .voc keyword classifier
+clf = load_media_classifier()                  # bundled .voc keyword classifier — zero deps
 clf.classify("play some music", "en-us")       # -> (<MediaType.MUSIC: 'music'>, 0.6)
 ```
 
 That is the whole minimum: install, load, classify. The default needs no model
 files and no ML dependencies — it runs fully offline.
 
-The full multi-axis result and a provider-ready `Signals`:
+The full multi-axis result, and a provider-ready `mediavocab.Signals`:
 
 ```python
 clf.classify_full("i want to watch an anime", "en-us").as_dict()
 # {'media_type': 'episodic_series', 'playback_type': 'video', 'structure': 'episodic',
 #  'domain': 'ocp_play', 'genres': ['anime'], 'confidence': 0.6, 'control_intent': None}
 
-clf.to_signals("play some music", "en-us")      # -> mediavocab.Signals (hand to a MediaProvider)
+clf.classify_tags("play some 80s rock", "en-us")  # -> ['genre:rock', 'era:1980s']  (trained backend)
+
+clf.to_signals("play some music", "en-us")        # -> mediavocab.Signals (hand to a MediaProvider)
 ```
 
-## Content filtering
+(`classify_full().as_dict()` carries the single-label axes plus the content-form
+`genres`; the multi-label `tags` / `qualifiers` axes are read with their own
+`classify_tags()` / `classify_qualifiers()` methods. On the zero-dep keyword
+default `tags` is empty — it is the trained ONNX backend that fills it.)
 
-A **detect-to-block** moderation layer recognises sensitive requests so OVOS can
-refuse them. `adult` is blocked by default (lift it with `allow_adult_content`).
+## Benchmark
 
-```python
-from ovos_media_classifier import ContentFilter
-ContentFilter().check(clf, "play porn", "en-us")   # (True, 'blocked genre: adult')
-```
+The headline result is the **lift across the ladder** — the deterministic keyword
+rules, then a model on context (keyword) features only, then the same model once a
+NER store has surfaced the user's entities. Per-axis, on the held-out
+**test split (34,700 synthetic utterances)**:
 
-See [content filtering](docs/content-filtering.md).
+| axis (metric) | rules | learned-context | learned-context+NER |
+|---|---|---|---|
+| domain (acc) | 0.833 | 0.866 | **0.986** |
+| media_type (acc) | 0.629 | 0.778 | **0.964** |
+| playback_type (acc) | 0.702 | 0.895 | **0.988** |
+| structure (acc) | 0.708 | 0.907 | **0.990** |
+| explicitness (acc) | 0.988 | 0.989 | **0.997** |
+| content_form_genres (macro-F1) | 0.706 | 0.738 | **0.975** |
+| qualifiers (macro-F1) | 0.000 | 0.746 | **0.906** |
+| tags (macro-F1) | 0.000 | 0.547 | **0.581** |
+
+Content filter (driven by the `content_form_genres` axis), same ladder:
+
+| rung | adult recall | hentai recall | false-block | median ms | p95 ms | bundle |
+|---|---|---|---|---|---|---|
+| rules | 0.481 | 0.510 | 0.000 | 0.32 | 0.50 | — |
+| learned-context | 0.481 | 0.510 | 0.000 | 0.21 | 0.25 | 176 KiB |
+| learned-context+NER | **0.922** | **0.936** | 0.001 | 0.21 | 0.26 | 289 KiB |
+
+Sub-millisecond, in a 289 KiB bundle. **Honesty notes:** these are on the
+*synthetic* eval split — they measure the model's *capability* given populated
+features, not field accuracy on arbitrary speech (the keyword floor is ~0.29 on a
+neutral real-text split). The **keyword backend is the zero-dependency default**;
+the context+NER column requires a wired-in NER store to surface the `ner_*`
+features. And `tags` stays low by design (~0.58) — see [limitations](docs/model.md#6-limitations).
+Full table and method: [docs/model.md](docs/model.md) ·
+[benchmarks/](benchmarks/README.md).
+
+## Axes vs. tags
+
+The single-label heads above are **axes** — exactly one answer per query (a request
+*is* `audio`, *is* `episodic`). The open-vocabulary descriptive signals — **genre,
+mood and era** — are not axes: a query can carry several at once, and they all live
+in slot *value text* (the decade is *in* the year, the mood is *in* the activity
+phrase). So they are folded into one **multi-label, namespaced `tags` head**
+(`genre:` / `mood:` / `era:`) instead of three starved single-label heads.
+`classify_content_genres()` / `classify_mood()` / `classify_era()` read the
+matching slice. This framing is what keeps the axis count honest while still
+modelling the descriptive signal — [classification-model.md](docs/classification-model.md).
 
 ## Backends
 
-`load_media_classifier(config)` returns one classifier. They all implement the
-same `AbstractMediaClassifier` contract, so callers never care which ran.
+`load_media_classifier(config)` returns one classifier. They all implement the same
+`AbstractMediaClassifier` contract, so callers never care which ran, and any load
+failure falls back to the keyword default.
 
 | Backend | What it is | Install |
 |---|---|---|
 | **keyword** (`.voc`) | zero-dependency phrase matching — the offline default | core |
-| **NER** | Aho-Corasick exact match over the user's [entity lists](docs/entity-lists.md) | `[ner]` |
-| **ONNX** | trained domain + play heads loaded from a model bundle | `[onnx]` |
+| **NER** | Aho-Corasick exact match over the user's [entity lists](docs/entity-lists.md) (their real library) | `[ner]` |
+| **ONNX** | the trained multi-task per-axis heads, loaded from a self-describing bundle | `[onnx]` |
 | **external** | any classifier registered under `opm.media.classifier` | a plugin |
 
 ```bash
@@ -68,28 +125,46 @@ pip install ovos-media-classifier[ner]     # entity-list matching (the user's li
 pip install ovos-media-classifier[onnx]    # trained ONNX backend
 ```
 
-See [docs/backends.md](docs/backends.md) and [docs/external-plugins.md](docs/external-plugins.md).
+See [docs/backends.md](docs/backends.md). To write your own backend or train your
+own bundle (including adding a brand-new axis end-to-end), see
+[docs/extending.md](docs/extending.md).
+
+## Content filtering
+
+A **detect-to-block** moderation layer recognises sensitive requests so OVOS can
+refuse them. It reads the `content_form_genres` axis, so `adult` can be flagged
+**independently of the media-type leaf** (a single leaf mistake never unblocks it).
+`adult` is **blocked by default** (lift it with `allow_adult_content`); the adult /
+hentai data exists for detection only, never for provision.
+
+```python
+from ovos_media_classifier import ContentFilter
+ContentFilter().check(clf, "play some porn", "en-us")   # (True, 'blocked genre: adult')
+```
+
+See [content filtering](docs/content-filtering.md).
 
 ## Command vs content classification
 
-This package classifies a **voice command** (*what does the user want?*). That is
-a different problem from `mediavocab.text.classify`, which classifies a piece of
+This package classifies a **voice command** (*what does the user want?*). That is a
+different problem from `mediavocab.text.classify`, which classifies a piece of
 **catalog content** (*what kind of item is this?*). They share the
-`mediavocab.MediaType` vocabulary but answer opposite questions — do not
-substitute one for the other. See
+`mediavocab.MediaType` vocabulary but answer opposite questions — do not substitute
+one for the other. See
 [taxonomy.md](docs/taxonomy.md#query-vs-content-classification).
 
 ## Documentation
 
-**Start at [docs/index.md](docs/index.md)** for the audience-routing table, or
-read the [glossary](docs/glossary.md) first if the terms are new.
+**Start at [docs/index.md](docs/index.md)** for the audience-routing table, or read
+the [glossary](docs/glossary.md) first if the terms are new.
 
 - New here → [glossary](docs/glossary.md) · [index](docs/index.md) · [examples/](examples/)
 - API reference → [stable API](docs/stable-api.md)
 - The model → [classification model](docs/classification-model.md) · [the trained model](docs/model.md) · [taxonomy](docs/taxonomy.md)
+- The data → [dataset](docs/dataset.md) · [data sources](docs/data-sources.md) · [dataset plots](docs/plots/dataset/)
 - Tuning backends → [backends](docs/backends.md) · [entity lists](docs/entity-lists.md) · [contextual classification](docs/contextual-classification.md)
 - Moderation → [content filtering](docs/content-filtering.md)
-- Writing / training a classifier → [external plugins](docs/external-plugins.md) · [extending](docs/extending.md)
+- Writing / training a classifier → [extending](docs/extending.md) · [external plugins](docs/external-plugins.md)
 - Measuring → [benchmarks](benchmarks/README.md)
 
 ## Credits
@@ -100,3 +175,5 @@ Media-metadata datasets by **TigreGotico** on
 ## License
 
 Apache-2.0.
+</content>
+</invoke>
