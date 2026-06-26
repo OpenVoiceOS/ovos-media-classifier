@@ -8,11 +8,11 @@ benchmark on.
 Pipeline:
   1. Concatenate every input CSV (schema = ``training.sources.SCHEMA_COLUMNS``),
      dedup on ``sentence``.
-  2. **Enforce taxonomy** — add two columns derived from the fine-grained
-     ``media_label`` (an ``OCPPlayIntent`` value):
-       * ``mediavocab_type``  via ``PLAY_INTENT_TO_MEDIA_TYPE`` (``not_ocp`` →
+  2. **Enforce taxonomy** — add two columns derived from the raw ``media_label``
+     (a ``LABEL_TO_MEDIA_TYPE`` key such as ``"music"`` / ``"adult"``):
+       * ``mediavocab_type``  via ``LABEL_TO_MEDIA_TYPE`` (``not_ocp`` →
          ``not_media``);
-       * ``genres``           via ``PLAY_INTENT_TO_GENRES`` (carries the ``adult``
+       * ``genres``           via ``LABEL_TO_GENRES`` (carries the ``adult``
          content-filter signal), serialized as ``;``-joined tags.
   3. Stratified **train/validation/test** split (80/10/10, ``random_state=42``,
      stratified on ``mediavocab_type``).
@@ -40,9 +40,8 @@ from mediavocab import infer_playback_type
 from ovos_media_classifier.axes import infer_structure
 from ovos_media_classifier.intents import (
     MediaType,
-    OCPPlayIntent,
-    PLAY_INTENT_TO_MEDIA_TYPE,
-    PLAY_INTENT_TO_GENRES,
+    LABEL_TO_MEDIA_TYPE,
+    LABEL_TO_GENRES,
 )
 
 # multi-axis columns (OVOS-MEDIA-CLASSIFY): the leaf type + the orthogonal coarse
@@ -62,19 +61,11 @@ _LANG_NORM = {
 def _intent_to_mvtype(media_label: str) -> str:
     if media_label in ("not_ocp", "", None):
         return MediaType.NOT_MEDIA.value
-    try:
-        intent = OCPPlayIntent(media_label)
-    except ValueError:
-        return MediaType.GENERIC.value
-    return PLAY_INTENT_TO_MEDIA_TYPE.get(intent, MediaType.GENERIC).value
+    return LABEL_TO_MEDIA_TYPE.get(media_label, MediaType.GENERIC).value
 
 
 def _intent_to_genres(media_label: str) -> str:
-    try:
-        intent = OCPPlayIntent(media_label)
-    except ValueError:
-        return ""
-    return ";".join(PLAY_INTENT_TO_GENRES.get(intent, []))
+    return ";".join(LABEL_TO_GENRES.get(media_label, []))
 
 
 def load_and_merge(inputs: List[str]) -> pd.DataFrame:
@@ -180,7 +171,7 @@ with a media type. Future `ovos-media-classifier` backends train and benchmark o
 |---|---|
 | `lang` | BCP-47 language code |
 | `domain` | `ocp_play` / `ocp_control` / `not_ocp` |
-| `intent` / `media_label` | fine-grained `OCPPlayIntent` label |
+| `intent` / `media_label` | raw media label (a `LABEL_TO_MEDIA_TYPE` key) |
 | `binary_label` | `ocp` / `not_ocp` |
 | `playback_label` | `audio` / `video` / `undefined` |
 | `mediavocab_type` | canonical [`mediavocab.MediaType`](https://github.com/TigreGotico/mediavocab) (enforced taxonomy) |

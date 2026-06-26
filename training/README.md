@@ -21,7 +21,7 @@ Each row is a natural-language media command labelled across the
 |---|---|
 | `lang` | BCP-47 language code |
 | `domain` | `ocp_play` / `ocp_control` / `not_ocp` |
-| `intent` / `media_label` | fine-grained `OCPPlayIntent` |
+| `intent` / `media_label` | raw media label (a `LABEL_TO_MEDIA_TYPE` key) |
 | `binary_label` | `ocp` / `not_ocp` |
 | `playback_label` / `playback_type` | modality (audio/video/…) |
 | `structure` | single / episodic / continuous / collection |

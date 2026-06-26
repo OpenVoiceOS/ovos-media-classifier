@@ -4,8 +4,8 @@ Tests cover:
   - AbstractMediaClassifier — the ABC contract and default is_ocp_query
   - KeywordMediaClassifier.classify() — each branch of the if/elif chain
   - KeywordMediaClassifier.is_ocp_query() — inherited default implementation
-  - intents.py taxonomy — MediaType / OCPPlayIntent / OCPControlIntent /
-    OCPEntityLabel and the intent → mediavocab.MediaType mapping
+  - intents.py taxonomy — MediaType / OCPControlIntent / OCPEntityLabel and the
+    raw label → mediavocab.MediaType + genres mapping
   - load_media_classifier() factory — keyword default + external plugin selection
 """
 import unittest
@@ -20,8 +20,9 @@ from ovos_media_classifier.intents import (
     MediaType,
     OCPControlIntent,
     OCPEntityLabel,
-    OCPPlayIntent,
-    PLAY_INTENT_TO_MEDIA_TYPE,
+    LABEL_TO_MEDIA_TYPE,
+    LABEL_TO_GENRES,
+    genres_for_label,
 )
 from ovos_media_classifier.keyword import KeywordMediaClassifier
 
@@ -400,74 +401,89 @@ class TestOCPEntityLabelStrings(unittest.TestCase):
         self.assertEqual(OCPEntityLabel.BTS_TITLE.value, "bts_title")
 
 
-class TestPlayIntentToMediaTypeMapping(unittest.TestCase):
-    """Verify the intent → mediavocab.MediaType mapping is correct/complete."""
+class TestLabelToMediaTypeMapping(unittest.TestCase):
+    """Verify raw detection label → mediavocab.MediaType + genres is correct.
 
-    # Expected collapse of the fine-grained intent space onto mediavocab types.
+    There is no per-media-type intent layer: each raw label resolves directly
+    to a ``mediavocab.MediaType`` (and any genre tags), with several labels
+    deliberately collapsing onto one type (the lost nuance survives as genres).
+    """
+
+    # Expected collapse of the raw label space onto mediavocab types.
     _EXPECTED = {
-        OCPPlayIntent.MUSIC:             MediaType.MUSIC,
-        OCPPlayIntent.PODCAST:           MediaType.PODCAST,
-        OCPPlayIntent.RADIO:             MediaType.RADIO,
-        OCPPlayIntent.AUDIOBOOK:         MediaType.AUDIOBOOK,
-        OCPPlayIntent.NEWS:              MediaType.RADIO,
-        OCPPlayIntent.MOVIE:             MediaType.MOVIE,
-        OCPPlayIntent.TV:                MediaType.TV,
-        OCPPlayIntent.TV_SHOW:           MediaType.EPISODIC_SERIES,
-        OCPPlayIntent.VIDEO:             MediaType.MOVIE,
-        OCPPlayIntent.VIDEO_EPISODES:    MediaType.EPISODIC_SERIES,
-        OCPPlayIntent.AUDIO:             MediaType.MUSIC,
-        OCPPlayIntent.GAME:              MediaType.GAME,
-        OCPPlayIntent.ANIME:             MediaType.EPISODIC_SERIES,
-        OCPPlayIntent.CARTOON:           MediaType.EPISODIC_SERIES,
-        OCPPlayIntent.DOCUMENTARY:       MediaType.MOVIE,
-        OCPPlayIntent.SHORT_FILM:        MediaType.SHORT_FILM,
-        OCPPlayIntent.SILENT_MOVIE:      MediaType.MOVIE,
-        OCPPlayIntent.BW_MOVIE:          MediaType.MOVIE,
-        OCPPlayIntent.RADIO_THEATRE:     MediaType.AUDIO_DRAMA,
-        OCPPlayIntent.VISUAL_STORY:      MediaType.COMIC,
-        OCPPlayIntent.ASMR:              MediaType.PROCEDURAL_AMBIENT,
-        OCPPlayIntent.AUDIO_DESCRIPTION: MediaType.MOVIE,
-        OCPPlayIntent.MUSIC_VIDEO:       MediaType.MUSIC_VIDEO,
-        OCPPlayIntent.TRAILER:           MediaType.MOVIE,
-        OCPPlayIntent.BEHIND_THE_SCENES: MediaType.MOVIE,
-        OCPPlayIntent.ADULT:             MediaType.MOVIE,
-        OCPPlayIntent.ADULT_AUDIO:       MediaType.MUSIC,
-        OCPPlayIntent.HENTAI:            MediaType.EPISODIC_SERIES,
-        OCPPlayIntent.GENERIC:           MediaType.GENERIC,
+        "music":             MediaType.MUSIC,
+        "podcast":           MediaType.PODCAST,
+        "radio":             MediaType.RADIO,
+        "audiobook":         MediaType.AUDIOBOOK,
+        "news":              MediaType.RADIO,
+        "movie":             MediaType.MOVIE,
+        "tv":                MediaType.TV,
+        "tv_show":           MediaType.EPISODIC_SERIES,
+        "video":             MediaType.MOVIE,
+        "video_episodes":    MediaType.EPISODIC_SERIES,
+        "audio":             MediaType.MUSIC,
+        "game":              MediaType.GAME,
+        "anime":             MediaType.EPISODIC_SERIES,
+        "cartoon":           MediaType.EPISODIC_SERIES,
+        "documentary":       MediaType.MOVIE,
+        "short_film":        MediaType.SHORT_FILM,
+        "silent_movie":      MediaType.MOVIE,
+        "bw_movie":          MediaType.MOVIE,
+        "radio_theatre":     MediaType.AUDIO_DRAMA,
+        "visual_story":      MediaType.COMIC,
+        "asmr":              MediaType.PROCEDURAL_AMBIENT,
+        "audio_description": MediaType.MOVIE,
+        "music_video":       MediaType.MUSIC_VIDEO,
+        "trailer":           MediaType.MOVIE,
+        "behind_the_scenes": MediaType.MOVIE,
+        "adult":             MediaType.MOVIE,
+        "adult_audio":       MediaType.MUSIC,
+        "hentai":            MediaType.EPISODIC_SERIES,
+        "generic":           MediaType.GENERIC,
     }
 
     def test_tv_show_maps_to_episodic_series_not_tv(self):
-        self.assertEqual(PLAY_INTENT_TO_MEDIA_TYPE[OCPPlayIntent.TV_SHOW],
+        self.assertEqual(LABEL_TO_MEDIA_TYPE["tv_show"],
                          MediaType.EPISODIC_SERIES)
-        self.assertNotEqual(PLAY_INTENT_TO_MEDIA_TYPE[OCPPlayIntent.TV_SHOW],
-                            MediaType.TV)
+        self.assertNotEqual(LABEL_TO_MEDIA_TYPE["tv_show"], MediaType.TV)
 
-    def test_tv_intent_maps_to_tv(self):
-        self.assertEqual(PLAY_INTENT_TO_MEDIA_TYPE[OCPPlayIntent.TV],
-                         MediaType.TV)
+    def test_tv_label_maps_to_tv(self):
+        self.assertEqual(LABEL_TO_MEDIA_TYPE["tv"], MediaType.TV)
 
-    def test_trailer_intent_collapses_to_movie(self):
-        self.assertEqual(PLAY_INTENT_TO_MEDIA_TYPE[OCPPlayIntent.TRAILER],
-                         MediaType.MOVIE)
+    def test_trailer_label_collapses_to_movie(self):
+        self.assertEqual(LABEL_TO_MEDIA_TYPE["trailer"], MediaType.MOVIE)
 
-    def test_behind_the_scenes_intent_collapses_to_movie(self):
-        self.assertEqual(
-            PLAY_INTENT_TO_MEDIA_TYPE[OCPPlayIntent.BEHIND_THE_SCENES],
-            MediaType.MOVIE,
-        )
+    def test_behind_the_scenes_label_collapses_to_movie(self):
+        self.assertEqual(LABEL_TO_MEDIA_TYPE["behind_the_scenes"], MediaType.MOVIE)
 
     def test_full_mapping_matches_expected(self):
-        self.assertEqual(dict(PLAY_INTENT_TO_MEDIA_TYPE), self._EXPECTED)
-
-    def test_all_play_intents_have_mapping(self):
-        for intent in OCPPlayIntent:
-            with self.subTest(intent=intent):
-                self.assertIn(intent, PLAY_INTENT_TO_MEDIA_TYPE)
+        self.assertEqual(dict(LABEL_TO_MEDIA_TYPE), self._EXPECTED)
 
     def test_every_value_is_a_mediavocab_type(self):
-        for intent, mt in PLAY_INTENT_TO_MEDIA_TYPE.items():
-            with self.subTest(intent=intent):
+        for label, mt in LABEL_TO_MEDIA_TYPE.items():
+            with self.subTest(label=label):
                 self.assertIsInstance(mt, mediavocab.MediaType)
+
+    def test_genre_labels_carry_genres(self):
+        self.assertEqual(LABEL_TO_GENRES["anime"], ["anime"])
+        self.assertEqual(LABEL_TO_GENRES["cartoon"], ["animation"])
+        self.assertEqual(LABEL_TO_GENRES["asmr"], ["asmr"])
+        self.assertEqual(LABEL_TO_GENRES["adult"], ["adult"])
+        # hentai collapses to EPISODIC_SERIES but carries BOTH anime + adult
+        self.assertIn("anime", LABEL_TO_GENRES["hentai"])
+        self.assertIn("adult", LABEL_TO_GENRES["hentai"])
+
+    def test_neutral_labels_have_no_genres(self):
+        for label in ("music", "movie", "podcast", "game", "tv_show"):
+            with self.subTest(label=label):
+                self.assertEqual(genres_for_label(label), [])
+
+    def test_every_genre_is_a_known_mediavocab_genre(self):
+        from mediavocab.taxonomy.genre import KNOWN_GENRES
+        for label, genres in LABEL_TO_GENRES.items():
+            for g in genres:
+                with self.subTest(label=label, genre=g):
+                    self.assertIn(g, KNOWN_GENRES)
 
 
 class TestOCPControlIntentExtensions(unittest.TestCase):

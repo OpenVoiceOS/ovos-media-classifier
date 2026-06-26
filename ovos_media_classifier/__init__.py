@@ -22,8 +22,9 @@ Public API::
     # use an external classifier plugin (opm.media.classifier)
     clf = load_media_classifier({"media_classifier_plugin": "ovos-media-classifier-onnx"})
 
-The classifier returns the canonical ``mediavocab.MediaType`` taxonomy; the
-fine-grained internal label space (``OCPPlayIntent``) maps to type + genre tags.
+The classifier models media on the real axes only: the ``OCPDomain`` (play /
+control / not-ocp) × the canonical ``mediavocab.MediaType`` + ``mediavocab``
+genre tags.  Raw detection labels resolve straight to ``(MediaType, genres)``.
 """
 from typing import Callable, Optional
 
@@ -40,15 +41,12 @@ from ovos_media_classifier.content_filter import ContentFilter
 from ovos_media_classifier.intents import (
     MediaType,
     OCPDomain,
-    OCPPlayIntent,
     OCPControlIntent,
     OCPEntityLabel,
-    PLAY_INTENT_TO_MEDIA_TYPE,
-    PLAY_INTENT_TO_GENRES,
-    MEDIA_TYPE_TO_PLAY_INTENT,
     LABEL_TO_MEDIA_TYPE,
     LABEL_TO_GENRES,
-    NER_LABEL_TO_PLAY_INTENT,
+    NER_LABEL_TO_MEDIA_TYPE,
+    NER_LABEL_TO_GENRES,
     genres_for_label,
 )
 from ovos_media_classifier.keyword import KeywordMediaClassifier
@@ -73,15 +71,12 @@ __all__ = [
     "MEDIA_TYPE_TO_STRUCTURE",
     "infer_structure",
     "OCPDomain",
-    "OCPPlayIntent",
     "OCPControlIntent",
     "OCPEntityLabel",
-    "PLAY_INTENT_TO_MEDIA_TYPE",
-    "PLAY_INTENT_TO_GENRES",
-    "MEDIA_TYPE_TO_PLAY_INTENT",
     "LABEL_TO_MEDIA_TYPE",
     "LABEL_TO_GENRES",
-    "NER_LABEL_TO_PLAY_INTENT",
+    "NER_LABEL_TO_MEDIA_TYPE",
+    "NER_LABEL_TO_GENRES",
     "genres_for_label",
     "KeywordMediaClassifier",
     "KeywordFeatureSlot",

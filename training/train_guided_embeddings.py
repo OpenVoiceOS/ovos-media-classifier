@@ -5,7 +5,7 @@ Reads ``categorical_features.parquet`` (produced by
 ``generate_categorical_features.py``) and trains two ONNX models:
 
   output/domain/ — OCPDomain classifier (ocp_play / ocp_control / not_ocp)
-  output/play/   — OCPPlayIntent classifier (music / movie / podcast / …)
+  output/play/   — media-label classifier (music / movie / podcast / …)
 
 Usage::
 

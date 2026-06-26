@@ -22,7 +22,7 @@ describes itself, so a future trained model can target a stable contract::
     {
       "feature_names": ["kw_music", "kw_movie", ...],   # ORDERED feature columns
       "domain_labels": {"0": "ocp_play", "1": "ocp_control", "2": "not_ocp"},
-      "play_labels":   {"0": "music", "1": "movie", ...},  # idx -> OCPPlayIntent label
+      "play_labels":   {"0": "music", "1": "movie", ...},  # idx -> raw media label
       "input_name":    "features",   # optional; defaults to each session's 1st input
       "domain_threshold": 0.5,       # optional; falls back to constants.py defaults
       "play_threshold":   0.3
@@ -36,7 +36,7 @@ describes itself, so a future trained model can target a stable contract::
 * ``domain_labels`` / ``play_labels`` — maps from *output index* (string keys,
   as JSON has no int keys) to the label string.  ``domain_labels`` values are
   :class:`~ovos_media_classifier.intents.OCPDomain` values; ``play_labels``
-  values are :class:`~ovos_media_classifier.intents.OCPPlayIntent` labels, mapped
+  values are raw media labels (``"music"``, ``"movie"``, ``"adult"``, …), mapped
   to :class:`mediavocab.MediaType` / genres via ``LABEL_TO_MEDIA_TYPE`` /
   ``LABEL_TO_GENRES``.
 
@@ -96,7 +96,7 @@ class OnnxMediaClassifier(AbstractMediaClassifier):
         play_session: ``onnxruntime.InferenceSession`` for the play head.
         feature_names: ordered feature columns the model was trained on.
         domain_labels: output-index → :class:`OCPDomain` value string.
-        play_labels: output-index → ``OCPPlayIntent`` label string.
+        play_labels: output-index → raw media label string.
         extractor: the categorical feature extractor.
         input_name: ONNX graph input name (default: each session's 1st input).
         domain_threshold: min softmax confidence to trust the domain head.

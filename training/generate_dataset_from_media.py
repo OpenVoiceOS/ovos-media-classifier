@@ -131,12 +131,10 @@ _LABEL_TO_MEDIA_TYPE: Dict[str, str] = {
 def _media_type(ocp_label: str) -> str:
     """Return the OCP MediaType name for an entity label, falling back to GENERIC."""
     try:
-        from ovos_media_classifier.intents import NER_LABEL_TO_PLAY_INTENT, PLAY_INTENT_TO_MEDIA_TYPE
-        intent = NER_LABEL_TO_PLAY_INTENT.get(ocp_label)
-        if intent:
-            mt = PLAY_INTENT_TO_MEDIA_TYPE.get(intent)
-            if mt is not None:
-                return mt.name
+        from ovos_media_classifier.intents import NER_LABEL_TO_MEDIA_TYPE
+        mt = NER_LABEL_TO_MEDIA_TYPE.get(ocp_label)
+        if mt is not None:
+            return mt.name
     except Exception:
         pass
     return _LABEL_TO_MEDIA_TYPE.get(ocp_label, "GENERIC")

@@ -81,9 +81,10 @@ clf.classify("play inception", "en-us")     # -> (<MediaType.MOVIE: 'movie'>, ..
 The NER backend matches the user's *real* media — their artists, titles and
 stations, captured as **entity lists** (`label → list of strings`) — with an
 Aho-Corasick automaton for fast exact substring matching. Each entity label maps
-to a media type via `NER_LABEL_TO_PLAY_INTENT`, so *"play Inception"* resolves to
-`MOVIE` because *Inception* is in the library — high confidence, language-agnostic,
-zero linguistic guessing.
+to a media type via `NER_LABEL_TO_MEDIA_TYPE` (and to genres via
+`NER_LABEL_TO_GENRES`), so *"play Inception"* resolves to `MOVIE` because
+*Inception* is in the library — high confidence, language-agnostic, zero
+linguistic guessing.
 
 It is selected by config (`media_classifier_entities` /
 `media_classifier_wordlists` / `media_classifier_ner_csv`) or built directly via

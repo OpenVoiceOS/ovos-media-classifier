@@ -106,7 +106,7 @@ Not axes of the product space but free-standing labels attached to the result:
   (a `documentary` and a `silent_movie` are both `MediaType.MOVIE`; a `cartoon`
   and an `anime` are both `episodic_series`). These survive as genre tags so the
   nuance is recoverable for ranking and filtering even though it is not its own
-  leaf type. See `PLAY_INTENT_TO_GENRES` in [taxonomy.md](taxonomy.md).
+  leaf type. See `LABEL_TO_GENRES` in [taxonomy.md](taxonomy.md).
 
 ---
 
@@ -207,7 +207,7 @@ video+continuous→`tv`, …).
 > selected leaf-first.
 
 This logic lives in `ovos_media_classifier/keyword.py` (`_predict_modality`,
-`_predict_structure`, `_candidate_media_types`, `_classify_intent`); the per-axis
+`_predict_structure`, `_classify_leaf`); the per-axis
 accessors (`classify_playback_type`, `classify_structure`, `classify_full`) are
 overridden to report the **predicted** axes rather than deriving them from the
 leaf. Where a locale lacks the axis vocab the prediction simply finds no evidence
@@ -371,23 +371,23 @@ ships, per row:
 
 | Column | Axis | Derivation |
 |---|---|---|
-| `mediavocab_type` | Axis 3 (leaf) | `PLAY_INTENT_TO_MEDIA_TYPE[media_label]` |
+| `mediavocab_type` | Axis 3 (leaf) | `LABEL_TO_MEDIA_TYPE[media_label]` |
 | `playback_type` | Axis 1 (modality) | `infer_playback_type(mediavocab_type)` |
 | `structure` | Axis 2 (structure) | `infer_structure(mediavocab_type)` |
-| `genres` | tags | `PLAY_INTENT_TO_GENRES[media_label]` (`;`-joined; carries `adult`) |
+| `genres` | tags | `LABEL_TO_GENRES[media_label]` (`;`-joined; carries `adult`) |
 
 Because every coarse column is derived from the same `infer_*` functions the
 runtime uses (§4.1), a model trained on these columns and a model that derives at
 runtime agree by construction on the defaults — and a multi-head model is free to
 learn the per-utterance overrides on top. See [taxonomy.md](taxonomy.md) for the
-intent → type/genre projection and `training/README` for the dataset build.
+label → type/genre projection and `training/README` for the dataset build.
 
 ---
 
 ## See also
 
-* [taxonomy.md](taxonomy.md) — `mediavocab` enforcement and the
-  `OCPPlayIntent` → type/genre projection (the leaf-axis machinery).
+* [taxonomy.md](taxonomy.md) — `mediavocab` enforcement and the raw label →
+  type/genre projection (the leaf-axis machinery).
 * [stable-api.md](stable-api.md) — `classify_full`, `classify_playback_type`,
   `classify_structure` and the rest of the contract.
 * [content-filtering.md](content-filtering.md) — how the `adult` genre tag drives

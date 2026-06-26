@@ -32,10 +32,11 @@ classifier's `classify()` and `classify_genres()` and applies the policy, return
 - Filtering is enabled by default; set `media_content_filter.enabled` to `false` to
   disable it entirely.
 
-The genre signal comes from the taxonomy map `PLAY_INTENT_TO_GENRES` — adult,
-hentai and adult-audio intents all carry the `adult` tag even though their public
-`MediaType` is a generic `MOVIE` / `MUSIC` / `EPISODIC_SERIES`. The type alone never
-carries the adult signal; the genre does. Genres are an **orthogonal tag**, not a
+The genre signal comes from the taxonomy map `LABEL_TO_GENRES` — the `adult`,
+`hentai` and `adult_audio` labels all carry the `adult` tag even though their
+public `MediaType` is a generic `MOVIE` / `MUSIC` / `EPISODIC_SERIES`. The type
+alone never carries the adult signal; the genre does. Genres are an
+**orthogonal tag**, not a
 classification axis — see [taxonomy.md](taxonomy.md) and
 [classification-model.md](classification-model.md#2-the-axes).
 
