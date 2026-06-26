@@ -561,7 +561,15 @@ def generate_all(
 
     for lang in langs:
         if lang == "en-us":
-            templates = _EN_TEMPLATES
+            # curated hand-written templates + componential (lead-in × pattern ×
+            # qualifier) expansion, deduped — the latter is the bulk diversity.
+            from training.template_components import generate_componential_templates
+            seen_t = set()
+            templates = []
+            for tmpl, intent in list(_EN_TEMPLATES) + generate_componential_templates():
+                if tmpl not in seen_t:
+                    seen_t.add(tmpl)
+                    templates.append((tmpl, intent))
         else:
             templates = _build_translated_templates(lang)
             if not templates:
