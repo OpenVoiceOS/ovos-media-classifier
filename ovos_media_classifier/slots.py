@@ -38,7 +38,6 @@ from typing import Dict, List, Tuple
 from mediavocab import MediaType, PlaybackType, infer_playback_type
 
 from ovos_media_classifier.intents import (
-    OCPEntityLabel,
     NER_LABEL_TO_MEDIA_TYPE,
     NER_LABEL_TO_GENRES,
 )

@@ -659,10 +659,8 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
                 (modality, structure),
                 _MODALITY_DEFAULT_LEAF.get(modality),
             )
-            if default is not None:
-                leaf = self._default_leaf_type(default)
-                if leaf is not None and _ok(leaf):
-                    return leaf, [], DEFAULT_KEYWORD_LOW_CONFIDENCE
+            if default is not None and _ok(default):
+                return default, [], DEFAULT_KEYWORD_LOW_CONFIDENCE
 
         return MediaType.GENERIC, [], 0.0
 
@@ -753,12 +751,3 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
         if allow(T.MUSIC) and m(q, "AudioKeyword", lang):
             return T.MUSIC, [], DEFAULT_KEYWORD_LOW_CONFIDENCE
         return None
-
-    @staticmethod
-    def _default_leaf_type(media_type: MediaType) -> Optional[MediaType]:
-        """Resolve a default-cell leaf to a concrete public ``MediaType``.
-
-        The paged default cell is ``BOOK`` (a TTS-read text) — e.g. a bare
-        "read me <title>" with no specific keyword voc still resolves to BOOK.
-        """
-        return media_type

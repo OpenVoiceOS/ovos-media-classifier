@@ -104,11 +104,16 @@ def _softmax(logits) -> "list":
 
 
 class OnnxMediaClassifier(AbstractMediaClassifier):
-    """Trained media classifier backed by two ONNX heads + numpy.
+    """Trained, multi-head media classifier backed by ONNX + numpy.
 
-    Loaded from a self-describing bundle (see module docstring) via
-    :meth:`from_path`.  Use the factory rather than the constructor directly
-    unless you are wiring sessions in by hand (e.g. in tests).
+    Loaded from a self-describing multi-task bundle (see module docstring) via
+    :meth:`from_path`.  The ``domain`` and ``play`` (media-type) heads are
+    always present; any further per-axis head (``media_type`` /
+    ``playback_type`` / ``structure`` / ``content_form_genres`` / ``tags`` /
+    ``qualifiers`` / ``explicitness``) is loaded into ``extra_heads`` when the
+    bundle carries it, and the axis is *derived* otherwise.  Use the factory
+    rather than the constructor directly unless you are wiring sessions in by
+    hand (e.g. in tests).
 
     Args:
         domain_session: ``onnxruntime.InferenceSession`` for the domain head.
@@ -120,6 +125,8 @@ class OnnxMediaClassifier(AbstractMediaClassifier):
         input_name: ONNX graph input name (default: each session's 1st input).
         domain_threshold: min softmax confidence to trust the domain head.
         play_threshold: min softmax confidence to trust the play head.
+        extra_heads: optional ``axis -> head-spec`` map for the extended
+            multi-task heads (each ``{"session", "kind", "labels", "threshold"}``).
     """
 
     def __init__(
@@ -146,7 +153,8 @@ class OnnxMediaClassifier(AbstractMediaClassifier):
         self._play_thresh = play_threshold
         # axis -> {"session", "kind", "labels": {idx: label}, "threshold"}
         # for the extended multi-task heads (media_type/playback_type/structure/
-        # content_form_genres/content_genre/qualifiers/mood/era/explicitness).
+        # content_form_genres/tags/qualifiers/explicitness).  The genre/mood/era
+        # signals are folded into the single multi-label ``tags`` head.
         self._heads: Dict[str, dict] = extra_heads or {}
 
     # ------------------------------------------------------------------
