@@ -24,7 +24,7 @@ at the boundary, so the public contract enforces the shared vocabulary.
 
 Internally the classifier works against a richer, fine-grained label space —
 `OCPPlayIntent` — that draws distinctions the public taxonomy treats as **genre** or
-**content-form** rather than as media types. (Future trained plugins use this same
+**content-form** rather than as media types. (Trained backends use this same
 label space.) For example `anime`, `cartoon`, `asmr`, and the adult
 variants are intents, but they are *not* their own `MediaType`: they collapse onto
 a base type and carry their nuance as a genre tag.
@@ -75,20 +75,20 @@ target OCP at all?":
 `OCPControlIntent` enumerates control actions (`PLAY`, `PAUSE`, `STOP`, `NEXT`,
 `SHUFFLE`, `SEEK_FORWARD`, …). Only a classifier with a dedicated control head
 classifies these; the bundled keyword classifier derives the domain from the
-media-type result and so reports `OCP_PLAY` / `NOT_OCP` only. Control-intent
-detection is something a future plugin can add.
+media-type result and so reports `OCP_PLAY` / `NOT_OCP` only. A backend that
+models control intents detects `OCP_CONTROL`.
 
-## Entity labels (reserved)
+## Entity labels
 
 `OCPEntityLabel` is the NER vocabulary (`artist_name`, `movie_title`,
 `tv_show_title`, `radio_station`, …). Each entity label maps to an `OCPPlayIntent`
 via `NER_LABEL_TO_PLAY_INTENT`, so an entity hit ("play *Dune: Part Two*") resolves
 to a media type.
 
-These labels and the `NER_LABEL_TO_PLAY_INTENT` map are **reserved for the future
-NER classifier plugin** — no classifier in this release uses them. They are exported
-so that an out-of-tree NER classifier (and the skills that register content under
-these labels at runtime) shares the same vocabulary.
+The [NER backend](backends.md) (`AhocorasickMediaClassifier`) uses these labels to
+tag the user's [entity lists](entity-lists.md). They are also exported so that an
+out-of-tree classifier — and the skills that register content under these labels at
+runtime — shares the same vocabulary.
 
 ## Query vs. content classification
 

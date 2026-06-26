@@ -12,8 +12,8 @@ reference.
 ## The classifier object
 
 `load_media_classifier(config=None, voc_match_func=None)` returns an
-`AbstractMediaClassifier` — in this release the bundled keyword classifier, unless
-`config["media_classifier_plugin"]` selects an external plugin. Every classifier
+`AbstractMediaClassifier` — the bundled keyword classifier by default, or the
+[NER / ONNX / external backend](backends.md) the config selects. Every classifier
 exposes the same methods below.
 
 ### `classify(query, lang, valid_labels=None) -> (MediaType, float)`
@@ -44,9 +44,9 @@ clf.classify_genres("play some anime", "en-us")   # ['anime']
 
 Returns the top-level domain: `OCP_PLAY`, `OCP_CONTROL`, or `NOT_OCP`, with a
 confidence. The default implementation (used by the keyword classifier) derives the
-domain from `classify()` (non-`GENERIC` type ⇒ `OCP_PLAY`, else `NOT_OCP`). A plugin
-with a dedicated domain or control head can override it for better accuracy and to
-detect `OCP_CONTROL`.
+domain from `classify()` (non-`GENERIC` type ⇒ `OCP_PLAY`, else `NOT_OCP`). A
+backend with a dedicated domain or control head overrides it for better accuracy
+and to detect `OCP_CONTROL`.
 
 ```python
 clf.classify_domain("play a podcast", "en-us")    # (<OCPDomain.OCP_PLAY: 'ocp_play'>, 0.6)
@@ -66,7 +66,7 @@ clf.is_ocp_query("what is the weather", "en-us")  # (False, 0.0)
 
 These return the coarse axes of the [multi-axis
 model](classification-model.md). On the bundled keyword classifier they are
-**derived** from the leaf `MediaType`; a trained plugin MAY override each to
+**derived** from the leaf `MediaType`; a trained backend MAY override each to
 predict it with its own head.
 
 ### `classify_playback_type(query, lang) -> PlaybackType`
@@ -100,7 +100,7 @@ axes directly and soft-gate the leaf.
 ```python
 clf.classify_full("play the breaking bad tv series", "en-us").as_dict()
 # {'media_type': 'episodic_series', 'playback_type': 'video', 'structure': 'episodic',
-#  'domain': 'ocp_play', 'genres': [], 'confidence': 0.6}
+#  'domain': 'ocp_play', 'genres': [], 'confidence': 0.6, 'control_intent': None}
 ```
 
 ## The `AbstractMediaClassifier` contract

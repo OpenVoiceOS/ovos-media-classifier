@@ -53,29 +53,27 @@ Slots are populated from whatever media you actually have, via
 A slot you never fill contributes nothing; a slot full of *your* titles becomes a
 strong, grounded signal.
 
-## Two classifiers, one contract
+## How a slot becomes a prediction
 
-The same slots drive both strategies:
+A filled slot drives classification in two ways:
 
-1. **NER (exact match)** — a query containing a slot's entity resolves to that
-   slot's media type directly. *"play Inception"* → `MOVIE` **because Inception is
-   in your Radarr**, not because of a keyword guess. High confidence, zero
-   ambiguity, language-agnostic. See [backends](backends.md).
-2. **Guided embeddings (learned features)** — each slot is a categorical feature
-   ("does the utterance contain a known `artist_name`?"). A model learns weights
-   over the slots; at runtime the slots are filled with your available entities,
-   so the features — and the prediction — are **biased toward the media you own**.
-   This is the [`guided-categorical-embeddings`](backends.md) pattern: define the
-   feature labels statically, fill the samples at runtime.
+1. **Exact match (the NER backend)** — a query containing a slot's entity
+   resolves to that slot's media type directly. *"play Inception"* → `MOVIE`
+   **because Inception is in your Radarr**, not because of a keyword guess. High
+   confidence, zero ambiguity, language-agnostic. See [backends](backends.md).
+2. **As a learned feature** — each slot is a categorical feature ("does the
+   utterance contain a known `artist_name`?"). A trained model weights the slots,
+   and because the slots are filled with *your* entities at runtime the features —
+   and the prediction — are biased toward the media you own. Define the feature
+   labels statically, fill the samples at runtime.
 
-## Why this is the *right* constraint
+## A grounded constraint
 
-The bundled keyword classifier predicts coarse axes (modality, structure) from
-linguistic cues, but it does **not** use them to hard-constrain the media-type
-leaf — empirically a guessed modality constraint *regressed* real-query accuracy
-(see [the model](classification-model.md) §4.1). Available media is the opposite:
-a **grounded** constraint. Where a noisy "watch → video" guess can suppress a
-correct answer, "this title is in your library" rarely lies. Contextual,
-inventory-driven bias is therefore the productive way to lift the keyword/NER
-floor — and it is exactly what plugs the classifier into Jellyfin and the *arr
-stack.
+The keyword classifier predicts coarse axes (modality, structure) from linguistic
+cues, but does **not** use them to hard-constrain the media-type leaf — a guessed
+modality constraint regresses real-query accuracy (see
+[the model](classification-model.md#41-predict-coarse-to-fine-the-keyword-classifier)).
+Available media is the opposite: a **grounded** signal. Where a noisy "watch →
+video" guess can suppress a correct answer, "this title is in your library" rarely
+lies. Inventory-driven bias is how the classifier plugs into Jellyfin and the
+\*arr stack and lifts accuracy above the keyword floor.
