@@ -155,7 +155,9 @@ detection, far below a normal class so it never dominates training.
 ## How the training set is assembled
 
 ```
-.intent templates (training/templates/<lang>/<intent>.intent)
+.intent templates (translatable locale resources:
+                   ovos_media_classifier/locale/<lang>/dataset/<intent>.intent
+                   + lead-in vocs ovos_media_classifier/locale/<lang>/<lead_*>.voc)
         │  ovos_spec_tools.expand()  — (a|b) alternations, [optional], <voc> refs
         ▼
 slot-free samples with opaque {slot} placeholders

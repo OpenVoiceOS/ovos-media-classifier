@@ -71,8 +71,14 @@ version = { attr = "ovos_media_classifier.version.__version__" }
 where = ["."]
 include = ["ovos_media_classifier*"]
 
-# ship the bundled .voc keyword files (the no-arg KeywordMediaClassifier reads
-# ovos_media_classifier/locale/<lang>/<Vocab>.voc directly off disk) + the PEP 561
-# typing marker so downstream type-checkers see the inline type hints.
+# ship the bundled locale resources: the .voc keyword + lead-in files (the no-arg
+# KeywordMediaClassifier reads ovos_media_classifier/locale/<lang>/<Vocab>.voc
+# directly off disk) and the translatable dataset .intent templates under
+# locale/<lang>/dataset/ (so ovos-localize and build_dataset see them in the
+# installed package) + the PEP 561 typing marker for downstream type-checkers.
 [tool.setuptools.package-data]
-ovos_media_classifier = ["locale/*/*.voc", "py.typed"]
+ovos_media_classifier = [
+    "locale/*/*.voc",
+    "locale/*/dataset/*.intent",
+    "py.typed",
+]

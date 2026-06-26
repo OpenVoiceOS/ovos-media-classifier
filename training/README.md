@@ -12,21 +12,20 @@ pip install -e ".[train]"
 It produces the canonical **`TigreGotico/ocp-media-intents`** dataset (the source
 of truth classifier backends train and benchmark on) and trains/exports models.
 
-## Pipeline — three steps
+## Pipeline — two steps
 
 ```bash
 # 1. ingest real entity pools from the TigreGotico media-metadata collection
 #    (local metadatarr cache when present, else HuggingFace) → data/entities/<label>.csv
 python -m training.ingest_entities
 
-# 2. (re)author the .intent / .voc templates from the bundled source
-#    (only needed when you edit author_templates.py; the files are committed)
-python -m training.author_templates
-
-# 3. build the dataset: expand templates → slot-fill → features → balance → split
+# 2. build the dataset: expand templates → slot-fill → features → balance → split
 python -m training.build_dataset                       # → data/release/
 python -m training.build_dataset --push --repo TigreGotico/ocp-media-intents
 ```
+
+The `.intent` / `.voc` templates are the hand-authored **source of truth** —
+nothing regenerates them, so ovos-localize translations stick.
 
 `build_dataset` is the **single entry point** and is fully reproducible for a
 fixed `--seed`. See [`docs/dataset.md`](../docs/dataset.md) for every column, the
@@ -34,23 +33,29 @@ rebuild recipe, and how to add/translate templates; see
 [`docs/data-sources.md`](../docs/data-sources.md) for every source → slot-label
 mapping and licenses.
 
-## Templates are `.intent` / `.voc` files
+## Templates are translatable `.intent` / `.voc` locale resources
 
-Templates live under `templates/` as translatable OVOS-INTENT-1 files, managed
-through ovos-localize:
+Templates are hand-authored OVOS-INTENT-1 files under the package `locale/`, so
+ovos-localize picks them up and translates them like any other locale resource:
 
 ```
-templates/
-  vocab/<lang>/<lead_*>.voc     shared lead-in vocabularies (request openers)
-  <lang>/<intent>.intent        one file per media label
+ovos_media_classifier/locale/
+  <lang>/<lead_*>.voc            shared lead-in vocabularies (request openers)
+  <lang>/dataset/<intent>.intent one file per media label
 ```
+
+The `dataset/` subdir namespaces the dataset templates away from the runtime OCP
+control intents (`play.intent`, `featured.intent`, …) that live at the locale
+root; `ovos_spec_tools` resolves resources recursively under `<lang>/`, so the
+`<lead_*>` references in `dataset/*.intent` expand from the lead-in `.voc` files
+in the parent language directory.
 
 Each `.intent` line is expanded by `ovos_spec_tools.expand` (`(a|b)`
-alternations, `[optional]`, `<voc>` references) into its sample set;
-`build_dataset` then fills the `{slot}` placeholders with real entities. Add
-phrasings or a new language by editing these files — no code change needed.
-`author_templates.py` regenerates the bundled English set from its source lists
-(natural phrasings + entity-role variants + cross-type **confusables**).
+alternations, `[optional]` openers/closers, `<voc>` references) into its sample
+set; `build_dataset` then fills the `{slot}` placeholders with real entities.
+These files are the **source of truth** — add phrasings, optional decorations
+(`[hey|ok|please] … [please|for me]`), or a new language by editing/translating
+them; no code regenerates or overwrites them.
 
 ## Entities
 
