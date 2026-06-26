@@ -46,6 +46,8 @@ the other. See [taxonomy.md](taxonomy.md#query-vs-content-classification).
 | **domain** | The top-level question, an `OCPDomain`: `ocp_play` (play media) / `ocp_control` (control the player) / `not_ocp` (unrelated). |
 | **control** | A player-transport request — pause / stop / next / shuffle / seek. Enumerated by `OCPControlIntent`. Surfaced only by a backend with a dedicated control head. |
 | **genre / tag** | A `mediavocab` genre tag (`anime`, `animation`, `asmr`, `adult`, …) attached to a result. Orthogonal to `MediaType` — *"play some hentai"* is an `episodic_series` tagged `["anime", "adult"]`. The `adult` tag is what the content filter blocks on. |
+| **tags (the head)** | The trained backend's **multi-label, namespaced descriptive axis** — genre, mood and era folded into one head: `["genre:rock", "mood:chill", "era:1980s"]`. `classify_tags()` returns it; `classify_content_genres()` / `classify_mood()` / `classify_era()` read the `genre:` / `mood:` / `era:` slice. Distinct from the content-form `genres` above (`anime`/`adult`/…) that the filter reads. |
+| **qualifiers** | Result-narrowing filters that are not media types: `black_and_white` / `silent` / `live` / `subtitled` / `dubbed` / `trailer` / …. A multi-label axis (`classify_qualifiers()`), folded into the `Signals.edition` filter. |
 | **content filter** | A **detect-to-block** moderation / parental-control layer (`ContentFilter`). It does not provide content — it recognises sensitive requests so OVOS can refuse them. `adult` is blocked by default. |
 | **command vs content classification** | Classifying a spoken *request* (this package) versus classifying a catalog *item* (`mediavocab.text.classify`). See above. |
 | **axis (multi-axis model)** | One coordinate of the classification — domain, modality, structure, or the leaf `MediaType`. The full result is a point in this small product space, not one label. See [classification-model.md](classification-model.md). |
@@ -56,7 +58,7 @@ the other. See [taxonomy.md](taxonomy.md#query-vs-content-classification).
 | **entity list** | A `label → list of strings` mapping of the user's *real* media (their artists, titles, stations). Feeds the NER backend. See [entity-lists.md](entity-lists.md). |
 | **keyword feature slot** | A named entity category (`artist_name`, `movie_title`, …) bound to a point on the taxonomy. Filled at runtime from the user's library so available media biases prediction. See [contextual-classification.md](contextual-classification.md). |
 | **`.voc` file** | A per-language list of keyword phrases (`locale/<lang>/<Vocab>.voc`). The keyword backend matches against these. |
-| **ONNX** | The Open Neural Network Exchange runtime. The trained backend loads two ONNX heads (domain + play) plus `numpy` from a self-describing model bundle directory. Needs the `[onnx]` extra. |
+| **ONNX** | The Open Neural Network Exchange runtime. The trained backend loads **one ONNX head per axis** (`domain` / `media_type` / `playback_type` / `structure` / `explicitness` / `content_form_genres` / `tags` / `qualifiers`) plus `numpy` from a self-describing model bundle directory. Needs the `[onnx]` extra. |
 | **NER** | *Named-entity recognition*. The NER backend matches the user's entity lists with an Aho-Corasick automaton — *"play Inception"* → `MOVIE` because *Inception* is in the library. Needs the `[ner]` extra. |
 | **OPM entry-point group** | `opm.media.classifier` — the group an external classifier package registers under so `load_media_classifier` can load it by name. |
 
@@ -69,7 +71,7 @@ the other. See [taxonomy.md](taxonomy.md#query-vs-content-classification).
 |---------|-----------|---------|
 | **keyword** | `.voc` phrase matching; zero ML deps; the offline default | core |
 | **NER** | Aho-Corasick exact match over the user's entity lists | `[ner]` |
-| **ONNX** | trained domain + play heads loaded from a model bundle | `[onnx]` |
+| **ONNX** | the trained multi-task per-axis heads, loaded from a self-describing bundle | `[onnx]` |
 | **external** | any classifier registered under `opm.media.classifier` | a plugin |
 
 See [backends.md](backends.md) for selection and config keys.

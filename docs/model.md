@@ -284,6 +284,29 @@ numbers above are the model's *capability* given populated entities; the
 out-of-the-box runtime sees the context-only behaviour until a NER store is
 attached.
 
+**(e) Near-tie leaves where the keyword default is already right.** A handful of
+leaves share almost all of their cue features and differ only in a token the bag
+under-weights — `music` vs `music_video` is the canonical case (both fire the
+music keywords; only the *video* modality cue separates them). The trained
+`media_type` head can confuse such pairs where the deterministic keyword
+classifier, matching leaf-first on the more specific `music_video` voc chain, gets
+them right. The aggregate `media_type` accuracy is high, but on these specific
+near-ties the rules floor is not strictly dominated — which is exactly why the
+backends are interchangeable behind one contract and the keyword default stays the
+zero-config baseline rather than being retired.
+
+**(f) The dataset is English-dominated.** Templates are built across the seven core
+languages, but the `en-us` `.intent` / `.voc` set is by far the richest — its
+alternations and lead-ins expand to the large majority of the rows, so the trained
+bundle is strongest on `en-us` and thinner on the other locales (and on the many
+languages with no templates at all). The fix is **more translated templates**, not
+a model change: the `.intent` / `.voc` files are managed through
+[ovos-localize](https://openvoiceos.github.io/ovos-localize), so adding or
+translating a locale ([dataset.md](dataset.md#to-add-or-translate-templates)) lifts
+that language's coverage with no code change. The keyword backend degrades
+gracefully on a thin locale (it finds no axis vocab and falls back to leaf-only
+matching), so a missing language is under-served, not broken.
+
 ---
 
 ## See also
