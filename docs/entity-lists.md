@@ -25,6 +25,11 @@ strategy — build them once.
 
 There are two channels.
 
+> The same labelled entity lists also seed **training**: the
+> [dataset generator](dataset.md) slot-fills templates from large real-entity
+> pools ingested from the [TigreGotico media-metadata collection](data-sources.md).
+> Build them once; they serve both runtime NER and training.
+
 ### 1. Provided at runtime
 
 The OCP pipeline registers the user's media as it discovers it — a skill

@@ -49,6 +49,13 @@ Representative examples:
 | `anime` | `EPISODIC_SERIES` | `["anime"]` |
 | `cartoon` | `EPISODIC_SERIES` | `["animation"]` |
 | `asmr` | `PROCEDURAL_AMBIENT` | `["asmr"]` |
+| `ambient` | `PROCEDURAL_AMBIENT` | — |
+| `audiobook` | `AUDIOBOOK` | — |
+| `book` | `BOOK` | — |
+| `comic` | `COMIC` | — |
+| `playlist` | `PLAYLIST` | — |
+| `sound_effect` | `SOUND_EFFECT` | — |
+| `interactive_fiction` | `INTERACTIVE_FICTION` | — |
 | `adult` | `MOVIE` | `["adult"]` |
 | `adult_audio` | `MUSIC` | `["adult"]` |
 | `hentai` | `EPISODIC_SERIES` | `["anime", "adult"]` |
@@ -59,6 +66,12 @@ So a query like _"play some hentai"_ yields a `MediaType.EPISODIC_SERIES` from
 `classify()` and `["anime", "adult"]` from `classify_genres()`. The `adult` tag is
 what the [content filter](content-filtering.md) blocks on — the type alone never
 carries that signal.
+
+Every non-sentinel `mediavocab.MediaType` is reachable from a raw label, so the
+whole taxonomy is exercised. A few distinctions are carried by **how a work is
+consumed**: `audiobook` (play a narration → `AUDIOBOOK`) vs `book` (TTS-read a
+text → `BOOK`); `anime` (watch → `EPISODIC_SERIES`) vs `comic`/manga (read →
+`COMIC`); `asmr`/`ambient` (both `PROCEDURAL_AMBIENT`, the former genre-tagged).
 
 ## Domains and control intents
 

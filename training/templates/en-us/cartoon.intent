@@ -1,0 +1,12 @@
+<lead_watch> {cartoon_title}
+[hey|ok|please] <lead_watch> {cartoon_title} [please|for me|right now|thanks]
+<lead_watch> the cartoon {cartoon_title}
+[hey|ok|please] <lead_watch> the cartoon {cartoon_title} [please|for me|right now|thanks]
+<lead_watch> some cartoons
+[hey|ok|please] <lead_watch> some cartoons [please|for me|right now|thanks]
+<lead_watch> an episode of {cartoon_title}
+[hey|ok|please] <lead_watch> an episode of {cartoon_title} [please|for me|right now|thanks]
+<lead_watch> a kids cartoon
+[hey|ok|please] <lead_watch> a kids cartoon [please|for me|right now|thanks]
+<lead_watch> the show {cartoon_title}
+[hey|ok|please] <lead_watch> the show {cartoon_title} [please|for me|right now|thanks]

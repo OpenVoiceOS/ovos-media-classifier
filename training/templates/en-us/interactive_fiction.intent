@@ -1,0 +1,14 @@
+<lead_game> a text adventure
+[hey|ok|please] <lead_game> a text adventure [please|for me|right now|thanks]
+<lead_game> some interactive fiction
+[hey|ok|please] <lead_game> some interactive fiction [please|for me|right now|thanks]
+<lead_game> a choose your own adventure
+[hey|ok|please] <lead_game> a choose your own adventure [please|for me|right now|thanks]
+<lead_game> a choose your own adventure game
+[hey|ok|please] <lead_game> a choose your own adventure game [please|for me|right now|thanks]
+<lead_game> the interactive story {game_title}
+[hey|ok|please] <lead_game> the interactive story {game_title} [please|for me|right now|thanks]
+<lead_game> an interactive novel
+[hey|ok|please] <lead_game> an interactive novel [please|for me|right now|thanks]
+<lead_game> a text adventure game
+[hey|ok|please] <lead_game> a text adventure game [please|for me|right now|thanks]

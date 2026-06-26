@@ -1,0 +1,18 @@
+<lead_watch> the music video for {music_video_title}
+[hey|ok|please] <lead_watch> the music video for {music_video_title} [please|for me|right now|thanks]
+<lead_watch> {music_video_title}
+[hey|ok|please] <lead_watch> {music_video_title} [please|for me|right now|thanks]
+<lead_watch> the {artist_name} music video
+[hey|ok|please] <lead_watch> the {artist_name} music video [please|for me|right now|thanks]
+<lead_watch> a music video by {artist_name}
+[hey|ok|please] <lead_watch> a music video by {artist_name} [please|for me|right now|thanks]
+<lead_watch> the official video for {music_video_title}
+[hey|ok|please] <lead_watch> the official video for {music_video_title} [please|for me|right now|thanks]
+<lead_watch> {artist_name}'s music video
+[hey|ok|please] <lead_watch> {artist_name}'s music video [please|for me|right now|thanks]
+<lead_watch> the music video by {artist_name}
+[hey|ok|please] <lead_watch> the music video by {artist_name} [please|for me|right now|thanks]
+<lead_watch> the official video for {track_name}
+[hey|ok|please] <lead_watch> the official video for {track_name} [please|for me|right now|thanks]
+<lead_watch> the {track_name} music video
+[hey|ok|please] <lead_watch> the {track_name} music video [please|for me|right now|thanks]

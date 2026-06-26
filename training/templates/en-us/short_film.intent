@@ -1,0 +1,12 @@
+<lead_watch> {short_film_title}
+[hey|ok|please] <lead_watch> {short_film_title} [please|for me|right now|thanks]
+<lead_watch> the short film {short_film_title}
+[hey|ok|please] <lead_watch> the short film {short_film_title} [please|for me|right now|thanks]
+<lead_watch> a short film
+[hey|ok|please] <lead_watch> a short film [please|for me|right now|thanks]
+<lead_watch> some short films
+[hey|ok|please] <lead_watch> some short films [please|for me|right now|thanks]
+<lead_watch> the short {short_film_title}
+[hey|ok|please] <lead_watch> the short {short_film_title} [please|for me|right now|thanks]
+<lead_watch> an award-winning short film
+[hey|ok|please] <lead_watch> an award-winning short film [please|for me|right now|thanks]

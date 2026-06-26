@@ -36,7 +36,7 @@ clf.classify_full("play a podcast", "en-us").as_dict()
 | **An operator tuning backends** | [backends.md](backends.md) (selection + config keys), [entity-lists.md](entity-lists.md), [contextual-classification.md](contextual-classification.md) |
 | **Blocking content** | [content-filtering.md](content-filtering.md) |
 | **A plugin author** writing an external classifier | [external-plugins.md](external-plugins.md), then [stable-api.md](stable-api.md) for the contract |
-| **A contributor** training a model | [classification-model.md](classification-model.md) (the multi-head model) and [benchmarks](../benchmarks/README.md) |
+| **A contributor** training a model | [classification-model.md](classification-model.md) (the multi-head model), [dataset.md](dataset.md) (the data + its generator), and [benchmarks](../benchmarks/README.md) |
 
 New to the vocabulary (OCP, OPM, domain, axis, NER, …)? Read
 [glossary.md](glossary.md) first.
@@ -50,6 +50,8 @@ New to the vocabulary (OCP, OPM, domain, axis, NER, …)? Read
 | [taxonomy.md](taxonomy.md) | `mediavocab.MediaType` enforcement, the raw label→type/genre mapping, and the query-vs-content distinction |
 | [backends.md](backends.md) | The keyword, NER and ONNX backends, how `load_media_classifier` selects between them, and adding an external classifier |
 | [entity-lists.md](entity-lists.md) | Entity lists (`label → list of strings`): the source-agnostic store (runtime / `.csv` / `.tsv` / `.jsonl` / HuggingFace / media-server / inline) the NER backend consumes |
+| [dataset.md](dataset.md) | The canonical `ocp-media-intents` dataset and its on-demand generator: every column, the rebuild command, the `.intent`/`.voc` templates, confusables, and the content-filter slice |
+| [data-sources.md](data-sources.md) | Every HF dataset + local scraper feeding the entity pools, the slot label each feeds, licenses, and how the training set is assembled |
 | [contextual-classification.md](contextual-classification.md) | How the media you actually have biases prediction, via keyword feature slots |
 | [content-filtering.md](content-filtering.md) | `ContentFilter`: detect-to-block content moderation / parental control |
 | [external-plugins.md](external-plugins.md) | Registering a third-party classifier via the `opm.media.classifier` entry-point group |

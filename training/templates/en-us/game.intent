@@ -1,0 +1,20 @@
+<lead_game> {game_title}
+[hey|ok|please] <lead_game> {game_title} [please|for me|right now|thanks]
+<lead_game> the game {game_title}
+[hey|ok|please] <lead_game> the game {game_title} [please|for me|right now|thanks]
+<lead_game> a {game_genre} game
+[hey|ok|please] <lead_game> a {game_genre} game [please|for me|right now|thanks]
+<lead_game> a game on {game_platform}
+[hey|ok|please] <lead_game> a game on {game_platform} [please|for me|right now|thanks]
+<lead_game> a round of {game_title}
+[hey|ok|please] <lead_game> a round of {game_title} [please|for me|right now|thanks]
+<lead_game> a quick {game_genre} game
+[hey|ok|please] <lead_game> a quick {game_genre} game [please|for me|right now|thanks]
+<lead_game> the {game_genre} game {game_title}
+[hey|ok|please] <lead_game> the {game_genre} game {game_title} [please|for me|right now|thanks]
+<lead_game> some {game_genre}
+[hey|ok|please] <lead_game> some {game_genre} [please|for me|right now|thanks]
+<lead_game> a {game_genre} game from {release_year}
+[hey|ok|please] <lead_game> a {game_genre} game from {release_year} [please|for me|right now|thanks]
+<lead_game> a {release_decade} {game_genre} game
+[hey|ok|please] <lead_game> a {release_decade} {game_genre} game [please|for me|right now|thanks]

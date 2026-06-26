@@ -1,0 +1,28 @@
+<lead_play_audio> {podcast_title}
+[hey|ok|please] <lead_play_audio> {podcast_title} [please|for me|right now|thanks]
+<lead_play_audio> the {podcast_title} podcast
+[hey|ok|please] <lead_play_audio> the {podcast_title} podcast [please|for me|right now|thanks]
+<lead_play_audio> an episode of {podcast_title}
+[hey|ok|please] <lead_play_audio> an episode of {podcast_title} [please|for me|right now|thanks]
+<lead_play_audio> the latest {podcast_title} episode
+[hey|ok|please] <lead_play_audio> the latest {podcast_title} episode [please|for me|right now|thanks]
+<lead_play_audio> a {podcast_genre} podcast
+[hey|ok|please] <lead_play_audio> a {podcast_genre} podcast [please|for me|right now|thanks]
+<lead_play_audio> the podcast with {podcast_host}
+[hey|ok|please] <lead_play_audio> the podcast with {podcast_host} [please|for me|right now|thanks]
+<lead_play_audio> {podcast_host}'s podcast
+[hey|ok|please] <lead_play_audio> {podcast_host}'s podcast [please|for me|right now|thanks]
+<lead_play_audio> a podcast about {podcast_genre}
+[hey|ok|please] <lead_play_audio> a podcast about {podcast_genre} [please|for me|right now|thanks]
+<lead_play_audio> the podcast hosted by {podcast_host}
+[hey|ok|please] <lead_play_audio> the podcast hosted by {podcast_host} [please|for me|right now|thanks]
+<lead_play_audio> {podcast_title} hosted by {podcast_host}
+[hey|ok|please] <lead_play_audio> {podcast_title} hosted by {podcast_host} [please|for me|right now|thanks]
+<lead_play_audio> a {podcast_genre} podcast with {podcast_host}
+[hey|ok|please] <lead_play_audio> a {podcast_genre} podcast with {podcast_host} [please|for me|right now|thanks]
+<lead_play_audio> a podcast about {artist_name}
+[hey|ok|please] <lead_play_audio> a podcast about {artist_name} [please|for me|right now|thanks]
+<lead_play_audio> a podcast about {movie_title}
+[hey|ok|please] <lead_play_audio> a podcast about {movie_title} [please|for me|right now|thanks]
+<lead_play_audio> the podcast about {movie_actor}
+[hey|ok|please] <lead_play_audio> the podcast about {movie_actor} [please|for me|right now|thanks]

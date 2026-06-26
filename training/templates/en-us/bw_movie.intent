@@ -1,0 +1,10 @@
+<lead_watch> {bw_movie_title}
+[hey|ok|please] <lead_watch> {bw_movie_title} [please|for me|right now|thanks]
+<lead_watch> the black and white movie {bw_movie_title}
+[hey|ok|please] <lead_watch> the black and white movie {bw_movie_title} [please|for me|right now|thanks]
+<lead_watch> a black and white film
+[hey|ok|please] <lead_watch> a black and white film [please|for me|right now|thanks]
+<lead_watch> an old black and white movie
+[hey|ok|please] <lead_watch> an old black and white movie [please|for me|right now|thanks]
+<lead_watch> the black and white film {bw_movie_title}
+[hey|ok|please] <lead_watch> the black and white film {bw_movie_title} [please|for me|right now|thanks]

@@ -1,0 +1,18 @@
+<lead_watch> episodes of {tv_show_title}
+[hey|ok|please] <lead_watch> episodes of {tv_show_title} [please|for me|right now|thanks]
+<lead_watch> the next episode of {tv_show_title}
+[hey|ok|please] <lead_watch> the next episode of {tv_show_title} [please|for me|right now|thanks]
+<lead_watch> more episodes of {tv_show_title}
+[hey|ok|please] <lead_watch> more episodes of {tv_show_title} [please|for me|right now|thanks]
+<lead_watch> a web series
+[hey|ok|please] <lead_watch> a web series [please|for me|right now|thanks]
+<lead_watch> a video series
+[hey|ok|please] <lead_watch> a video series [please|for me|right now|thanks]
+<lead_watch> an online video series
+[hey|ok|please] <lead_watch> an online video series [please|for me|right now|thanks]
+<lead_watch> the latest episode of {tv_show_title} online
+[hey|ok|please] <lead_watch> the latest episode of {tv_show_title} online [please|for me|right now|thanks]
+<lead_watch> the next episode
+[hey|ok|please] <lead_watch> the next episode [please|for me|right now|thanks]
+<lead_watch> more of that web series
+[hey|ok|please] <lead_watch> more of that web series [please|for me|right now|thanks]

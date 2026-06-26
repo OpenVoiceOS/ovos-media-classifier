@@ -1,0 +1,11 @@
+<lead_play_audio> {podcast_title}
+<lead_play_audio> the {podcast_title} podcast
+<lead_play_audio> an episode of {podcast_title}
+<lead_play_audio> the latest {podcast_title} episode
+<lead_play_audio> a {podcast_genre} podcast
+<lead_play_audio> the podcast with {podcast_host}
+<lead_play_audio> {podcast_host}'s podcast
+<lead_play_audio> a podcast about {podcast_genre}
+<lead_play_audio> the podcast hosted by {podcast_host}
+<lead_play_audio> {podcast_title} hosted by {podcast_host}
+<lead_play_audio> a {podcast_genre} podcast with {podcast_host}

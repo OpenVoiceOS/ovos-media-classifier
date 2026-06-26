@@ -1,0 +1,11 @@
+<lead_read> {book_title}
+<lead_read> the book {book_title}
+<lead_read> the novel {book_title}
+<lead_read> {book_title} by {book_author}
+<lead_read> a book by {book_author}
+<lead_read> a {book_genre} book
+<lead_read> a {book_genre} novel
+<lead_read> anything by {book_author}
+<lead_read> the {book_genre} book {book_title}
+<lead_read> the novel {book_title} by {book_author}
+<lead_read> a book about {book_genre}

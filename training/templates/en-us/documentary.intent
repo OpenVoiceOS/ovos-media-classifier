@@ -1,0 +1,24 @@
+<lead_watch> {documentary_title}
+[hey|ok|please] <lead_watch> {documentary_title} [please|for me|right now|thanks]
+<lead_watch> the documentary {documentary_title}
+[hey|ok|please] <lead_watch> the documentary {documentary_title} [please|for me|right now|thanks]
+<lead_watch> a documentary
+[hey|ok|please] <lead_watch> a documentary [please|for me|right now|thanks]
+<lead_watch> a nature documentary
+[hey|ok|please] <lead_watch> a nature documentary [please|for me|right now|thanks]
+<lead_watch> some documentaries
+[hey|ok|please] <lead_watch> some documentaries [please|for me|right now|thanks]
+<lead_watch> the {documentary_title} documentary
+[hey|ok|please] <lead_watch> the {documentary_title} documentary [please|for me|right now|thanks]
+<lead_watch> a good documentary
+[hey|ok|please] <lead_watch> a good documentary [please|for me|right now|thanks]
+<lead_watch> a documentary about {movie_actor}
+[hey|ok|please] <lead_watch> a documentary about {movie_actor} [please|for me|right now|thanks]
+<lead_watch> a documentary about {artist_name}
+[hey|ok|please] <lead_watch> a documentary about {artist_name} [please|for me|right now|thanks]
+<lead_watch> the {artist_name} documentary
+[hey|ok|please] <lead_watch> the {artist_name} documentary [please|for me|right now|thanks]
+<lead_watch> a documentary on {movie_director}
+[hey|ok|please] <lead_watch> a documentary on {movie_director} [please|for me|right now|thanks]
+<lead_watch> the documentary about {movie_title}
+[hey|ok|please] <lead_watch> the documentary about {movie_title} [please|for me|right now|thanks]

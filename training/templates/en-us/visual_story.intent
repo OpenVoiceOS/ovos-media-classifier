@@ -1,0 +1,12 @@
+<lead_watch> {visual_story_title}
+[hey|ok|please] <lead_watch> {visual_story_title} [please|for me|right now|thanks]
+<lead_watch> the motion comic {visual_story_title}
+[hey|ok|please] <lead_watch> the motion comic {visual_story_title} [please|for me|right now|thanks]
+<lead_watch> a visual story
+[hey|ok|please] <lead_watch> a visual story [please|for me|right now|thanks]
+<lead_watch> the visual story {visual_story_title}
+[hey|ok|please] <lead_watch> the visual story {visual_story_title} [please|for me|right now|thanks]
+<lead_watch> a motion comic
+[hey|ok|please] <lead_watch> a motion comic [please|for me|right now|thanks]
+<lead_watch> an interactive story
+[hey|ok|please] <lead_watch> an interactive story [please|for me|right now|thanks]

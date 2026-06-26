@@ -1,0 +1,12 @@
+<lead_watch> a video
+[hey|ok|please] <lead_watch> a video [please|for me|right now|thanks]
+<lead_watch> some videos
+[hey|ok|please] <lead_watch> some videos [please|for me|right now|thanks]
+<lead_watch> something to watch
+[hey|ok|please] <lead_watch> something to watch [please|for me|right now|thanks]
+<lead_watch> a video about {documentary_title}
+[hey|ok|please] <lead_watch> a video about {documentary_title} [please|for me|right now|thanks]
+<lead_watch> something interesting
+[hey|ok|please] <lead_watch> something interesting [please|for me|right now|thanks]
+<lead_watch> any video
+[hey|ok|please] <lead_watch> any video [please|for me|right now|thanks]

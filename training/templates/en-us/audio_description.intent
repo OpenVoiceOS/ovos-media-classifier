@@ -1,0 +1,10 @@
+<lead_watch> {movie_title} with audio description
+[hey|ok|please] <lead_watch> {movie_title} with audio description [please|for me|right now|thanks]
+<lead_watch> the audio described version of {movie_title}
+[hey|ok|please] <lead_watch> the audio described version of {movie_title} [please|for me|right now|thanks]
+<lead_watch> a movie with audio description
+[hey|ok|please] <lead_watch> a movie with audio description [please|for me|right now|thanks]
+<lead_watch> the described version of {movie_title}
+[hey|ok|please] <lead_watch> the described version of {movie_title} [please|for me|right now|thanks]
+<lead_watch> a described {movie_genre} movie
+[hey|ok|please] <lead_watch> a described {movie_genre} movie [please|for me|right now|thanks]
