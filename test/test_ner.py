@@ -181,6 +181,24 @@ class TestAhocorasickClassify(_NERTestCase):
         self.assertEqual(mt, MediaType.GENERIC)
         self.assertEqual(conf, 0.0)
 
+    def test_ner_exception_uniform_across_axes(self):
+        """A NER failure degrades *every* axis to its empty/none result.
+
+        All three classify_* methods route through the shared ``_tag`` helper,
+        so a tagger error never propagates and each axis returns its
+        no-entities-found answer consistently.
+        """
+        from ovos_media_classifier.ahocorasick import AhocorasickMediaClassifier
+
+        ner = MagicMock()
+        ner.tag.side_effect = RuntimeError("boom")
+        clf = AhocorasickMediaClassifier(ner)
+
+        self.assertEqual(clf.classify("query", "en-us"), (MediaType.GENERIC, 0.0))
+        self.assertEqual(clf.classify_genres("query", "en-us"), [])
+        self.assertEqual(
+            clf.classify_domain("query", "en-us"), (OCPDomain.NOT_OCP, 0.0))
+
     def test_classify_domain_hit_and_miss(self):
         from ovos_media_classifier.ahocorasick import AhocorasickMediaClassifier
 

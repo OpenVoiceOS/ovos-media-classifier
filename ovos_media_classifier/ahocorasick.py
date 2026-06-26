@@ -47,7 +47,6 @@ Usage::
     # New entity added at runtime → immediately reflected in classify():
     container.add("artist_name", "Radiohead")
 """
-import csv
 from typing import TYPE_CHECKING, Dict, List, Optional, Tuple
 
 from ovos_utils.log import LOG
@@ -250,6 +249,20 @@ class AhocorasickMediaClassifier(AbstractMediaClassifier):
     # Classification
     # ------------------------------------------------------------------
 
+    def _tag(self, query: str) -> Dict[str, str]:
+        """Run the NER over *query* → ``{label: matched_word}``.
+
+        Never raises: a NER failure is logged and yields an empty dict, so the
+        classifier degrades to "no entities found" (GENERIC / NOT_OCP) rather
+        than propagating the error to the pipeline.
+        """
+        try:
+            raw = self._ner.tag(query)
+            return {e["label"]: e["word"] for e in raw}
+        except Exception as e:
+            LOG.error(f"AhocorasickMediaClassifier NER failed: {e}")
+            return {}
+
     def _entities_to_media_type(
         self, entities: Dict[str, str]
     ) -> Optional[MediaType]:
@@ -275,13 +288,7 @@ class AhocorasickMediaClassifier(AbstractMediaClassifier):
         lang: str,
         valid_labels: Optional[List[MediaType]] = None,
     ) -> Tuple[MediaType, float]:
-        try:
-            raw = self._ner.tag(query)
-            entities = {e["label"]: e["word"] for e in raw}
-        except Exception as e:
-            LOG.error(f"AhocorasickMediaClassifier NER failed: {e}")
-            return MediaType.GENERIC, 0.0
-
+        entities = self._tag(query)
         media_type = self._entities_to_media_type(entities)
         if media_type is None:
             return MediaType.GENERIC, 0.0
@@ -300,11 +307,7 @@ class AhocorasickMediaClassifier(AbstractMediaClassifier):
         so an ``adult_title`` (MOVIE) still surfaces ``adult`` even though MOVIE
         itself is genre-neutral.
         """
-        try:
-            raw = self._ner.tag(query)
-            entities = {e["label"]: e["word"] for e in raw}
-        except Exception:
-            return []
+        entities = self._tag(query)
         media_type = self._entities_to_media_type(entities)
         if media_type is None:
             return []
@@ -317,13 +320,7 @@ class AhocorasickMediaClassifier(AbstractMediaClassifier):
 
     def classify_domain(self, query: str, lang: str) -> Tuple[OCPDomain, float]:
         """Domain is OCP_PLAY when any known entity is found, NOT_OCP otherwise."""
-        try:
-            raw = self._ner.tag(query)
-            entities = {e["label"]: e["word"] for e in raw}
-        except Exception as e:
-            LOG.error(f"AhocorasickMediaClassifier NER failed: {e}")
-            return OCPDomain.NOT_OCP, 0.0
-
+        entities = self._tag(query)
         media_type = self._entities_to_media_type(entities)
         if media_type is None:
             return OCPDomain.NOT_OCP, 0.0
