@@ -173,6 +173,27 @@ the runtime consumes it. The reference producer is
 installable via the `[train]` extra. End-to-end retraining — including adding a
 *new* axis — is covered in [extending.md](extending.md).
 
+### Building it locally + the (manual) publish step
+
+The whole bundle is reproduced from source with three local commands; **all
+artifacts stay local under the gitignored `data/`** — nothing is published
+automatically:
+
+```bash
+python -m training.ingest_entities --relations   # flat pools + non-IMDb relations
+python -m training.imdb_relations                 # IMDb relations + popularity weights
+python -m training.build_dataset                  # → data/release/*
+python -m training.train_sklearn                  # → data/models/{context,context_ner}/
+python -m benchmarks.ladder                        # → benchmarks/ladder_results.{json,md}
+```
+
+Publishing the dataset / model bundle to the Hub is a **separate, manual,
+explicitly-authorised step** — it is never run by the build. When authorised, the
+dataset is pushed with `python -m training.build_dataset --push --repo
+TigreGotico/ocp-media-intents [--private]`; a model bundle is uploaded by hand
+from `data/models/`. Until then the bundle lives only in the local gitignored
+`data/` tree.
+
 ---
 
 ## 5. Benchmark
