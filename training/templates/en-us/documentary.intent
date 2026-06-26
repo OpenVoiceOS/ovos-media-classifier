@@ -12,6 +12,24 @@
 [hey|ok|please] <lead_watch> the {documentary_title} documentary [please|for me|right now|thanks]
 <lead_watch> a good documentary
 [hey|ok|please] <lead_watch> a good documentary [please|for me|right now|thanks]
+<lead_watch> a history documentary
+[hey|ok|please] <lead_watch> a history documentary [please|for me|right now|thanks]
+<lead_watch> a science documentary
+[hey|ok|please] <lead_watch> a science documentary [please|for me|right now|thanks]
+<lead_watch> a true crime documentary
+[hey|ok|please] <lead_watch> a true crime documentary [please|for me|right now|thanks]
+<lead_watch> a {movie_genre} documentary
+[hey|ok|please] <lead_watch> a {movie_genre} documentary [please|for me|right now|thanks]
+<lead_watch> a documentary about {documentary_title}
+[hey|ok|please] <lead_watch> a documentary about {documentary_title} [please|for me|right now|thanks]
+<lead_watch> do you have any documentaries
+[hey|ok|please] <lead_watch> do you have any documentaries [please|for me|right now|thanks]
+<lead_watch> got a good documentary
+[hey|ok|please] <lead_watch> got a good documentary [please|for me|right now|thanks]
+<lead_watch> a documentary to fall asleep to
+[hey|ok|please] <lead_watch> a documentary to fall asleep to [please|for me|right now|thanks]
+<lead_watch> something educational to watch
+[hey|ok|please] <lead_watch> something educational to watch [please|for me|right now|thanks]
 <lead_watch> a documentary about {movie_actor}
 [hey|ok|please] <lead_watch> a documentary about {movie_actor} [please|for me|right now|thanks]
 <lead_watch> a documentary about {artist_name}

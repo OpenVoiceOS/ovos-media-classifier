@@ -14,11 +14,31 @@
 [hey|ok|please] <lead_watch> the new season of {anime_title} [please|for me|right now|thanks]
 <lead_watch> the next episode of {anime_title}
 [hey|ok|please] <lead_watch> the next episode of {anime_title} [please|for me|right now|thanks]
+<lead_watch> a {anime_genre} anime
+[hey|ok|please] <lead_watch> a {anime_genre} anime [please|for me|right now|thanks]
+<lead_watch> some {anime_genre} anime
+[hey|ok|please] <lead_watch> some {anime_genre} anime [please|for me|right now|thanks]
+<lead_watch> a good anime
+[hey|ok|please] <lead_watch> a good anime [please|for me|right now|thanks]
 <lead_watch> the {anime_studio} anime {anime_title}
 [hey|ok|please] <lead_watch> the {anime_studio} anime {anime_title} [please|for me|right now|thanks]
 <lead_watch> {anime_title} by {anime_studio}
 [hey|ok|please] <lead_watch> {anime_title} by {anime_studio} [please|for me|right now|thanks]
-<lead_watch> a {release_decade} anime
-[hey|ok|please] <lead_watch> a {release_decade} anime [please|for me|right now|thanks]
+<lead_watch> a {anime_genre} anime by {anime_studio}
+[hey|ok|please] <lead_watch> a {anime_genre} anime by {anime_studio} [please|for me|right now|thanks]
+<lead_watch> a {anime_genre} anime from {anime_studio}
+[hey|ok|please] <lead_watch> a {anime_genre} anime from {anime_studio} [please|for me|right now|thanks]
+<lead_watch> {anime_title} from {anime_studio}
+[hey|ok|please] <lead_watch> {anime_title} from {anime_studio} [please|for me|right now|thanks]
+<lead_watch> the {anime_genre} anime {anime_title} by {anime_studio}
+[hey|ok|please] <lead_watch> the {anime_genre} anime {anime_title} by {anime_studio} [please|for me|right now|thanks]
+<lead_watch> do you have any {anime_genre} anime
+[hey|ok|please] <lead_watch> do you have any {anime_genre} anime [please|for me|right now|thanks]
+<lead_watch> got a good {anime_genre} anime
+[hey|ok|please] <lead_watch> got a good {anime_genre} anime [please|for me|right now|thanks]
+<lead_watch> some {anime_genre} anime to binge
+[hey|ok|please] <lead_watch> some {anime_genre} anime to binge [please|for me|right now|thanks]
+<lead_watch> an anime from the {release_decade}
+[hey|ok|please] <lead_watch> an anime from the {release_decade} [please|for me|right now|thanks]
 <lead_watch> an anime from {release_year}
 [hey|ok|please] <lead_watch> an anime from {release_year} [please|for me|right now|thanks]

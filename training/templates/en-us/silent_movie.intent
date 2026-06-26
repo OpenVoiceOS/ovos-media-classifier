@@ -10,3 +10,45 @@
 [hey|ok|please] <lead_watch> the silent film {silent_movie_title} [please|for me|right now|thanks]
 <lead_watch> a classic silent movie
 [hey|ok|please] <lead_watch> a classic silent movie [please|for me|right now|thanks]
+<lead_watch> a {movie_genre} silent film
+[hey|ok|please] <lead_watch> a {movie_genre} silent film [please|for me|right now|thanks]
+<lead_watch> an early silent film
+[hey|ok|please] <lead_watch> an early silent film [please|for me|right now|thanks]
+<lead_watch> a silent comedy
+[hey|ok|please] <lead_watch> a silent comedy [please|for me|right now|thanks]
+<lead_watch> a silent era classic
+[hey|ok|please] <lead_watch> a silent era classic [please|for me|right now|thanks]
+<lead_watch> a silent picture
+[hey|ok|please] <lead_watch> a silent picture [please|for me|right now|thanks]
+<lead_watch> an old silent picture
+[hey|ok|please] <lead_watch> an old silent picture [please|for me|right now|thanks]
+<lead_watch> the silent picture {silent_movie_title}
+[hey|ok|please] <lead_watch> the silent picture {silent_movie_title} [please|for me|right now|thanks]
+<lead_watch> a {movie_genre} silent movie
+[hey|ok|please] <lead_watch> a {movie_genre} silent movie [please|for me|right now|thanks]
+<lead_watch> a silent movie classic
+[hey|ok|please] <lead_watch> a silent movie classic [please|for me|right now|thanks]
+<lead_watch> an early cinema classic
+[hey|ok|please] <lead_watch> an early cinema classic [please|for me|right now|thanks]
+<lead_watch> a silent drama
+[hey|ok|please] <lead_watch> a silent drama [please|for me|right now|thanks]
+<lead_watch> the classic silent film {silent_movie_title}
+[hey|ok|please] <lead_watch> the classic silent film {silent_movie_title} [please|for me|right now|thanks]
+<lead_watch> another silent movie
+[hey|ok|please] <lead_watch> another silent movie [please|for me|right now|thanks]
+<lead_watch> a silent film from the early days
+[hey|ok|please] <lead_watch> a silent film from the early days [please|for me|right now|thanks]
+<lead_watch> a vintage silent movie
+[hey|ok|please] <lead_watch> a vintage silent movie [please|for me|right now|thanks]
+<lead_watch> do you have any silent films
+[hey|ok|please] <lead_watch> do you have any silent films [please|for me|right now|thanks]
+<lead_watch> got a good silent movie
+[hey|ok|please] <lead_watch> got a good silent movie [please|for me|right now|thanks]
+<lead_watch> a silent classic for the evening
+[hey|ok|please] <lead_watch> a silent classic for the evening [please|for me|right now|thanks]
+<lead_watch> something from the silent era
+[hey|ok|please] <lead_watch> something from the silent era [please|for me|right now|thanks]
+<lead_watch> a silent comedy for tonight
+[hey|ok|please] <lead_watch> a silent comedy for tonight [please|for me|right now|thanks]
+<lead_watch> got any {movie_genre} silent films
+[hey|ok|please] <lead_watch> got any {movie_genre} silent films [please|for me|right now|thanks]

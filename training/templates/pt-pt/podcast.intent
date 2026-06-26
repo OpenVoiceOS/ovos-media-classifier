@@ -7,5 +7,12 @@
 <lead_play_audio> {podcast_host}'s podcast
 <lead_play_audio> a podcast about {podcast_genre}
 <lead_play_audio> the podcast hosted by {podcast_host}
+<lead_play_audio> a good {podcast_genre} podcast
 <lead_play_audio> {podcast_title} hosted by {podcast_host}
 <lead_play_audio> a {podcast_genre} podcast with {podcast_host}
+<lead_play_audio> a {podcast_genre} podcast hosted by {podcast_host}
+<lead_play_audio> the {podcast_title} episode with {podcast_host}
+<lead_play_audio> a {podcast_genre} podcast called {podcast_title} with {podcast_host}
+<lead_play_audio> do you have any {podcast_genre} podcasts
+<lead_play_audio> got a good {podcast_genre} podcast
+<lead_play_audio> a {podcast_genre} podcast for my commute

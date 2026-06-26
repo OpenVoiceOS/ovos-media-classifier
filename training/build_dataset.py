@@ -86,6 +86,7 @@ SLOT_ALIASES: Dict[str, str] = {
     "silent_movie_title": "movie_title",
     "bw_movie_title":     "movie_title",
     "track_name":         "album_name",
+    "anime_genre":        "video_genre",
 }
 
 # Every media-template row is a play request.

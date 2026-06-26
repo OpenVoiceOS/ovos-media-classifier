@@ -1,8 +1,18 @@
 <lead_play_audio> the news
 <lead_play_audio> today's news
 <lead_play_audio> the latest news
+<lead_play_audio> the morning news
+<lead_play_audio> a news briefing
+<lead_play_audio> the headlines
 <lead_play_audio> the news from {news_provider}
 <lead_play_audio> {news_provider} news
 <lead_play_audio> the {news_category} news
 <lead_play_audio> {news_category} headlines
+<lead_play_audio> the latest {news_category} news
+<lead_play_audio> an update on {news_category}
+<lead_play_audio> some {news_category} news
 <lead_play_audio> the {news_category} headlines from {news_provider}
+<lead_play_audio> the {news_category} news from {news_provider}
+<lead_play_audio> what's the latest {news_category} news
+<lead_play_audio> any {news_category} news
+<lead_play_audio> the {news_category} headlines for my morning

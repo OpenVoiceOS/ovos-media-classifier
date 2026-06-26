@@ -1,7 +1,6 @@
 <lead_watch> the music video for {music_video_title}
 [hey|ok|please] <lead_watch> the music video for {music_video_title} [please|for me|right now|thanks]
 <lead_watch> {music_video_title}
-[hey|ok|please] <lead_watch> {music_video_title} [please|for me|right now|thanks]
 <lead_watch> the {artist_name} music video
 [hey|ok|please] <lead_watch> the {artist_name} music video [please|for me|right now|thanks]
 <lead_watch> a music video by {artist_name}
@@ -10,6 +9,47 @@
 [hey|ok|please] <lead_watch> the official video for {music_video_title} [please|for me|right now|thanks]
 <lead_watch> {artist_name}'s music video
 [hey|ok|please] <lead_watch> {artist_name}'s music video [please|for me|right now|thanks]
+<lead_watch> the {music_video_title} video
+[hey|ok|please] <lead_watch> the {music_video_title} video [please|for me|right now|thanks]
+<lead_watch> a music video
+[hey|ok|please] <lead_watch> a music video [please|for me|right now|thanks]
+<lead_watch> some music videos
+[hey|ok|please] <lead_watch> some music videos [please|for me|right now|thanks]
+<lead_watch> the latest {artist_name} music video
+[hey|ok|please] <lead_watch> the latest {artist_name} music video [please|for me|right now|thanks]
+<lead_watch> another {artist_name} music video
+[hey|ok|please] <lead_watch> another {artist_name} music video [please|for me|right now|thanks]
+<lead_watch> a {artist_name} video
+[hey|ok|please] <lead_watch> a {artist_name} video [please|for me|right now|thanks]
+<lead_watch> the official {music_video_title} video
+[hey|ok|please] <lead_watch> the official {music_video_title} video [please|for me|right now|thanks]
+<lead_watch> the new music video by {artist_name}
+[hey|ok|please] <lead_watch> the new music video by {artist_name} [please|for me|right now|thanks]
+<lead_watch> some {artist_name} music videos
+[hey|ok|please] <lead_watch> some {artist_name} music videos [please|for me|right now|thanks]
+<lead_watch> a recent music video
+[hey|ok|please] <lead_watch> a recent music video [please|for me|right now|thanks]
+<lead_watch> the {music_video_title} official video
+<lead_watch> the music video {music_video_title}
+[hey|ok|please] <lead_watch> the music video {music_video_title} [please|for me|right now|thanks]
+<lead_watch> the music video for {music_video_title} by {artist_name}
+[hey|ok|please] <lead_watch> the music video for {music_video_title} by {artist_name} [please|for me|right now|thanks]
+<lead_watch> {artist_name}'s music video for {music_video_title}
+[hey|ok|please] <lead_watch> {artist_name}'s music video for {music_video_title} [please|for me|right now|thanks]
+<lead_watch> the official video for {music_video_title} by {artist_name}
+[hey|ok|please] <lead_watch> the official video for {music_video_title} by {artist_name} [please|for me|right now|thanks]
+<lead_watch> do you have the music video for {music_video_title}
+[hey|ok|please] <lead_watch> do you have the music video for {music_video_title} [please|for me|right now|thanks]
+<lead_watch> got any {artist_name} music videos
+[hey|ok|please] <lead_watch> got any {artist_name} music videos [please|for me|right now|thanks]
+<lead_watch> some music videos for the party
+[hey|ok|please] <lead_watch> some music videos for the party [please|for me|right now|thanks]
+<lead_watch> do you have any music videos by {artist_name}
+[hey|ok|please] <lead_watch> do you have any music videos by {artist_name} [please|for me|right now|thanks]
+<lead_watch> a music video to vibe to
+[hey|ok|please] <lead_watch> a music video to vibe to [please|for me|right now|thanks]
+<lead_watch> got the video for {music_video_title}
+[hey|ok|please] <lead_watch> got the video for {music_video_title} [please|for me|right now|thanks]
 <lead_watch> the music video by {artist_name}
 [hey|ok|please] <lead_watch> the music video by {artist_name} [please|for me|right now|thanks]
 <lead_watch> the official video for {track_name}

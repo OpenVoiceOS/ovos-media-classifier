@@ -10,3 +10,27 @@
 [hey|ok|please] <lead_play_audio> the {sound_name} sound effect [please|for me|right now|thanks]
 <lead_play_audio> some {sound_name} sounds
 [hey|ok|please] <lead_play_audio> some {sound_name} sounds [please|for me|right now|thanks]
+<lead_play_audio> a {sound_name} sfx
+[hey|ok|please] <lead_play_audio> a {sound_name} sfx [please|for me|right now|thanks]
+<lead_play_audio> the {sound_name} noise
+[hey|ok|please] <lead_play_audio> the {sound_name} noise [please|for me|right now|thanks]
+<lead_play_audio> {sound_name} sounds
+[hey|ok|please] <lead_play_audio> {sound_name} sounds [please|for me|right now|thanks]
+<lead_play_audio> the {sound_name} sfx
+[hey|ok|please] <lead_play_audio> the {sound_name} sfx [please|for me|right now|thanks]
+<lead_play_audio> a clip of a {sound_name}
+[hey|ok|please] <lead_play_audio> a clip of a {sound_name} [please|for me|right now|thanks]
+<lead_play_audio> a {sound_name} clip
+[hey|ok|please] <lead_play_audio> a {sound_name} clip [please|for me|right now|thanks]
+<lead_play_audio> the sound effect of {sound_name}
+[hey|ok|please] <lead_play_audio> the sound effect of {sound_name} [please|for me|right now|thanks]
+<lead_play_audio> a recording of a {sound_name}
+[hey|ok|please] <lead_play_audio> a recording of a {sound_name} [please|for me|right now|thanks]
+<lead_play_audio> do you have a {sound_name} sound
+[hey|ok|please] <lead_play_audio> do you have a {sound_name} sound [please|for me|right now|thanks]
+<lead_play_audio> got a {sound_name} sound effect
+[hey|ok|please] <lead_play_audio> got a {sound_name} sound effect [please|for me|right now|thanks]
+<lead_play_audio> a {sound_name} sound for my video
+[hey|ok|please] <lead_play_audio> a {sound_name} sound for my video [please|for me|right now|thanks]
+<lead_play_audio> the sound of a {sound_name} please
+[hey|ok|please] <lead_play_audio> the sound of a {sound_name} please [please|for me|right now|thanks]

@@ -1,7 +1,6 @@
 <lead_play_audio> {podcast_title}
 [hey|ok|please] <lead_play_audio> {podcast_title} [please|for me|right now|thanks]
 <lead_play_audio> the {podcast_title} podcast
-[hey|ok|please] <lead_play_audio> the {podcast_title} podcast [please|for me|right now|thanks]
 <lead_play_audio> an episode of {podcast_title}
 [hey|ok|please] <lead_play_audio> an episode of {podcast_title} [please|for me|right now|thanks]
 <lead_play_audio> the latest {podcast_title} episode
@@ -16,10 +15,24 @@
 [hey|ok|please] <lead_play_audio> a podcast about {podcast_genre} [please|for me|right now|thanks]
 <lead_play_audio> the podcast hosted by {podcast_host}
 [hey|ok|please] <lead_play_audio> the podcast hosted by {podcast_host} [please|for me|right now|thanks]
+<lead_play_audio> a good {podcast_genre} podcast
+[hey|ok|please] <lead_play_audio> a good {podcast_genre} podcast [please|for me|right now|thanks]
 <lead_play_audio> {podcast_title} hosted by {podcast_host}
 [hey|ok|please] <lead_play_audio> {podcast_title} hosted by {podcast_host} [please|for me|right now|thanks]
 <lead_play_audio> a {podcast_genre} podcast with {podcast_host}
 [hey|ok|please] <lead_play_audio> a {podcast_genre} podcast with {podcast_host} [please|for me|right now|thanks]
+<lead_play_audio> a {podcast_genre} podcast hosted by {podcast_host}
+[hey|ok|please] <lead_play_audio> a {podcast_genre} podcast hosted by {podcast_host} [please|for me|right now|thanks]
+<lead_play_audio> the {podcast_title} episode with {podcast_host}
+[hey|ok|please] <lead_play_audio> the {podcast_title} episode with {podcast_host} [please|for me|right now|thanks]
+<lead_play_audio> a {podcast_genre} podcast called {podcast_title} with {podcast_host}
+[hey|ok|please] <lead_play_audio> a {podcast_genre} podcast called {podcast_title} with {podcast_host} [please|for me|right now|thanks]
+<lead_play_audio> do you have any {podcast_genre} podcasts
+[hey|ok|please] <lead_play_audio> do you have any {podcast_genre} podcasts [please|for me|right now|thanks]
+<lead_play_audio> got a good {podcast_genre} podcast
+[hey|ok|please] <lead_play_audio> got a good {podcast_genre} podcast [please|for me|right now|thanks]
+<lead_play_audio> a {podcast_genre} podcast for my commute
+[hey|ok|please] <lead_play_audio> a {podcast_genre} podcast for my commute [please|for me|right now|thanks]
 <lead_play_audio> a podcast about {artist_name}
 [hey|ok|please] <lead_play_audio> a podcast about {artist_name} [please|for me|right now|thanks]
 <lead_play_audio> a podcast about {movie_title}

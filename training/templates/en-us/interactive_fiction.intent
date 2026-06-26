@@ -12,3 +12,57 @@
 [hey|ok|please] <lead_game> an interactive novel [please|for me|right now|thanks]
 <lead_game> a text adventure game
 [hey|ok|please] <lead_game> a text adventure game [please|for me|right now|thanks]
+<lead_game> an interactive fiction game
+[hey|ok|please] <lead_game> an interactive fiction game [please|for me|right now|thanks]
+<lead_game> the text adventure {game_title}
+[hey|ok|please] <lead_game> the text adventure {game_title} [please|for me|right now|thanks]
+<lead_game> a story game
+[hey|ok|please] <lead_game> a story game [please|for me|right now|thanks]
+<lead_game> a branching story game
+[hey|ok|please] <lead_game> a branching story game [please|for me|right now|thanks]
+<lead_game> the interactive fiction {game_title}
+[hey|ok|please] <lead_game> the interactive fiction {game_title} [please|for me|right now|thanks]
+<lead_game> a parser game
+[hey|ok|please] <lead_game> a parser game [please|for me|right now|thanks]
+<lead_game> a {game_genre} text adventure
+[hey|ok|please] <lead_game> a {game_genre} text adventure [please|for me|right now|thanks]
+<lead_game> an old text adventure
+[hey|ok|please] <lead_game> an old text adventure [please|for me|right now|thanks]
+<lead_game> a interactive story
+[hey|ok|please] <lead_game> a interactive story [please|for me|right now|thanks]
+<lead_game> a gamebook
+[hey|ok|please] <lead_game> a gamebook [please|for me|right now|thanks]
+<lead_game> the gamebook {game_title}
+[hey|ok|please] <lead_game> the gamebook {game_title} [please|for me|right now|thanks]
+<lead_game> an if game
+[hey|ok|please] <lead_game> an if game [please|for me|right now|thanks]
+<lead_game> a classic text adventure
+[hey|ok|please] <lead_game> a classic text adventure [please|for me|right now|thanks]
+<lead_game> the story game {game_title}
+[hey|ok|please] <lead_game> the story game {game_title} [please|for me|right now|thanks]
+<lead_game> a {game_genre} interactive fiction game
+[hey|ok|please] <lead_game> a {game_genre} interactive fiction game [please|for me|right now|thanks]
+<lead_game> an adventure game with choices
+[hey|ok|please] <lead_game> an adventure game with choices [please|for me|right now|thanks]
+<lead_game> the branching story {game_title}
+[hey|ok|please] <lead_game> the branching story {game_title} [please|for me|right now|thanks]
+<lead_game> another text adventure
+[hey|ok|please] <lead_game> another text adventure [please|for me|right now|thanks]
+<lead_game> a text based game
+[hey|ok|please] <lead_game> a text based game [please|for me|right now|thanks]
+<lead_game> the interactive novel {game_title}
+[hey|ok|please] <lead_game> the interactive novel {game_title} [please|for me|right now|thanks]
+<lead_game> do you have any text adventures
+[hey|ok|please] <lead_game> do you have any text adventures [please|for me|right now|thanks]
+<lead_game> got a good choose your own adventure
+[hey|ok|please] <lead_game> got a good choose your own adventure [please|for me|right now|thanks]
+<lead_game> a text adventure to play tonight
+[hey|ok|please] <lead_game> a text adventure to play tonight [please|for me|right now|thanks]
+<lead_game> an interactive story for bedtime
+[hey|ok|please] <lead_game> an interactive story for bedtime [please|for me|right now|thanks]
+<lead_game> do you have the text adventure {game_title}
+[hey|ok|please] <lead_game> do you have the text adventure {game_title} [please|for me|right now|thanks]
+<lead_game> got any {game_genre} text adventures
+[hey|ok|please] <lead_game> got any {game_genre} text adventures [please|for me|right now|thanks]
+<lead_game> an interactive story to wind down with
+[hey|ok|please] <lead_game> an interactive story to wind down with [please|for me|right now|thanks]

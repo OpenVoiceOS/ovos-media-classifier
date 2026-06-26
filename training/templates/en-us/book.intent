@@ -4,22 +4,62 @@
 [hey|ok|please] <lead_read> the book {book_title} [please|for me|right now|thanks]
 <lead_read> the novel {book_title}
 [hey|ok|please] <lead_read> the novel {book_title} [please|for me|right now|thanks]
-<lead_read> {book_title} by {book_author}
-[hey|ok|please] <lead_read> {book_title} by {book_author} [please|for me|right now|thanks]
 <lead_read> a book by {book_author}
 [hey|ok|please] <lead_read> a book by {book_author} [please|for me|right now|thanks]
+<lead_read> anything by {book_author}
+[hey|ok|please] <lead_read> anything by {book_author} [please|for me|right now|thanks]
 <lead_read> a {book_genre} book
 [hey|ok|please] <lead_read> a {book_genre} book [please|for me|right now|thanks]
 <lead_read> a {book_genre} novel
 [hey|ok|please] <lead_read> a {book_genre} novel [please|for me|right now|thanks]
-<lead_read> anything by {book_author}
-[hey|ok|please] <lead_read> anything by {book_author} [please|for me|right now|thanks]
-<lead_read> the {book_genre} book {book_title}
-[hey|ok|please] <lead_read> the {book_genre} book {book_title} [please|for me|right now|thanks]
-<lead_read> the novel {book_title} by {book_author}
-[hey|ok|please] <lead_read> the novel {book_title} by {book_author} [please|for me|right now|thanks]
 <lead_read> a book about {book_genre}
 [hey|ok|please] <lead_read> a book about {book_genre} [please|for me|right now|thanks]
+<lead_read> a good {book_genre} book
+[hey|ok|please] <lead_read> a good {book_genre} book [please|for me|right now|thanks]
+<lead_read> some {book_genre}
+[hey|ok|please] <lead_read> some {book_genre} [please|for me|right now|thanks]
+<lead_read> {book_title} by {book_author}
+[hey|ok|please] <lead_read> {book_title} by {book_author} [please|for me|right now|thanks]
+<lead_read> the novel {book_title} by {book_author}
+[hey|ok|please] <lead_read> the novel {book_title} by {book_author} [please|for me|right now|thanks]
+<lead_read> the book {book_title} by {book_author}
+[hey|ok|please] <lead_read> the book {book_title} by {book_author} [please|for me|right now|thanks]
+<lead_read> the {book_genre} book {book_title}
+[hey|ok|please] <lead_read> the {book_genre} book {book_title} [please|for me|right now|thanks]
+<lead_read> a {book_genre} book by {book_author}
+[hey|ok|please] <lead_read> a {book_genre} book by {book_author} [please|for me|right now|thanks]
+<lead_read> a {book_genre} novel by {book_author}
+[hey|ok|please] <lead_read> a {book_genre} novel by {book_author} [please|for me|right now|thanks]
+<lead_read> the latest book by {book_author}
+[hey|ok|please] <lead_read> the latest book by {book_author} [please|for me|right now|thanks]
+<lead_read> another {book_genre} book
+[hey|ok|please] <lead_read> another {book_genre} book [please|for me|right now|thanks]
+<lead_read> a chapter of {book_title}
+[hey|ok|please] <lead_read> a chapter of {book_title} [please|for me|right now|thanks]
+<lead_read> the next chapter of {book_title}
+[hey|ok|please] <lead_read> the next chapter of {book_title} [please|for me|right now|thanks]
+<lead_read> more of {book_title}
+[hey|ok|please] <lead_read> more of {book_title} [please|for me|right now|thanks]
+<lead_read> a short story by {book_author}
+[hey|ok|please] <lead_read> a short story by {book_author} [please|for me|right now|thanks]
+<lead_read> the {book_genre} book {book_title} by {book_author}
+[hey|ok|please] <lead_read> the {book_genre} book {book_title} by {book_author} [please|for me|right now|thanks]
+<lead_read> the {book_genre} novel {book_title} by {book_author}
+[hey|ok|please] <lead_read> the {book_genre} novel {book_title} by {book_author} [please|for me|right now|thanks]
+<lead_read> do you have any {book_genre} books
+[hey|ok|please] <lead_read> do you have any {book_genre} books [please|for me|right now|thanks]
+<lead_read> got a good {book_genre} novel
+[hey|ok|please] <lead_read> got a good {book_genre} novel [please|for me|right now|thanks]
+<lead_read> a {book_genre} book to read at bedtime
+[hey|ok|please] <lead_read> a {book_genre} book to read at bedtime [please|for me|right now|thanks]
+<lead_read> do you have anything by {book_author}
+[hey|ok|please] <lead_read> do you have anything by {book_author} [please|for me|right now|thanks]
+<lead_read> got a {book_genre} book
+[hey|ok|please] <lead_read> got a {book_genre} book [please|for me|right now|thanks]
+<lead_read> a {book_genre} novel for the weekend
+[hey|ok|please] <lead_read> a {book_genre} novel for the weekend [please|for me|right now|thanks]
+<lead_read> something by {book_author} to relax
+[hey|ok|please] <lead_read> something by {book_author} to relax [please|for me|right now|thanks]
 <lead_read> the {movie_title} novel
 [hey|ok|please] <lead_read> the {movie_title} novel [please|for me|right now|thanks]
 <lead_read> the novel {movie_title}

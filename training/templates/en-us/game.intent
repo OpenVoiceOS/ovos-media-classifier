@@ -10,11 +10,57 @@
 [hey|ok|please] <lead_game> a round of {game_title} [please|for me|right now|thanks]
 <lead_game> a quick {game_genre} game
 [hey|ok|please] <lead_game> a quick {game_genre} game [please|for me|right now|thanks]
-<lead_game> the {game_genre} game {game_title}
-[hey|ok|please] <lead_game> the {game_genre} game {game_title} [please|for me|right now|thanks]
 <lead_game> some {game_genre}
 [hey|ok|please] <lead_game> some {game_genre} [please|for me|right now|thanks]
+<lead_game> another {game_genre} game
+[hey|ok|please] <lead_game> another {game_genre} game [please|for me|right now|thanks]
+<lead_game> a good {game_genre} game
+[hey|ok|please] <lead_game> a good {game_genre} game [please|for me|right now|thanks]
+<lead_game> a game like {game_title}
+[hey|ok|please] <lead_game> a game like {game_title} [please|for me|right now|thanks]
+<lead_game> the {game_genre} game {game_title}
+[hey|ok|please] <lead_game> the {game_genre} game {game_title} [please|for me|right now|thanks]
+<lead_game> a {game_genre} game on {game_platform}
+[hey|ok|please] <lead_game> a {game_genre} game on {game_platform} [please|for me|right now|thanks]
+<lead_game> {game_title} on {game_platform}
+[hey|ok|please] <lead_game> {game_title} on {game_platform} [please|for me|right now|thanks]
+<lead_game> {game_genre} on {game_platform}
+[hey|ok|please] <lead_game> {game_genre} on {game_platform} [please|for me|right now|thanks]
 <lead_game> a {game_genre} game from {release_year}
 [hey|ok|please] <lead_game> a {game_genre} game from {release_year} [please|for me|right now|thanks]
-<lead_game> a {release_decade} {game_genre} game
-[hey|ok|please] <lead_game> a {release_decade} {game_genre} game [please|for me|right now|thanks]
+<lead_game> {game_title} from the {release_decade}
+[hey|ok|please] <lead_game> {game_title} from the {release_decade} [please|for me|right now|thanks]
+<lead_game> a retro {game_genre} game
+[hey|ok|please] <lead_game> a retro {game_genre} game [please|for me|right now|thanks]
+<lead_game> an indie {game_genre} game
+[hey|ok|please] <lead_game> an indie {game_genre} game [please|for me|right now|thanks]
+<lead_game> a multiplayer {game_genre} game
+[hey|ok|please] <lead_game> a multiplayer {game_genre} game [please|for me|right now|thanks]
+<lead_game> another round of {game_title}
+[hey|ok|please] <lead_game> another round of {game_title} [please|for me|right now|thanks]
+<lead_game> a co-op {game_genre} game
+[hey|ok|please] <lead_game> a co-op {game_genre} game [please|for me|right now|thanks]
+<lead_game> the {game_genre} game {game_title} on {game_platform}
+[hey|ok|please] <lead_game> the {game_genre} game {game_title} on {game_platform} [please|for me|right now|thanks]
+<lead_game> a {game_genre} game on {game_platform} from {release_year}
+[hey|ok|please] <lead_game> a {game_genre} game on {game_platform} from {release_year} [please|for me|right now|thanks]
+<lead_game> do you have any {game_genre} games
+[hey|ok|please] <lead_game> do you have any {game_genre} games [please|for me|right now|thanks]
+<lead_game> got a good {game_genre} game
+[hey|ok|please] <lead_game> got a good {game_genre} game [please|for me|right now|thanks]
+<lead_game> a {game_genre} game to unwind with
+[hey|ok|please] <lead_game> a {game_genre} game to unwind with [please|for me|right now|thanks]
+<lead_game> a quick game before bed
+[hey|ok|please] <lead_game> a quick game before bed [please|for me|right now|thanks]
+<lead_game> do you have {game_title}
+[hey|ok|please] <lead_game> do you have {game_title} [please|for me|right now|thanks]
+<lead_game> got any {game_genre} games on {game_platform}
+[hey|ok|please] <lead_game> got any {game_genre} games on {game_platform} [please|for me|right now|thanks]
+<lead_game> a {game_genre} game for the evening
+[hey|ok|please] <lead_game> a {game_genre} game for the evening [please|for me|right now|thanks]
+<lead_game> something quick to play
+[hey|ok|please] <lead_game> something quick to play [please|for me|right now|thanks]
+<lead_game> a game from {release_year}
+[hey|ok|please] <lead_game> a game from {release_year} [please|for me|right now|thanks]
+<lead_game> a {game_genre} game from the {release_decade}
+[hey|ok|please] <lead_game> a {game_genre} game from the {release_decade} [please|for me|right now|thanks]

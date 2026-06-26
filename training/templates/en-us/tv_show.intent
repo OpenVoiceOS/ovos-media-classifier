@@ -1,7 +1,6 @@
 <lead_watch> {tv_show_title}
 [hey|ok|please] <lead_watch> {tv_show_title} [please|for me|right now|thanks]
 <lead_watch> the show {tv_show_title}
-[hey|ok|please] <lead_watch> the show {tv_show_title} [please|for me|right now|thanks]
 <lead_watch> the series {tv_show_title}
 [hey|ok|please] <lead_watch> the series {tv_show_title} [please|for me|right now|thanks]
 <lead_watch> an episode of {tv_show_title}
@@ -11,26 +10,51 @@
 <lead_watch> a {tv_genre} series
 [hey|ok|please] <lead_watch> a {tv_genre} series [please|for me|right now|thanks]
 <lead_watch> the new season of {tv_show_title}
-[hey|ok|please] <lead_watch> the new season of {tv_show_title} [please|for me|right now|thanks]
 <lead_watch> the latest episode of {tv_show_title}
 [hey|ok|please] <lead_watch> the latest episode of {tv_show_title} [please|for me|right now|thanks]
 <lead_watch> something like {tv_show_title}
 [hey|ok|please] <lead_watch> something like {tv_show_title} [please|for me|right now|thanks]
-<lead_watch> {tv_show_title} starring {movie_actor}
-[hey|ok|please] <lead_watch> {tv_show_title} starring {movie_actor} [please|for me|right now|thanks]
+<lead_watch> a good {tv_genre} show
+[hey|ok|please] <lead_watch> a good {tv_genre} show [please|for me|right now|thanks]
 <lead_watch> a series starring {movie_actor}
 [hey|ok|please] <lead_watch> a series starring {movie_actor} [please|for me|right now|thanks]
+<lead_watch> a show on {tv_network}
+[hey|ok|please] <lead_watch> a show on {tv_network} [please|for me|right now|thanks]
+<lead_watch> {tv_show_title} starring {movie_actor}
 <lead_watch> {tv_show_title} on {tv_network}
 [hey|ok|please] <lead_watch> {tv_show_title} on {tv_network} [please|for me|right now|thanks]
 <lead_watch> a {tv_genre} show on {tv_network}
 [hey|ok|please] <lead_watch> a {tv_genre} show on {tv_network} [please|for me|right now|thanks]
 <lead_watch> the {tv_network} series {tv_show_title}
 [hey|ok|please] <lead_watch> the {tv_network} series {tv_show_title} [please|for me|right now|thanks]
+<lead_watch> a {tv_genre} series starring {movie_actor}
+[hey|ok|please] <lead_watch> a {tv_genre} series starring {movie_actor} [please|for me|right now|thanks]
 <lead_watch> a {tv_genre} show from {release_year}
-[hey|ok|please] <lead_watch> a {tv_genre} show from {release_year} [please|for me|right now|thanks]
-<lead_watch> a {release_decade} {tv_genre} series
-[hey|ok|please] <lead_watch> a {release_decade} {tv_genre} series [please|for me|right now|thanks]
+<lead_watch> a {tv_genre} series from {media_country}
+[hey|ok|please] <lead_watch> a {tv_genre} series from {media_country} [please|for me|right now|thanks]
+<lead_watch> a {tv_genre} show on {tv_network} starring {movie_actor}
+[hey|ok|please] <lead_watch> a {tv_genre} show on {tv_network} starring {movie_actor} [please|for me|right now|thanks]
+<lead_watch> {tv_show_title} on {tv_network} starring {movie_actor}
+[hey|ok|please] <lead_watch> {tv_show_title} on {tv_network} starring {movie_actor} [please|for me|right now|thanks]
+<lead_watch> a {tv_genre} series from {release_year} on {tv_network}
+[hey|ok|please] <lead_watch> a {tv_genre} series from {release_year} on {tv_network} [please|for me|right now|thanks]
+<lead_watch> a {tv_genre} series on {tv_network} starring {movie_actor} from {release_year}
+[hey|ok|please] <lead_watch> a {tv_genre} series on {tv_network} starring {movie_actor} from {release_year} [please|for me|right now|thanks]
+<lead_watch> {tv_show_title} on {tv_network} starring {movie_actor}, a {tv_genre} show
+<lead_watch> {tv_show_title}, a {tv_genre} series on {tv_network} starring {movie_actor} from {release_year}
+[hey|ok|please] <lead_watch> {tv_show_title}, a {tv_genre} series on {tv_network} starring {movie_actor} from {release_year} [please|for me|right now|thanks]
+<lead_watch> do you have any {tv_genre} shows
+[hey|ok|please] <lead_watch> do you have any {tv_genre} shows [please|for me|right now|thanks]
+<lead_watch> got a good {tv_genre} series
+[hey|ok|please] <lead_watch> got a good {tv_genre} series [please|for me|right now|thanks]
+<lead_watch> something {tv_genre} to binge
+[hey|ok|please] <lead_watch> something {tv_genre} to binge [please|for me|right now|thanks]
+<lead_watch> a {tv_genre} show to fall asleep to
+<lead_watch> a show from the {release_decade}
+[hey|ok|please] <lead_watch> a show from the {release_decade} [please|for me|right now|thanks]
 <lead_watch> the {tv_network} show {tv_show_title}
 [hey|ok|please] <lead_watch> the {tv_network} show {tv_show_title} [please|for me|right now|thanks]
 <lead_watch> a {media_country} series
 [hey|ok|please] <lead_watch> a {media_country} series [please|for me|right now|thanks]
+<lead_watch> a {tv_genre} series from the {release_decade}
+[hey|ok|please] <lead_watch> a {tv_genre} series from the {release_decade} [please|for me|right now|thanks]

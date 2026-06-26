@@ -5,20 +5,66 @@
 <lead_play_audio> songs by {artist_name}
 <lead_play_audio> the best of {artist_name}
 <lead_play_audio> anything by {artist_name}
+<lead_play_audio> more {artist_name}
+<lead_play_audio> {artist_name} radio
+<lead_play_audio> the {artist_name} station
+<lead_play_audio> the latest from {artist_name}
+<lead_play_audio> {artist_name}'s newest
+<lead_play_audio> {artist_name}'s greatest hits
+<lead_play_audio> a song by {artist_name}
 <lead_play_audio> {track_name}
 <lead_play_audio> the song {track_name}
-<lead_play_audio> {track_name} by {artist_name}
-<lead_play_audio> the album {album_name}
+<lead_play_audio> the track {track_name}
+<lead_play_audio> that song {track_name}
 <lead_play_audio> {album_name}
-<lead_play_audio> {album_name} by {artist_name}
+<lead_play_audio> the album {album_name}
+<lead_play_audio> songs from {album_name}
+<lead_play_audio> the record {album_name}
 <lead_play_audio> some {music_genre}
 <lead_play_audio> some {music_genre} music
 <lead_play_audio> a {music_genre} playlist
 <lead_play_audio> a {music_genre} mix
+<lead_play_audio> a {music_genre} song
+<lead_play_audio> the {music_genre} station
 <lead_play_audio> {record_label} artists
+<lead_play_audio> music on {record_label}
+<lead_play_audio> {track_name} by {artist_name}
+<lead_play_audio> {artist_name}'s {track_name}
+<lead_play_audio> the song {track_name} by {artist_name}
+<lead_play_audio> {album_name} by {artist_name}
+<lead_play_audio> {artist_name}'s {album_name}
+<lead_play_audio> the album {album_name} by {artist_name}
+<lead_play_audio> songs from {album_name} by {artist_name}
 <lead_play_audio> a song featuring {artist_name}
 <lead_play_audio> {track_name} featuring {artist_name}
-<lead_play_audio> music on {record_label}
-<lead_play_audio> {album_name} on {record_label}
-<lead_play_audio> the latest from {artist_name}
+<lead_play_audio> some {music_genre} by {artist_name}
+<lead_play_audio> {artist_name}'s {music_genre}
 <lead_play_audio> a {music_genre} song by {artist_name}
+<lead_play_audio> {music_genre} from {artist_name}
+<lead_play_audio> {album_name} on {record_label}
+<lead_play_audio> {artist_name} on {record_label}
+<lead_play_audio> the {music_genre} one called {track_name}
+<lead_play_audio> some {music_genre} from {album_name}
+<lead_play_audio> {music_genre} from the {release_decade}
+<lead_play_audio> some {artist_name} from the {release_decade}
+<lead_play_audio> {track_name} by {artist_name} from {album_name}
+<lead_play_audio> {artist_name}'s {music_genre} song {track_name}
+<lead_play_audio> {track_name} off {album_name} by {artist_name}
+<lead_play_audio> the {music_genre} track {track_name} by {artist_name}
+<lead_play_audio> {album_name} by {artist_name} on {record_label}
+<lead_play_audio> some {music_genre} by {artist_name} from {album_name}
+<lead_play_audio> {artist_name}'s {music_genre} from the {release_decade}
+<lead_play_audio> the {music_genre} song {track_name} from the {release_decade}
+<lead_play_audio> the {music_genre} track {track_name} by {artist_name} off {album_name}
+<lead_play_audio> {track_name} by {artist_name} from {album_name} on {record_label}
+<lead_play_audio> some {music_genre} by {artist_name} from {album_name} on {record_label}
+<lead_play_audio> the {music_genre} song {track_name} by {artist_name} from the {release_decade}
+<lead_play_audio> {track_name} by {artist_name} from {album_name}, a {music_genre} record from the {release_decade}
+<lead_play_audio> the {music_genre} track {track_name} by {artist_name} off {album_name} on {record_label}
+<lead_play_audio> do you have any {artist_name}
+<lead_play_audio> got any {music_genre}
+<lead_play_audio> do you have any {music_genre} by {artist_name}
+<lead_play_audio> something {music_genre} for my workout
+<lead_play_audio> some {music_genre} to help me focus
+<lead_play_audio> a {music_genre} mix while i cook
+<lead_play_audio> something by {artist_name} to relax to
