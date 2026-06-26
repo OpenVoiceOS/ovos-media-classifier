@@ -60,11 +60,25 @@ def _clean(v) -> str:
 
 
 def _maybe_list(v) -> List[str]:
-    """Coerce a field that may be a python/json list-string or a scalar."""
+    """Coerce a field that may be a python/json list-string or a scalar.
+
+    Tolerates ``numpy.ndarray`` (HF parquet often loads multi-valued columns —
+    e.g. IMDb ``genres`` — as ``ndarray`` of ``object``), python/json
+    list-strings, and ``sep``-joined scalars.
+    """
     if v is None:
         return []
+    try:
+        import numpy as np
+        if isinstance(v, np.ndarray):
+            v = v.tolist()
+    except ImportError:
+        pass
     if isinstance(v, (list, tuple)):
         return [_clean(x) for x in v if _clean(x)]
+    # a scalar NaN (float) is not a list
+    if isinstance(v, float):
+        return []
     s = str(v).strip()
     if not s or s.lower() in ("nan", "none", "null"):
         return []

@@ -64,14 +64,17 @@ from ovos_media_classifier.constants import (
     DEFAULT_DOMAIN_THRESHOLD,
     DEFAULT_PLAY_THRESHOLD,
 )
-from ovos_media_classifier.features import _KEYWORD_VOCABS
+from ovos_media_classifier.features import _KEYWORD_VOCABS, VALUE_FEATURE_COLS
 from ovos_media_classifier.intents import OCPDomain
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 REPO_ROOT = os.path.dirname(_HERE)
 
 # Keyword (context) feature columns — the order the runtime extractor uses.
-KEYWORD_COLS: List[str] = [col for _voc, col in _KEYWORD_VOCABS]
+# Plain .voc presence flags + the per-value genre/mood/era flags so the
+# content_genre / mood / era heads can learn *which* value was named.
+KEYWORD_COLS: List[str] = ([col for _voc, col in _KEYWORD_VOCABS]
+                           + list(VALUE_FEATURE_COLS))
 
 FEATURE_SETS = ("context", "context_ner")
 

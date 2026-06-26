@@ -56,7 +56,11 @@ from ovos_media_classifier.intents import (
     LABEL_TO_GENRES,
     OCPEntityLabel,
 )
-from ovos_media_classifier.features import _KEYWORD_VOCABS, CategoricalFeatureExtractor
+from ovos_media_classifier.features import (
+    _KEYWORD_VOCABS,
+    VALUE_FEATURE_COLS,
+    CategoricalFeatureExtractor,
+)
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 TEMPLATES_DIR = os.path.join(_HERE, "templates")
@@ -323,7 +327,9 @@ def build_rows_for_lang(
 # Rich feature columns
 # ---------------------------------------------------------------------------
 
-_KEYWORD_COLS = [col for _voc, col in _KEYWORD_VOCABS]
+# keyword feature columns = plain .voc presence flags + the per-value genre /
+# mood / era flags (kw_genre_* / kw_mood_* / kw_era_*) the extractor now emits.
+_KEYWORD_COLS = [col for _voc, col in _KEYWORD_VOCABS] + list(VALUE_FEATURE_COLS)
 _NER_COLS = [f"ner_{label}" for label in ENTITY_LABELS]
 
 

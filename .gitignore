@@ -25,3 +25,16 @@ data/
 
 # generated template output
 /templates/
+
+# stray agent scratch at repo root
+/anime_*.json
+/asmr_*.json
+/audiobook_*.json
+/*_commands.json
+/*_utterances.json
+/*_questions.json
+/*_training_data.json
+/de_de_*.json
+/fr_*.json
+.kilo/
+.tmp/
