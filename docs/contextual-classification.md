@@ -6,7 +6,40 @@ series. The most reliable disambiguator is not a linguistic cue — it is **what
 media you actually have**. This classifier makes that signal first-class:
 prediction is **influenced and biased by the media available to you**.
 
-The mechanism is **keyword feature slots**.
+Two kinds of context shape a prediction: the **entities the user actually has**
+(their library) and the **player's now-playing state**. Both are passed per query
+to `classify_full`, and both are optional.
+
+## Per-query context — `classify_full(query, lang, player_status, ner_list)`
+
+The minimal call is `classify_full(query, lang)`. Two optional arguments add
+context, threaded per query so a caller passes the live state with no retraining:
+
+- **`ner_list`** — `{ner_label: [entity, …]}` of the user's real entities
+  (skill-registered keywords + library). It is the entity context the NER backend
+  matches and the embedding router injects at runtime. A backend with no entity
+  stream (the keyword default) ignores it; the entity-matching backends route on
+  it. The same data, held in an [`EntitiesContainer`](entity-lists.md), is also
+  what fills the keyword feature slots below.
+- **`player_status`** — a `PlayerStatus` (`now_playing` `MediaType` + transport
+  `state`). When a session is active it enables relative follow-ups — *"next"* /
+  *"pause"* route to `OCP_CONTROL` with no media keyword, and *"play something
+  else"* re-queries biased to the current type — plus a light type bias on
+  ambiguous follow-ups. The bias is conservative: it never overrides a confident
+  explicit route, and a missing/malformed status degrades to the context-free path.
+
+```python
+from ovos_media_classifier.context import PlayerStatus, PlayerState
+from mediavocab import MediaType
+
+status = PlayerStatus(now_playing=MediaType.MUSIC, state=PlayerState.PLAYING)
+clf.classify_full("play something else", "en-us",
+                  player_status=status,
+                  ner_list={"artist_name": ["Radiohead", "Björk"]})
+```
+
+The rest of this page is the entity side of that context — how the user's library
+fills the feature slots a backend reads.
 
 ## Keyword feature slots
 

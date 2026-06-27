@@ -235,7 +235,7 @@ the keyword/NER model can learn the override.
 
 Every non-sentinel `mediavocab.MediaType` is exercised by at least one intent, so
 the dataset covers the whole taxonomy — including the read-vs-play distinctions
-(`book` vs `audiobook`, `comic`/manga vs `anime`) and the previously unreachable
+(`book` vs `audiobook`, `comic`/manga vs `anime`) and the rarer leaves
 `playlist`, `sound_effect`, `interactive_fiction`, and non-asmr `ambient`
 (`PROCEDURAL_AMBIENT`). See [taxonomy.md](taxonomy.md).
 

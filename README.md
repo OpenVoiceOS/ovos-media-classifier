@@ -9,6 +9,15 @@ chapter of Dune"* — it answers, fast and offline, **what kind of media is want
 so the **OVOS Common Play (OCP)** pipeline can route it to the right provider and
 player.
 
+It is a **router, not a resolver.** It gates (*is this a media request at all?*),
+routes by `media_type` / `playback_type` (which `MediaProvider`s to call, which to
+skip), applies content policy (`adult` → drop adult providers), and hands the
+providers a [`mediavocab.Signals`](https://github.com/TigreGotico/mediavocab) as
+**search context**. It does **not** resolve a title to a stream — the providers
+do that — so `Signals.title` carries the raw query by design. The honest measure
+of a router is whether it routes real speech correctly: see the
+[routing eval](docs/routing-eval.md).
+
 It is the single home for OCP's media-command NLP. It is **multi-task** — every
 request is classified along several orthogonal [axes](docs/classification-model.md)
 at once rather than into one label:
@@ -59,6 +68,13 @@ clf.to_signals("play some music", "en-us")        # -> mediavocab.Signals (hand 
 `genres`; the multi-label `tags` / `qualifiers` axes are read with their own
 `classify_tags()` / `classify_qualifiers()` methods. On the zero-dep keyword
 default `tags` is empty — it is the trained ONNX backend that fills it.)
+
+`classify_full` is **context-aware**: the minimal call is `classify_full(query,
+lang)`, and two optional arguments thread per-query context with no retraining —
+`player_status` (now-playing state, for control / *"play something else"*
+follow-ups) and `ner_list` (the user's live entities, for NER matching and the
+embedding router's runtime injection). See
+[contextual classification](docs/contextual-classification.md).
 
 ## Benchmark
 
@@ -115,15 +131,34 @@ failure falls back to the keyword default.
 
 | Backend | What it is | Install |
 |---|---|---|
-| **keyword** (`.voc`) | zero-dependency phrase matching — the offline default | core |
+| **keyword** (`.voc`) | zero-dependency phrase matching — high-precision, abstains when unsure; the offline default | core |
 | **NER** | Aho-Corasick exact match over the user's [entity lists](docs/entity-lists.md) (their real library) | `[ner]` |
+| **embedding-router** (hybrid) | learned [open-vocab router](docs/embedding-router.md): keyword stays the floor, the router fills keyword's abstains using a gazetteer + the user's injected library | `[onnx]` |
 | **ONNX** | the trained multi-task per-axis heads, loaded from a self-describing bundle | `[onnx]` |
 | **external** | any classifier registered under `opm.media.classifier` | a plugin |
 
 ```bash
 pip install ovos-media-classifier[ner]     # entity-list matching (the user's library)
-pip install ovos-media-classifier[onnx]    # trained ONNX backend
+pip install ovos-media-classifier[onnx]    # trained ONNX + embedding-router backends
 ```
+
+**The keyword backend is the floor; a learned backend has to earn its place.** The
+zero-dep keyword classifier is deliberately high-precision and *abstains* to
+GENERIC when it has no cue — a safe outcome, because an abstain still lets every
+provider search. The [embedding-router hybrid](docs/embedding-router.md) keeps
+keyword as the first pass and only fills those abstains, resolving open-vocabulary
+titles by injecting the **user's own library** as entities at runtime (no
+retraining). That entity injection is what lowers mis-route *below* the keyword
+floor — see the [routing eval](docs/routing-eval.md).
+
+> **Live routing uses a bounded entity set.** Entity / gazetteer matching cost
+> scales with the number of injected titles, so **live** classification runs on a
+> bounded set — the user's library plus a capped popular [gazetteer](docs/metadatarr-routing.md)
+> (default ~1000 titles/type, p95 a few ms). A **1M-entity set (e.g. full
+> MusicBrainz) is for OFFLINE tagging only, never live classification.** The
+> optional online `metadatarr.resolve` layer (~seconds per title) is for offline
+> tagging or a long-running agent — **off by default**, never in the live OCP
+> pipeline.
 
 See [docs/backends.md](docs/backends.md). To write your own backend or train your
 own bundle (including adding a brand-new axis end-to-end), see
@@ -160,12 +195,12 @@ the [glossary](docs/glossary.md) first if the terms are new.
 
 - New here → [glossary](docs/glossary.md) · [index](docs/index.md) · [examples/](examples/)
 - API reference → [stable API](docs/stable-api.md)
-- The model → [classification model](docs/classification-model.md) · [the trained model](docs/model.md) · [taxonomy](docs/taxonomy.md)
+- The model → [classification model](docs/classification-model.md) · [the trained model](docs/model.md) · [taxonomy](docs/taxonomy.md) · [hierarchical experiment](docs/hierarchical.md)
 - The data → [dataset](docs/dataset.md) · [data sources](docs/data-sources.md) · [dataset plots](docs/plots/dataset/)
-- Tuning backends → [backends](docs/backends.md) · [entity lists](docs/entity-lists.md) · [contextual classification](docs/contextual-classification.md)
+- Tuning backends → [backends](docs/backends.md) · [embedding-router](docs/embedding-router.md) · [entity lists](docs/entity-lists.md) · [contextual classification](docs/contextual-classification.md) · [open-vocab routing](docs/metadatarr-routing.md)
 - Moderation → [content filtering](docs/content-filtering.md)
 - Writing / training a classifier → [extending](docs/extending.md) · [external plugins](docs/external-plugins.md)
-- Measuring → [benchmarks](benchmarks/README.md)
+- Measuring → [routing eval](docs/routing-eval.md) (the source of truth) · [benchmarks](benchmarks/README.md)
 
 ## Credits
 

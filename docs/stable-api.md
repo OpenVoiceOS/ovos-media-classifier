@@ -114,7 +114,7 @@ clf.classify_content_form("watch the Dune trailer", "en-us")  # <ContentForm.TRA
 clf.classify_programme_format("a documentary about whales", "en-us")  # <ProgrammeFormat.DOCUMENTARY: 'documentary'>
 ```
 
-### `classify_full(query, lang) -> MediaClassification`
+### `classify_full(query, lang, player_status=None, ner_list=None) -> MediaClassification`
 
 Returns **all axes at once** in a `MediaClassification` dataclass: `media_type`,
 `playback_type`, `structure`, `domain`, `genres`, `confidence`. Default: runs
@@ -122,11 +122,31 @@ Returns **all axes at once** in a `MediaClassification` dataclass: `media_type`,
 from the leaf. A backend with dedicated heads SHOULD override this to predict the
 axes directly and soft-gate the leaf.
 
+The two minimal inputs are `query` and `lang`. Both context arguments are
+**optional** (default `None` = context-free behaviour):
+
+- `player_status` — a `PlayerStatus` (now-playing `media_type` + play/pause/stop).
+  Enables relative / control follow-ups (*"next"* / *"pause"* → `OCP_CONTROL`
+  even with no media keyword; *"play something else"* → a re-query biased to the
+  current type) and a light type bias on ambiguous follow-ups — applied
+  conservatively, never overriding a confident explicit route.
+- `ner_list` — `{ner_label: [entity, …]}` of the entities the user actually has
+  (skill-registered keywords + library). The entity context for NER matching and
+  the embedding router's runtime injection, threaded per query so a caller passes
+  the live list with no retraining.
+
 ```python
 clf.classify_full("play the breaking bad tv series", "en-us").as_dict()
 # {'media_type': 'episodic_series', 'playback_type': 'video', 'structure': 'episodic',
 #  'domain': 'ocp_play', 'genres': [], 'confidence': 0.6, 'control_intent': None}
+
+# context-aware: now-playing status + the user's live entity lists
+clf.classify_full("play something else", "en-us",
+                  player_status=status, ner_list={"artist_name": ["Radiohead"]})
 ```
+
+See [contextual-classification.md](contextual-classification.md) for how
+`player_status` and `ner_list` shape the result.
 
 ## The `AbstractMediaClassifier` contract
 

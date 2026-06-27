@@ -144,17 +144,29 @@ The structured keys (`csv`, `wordlists`, `huggingface`, and the per-server
 `radarr`/`sonarr`/`lidarr`/`jellyfin`/`music_assistant` keys) are also accepted and
 merged in addition to `entity_lists`.
 
-## Performance / memory tradeoff
+## Performance / memory tradeoff — live routing uses a bounded set
 
-Entity lists are a **deliberate, bounded choice**. The Aho-Corasick automaton
-holds every entity string in memory, and every entity added widens the matcher:
+Entity lists are a **deliberate, bounded choice**. The matcher holds every entity
+string in memory, and every entity added widens it:
 
 - **the more entities loaded, the slower** the per-utterance tagging;
 - **the more entities loaded, the larger** the memory footprint.
 
-So load the user's *actual* library (typically a few thousand titles) — not an
-open-ended public catalogue. A bloated entity vocabulary dilutes the signal
-rather than sharpening it. Prefer a handful of focused lists over one giant dump.
+The per-query cost grows with the entity count, so this draws a hard line between
+two uses:
+
+- **Live OCP routing → a small bounded set.** Load the user's *actual* library
+  (typically a few thousand titles), optionally with a capped popular
+  [gazetteer](metadatarr-routing.md) (default ~1000/type). The knee is around
+  ~1 ms; a bloated vocabulary both slows the path and dilutes the signal.
+- **Offline tagging → large sets are fine.** A 1M-entity set (e.g. the full
+  MusicBrainz artist list) is productive for *offline* entity tagging — annotating
+  text to build datasets — but is **not for live classification**, where its
+  per-query cost is far above any interactive budget.
+
+So prefer a handful of focused lists over one giant dump for live routing; reserve
+the giant sets for offline work. The full latency curve and the per-type cap are
+in [metadatarr-routing.md](metadatarr-routing.md#live-size-must-be-bounded-latency).
 
 ## API
 

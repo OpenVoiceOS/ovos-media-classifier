@@ -117,7 +117,8 @@ carries it, else fall back to the inherited derive/empty default**. A head whose
 column was degenerate on the training data is simply skipped at train time
 (`train_single_head` returns `skipped`), its `.onnx` file is absent, and
 `from_path` derives that axis instead. This is what lets **partial bundles** —
-and old two-head `domain`/`play` bundles — load and run unchanged.
+a bundle that ships only some of the heads — load and run unchanged, deriving the
+rest.
 
 ---
 
@@ -165,14 +166,15 @@ out-of-band knowledge of what it trained on:
   ├── accessibility.onnx       # MULTI-LABEL subtitles/audio_description/sign_language
   ├── variant.onnx             # SINGLE  directors/extended/remastered/colorized/…
   ├── explicitness.onnx        # clean / adult  (when trained)
-  ├── play.onnx                # back-compat alias of the media_type head
+  ├── play.onnx                # alias of the media_type head (for leaf-only loaders)
   └── meta.json
 ```
 
 `meta.json` carries the ordered `feature_names`, the `input_name`, and a `heads`
 manifest — one entry per axis naming its `.onnx` file, `kind` (`single`/`multi`),
-index→label map, and (for multi-label heads) the `threshold`. It also keeps the
-legacy `domain_labels` / `play_labels` keys so a pre-multihead loader still works.
+index→label map, and (for multi-label heads) the `threshold`. It also carries
+flat `domain_labels` / `play_labels` keys, so a loader that reads only the
+`domain` and leaf heads can consume the bundle without parsing the full manifest.
 
 [`OnnxMediaClassifier.from_path`](../ovos_media_classifier/onnx.py) loads whatever
 heads exist: it iterates `meta["heads"]`, opens an `InferenceSession` per present
@@ -293,7 +295,7 @@ context bundle is the realistic no-NER floor a fresh install sees.
 
 ### 5a. The ASR-noise realism layer — does it help?
 
-The rebuilt dataset adds a **spoken/ASR-style augmentation**
+The dataset includes a **spoken/ASR-style augmentation**
 ([`training/build_dataset.py`](../training/build_dataset.py) `--asr-noise-fraction`):
 a configurable fraction of rows is *also* emitted as a lowercased,
 punctuation-stripped, run-on variant with casual elisions (`wanna` / `gimme` /
@@ -301,7 +303,7 @@ punctuation-stripped, run-on variant with casual elisions (`wanna` / `gimme` /
 (`um` / `uh` / `like`), and a light function-word mishear — the clean rows are
 kept. At the shipped fraction (`0.20`, ≈ 11 % of the balanced set) the layer adds
 ≈ 37 k spoken variants. A dedicated **`conversational` slice** (36 messy-spoken
-cases) was added to the routing eval to measure the effect
+cases) in the routing eval measures the effect
 ([docs/routing-eval.md](routing-eval.md)).
 
 **Honest finding: ASR-noise is a near-no-op for the categorical-feature backends
@@ -338,8 +340,8 @@ text the features drop: the real genre is *in* the genre slot value, not in a cu
 word. This is the direct motivation for the **semantic** rung (§3): embedding the
 surface string is the only way to read which genre was named. The head is shipped
 so the rung is ready to train, not because the current features predict it well.
-(`mood` / `era` are no longer modelled axes — dropped in the mediavocab-axes
-alignment; a release year feeds `Signals.year` directly.)
+(`mood` / `era` are not modelled axes; a release year feeds `Signals.year`
+directly.)
 
 **(c) Synthetic / degenerate label regions.** The `domain` head's negative class
 is **synthetic** — the all-zero feature vector (no keyword or NER evidence)
@@ -431,8 +433,8 @@ the imbalanced axes, early-stop on mean val macro-F1, fixed seed. Each head expo
 as its **own** ONNX graph into the *existing* bundle format, so
 [`OnnxMediaClassifier`](../ovos_media_classifier/onnx.py) loads it unchanged — the
 only addition is reading the featurizer spec from `meta.json` to build the
-`txt_*` / `wv_*` blocks at runtime (categorical-only sklearn bundles are
-untouched, back-compat). torch→onnxruntime round-trip parity is verified at export
+`txt_*` / `wv_*` blocks at runtime (a categorical-only sklearn bundle simply has
+no such spec and loads as-is). torch→onnxruntime round-trip parity is verified at export
 (max |Δ| ≈ 1e-7 on the softmax outputs).
 
 ### 7.3 The comparison (held-out test split, 34 700 utterances)
