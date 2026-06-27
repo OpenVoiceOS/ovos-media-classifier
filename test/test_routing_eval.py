@@ -208,6 +208,48 @@ class TestHarmMetrics(unittest.TestCase):
         self.assertEqual(rep.control_recall, 1.0)
 
 
+class TestResolvedRate(unittest.TestCase):
+    """resolved_rate credits an abstain_ok case turned into a CORRECT route."""
+
+    def test_abstain_on_abstain_ok_not_resolved(self):
+        # abstain_ok case, backend abstains -> safe (no mis-route) but NOT resolved
+        clf = _StubClassifier("ocp_play", "generic")
+        rep = RE.evaluate(clf, [_case(media_type="music", abstain_ok=True)], "stub")
+        self.assertEqual(rep.resolved_total, 1)
+        self.assertEqual(rep.resolved_n, 0)
+        self.assertEqual(rep.resolved_rate, 0.0)
+        self.assertEqual(rep.mis_route_rate, 0.0)  # abstain is still safe
+
+    def test_correct_on_abstain_ok_is_resolved(self):
+        # abstain_ok case, backend routes correctly -> resolved (the open-vocab win)
+        clf = _StubClassifier("ocp_play", "music")
+        rep = RE.evaluate(clf, [_case(media_type="music", abstain_ok=True)], "stub")
+        self.assertEqual(rep.resolved_total, 1)
+        self.assertEqual(rep.resolved_n, 1)
+        self.assertEqual(rep.resolved_rate, 1.0)
+
+    def test_wrong_on_abstain_ok_not_resolved(self):
+        clf = _StubClassifier("ocp_play", "movie")
+        rep = RE.evaluate(clf, [_case(media_type="music", abstain_ok=True)], "stub")
+        self.assertEqual(rep.resolved_n, 0)
+        self.assertEqual(rep.resolved_rate, 0.0)
+        self.assertEqual(rep.mis_route_rate, 1.0)  # wrong is still a mis-route
+
+    def test_non_abstain_ok_not_counted_in_resolved(self):
+        # a non-abstain_ok play case is excluded from the resolved denominator
+        clf = _StubClassifier("ocp_play", "music")
+        rep = RE.evaluate(clf, [_case(media_type="music", abstain_ok=False)], "stub")
+        self.assertEqual(rep.resolved_total, 0)
+        self.assertEqual(rep.resolved_rate, 0.0)
+
+    def test_resolved_in_as_dict(self):
+        clf = _StubClassifier("ocp_play", "music")
+        rep = RE.evaluate(clf, [_case(media_type="music", abstain_ok=True)], "stub")
+        d = rep.as_dict()
+        self.assertIn("resolved", d)
+        self.assertEqual(d["resolved"]["rate"], 1.0)
+
+
 class TestKeywordBaselineRuns(unittest.TestCase):
     """The keyword backend is always available and must produce a full report."""
 

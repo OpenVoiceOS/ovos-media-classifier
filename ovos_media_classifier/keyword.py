@@ -536,7 +536,8 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
         media_type, _ = self.classify(query, lang)
         return infer_structure(media_type)
 
-    def classify_full(self, query: str, lang: str) -> MediaClassification:
+    def classify_full(self, query: str, lang: str,
+                      player_status=None, ner_list=None) -> MediaClassification:
         """Full multi-axis result, predicting each axis top-down.
 
         Unlike the base implementation (which derives the coarse axes from the
@@ -546,7 +547,18 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
         When the query is a **transport-control** request (``OCP_CONTROL``) the
         media axes are left UNKNOWN/GENERIC (a pure control has no media leaf)
         and ``control_intent`` carries the action.
+
+        *player_status* / *ner_list* are the standalone context inputs (see
+        :meth:`AbstractMediaClassifier.classify_full`).  The keyword backend has
+        no entity stream so *ner_list* is inert here; *player_status* is layered
+        on conservatively by the shared base helper after the context-free axes
+        are predicted.
         """
+        result = self._classify_full_nocontext(query, lang)
+        return self._apply_player_status(self, query, lang, result, player_status)
+
+    def _classify_full_nocontext(self, query: str, lang: str) -> MediaClassification:
+        """The context-free multi-axis result (see :meth:`classify_full`)."""
         modality, _ = self._predict_modality(query, lang)
         structure = self._predict_structure(query, lang, modality)
         media_type, leaf_genres, conf = self._classify_leaf(query, lang, None)

@@ -70,6 +70,9 @@ from ovos_media_classifier.intents import (
 _ROUTER_META = "router_meta.json"
 # axis value that means "no confident route" — the safe outcome.
 GENERIC = "GENERIC"
+# synthetic entity label for cross-media-ambiguous gazetteer titles: they fire
+# the matcher (longest-match) but map to abstain, never to a confident MediaType.
+AMBIGUOUS_LABEL = "__ambiguous__"
 # media-type sentinels (mediavocab values) that mean abstain on the routing eval.
 _ABSTAIN_MEDIA = {"generic", "not_media", "control"}
 
@@ -93,28 +96,41 @@ class _NumpyEntityMatcher:
     were present at export (``entity_labels``) ever fire a column — unknown
     labels are accepted but ignored, matching ``RuntimeEntityInjector``.
 
-    Two precision tiers are tracked per label:
+    Three precision tiers are tracked per label:
 
     * **user** — the user's own injected library; high precision, allowed to
       override even a confident keyword route in the hybrid.
     * **gazetteer** — the Layer A default offline gazetteer of common real
-      titles; lower precision (a famous title can be ambiguous across types, e.g.
-      "Watchmen" film vs comic), so the hybrid consults it ONLY to fill an
-      abstention, never to override a confident keyword leaf.
+      titles, restricted to titles that are UNAMBIGUOUS across media types; lower
+      precision, so the hybrid consults it ONLY to fill an abstention, never to
+      override a confident keyword leaf.
+    * **ambiguous** — cross-media-ambiguous gazetteer titles (a title present in
+      more than one type pool, e.g. "Dune" film/tv/book, "Moby Dick" book/tv).
+      These are registered so the matcher still SEES them (longest-match
+      semantics: "moby dick" beats the artist "moby"), but they deterministically
+      map to **abstain** (GENERIC) — the gazetteer cannot disambiguate them, so a
+      wrong confident leaf is never emitted.  Registered under the synthetic
+      :data:`AMBIGUOUS_LABEL` so it has no MediaType.
 
-    ``one_hot`` (the model's entity stream) fires on both tiers; only the
-    hybrid's *override* decision distinguishes them via ``fired_labels(...,
-    tier=...)``.
+    ``one_hot`` (the model's entity stream) fires on the user + gazetteer tiers
+    (real entity slots only); the ambiguous tier never fires a model slot — it
+    exists purely to win the longest-match and force an abstain.  The hybrid's
+    *override* decision distinguishes tiers via ``fired_labels(..., tier=...)``.
     """
 
-    _TIERS = ("user", "gazetteer")
+    _TIERS = ("user", "gazetteer", "ambiguous")
+    #: tiers whose matches feed the model's one-hot entity stream (real labels)
+    _MODEL_TIERS = ("user", "gazetteer")
 
     def __init__(self, entity_labels: List[str]) -> None:
         self._labels = list(entity_labels)
         self._index = {lbl: i for i, lbl in enumerate(self._labels)}
-        # tier -> label -> phrases, and tier -> label -> compiled regex
+        # tier -> label -> phrases, and tier -> label -> compiled regex.
+        # The ambiguous tier keeps its phrases under the synthetic AMBIGUOUS_LABEL
+        # (no model slot), so it can carry titles not in ``entity_labels``.
         self._phrases: Dict[str, Dict[str, List[str]]] = {
             t: {lbl: [] for lbl in self._labels} for t in self._TIERS}
+        self._phrases["ambiguous"] = {AMBIGUOUS_LABEL: []}
         self._rx: Dict[str, Dict[str, "re.Pattern"]] = {
             t: {} for t in self._TIERS}
 
@@ -124,8 +140,16 @@ class _NumpyEntityMatcher:
 
     def register(self, name: str, samples: List[str],
                  tier: str = "user") -> None:
-        """Add entity phrases for a label in *tier* (no-op for unknown labels)."""
-        if name not in self._index or not samples or tier not in self._TIERS:
+        """Add entity phrases for a label in *tier* (no-op for unknown labels).
+
+        The ``ambiguous`` tier stores phrases under :data:`AMBIGUOUS_LABEL`
+        regardless of *name*; every other tier requires a known entity label.
+        """
+        if not samples or tier not in self._TIERS:
+            return
+        if tier == "ambiguous":
+            name = AMBIGUOUS_LABEL
+        elif name not in self._index:
             return
         existing = set(self._phrases[tier][name])
         added = [s for s in samples if s and s not in existing]
@@ -147,16 +171,18 @@ class _NumpyEntityMatcher:
     def one_hot(self, utterance: str):
         """Binary vector of length ``len(entity_labels)`` of fired entity slots.
 
-        Fires on BOTH tiers — the model's entity stream sees any known title.
+        Fires on the model tiers (user + gazetteer) only — the model's entity
+        stream sees any known *real-label* title.  The ambiguous tier has no
+        model slot (it maps to abstain) so it never sets a column.
         """
         import numpy as np
 
         vec = np.zeros((len(self._labels),), dtype="float32")
         if not utterance:
             return vec
-        for tier in self._TIERS:
+        for tier in self._MODEL_TIERS:
             for name, rx in self._rx[tier].items():
-                if rx.search(utterance):
+                if name in self._index and rx.search(utterance):
                     vec[self._index[name]] = 1.0
         return vec
 
@@ -374,6 +400,19 @@ class EmbeddingMediaClassifier(AbstractMediaClassifier):
         for name, samples in library.items():
             self.register_user_entities(name, samples)
 
+    def _with_ner_context(self, ner_list):
+        """Inject the per-query available-entity list (``{label: [entity]}``).
+
+        Threads the caller's live entity context (skill-registered keywords + the
+        user's library) into the entity stream as high-precision ``user``-tier
+        entities, so the router routes a bare title the user actually has — no
+        retraining.  Registration dedups, so passing the same list each turn is
+        cheap.  Returns ``self`` (the matcher is the shared injection point).
+        """
+        if ner_list:
+            self.register_user_library(ner_list)
+        return self
+
     def register_default_gazetteer(self, top_n: Optional[int] = None,
                                    path: Optional[str] = None) -> int:
         """Inject the **Layer A offline popularity gazetteer** as a default library.
@@ -394,14 +433,33 @@ class EmbeddingMediaClassifier(AbstractMediaClassifier):
             the number of titles registered (0 when no gazetteer is available).
         """
         from ovos_media_classifier.gazetteer import (
-            DEFAULT_TOP_N, load_default_gazetteer,
+            DEFAULT_TOP_N, cross_pool_titles, load_default_gazetteer,
         )
-        gaz = load_default_gazetteer(
-            top_n=DEFAULT_TOP_N if top_n is None else top_n, path=path)
+        cap = DEFAULT_TOP_N if top_n is None else top_n
+        # Ambiguity is a property of the FULL pools, so compute it on the
+        # uncapped gazetteer: a title is cross-media-ambiguous if it appears in
+        # >1 type pool anywhere, even when the per-type cap would later keep it in
+        # only one.  (Capping first could hide an ambiguity and let a wrong leaf
+        # route.)
+        full = load_default_gazetteer(top_n=None, path=path,
+                                      drop_ambiguous=False)
+        ambiguous = set(cross_pool_titles(full))
+        # The routable (capped) gazetteer with the ambiguous titles removed.
+        gaz = load_default_gazetteer(top_n=cap, path=path, drop_ambiguous=True)
+        registered = 0
         for name, samples in gaz.items():
             for head in self._heads.values():
                 head.matcher.register(name, samples, tier="gazetteer")
-        return sum(len(v) for v in gaz.values())
+            registered += len(samples)
+        # Register the ambiguous titles into the abstain tier so the matcher
+        # still SEES them (longest-match): "moby dick" beats the artist "moby"
+        # inside it, and resolves to abstain rather than a wrong MUSIC route.
+        for name, samples in full.items():
+            ambig = [s for s in samples if str(s).lower() in ambiguous]
+            if ambig:
+                for head in self._heads.values():
+                    head.matcher.register(name, ambig, tier="ambiguous")
+        return registered
 
     # ------------------------------------------------------------------
     # Helpers
@@ -585,6 +643,13 @@ class HybridMediaClassifier(AbstractMediaClassifier):
 
     def register_user_library(self, library: Dict[str, List[str]]) -> None:
         self.router.register_user_library(library)
+
+    def _with_ner_context(self, ner_list):
+        """Inject the per-query available-entity list into the router (see
+        :meth:`EmbeddingMediaClassifier._with_ner_context`)."""
+        if ner_list:
+            self.register_user_library(ner_list)
+        return self
 
     def register_default_gazetteer(self, top_n: Optional[int] = None,
                                    path: Optional[str] = None) -> int:

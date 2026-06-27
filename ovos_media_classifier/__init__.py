@@ -38,6 +38,10 @@ from ovos_media_classifier.axes import (
 )
 from ovos_media_classifier.base import AbstractMediaClassifier
 from ovos_media_classifier.content_filter import ContentFilter
+from ovos_media_classifier.context import (
+    PlayerStatus,
+    PlayerState,
+)
 from ovos_media_classifier.intents import (
     MediaType,
     OCPDomain,
@@ -74,6 +78,8 @@ __all__ = [
     "AbstractMediaClassifier",
     "MediaType",
     "ContentFilter",
+    "PlayerStatus",
+    "PlayerState",
     "Structure",
     "MediaClassification",
     "MEDIA_TYPE_TO_STRUCTURE",

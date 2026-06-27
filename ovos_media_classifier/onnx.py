@@ -682,7 +682,8 @@ class OnnxMediaClassifier(AbstractMediaClassifier):
             return res[0]
         return super().classify_explicitness(query, lang)
 
-    def classify_full(self, query: str, lang: str):
+    def classify_full(self, query: str, lang: str,
+                      player_status=None, ner_list=None):
         """Full multi-axis result, predicting each axis from its own head.
 
         Each axis uses its dedicated head when the bundle carries one and
@@ -690,15 +691,20 @@ class OnnxMediaClassifier(AbstractMediaClassifier):
         The content-form genres come from the ``content_form_genres`` head, so a
         request can be flagged ``adult`` even when the leaf is uncertain
         (soft-gating).
-        """
-        media_type, conf = self.classify(query, lang)
-        domain, _ = self.classify_domain(query, lang)
-        playback = self.classify_playback_type(query, lang)
-        structure = self.classify_structure(query, lang)
-        genres = self.classify_content_form_genres(query, lang)
 
+        *player_status* / *ner_list* are the standalone context inputs (see
+        :meth:`AbstractMediaClassifier.classify_full`); *player_status* is layered
+        on by the shared base helper.
+        """
         from ovos_media_classifier.axes import MediaClassification
-        return MediaClassification(
+        ctx = self._with_ner_context(ner_list)
+        media_type, conf = ctx.classify(query, lang)
+        domain, _ = ctx.classify_domain(query, lang)
+        playback = ctx.classify_playback_type(query, lang)
+        structure = ctx.classify_structure(query, lang)
+        genres = ctx.classify_content_form_genres(query, lang)
+
+        result = MediaClassification(
             media_type=media_type,
             playback_type=playback,
             structure=structure,
@@ -706,3 +712,4 @@ class OnnxMediaClassifier(AbstractMediaClassifier):
             genres=genres,
             confidence=conf,
         )
+        return self._apply_player_status(ctx, query, lang, result, player_status)

@@ -285,6 +285,38 @@ def build_gazetteer(entities_dir: str, top_n: int = DEFAULT_TOP_N
     return out
 
 
+def cross_pool_titles(gaz: Dict[str, List[str]]) -> Dict[str, List[str]]:
+    """``{title_lower: [label, ...]}`` for every title present in >1 type pool.
+
+    A title that appears in more than one media-type pool (``Dune`` in
+    ``movie_title`` + ``tv_show_title`` + ``book_title``; ``Moby Dick`` in
+    ``book_title`` + ``tv_show_title``) is **cross-media-ambiguous**: the offline
+    gazetteer cannot know which type the user means, and a confident wrong leaf
+    would prune the provider that actually had it.  These titles are dropped from
+    the gazetteer so it ABSTAINS (→ GENERIC, the safe outcome) on them — only
+    titles unambiguous *within the gazetteer* are routed.
+    """
+    from collections import defaultdict
+    pools: Dict[str, set] = defaultdict(set)
+    for label, titles in gaz.items():
+        if label in _FORBIDDEN_LABELS:
+            continue
+        for t in titles or []:
+            if t:
+                pools[str(t).lower()].add(label)
+    return {t: sorted(labels) for t, labels in pools.items() if len(labels) > 1}
+
+
+def _drop_cross_pool(gaz: Dict[str, List[str]]) -> Dict[str, List[str]]:
+    """Drop every cross-media-ambiguous title (see :func:`cross_pool_titles`)."""
+    ambiguous = set(cross_pool_titles(gaz))
+    if not ambiguous:
+        return {k: list(v) for k, v in gaz.items()}
+    return {label: [t for t in (titles or [])
+                    if str(t).lower() not in ambiguous]
+            for label, titles in gaz.items()}
+
+
 def _apply_cap(gaz: Dict[str, List[str]], top_n: Optional[int]
                ) -> Dict[str, List[str]]:
     if top_n is None or top_n <= 0:
@@ -294,7 +326,9 @@ def _apply_cap(gaz: Dict[str, List[str]], top_n: Optional[int]
 
 
 def load_default_gazetteer(top_n: Optional[int] = DEFAULT_TOP_N,
-                           path: Optional[str] = None) -> Dict[str, List[str]]:
+                           path: Optional[str] = None,
+                           drop_ambiguous: bool = True
+                           ) -> Dict[str, List[str]]:
     """Load the offline gazetteer ``{ner_label: [title, ...]}``.
 
     Resolution order: explicit *path* → generated ``data/gazetteer.json`` →
@@ -302,6 +336,13 @@ def load_default_gazetteer(top_n: Optional[int] = DEFAULT_TOP_N,
     stripped defensively even if present on disk, and each type is capped at
     *top_n* (``None``/``<=0`` → no cap).  Returns ``{}`` (and logs) on any
     failure so a bad/absent file never breaks the hybrid.
+
+    When *drop_ambiguous* is True (the default) every **cross-media-ambiguous**
+    title — one present in more than one type pool — is dropped *before* the cap,
+    so the gazetteer ABSTAINS on titles it cannot disambiguate (``Dune``,
+    ``Moby Dick``, ``Watchmen``) and only routes titles that are unambiguous
+    within it.  This keeps the gazetteer's open-vocab wins (the unambiguous
+    titles) without the cross-media mis-routes.
     """
     candidates = [path] if path else [GENERATED_GAZETTEER_PATH,
                                       BUNDLED_GAZETTEER_PATH]
@@ -313,6 +354,8 @@ def load_default_gazetteer(top_n: Optional[int] = DEFAULT_TOP_N,
                 gaz = json.load(fh)
             if not isinstance(gaz, dict):
                 continue
+            if drop_ambiguous:
+                gaz = _drop_cross_pool(gaz)
             capped = _apply_cap(gaz, top_n)
             total = sum(len(v) for v in capped.values())
             if total > _LIVE_SIZE_WARN:
