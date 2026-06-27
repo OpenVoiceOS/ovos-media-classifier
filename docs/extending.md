@@ -47,17 +47,19 @@ axis method only when your backend has real signal for it:
 | `classify_domain` | derives from `classify()` | you have a cheap domain head |
 | `classify_control` | `None` | you model transport-control actions |
 | `is_ocp_query` | derives from `classify_domain()` | you also handle `ocp_control` |
-| `classify_genres` | `[]` | you can surface genre tags |
+| `classify_genres` | `[]` | you can surface genre tags (⊆ `KNOWN_GENRES`) |
 | `classify_content_form_genres` | delegates to `classify_genres()` | you have a dedicated content-form head (lets the content filter block on it) |
-| `classify_content_genres` | `[]` | you predict the real open-vocab genre |
+| `classify_content_form` | `None` | you predict the `mediavocab.ContentForm` (trailer / behind_scenes / …) |
+| `classify_programme_format` | `None` | you predict the `mediavocab.ProgrammeFormat` (documentary / news / …) |
+| `classify_accessibility` | `[]` | you predict `mediavocab.AccessibilityKind` assets |
+| `classify_variant` | `None` | you predict the `mediavocab.VariantKind` cut |
 | `classify_playback_type` | derives from the leaf | you have a modality head |
 | `classify_structure` | derives from the leaf | you have a structure head |
-| `classify_mood` / `classify_era` | `None` | you have those heads |
+| `classify_presentation` | `[]` | you surface bw / silent / 3d (Phase-2 `PictureFormat` placeholder) |
 | `classify_explicitness` | derives from the form genres | you have an explicitness head |
-| `classify_qualifiers` | `[]` | you surface result-narrowing qualifiers |
 | `classify_control_intent` | delegates to `classify_control()` | — |
 | `classify_full` | combines the above (derive-from-leaf) | you predict the axes directly and want to soft-gate the leaf |
-| `to_signals` | builds `mediavocab.Signals` from `classify_full` + genres + qualifiers | you extract entities (artist / year / season / episode) to enrich the `Signals` |
+| `to_signals` | builds `mediavocab.Signals` from `classify_full` + genres + content_form + variant | you extract entities (artist / year / season / episode) to enrich the `Signals` |
 
 A trained backend SHOULD override the coarse-axis methods so it predicts each axis
 with its own head and soft-gates the leaf — that is the whole point of the
@@ -219,8 +221,9 @@ symbol names below; the existing axes are worked examples of each step.
 **1. Emit a ground-truth column** — add the derived label to
 [`_derive_axes`](../training/build_dataset.py) in `training/build_dataset.py`. It
 computes each axis from the template `intent` plus the `slot_values` that filled
-the row (e.g. `mood` from the `playlist_mood` slot, `decade` from the year slot,
-`qualifiers` from the intent alias). Return your new key from this function and add
+the row (e.g. `content_form` / `programme_format` / `variant` from the intent
+alias, `content_genres` from the genre slot value, `year` from the year slot).
+Return your new key from this function and add
 it to the `_AXES` column-order list so it lands in the written CSV/parquet. The
 label must be ground-truth-by-construction, exactly like the existing columns.
 
@@ -231,7 +234,7 @@ label must be ground-truth-by-construction, exactly like the existing columns.
 automatically; a degenerate column is skipped, and `export_bundle` writes
 `<axis>.onnx` plus its `meta.json` manifest entry. Multi-label heads carry a
 per-label `threshold` (default `DEFAULT_MULTILABEL_THRESHOLD = 0.5`); cap an
-open-vocabulary head with a `top_k` like `content_genre` does.
+open-vocabulary head with a `top_k` like `content_genres` does.
 
 **3. Add the contract method** — add `classify_<axis>` to
 [`AbstractMediaClassifier`](../ovos_media_classifier/base.py) with a sensible

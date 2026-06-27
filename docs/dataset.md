@@ -61,10 +61,14 @@ Each row is one natural-language command. Columns are grouped:
 | `structure` | structure axis (`single` / `episodic` / `continuous` / `collection`) |
 | `binary_label` | `ocp` / `not_ocp` |
 | `content_form_genres` | JSON list of sensitive / content-form tags (`adult`/`anime`/`animation`/`asmr`) — the content-filter axis |
-| `tags` | JSON list of **namespaced descriptive tags** — `genre:rock` / `mood:chill` / `era:1980s` (genre + mood + era folded into one multi-label axis) |
-| `qualifiers` | JSON list of result-narrowing qualifiers (`black_and_white` / `silent` / `trailer` / …) |
+| `content_genres` | JSON list of the real genre(s), constrained to `mediavocab.KNOWN_GENRES` |
+| `content_form` | `mediavocab.ContentForm` (single) — `trailer` / `teaser` / `behind_scenes` / `excerpt` / `supplement` |
+| `programme_format` | `mediavocab.ProgrammeFormat` (single) — `documentary` / `news` |
+| `accessibility` | JSON list of `mediavocab.AccessibilityKind` (`subtitles` / `audio_description` / `sign_language`) |
+| `variant` | `mediavocab.VariantKind` (single) — `directors` / `extended` / `remastered` / `colorized` / `fanedit` |
+| `presentation` | JSON list of classifier-local picture flags (`black_and_white` / `silent`) — Phase-2 `PictureFormat` placeholder |
+| `year` | the release year (feeds `Signals.year`) |
 | `explicitness` | `clean` / `adult` |
-| `content_genre`, `mood`, `era`, `decade` | the unfolded genre / mood / era values kept as **provenance + benchmark ground truth** (no standalone head trains on them; `tags` does) |
 
 ### Keyword feature columns (one per `CategoricalFeatureExtractor` feature)
 

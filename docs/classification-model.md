@@ -342,7 +342,7 @@ result.media_type      # <MediaType.EPISODIC_SERIES: 'episodic_series'>   (Axis 
 result.playback_type   # <PlaybackType.VIDEO: 'video'>                    (Axis 1)
 result.structure       # <Structure.EPISODIC: 'episodic'>                 (Axis 2)
 result.domain          # <OCPDomain.OCP_PLAY: 'ocp_play'>                 (Axis 0)
-result.genres          # []                                              (tags)
+result.genres          # []                                              (content-form genres)
 result.confidence      # 0.6
 result.as_dict()
 # {'media_type': 'episodic_series', 'playback_type': 'video', 'structure': 'episodic',
@@ -375,8 +375,12 @@ ships, per row:
 | `playback_type` | Axis 1 (modality) | `infer_playback_type(media_type)` |
 | `structure` | Axis 2 (structure) | `infer_structure(media_type)` |
 | `genres` / `content_form_genres` | content-form tags | `LABEL_TO_GENRES[intent]` (carries `adult`) |
-| `tags` | descriptive (multi-label) | `genre:` / `mood:` / `era:` from the filled slot values |
-| `qualifiers` | result-narrowing (multi-label) | the intent alias (`black_and_white` / `silent` / …) |
+| `content_genres` | real genre(s) (multi-label, ⊆ `KNOWN_GENRES`) | the filled genre slot value |
+| `content_form` | `mediavocab.ContentForm` (single) | the intent alias (`trailer` / `behind_scenes` / …) |
+| `programme_format` | `mediavocab.ProgrammeFormat` (single) | the intent alias (`documentary` / `news`) |
+| `accessibility` | `mediavocab.AccessibilityKind` (multi-label) | the intent alias (`audio_description` / …) |
+| `variant` | `mediavocab.VariantKind` (single) | the intent alias (`directors` / `remastered` / …) |
+| `presentation` | classifier-local (multi-label, Phase-2 `PictureFormat`) | the intent alias (`black_and_white` / `silent`) |
 
 Because every coarse column is derived from the same `infer_*` functions the
 runtime uses (§4.1), a model trained on these columns and a model that derives at

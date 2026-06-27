@@ -89,17 +89,29 @@ derived from `classify()` via `infer_structure`.
 clf.classify_structure("put on the radio", "en-us")     # <Structure.CONTINUOUS: 'continuous'>
 ```
 
-### `classify_tags(query, lang) -> list[str]`
+### The mediavocab descriptive axes
 
-Returns the **namespaced descriptive tags** (multi-label) — genre, mood and era
-folded into one axis: `["genre:rock", "mood:chill", "era:1980s"]`, empty when
-none apply. `tags_namespace(tags, "genre")` extracts the bare values of one
-slice; `classify_content_genres` / `classify_mood` / `classify_era` are the
-`genre:` / `mood:` / `era:` slices. Default: derived from those helpers; a trained
-backend overrides with its dedicated multi-label `tags` head.
+The classifier emits its descriptive signals in **mediavocab's own taxonomy**, so
+`to_signals` is lossless and providers consume one shared vocabulary.
+
+- `classify_content_form(query, lang) -> ContentForm | None` — the experiential
+  kind: `trailer` / `teaser` / `behind_scenes` / `excerpt` / `supplement` / …
+  (the parent `MediaType` stays the feature; `None` ⇒ a primary work).
+- `classify_programme_format(query, lang) -> ProgrammeFormat | None` — the
+  structural format: `documentary` / `news` / `concert` / `stand_up` / `sports` / …
+- `classify_accessibility(query, lang) -> list[AccessibilityKind]` — requested
+  accessibility assets: `subtitles` / `audio_description` / `sign_language` / …
+- `classify_variant(query, lang) -> VariantKind | None` — the work-level cut:
+  `directors` / `extended` / `remastered` / `colorized` / `fanedit` / …
+- `classify_genres(query, lang) -> list[str]` — genre tags constrained to
+  `mediavocab.KNOWN_GENRES` (the content filter reads `adult` / `anime` / … here).
+- `classify_presentation(query, lang) -> list[str]` — a classifier-local
+  placeholder for `black_and_white` / `silent` / `3d` (no mediavocab home yet;
+  redirected to a `PictureFormat` enum in Phase 2).
 
 ```python
-clf.classify_tags("play some 80s rock", "en-us")   # ['genre:rock', 'era:1980s']
+clf.classify_content_form("watch the Dune trailer", "en-us")  # <ContentForm.TRAILER: 'trailer'>
+clf.classify_programme_format("a documentary about whales", "en-us")  # <ProgrammeFormat.DOCUMENTARY: 'documentary'>
 ```
 
 ### `classify_full(query, lang) -> MediaClassification`
@@ -130,7 +142,11 @@ This ABC is both the interface the bundled keyword classifier implements and the
 | `classify_genres` | optional override | returns `[]` |
 | `classify_playback_type` | optional override | derives from `classify()` |
 | `classify_structure` | optional override | derives from `classify()` |
-| `classify_tags` | optional override | derives from `classify_content_genres`/`classify_mood`/`classify_era` |
+| `classify_content_form` | optional override | returns `None` |
+| `classify_programme_format` | optional override | returns `None` |
+| `classify_accessibility` | optional override | returns `[]` |
+| `classify_variant` | optional override | returns `None` |
+| `classify_presentation` | optional override | returns `[]` (Phase-2 `PictureFormat` placeholder) |
 | `classify_full` | optional override | combines the above (derive-from-leaf) |
 
 Override guidance (for plugin authors — the bundled keyword classifier only
@@ -155,6 +171,10 @@ overrides `classify_genres()` and derives every coarse axis from the leaf):
 | `Structure` | `ovos_media_classifier` | string-Enum; the structure axis (`single`/`episodic`/`continuous`/`collection`/`unknown`) |
 | `OCPDomain` | `ovos_media_classifier` | `ocp_play` / `ocp_control` / `not_ocp` |
 | `MediaClassification` | `ovos_media_classifier` | dataclass holding all axes + genres + confidence; `.as_dict()` for a plain dict |
+| `ContentForm` | `mediavocab` | string-Enum; experiential kind (`trailer`/`behind_scenes`/`excerpt`/…) |
+| `ProgrammeFormat` | `mediavocab` | string-Enum; structural format (`documentary`/`news`/`concert`/…) |
+| `AccessibilityKind` | `mediavocab` | string-Enum; a11y asset (`subtitles`/`audio_description`/…) |
+| `VariantKind` | `mediavocab` | string-Enum; work-level cut (`directors`/`extended`/`remastered`/…) |
 | genre tags | `list[str]` | members of `mediavocab` `KNOWN_GENRES` |
 | confidence | `float` | in `[0, 1]` |
 

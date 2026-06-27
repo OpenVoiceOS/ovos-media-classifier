@@ -5,10 +5,12 @@ OCP (OVOS Common Play). It is **multi-task**: it maps a spoken command onto a se
 of **orthogonal axes** at once — domain (play / control / not-OCP), modality
 (`playback_type`: audio / video / paged / interactive), structure
 (single / episodic / continuous / collection), explicitness (clean / adult), and
-the concrete `mediavocab.MediaType` leaf — plus a multi-label, namespaced **`tags`**
-axis (genre / mood / era), result-narrowing **qualifiers**, and the content-form
-genre tags. A detect-to-block content filter sits on top so OVOS can refuse
-sensitive requests by default.
+the concrete `mediavocab.MediaType` leaf — plus the mediavocab descriptive axes:
+**`content_form`** (trailer / behind_scenes / …), **`programme_format`**
+(documentary / news / …), **`accessibility`** (subtitles / audio_description),
+**`variant`** (directors / remastered / …), the **`content_genres`** (⊆
+`KNOWN_GENRES`) and the content-form genre tags. A detect-to-block content filter
+sits on top so OVOS can refuse sensitive requests by default.
 
 This classifies *voice commands*. It is distinct from `mediavocab.text.classify`,
 which classifies *catalog content* — see
@@ -49,7 +51,7 @@ New to the vocabulary (OCP, OPM, domain, axis, NER, …)? Read
 | Page | What it covers |
 |---|---|
 | [glossary.md](glossary.md) | Every term and acronym, the 30-second mental model, and the command-vs-content distinction |
-| [classification-model.md](classification-model.md) | The multi-axis model: the four axes + tags, why orthogonal axes rather than a strict tree, and the `MediaType`→(playback_type, structure) defaults |
+| [classification-model.md](classification-model.md) | The multi-axis model: the core axes + the mediavocab descriptive axes, why orthogonal axes rather than a strict tree, and the `MediaType`→(playback_type, structure) defaults |
 | [model.md](model.md) | The trained model for an ML engineer: the feature representation, the multi-task per-axis heads + soft-gating, the rules→context→context+NER ladder, the self-describing bundle/retrain contract, the benchmark table, and the honest limitations |
 | [extending.md](extending.md) | Step-by-step: implement a new `AbstractMediaClassifier` backend + register it under `opm.media.classifier`, retrain the ONNX bundle with `train_sklearn.py`, and add a new axis/head end-to-end |
 | [taxonomy.md](taxonomy.md) | `mediavocab.MediaType` enforcement, the raw label→type/genre mapping, and the query-vs-content distinction |
