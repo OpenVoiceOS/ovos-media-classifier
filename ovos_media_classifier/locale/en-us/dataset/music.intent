@@ -201,3 +201,29 @@ just {music_genre} for now
 <lead_play_audio> music inspired by {book_title}
 <lead_play_audio> a concept album based on {book_title}
 <lead_play_audio> songs inspired by the game {game_title}
+um can you put on {artist_name}
+uh play some {music_genre} i guess
+play {track_name}, actually no {album_name}
+put on {artist_name} — no wait {track_name}
+play that song, you know, {track_name} by {artist_name}
+i wanna hear— no put on {album_name}
+hmm maybe some {music_genre}, yeah that
+hey so put on {artist_name}
+you know what throw on some {music_genre}
+lemme hear {track_name}
+gimme some {music_genre}
+gimme that {artist_name} track {track_name}
+wanna hear some {artist_name}
+ok so play {album_name}
+ugh i'm so bored put some {music_genre} on
+i've had a long day put on some {music_genre}
+it's friday night crank up some {music_genre}
+we're having people over put on some {music_genre}
+i need to relax play something by {artist_name}
+i could really go for some {music_genre} right now
+i'm kind of in a {artist_name} mood
+i keep getting that {track_name} song stuck in my head
+feels like a {music_genre} kind of evening
+got anything by {artist_name}?
+you got that new {artist_name} album {album_name}?
+could we listen to {track_name}
