@@ -66,7 +66,536 @@
         "total": 28,
         "hit_n": 14,
         "recall": 0.5
-      }
+      },
+      "latency": null
+    },
+    "onnx:models/context": {
+      "status": "available",
+      "reason": "",
+      "n": 186,
+      "mis_route_rate": 0.0789,
+      "media_type": {
+        "confident_correct": 62,
+        "confident_wrong": 9,
+        "abstain": 43,
+        "n": 114,
+        "mis_route_rate": 0.0789,
+        "abstain_rate": 0.3772
+      },
+      "playback_type": {
+        "confident_correct": 80,
+        "confident_wrong": 33,
+        "abstain": 1,
+        "n": 114,
+        "mis_route_rate": 0.2895,
+        "abstain_rate": 0.0088
+      },
+      "gate": {
+        "false_hijack_n": 8,
+        "false_hijack_total": 44,
+        "false_hijack_rate": 0.1818,
+        "false_miss_n": 62,
+        "false_miss_total": 142,
+        "false_miss_rate": 0.4366
+      },
+      "adult_leak": {
+        "adult_total": 21,
+        "leak_n": 1,
+        "leak_rate": 0.0476,
+        "clean_total": 165,
+        "overflag_n": 0,
+        "overflag_rate": 0.0
+      },
+      "control": {
+        "total": 28,
+        "hit_n": 0,
+        "recall": 0.0
+      },
+      "latency": null
+    },
+    "onnx:models/context_ner": {
+      "status": "available",
+      "reason": "",
+      "n": 186,
+      "mis_route_rate": 0.1316,
+      "media_type": {
+        "confident_correct": 49,
+        "confident_wrong": 15,
+        "abstain": 50,
+        "n": 114,
+        "mis_route_rate": 0.1316,
+        "abstain_rate": 0.4386
+      },
+      "playback_type": {
+        "confident_correct": 80,
+        "confident_wrong": 28,
+        "abstain": 6,
+        "n": 114,
+        "mis_route_rate": 0.2456,
+        "abstain_rate": 0.0526
+      },
+      "gate": {
+        "false_hijack_n": 7,
+        "false_hijack_total": 44,
+        "false_hijack_rate": 0.1591,
+        "false_miss_n": 69,
+        "false_miss_total": 142,
+        "false_miss_rate": 0.4859
+      },
+      "adult_leak": {
+        "adult_total": 21,
+        "leak_n": 0,
+        "leak_rate": 0.0,
+        "clean_total": 165,
+        "overflag_n": 0,
+        "overflag_rate": 0.0
+      },
+      "control": {
+        "total": 28,
+        "hit_n": 0,
+        "recall": 0.0
+      },
+      "latency": null
+    },
+    "onnx:models_text/tfidf_char35": {
+      "status": "available",
+      "reason": "",
+      "n": 186,
+      "mis_route_rate": 0.3947,
+      "media_type": {
+        "confident_correct": 69,
+        "confident_wrong": 45,
+        "abstain": 0,
+        "n": 114,
+        "mis_route_rate": 0.3947,
+        "abstain_rate": 0.0
+      },
+      "playback_type": {
+        "confident_correct": 81,
+        "confident_wrong": 31,
+        "abstain": 2,
+        "n": 114,
+        "mis_route_rate": 0.2719,
+        "abstain_rate": 0.0175
+      },
+      "gate": {
+        "false_hijack_n": 37,
+        "false_hijack_total": 44,
+        "false_hijack_rate": 0.8409,
+        "false_miss_n": 14,
+        "false_miss_total": 142,
+        "false_miss_rate": 0.0986
+      },
+      "adult_leak": {
+        "adult_total": 21,
+        "leak_n": 13,
+        "leak_rate": 0.619,
+        "clean_total": 165,
+        "overflag_n": 0,
+        "overflag_rate": 0.0
+      },
+      "control": {
+        "total": 28,
+        "hit_n": 0,
+        "recall": 0.0
+      },
+      "latency": null
+    },
+    "onnx:models_text/tfidf_word12": {
+      "status": "available",
+      "reason": "",
+      "n": 186,
+      "mis_route_rate": 0.4298,
+      "media_type": {
+        "confident_correct": 59,
+        "confident_wrong": 49,
+        "abstain": 6,
+        "n": 114,
+        "mis_route_rate": 0.4298,
+        "abstain_rate": 0.0526
+      },
+      "playback_type": {
+        "confident_correct": 87,
+        "confident_wrong": 26,
+        "abstain": 1,
+        "n": 114,
+        "mis_route_rate": 0.2281,
+        "abstain_rate": 0.0088
+      },
+      "gate": {
+        "false_hijack_n": 29,
+        "false_hijack_total": 44,
+        "false_hijack_rate": 0.6591,
+        "false_miss_n": 22,
+        "false_miss_total": 142,
+        "false_miss_rate": 0.1549
+      },
+      "adult_leak": {
+        "adult_total": 21,
+        "leak_n": 13,
+        "leak_rate": 0.619,
+        "clean_total": 165,
+        "overflag_n": 0,
+        "overflag_rate": 0.0
+      },
+      "control": {
+        "total": 28,
+        "hit_n": 0,
+        "recall": 0.0
+      },
+      "latency": null
+    },
+    "onnx:models_text/tfidf_word13": {
+      "status": "available",
+      "reason": "",
+      "n": 186,
+      "mis_route_rate": 0.4386,
+      "media_type": {
+        "confident_correct": 60,
+        "confident_wrong": 50,
+        "abstain": 4,
+        "n": 114,
+        "mis_route_rate": 0.4386,
+        "abstain_rate": 0.0351
+      },
+      "playback_type": {
+        "confident_correct": 83,
+        "confident_wrong": 29,
+        "abstain": 2,
+        "n": 114,
+        "mis_route_rate": 0.2544,
+        "abstain_rate": 0.0175
+      },
+      "gate": {
+        "false_hijack_n": 30,
+        "false_hijack_total": 44,
+        "false_hijack_rate": 0.6818,
+        "false_miss_n": 20,
+        "false_miss_total": 142,
+        "false_miss_rate": 0.1408
+      },
+      "adult_leak": {
+        "adult_total": 21,
+        "leak_n": 13,
+        "leak_rate": 0.619,
+        "clean_total": 165,
+        "overflag_n": 0,
+        "overflag_rate": 0.0
+      },
+      "control": {
+        "total": 28,
+        "hit_n": 0,
+        "recall": 0.0
+      },
+      "latency": null
+    },
+    "onnx:models_torch/cat": {
+      "status": "available",
+      "reason": "",
+      "n": 186,
+      "mis_route_rate": 0.3596,
+      "media_type": {
+        "confident_correct": 73,
+        "confident_wrong": 41,
+        "abstain": 0,
+        "n": 114,
+        "mis_route_rate": 0.3596,
+        "abstain_rate": 0.0
+      },
+      "playback_type": {
+        "confident_correct": 77,
+        "confident_wrong": 32,
+        "abstain": 5,
+        "n": 114,
+        "mis_route_rate": 0.2807,
+        "abstain_rate": 0.0439
+      },
+      "gate": {
+        "false_hijack_n": 44,
+        "false_hijack_total": 44,
+        "false_hijack_rate": 1.0,
+        "false_miss_n": 0,
+        "false_miss_total": 142,
+        "false_miss_rate": 0.0
+      },
+      "adult_leak": {
+        "adult_total": 21,
+        "leak_n": 0,
+        "leak_rate": 0.0,
+        "clean_total": 165,
+        "overflag_n": 2,
+        "overflag_rate": 0.0121
+      },
+      "control": {
+        "total": 28,
+        "hit_n": 0,
+        "recall": 0.0
+      },
+      "latency": null
+    },
+    "onnx:models_torch/cat_all": {
+      "status": "available",
+      "reason": "",
+      "n": 186,
+      "mis_route_rate": 0.3947,
+      "media_type": {
+        "confident_correct": 69,
+        "confident_wrong": 45,
+        "abstain": 0,
+        "n": 114,
+        "mis_route_rate": 0.3947,
+        "abstain_rate": 0.0
+      },
+      "playback_type": {
+        "confident_correct": 85,
+        "confident_wrong": 27,
+        "abstain": 2,
+        "n": 114,
+        "mis_route_rate": 0.2368,
+        "abstain_rate": 0.0175
+      },
+      "gate": {
+        "false_hijack_n": 44,
+        "false_hijack_total": 44,
+        "false_hijack_rate": 1.0,
+        "false_miss_n": 0,
+        "false_miss_total": 142,
+        "false_miss_rate": 0.0
+      },
+      "adult_leak": {
+        "adult_total": 21,
+        "leak_n": 2,
+        "leak_rate": 0.0952,
+        "clean_total": 165,
+        "overflag_n": 8,
+        "overflag_rate": 0.0485
+      },
+      "control": {
+        "total": 28,
+        "hit_n": 0,
+        "recall": 0.0
+      },
+      "latency": null
+    },
+    "onnx:models_torch/cat_all_deep": {
+      "status": "available",
+      "reason": "",
+      "n": 186,
+      "mis_route_rate": 0.3684,
+      "media_type": {
+        "confident_correct": 72,
+        "confident_wrong": 42,
+        "abstain": 0,
+        "n": 114,
+        "mis_route_rate": 0.3684,
+        "abstain_rate": 0.0
+      },
+      "playback_type": {
+        "confident_correct": 88,
+        "confident_wrong": 24,
+        "abstain": 2,
+        "n": 114,
+        "mis_route_rate": 0.2105,
+        "abstain_rate": 0.0175
+      },
+      "gate": {
+        "false_hijack_n": 44,
+        "false_hijack_total": 44,
+        "false_hijack_rate": 1.0,
+        "false_miss_n": 0,
+        "false_miss_total": 142,
+        "false_miss_rate": 0.0
+      },
+      "adult_leak": {
+        "adult_total": 21,
+        "leak_n": 0,
+        "leak_rate": 0.0,
+        "clean_total": 165,
+        "overflag_n": 11,
+        "overflag_rate": 0.0667
+      },
+      "control": {
+        "total": 28,
+        "hit_n": 0,
+        "recall": 0.0
+      },
+      "latency": null
+    },
+    "onnx:models_torch/cat_all_wide": {
+      "status": "available",
+      "reason": "",
+      "n": 186,
+      "mis_route_rate": 0.3772,
+      "media_type": {
+        "confident_correct": 71,
+        "confident_wrong": 43,
+        "abstain": 0,
+        "n": 114,
+        "mis_route_rate": 0.3772,
+        "abstain_rate": 0.0
+      },
+      "playback_type": {
+        "confident_correct": 87,
+        "confident_wrong": 25,
+        "abstain": 2,
+        "n": 114,
+        "mis_route_rate": 0.2193,
+        "abstain_rate": 0.0175
+      },
+      "gate": {
+        "false_hijack_n": 44,
+        "false_hijack_total": 44,
+        "false_hijack_rate": 1.0,
+        "false_miss_n": 0,
+        "false_miss_total": 142,
+        "false_miss_rate": 0.0
+      },
+      "adult_leak": {
+        "adult_total": 21,
+        "leak_n": 2,
+        "leak_rate": 0.0952,
+        "clean_total": 165,
+        "overflag_n": 10,
+        "overflag_rate": 0.0606
+      },
+      "control": {
+        "total": 28,
+        "hit_n": 0,
+        "recall": 0.0
+      },
+      "latency": null
+    },
+    "onnx:models_torch/cat_text": {
+      "status": "available",
+      "reason": "",
+      "n": 186,
+      "mis_route_rate": 0.2982,
+      "media_type": {
+        "confident_correct": 80,
+        "confident_wrong": 34,
+        "abstain": 0,
+        "n": 114,
+        "mis_route_rate": 0.2982,
+        "abstain_rate": 0.0
+      },
+      "playback_type": {
+        "confident_correct": 87,
+        "confident_wrong": 25,
+        "abstain": 2,
+        "n": 114,
+        "mis_route_rate": 0.2193,
+        "abstain_rate": 0.0175
+      },
+      "gate": {
+        "false_hijack_n": 44,
+        "false_hijack_total": 44,
+        "false_hijack_rate": 1.0,
+        "false_miss_n": 0,
+        "false_miss_total": 142,
+        "false_miss_rate": 0.0
+      },
+      "adult_leak": {
+        "adult_total": 21,
+        "leak_n": 1,
+        "leak_rate": 0.0476,
+        "clean_total": 165,
+        "overflag_n": 11,
+        "overflag_rate": 0.0667
+      },
+      "control": {
+        "total": 28,
+        "hit_n": 0,
+        "recall": 0.0
+      },
+      "latency": null
+    },
+    "onnx:models_torch/cat_wordvec": {
+      "status": "available",
+      "reason": "",
+      "n": 186,
+      "mis_route_rate": 0.3158,
+      "media_type": {
+        "confident_correct": 78,
+        "confident_wrong": 36,
+        "abstain": 0,
+        "n": 114,
+        "mis_route_rate": 0.3158,
+        "abstain_rate": 0.0
+      },
+      "playback_type": {
+        "confident_correct": 87,
+        "confident_wrong": 25,
+        "abstain": 2,
+        "n": 114,
+        "mis_route_rate": 0.2193,
+        "abstain_rate": 0.0175
+      },
+      "gate": {
+        "false_hijack_n": 44,
+        "false_hijack_total": 44,
+        "false_hijack_rate": 1.0,
+        "false_miss_n": 0,
+        "false_miss_total": 142,
+        "false_miss_rate": 0.0
+      },
+      "adult_leak": {
+        "adult_total": 21,
+        "leak_n": 1,
+        "leak_rate": 0.0476,
+        "clean_total": 165,
+        "overflag_n": 20,
+        "overflag_rate": 0.1212
+      },
+      "control": {
+        "total": 28,
+        "hit_n": 0,
+        "recall": 0.0
+      },
+      "latency": null
+    },
+    "onnx:models_torch/cat_wordvec_cbow": {
+      "status": "available",
+      "reason": "",
+      "n": 186,
+      "mis_route_rate": 0.4123,
+      "media_type": {
+        "confident_correct": 67,
+        "confident_wrong": 47,
+        "abstain": 0,
+        "n": 114,
+        "mis_route_rate": 0.4123,
+        "abstain_rate": 0.0
+      },
+      "playback_type": {
+        "confident_correct": 88,
+        "confident_wrong": 24,
+        "abstain": 2,
+        "n": 114,
+        "mis_route_rate": 0.2105,
+        "abstain_rate": 0.0175
+      },
+      "gate": {
+        "false_hijack_n": 44,
+        "false_hijack_total": 44,
+        "false_hijack_rate": 1.0,
+        "false_miss_n": 0,
+        "false_miss_total": 142,
+        "false_miss_rate": 0.0
+      },
+      "adult_leak": {
+        "adult_total": 21,
+        "leak_n": 2,
+        "leak_rate": 0.0952,
+        "clean_total": 165,
+        "overflag_n": 24,
+        "overflag_rate": 0.1455
+      },
+      "control": {
+        "total": 28,
+        "hit_n": 0,
+        "recall": 0.0
+      },
+      "latency": null
     },
     "embedding-router:embedding_router": {
       "status": "available",
@@ -109,7 +638,8 @@
         "total": 28,
         "hit_n": 0,
         "recall": 0.0
-      }
+      },
+      "latency": null
     },
     "hybrid:embedding_router": {
       "status": "available",
@@ -152,7 +682,52 @@
         "total": 28,
         "hit_n": 14,
         "recall": 0.5
-      }
+      },
+      "latency": null
+    },
+    "hybrid+gazetteer:embedding_router": {
+      "status": "available",
+      "reason": "",
+      "n": 186,
+      "mis_route_rate": 0.0526,
+      "media_type": {
+        "confident_correct": 79,
+        "confident_wrong": 6,
+        "abstain": 29,
+        "n": 114,
+        "mis_route_rate": 0.0526,
+        "abstain_rate": 0.2544
+      },
+      "playback_type": {
+        "confident_correct": 79,
+        "confident_wrong": 5,
+        "abstain": 30,
+        "n": 114,
+        "mis_route_rate": 0.0439,
+        "abstain_rate": 0.2632
+      },
+      "gate": {
+        "false_hijack_n": 10,
+        "false_hijack_total": 44,
+        "false_hijack_rate": 0.2273,
+        "false_miss_n": 16,
+        "false_miss_total": 142,
+        "false_miss_rate": 0.1127
+      },
+      "adult_leak": {
+        "adult_total": 21,
+        "leak_n": 0,
+        "leak_rate": 0.0,
+        "clean_total": 165,
+        "overflag_n": 0,
+        "overflag_rate": 0.0
+      },
+      "control": {
+        "total": 28,
+        "hit_n": 14,
+        "recall": 0.5
+      },
+      "latency": null
     },
     "hybrid+inject:embedding_router": {
       "status": "available",
@@ -195,7 +770,157 @@
         "total": 28,
         "hit_n": 14,
         "recall": 0.5
-      }
+      },
+      "latency": null
     }
+  },
+  "fixes": {
+    "keyword -> hybrid": [],
+    "hybrid -> hybrid+gazetteer": [
+      {
+        "utterance": "put on the matrix",
+        "expected": "movie",
+        "was": "generic",
+        "now": "movie",
+        "category": "media",
+        "note": "bare title after generic put-on verb; GENERIC fine, providers search"
+      },
+      {
+        "utterance": "play some miles davis",
+        "expected": "music",
+        "was": "generic",
+        "now": "music",
+        "category": "media",
+        "note": "artist, no media keyword"
+      },
+      {
+        "utterance": "stick on bluey for the kids",
+        "expected": "episodic_series",
+        "was": "generic",
+        "now": "episodic_series",
+        "category": "media",
+        "note": "kids cartoon series, no keyword"
+      },
+      {
+        "utterance": "throw on breaking bad",
+        "expected": "episodic_series",
+        "was": "generic",
+        "now": "episodic_series",
+        "category": "media",
+        "note": "bare series title"
+      },
+      {
+        "utterance": "can you play the office",
+        "expected": "episodic_series",
+        "was": "generic",
+        "now": "episodic_series",
+        "category": "media",
+        "note": "ambiguous title 'the office'"
+      },
+      {
+        "utterance": "i feel like listening to the beatles",
+        "expected": "music",
+        "was": "generic",
+        "now": "music",
+        "category": "media",
+        "note": "elliptical, audio verb"
+      },
+      {
+        "utterance": "play the joe rogan experience",
+        "expected": "podcast",
+        "was": "generic",
+        "now": "podcast",
+        "category": "media",
+        "note": "podcast by name, no 'podcast' word"
+      },
+      {
+        "utterance": "play frozen for my daughter",
+        "expected": "movie",
+        "was": "generic",
+        "now": "movie",
+        "category": "media",
+        "note": "kids movie title"
+      },
+      {
+        "utterance": "play seinfeld",
+        "expected": "episodic_series",
+        "was": "generic",
+        "now": "episodic_series",
+        "category": "keywordless",
+        "note": "bare sitcom title"
+      },
+      {
+        "utterance": "play interstellar",
+        "expected": "movie",
+        "was": "generic",
+        "now": "movie",
+        "category": "keywordless",
+        "note": "bare film title"
+      },
+      {
+        "utterance": "play radiohead",
+        "expected": "music",
+        "was": "generic",
+        "now": "music",
+        "category": "keywordless",
+        "note": "bare band name"
+      },
+      {
+        "utterance": "play the witcher",
+        "expected": "episodic_series",
+        "was": "generic",
+        "now": "episodic_series",
+        "category": "keywordless",
+        "note": "ambiguous: series or game"
+      },
+      {
+        "utterance": "play sherlock",
+        "expected": "episodic_series",
+        "was": "generic",
+        "now": "episodic_series",
+        "category": "keywordless",
+        "note": "bare series title"
+      },
+      {
+        "utterance": "play stranger things",
+        "expected": "episodic_series",
+        "was": "generic",
+        "now": "episodic_series",
+        "category": "keywordless",
+        "note": "bare series title"
+      },
+      {
+        "utterance": "binge the mandalorian",
+        "expected": "episodic_series",
+        "was": "generic",
+        "now": "episodic_series",
+        "category": "media",
+        "note": "binge verb + series"
+      },
+      {
+        "utterance": "put on naruto",
+        "expected": "episodic_series",
+        "was": "generic",
+        "now": "episodic_series",
+        "category": "keywordless",
+        "note": "anime title bare"
+      },
+      {
+        "utterance": "play me something by hans zimmer",
+        "expected": "music",
+        "was": "generic",
+        "now": "music",
+        "category": "media",
+        "note": "composer, music implied"
+      },
+      {
+        "utterance": "play the simpsons season 5",
+        "expected": "episodic_series",
+        "was": "generic",
+        "now": "episodic_series",
+        "category": "media",
+        "note": "season modifier => episodic"
+      }
+    ]
   }
 }

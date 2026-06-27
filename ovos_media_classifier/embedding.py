@@ -92,57 +92,101 @@ class _NumpyEntityMatcher:
     runtime with the user's own library via :meth:`register`.  Only labels that
     were present at export (``entity_labels``) ever fire a column — unknown
     labels are accepted but ignored, matching ``RuntimeEntityInjector``.
+
+    Two precision tiers are tracked per label:
+
+    * **user** — the user's own injected library; high precision, allowed to
+      override even a confident keyword route in the hybrid.
+    * **gazetteer** — the Layer A default offline gazetteer of common real
+      titles; lower precision (a famous title can be ambiguous across types, e.g.
+      "Watchmen" film vs comic), so the hybrid consults it ONLY to fill an
+      abstention, never to override a confident keyword leaf.
+
+    ``one_hot`` (the model's entity stream) fires on both tiers; only the
+    hybrid's *override* decision distinguishes them via ``fired_labels(...,
+    tier=...)``.
     """
+
+    _TIERS = ("user", "gazetteer")
 
     def __init__(self, entity_labels: List[str]) -> None:
         self._labels = list(entity_labels)
         self._index = {lbl: i for i, lbl in enumerate(self._labels)}
-        # label -> compiled word-boundary regex over its phrases
-        self._phrases: Dict[str, List[str]] = {lbl: [] for lbl in self._labels}
-        self._rx: Dict[str, "re.Pattern"] = {}
+        # tier -> label -> phrases, and tier -> label -> compiled regex
+        self._phrases: Dict[str, Dict[str, List[str]]] = {
+            t: {lbl: [] for lbl in self._labels} for t in self._TIERS}
+        self._rx: Dict[str, Dict[str, "re.Pattern"]] = {
+            t: {} for t in self._TIERS}
 
     @property
     def labels(self) -> List[str]:
         return list(self._labels)
 
-    def register(self, name: str, samples: List[str]) -> None:
-        """Add entity phrases for a label (no-op for labels not in the bundle)."""
-        if name not in self._index or not samples:
+    def register(self, name: str, samples: List[str],
+                 tier: str = "user") -> None:
+        """Add entity phrases for a label in *tier* (no-op for unknown labels)."""
+        if name not in self._index or not samples or tier not in self._TIERS:
             return
-        existing = set(self._phrases[name])
+        existing = set(self._phrases[tier][name])
         added = [s for s in samples if s and s not in existing]
         if not added:
             return
-        self._phrases[name].extend(added)
-        self._compile(name)
+        self._phrases[tier][name].extend(added)
+        self._compile(tier, name)
 
-    def _compile(self, name: str) -> None:
-        phrases = self._phrases.get(name) or []
+    def _compile(self, tier: str, name: str) -> None:
+        phrases = self._phrases[tier].get(name) or []
         if not phrases:
-            self._rx.pop(name, None)
+            self._rx[tier].pop(name, None)
             return
         # longest first so a multi-word phrase wins over a fragment
         ordered = sorted(set(phrases), key=len, reverse=True)
         alt = "|".join(re.escape(p) for p in ordered)
-        self._rx[name] = re.compile(rf"\b(?:{alt})\b", re.IGNORECASE)
+        self._rx[tier][name] = re.compile(rf"\b(?:{alt})\b", re.IGNORECASE)
 
     def one_hot(self, utterance: str):
-        """Binary vector of length ``len(entity_labels)`` of fired entity slots."""
+        """Binary vector of length ``len(entity_labels)`` of fired entity slots.
+
+        Fires on BOTH tiers — the model's entity stream sees any known title.
+        """
         import numpy as np
 
         vec = np.zeros((len(self._labels),), dtype="float32")
         if not utterance:
             return vec
-        for name, rx in self._rx.items():
-            if rx.search(utterance):
-                vec[self._index[name]] = 1.0
+        for tier in self._TIERS:
+            for name, rx in self._rx[tier].items():
+                if rx.search(utterance):
+                    vec[self._index[name]] = 1.0
         return vec
 
-    def fired_labels(self, utterance: str) -> List[str]:
-        """The entity labels whose phrases appear in *utterance*."""
+    def fired_labels(self, utterance: str,
+                     tier: Optional[str] = None) -> List[str]:
+        """The entity labels whose phrases appear in *utterance*.
+
+        *tier* ``None`` → either tier; ``"user"`` / ``"gazetteer"`` → that tier
+        only (so the hybrid can let only user entities override keyword).
+        """
+        return [lbl for lbl, _ in self.fired_labels_with_len(utterance, tier)]
+
+    def fired_labels_with_len(self, utterance: str, tier: Optional[str] = None
+                              ) -> List[Tuple[str, int]]:
+        """``(label, matched_phrase_len)`` for every fired label.
+
+        The matched length lets the caller prefer the longest match — so a
+        multi-word "Moby Dick" (book) beats a single-word "Moby" (artist) that
+        fires inside it.
+        """
         if not utterance:
             return []
-        return [name for name, rx in self._rx.items() if rx.search(utterance)]
+        tiers = self._TIERS if tier is None else (tier,)
+        out: Dict[str, int] = {}
+        for t in tiers:
+            for name, rx in self._rx[t].items():
+                m = rx.search(utterance)
+                if m:
+                    out[name] = max(out.get(name, 0), len(m.group(0)))
+        return sorted(out.items(), key=lambda kv: kv[1], reverse=True)
 
 
 class _AxisHead:
@@ -318,14 +362,46 @@ class EmbeddingMediaClassifier(AbstractMediaClassifier):
         ``anime_title`` / ``audiobook_title`` / …); ``samples`` are the user's
         titles.  Unknown labels are ignored.  No retraining: the entity block
         fires the matching slot so the router can route a bare title.
+
+        These are the high-precision ``user`` tier — they may override even a
+        confident keyword route in the hybrid.
         """
         for head in self._heads.values():
-            head.matcher.register(name, samples)
+            head.matcher.register(name, samples, tier="user")
 
     def register_user_library(self, library: Dict[str, List[str]]) -> None:
         """Bulk :meth:`register_user_entities` from a ``{label: [titles]}`` dict."""
         for name, samples in library.items():
             self.register_user_entities(name, samples)
+
+    def register_default_gazetteer(self, top_n: Optional[int] = None,
+                                   path: Optional[str] = None) -> int:
+        """Inject the **Layer A offline popularity gazetteer** as a default library.
+
+        Loads the popularity-ranked gazetteer of common real titles
+        (:mod:`ovos_media_classifier.gazetteer`) and registers it across every
+        head's entity matcher *in addition to* anything the user injected — so
+        the router recognises common real titles ("cowboy bebop" → anime →
+        EPISODIC_SERIES) offline, with NO network call and without the user
+        having saved them.  Adult labels are never present in the gazetteer.
+
+        Args:
+            top_n: per-type cap (``None`` → :data:`gazetteer.DEFAULT_TOP_N`;
+                ``<=0`` → no cap).
+            path: explicit gazetteer JSON; default resolution otherwise.
+
+        Returns:
+            the number of titles registered (0 when no gazetteer is available).
+        """
+        from ovos_media_classifier.gazetteer import (
+            DEFAULT_TOP_N, load_default_gazetteer,
+        )
+        gaz = load_default_gazetteer(
+            top_n=DEFAULT_TOP_N if top_n is None else top_n, path=path)
+        for name, samples in gaz.items():
+            for head in self._heads.values():
+                head.matcher.register(name, samples, tier="gazetteer")
+        return sum(len(v) for v in gaz.values())
 
     # ------------------------------------------------------------------
     # Helpers
@@ -334,7 +410,8 @@ class EmbeddingMediaClassifier(AbstractMediaClassifier):
     def _feat(self, query: str, lang: str) -> Dict[str, str]:
         return self._extractor.extract(query, lang)
 
-    def _entity_media_type(self, query: str) -> Optional[MediaType]:
+    def _entity_media_type(self, query: str,
+                           tier: Optional[str] = None) -> Optional[MediaType]:
         """A confident MediaType implied by a fired entity slot, if any.
 
         When a runtime-injected entity matches, its NER label deterministically
@@ -342,13 +419,36 @@ class EmbeddingMediaClassifier(AbstractMediaClassifier):
         → AUDIOBOOK, …).  This is what lets a freshly injected library route a
         bare title the model itself never saw — and it is a *confident* entity
         signal, so it overrides a low-confidence head abstain.
+
+        *tier* restricts which precision tier may fire (``"user"`` → only the
+        user's library; ``None`` → user + gazetteer).
+
+        Disambiguation:
+
+        * **Longest match wins** — a multi-word "Moby Dick" (book) beats a
+          single-word "Moby" (artist) firing inside it.
+        * **Conflict → abstain** — when the longest-matching phrase maps to
+          MORE THAN ONE distinct MediaType (a title that genuinely exists across
+          media, e.g. "Dune" movie/tv/book, "Watchmen" movie/comic), the
+          gazetteer cannot disambiguate, so it returns ``None`` (safe abstain —
+          a wrong confident leaf would prune the right provider) rather than
+          guessing.  A title that fires several labels mapping to the SAME type
+          still routes.
         """
-        fired = self._mt.matcher.fired_labels(query)
-        for label in fired:
+        fired = self._mt.matcher.fired_labels_with_len(query, tier=tier)
+        if not fired:
+            return None
+        best_len = fired[0][1]
+        types = set()
+        for label, length in fired:
+            if length < best_len:
+                break  # only consider the longest-matching phrases
             mt = NER_LABEL_TO_MEDIA_TYPE.get(label)
             if mt is not None and mt != MediaType.GENERIC:
-                return mt
-        return None
+                types.add(mt)
+        if len(types) == 1:
+            return next(iter(types))
+        return None  # no fire, or ambiguous across types → abstain
 
     # ------------------------------------------------------------------
     # AbstractMediaClassifier implementation
@@ -434,26 +534,50 @@ class HybridMediaClassifier(AbstractMediaClassifier):
     * recovers the keyword backend's abstains/entity-gap mis-routes via the
       router + runtime entity injection.
 
+    Layered fall-through (cheapest → most expensive)
+    ------------------------------------------------
+    Routing falls through three layers, and a later layer only ever **fills an
+    abstention** — it never overrides a confident earlier route nor moves the
+    gate:
+
+    1. **keyword** (explicit cues) — owns the gate + adult policy; a confident
+       leaf wins outright.
+    2. **embedding router + user library + Layer A offline gazetteer** (offline)
+       — fills keyword's abstains for common real titles, no network.
+    3. **online metadatarr** (network, *opt-in*, :data:`online`) — consulted
+       ONLY when the cheaper layers abstain, and itself abstains on
+       failure/timeout/low-confidence.  Off unless an online backend is wired.
+
     Args:
         keyword: the keyword (``.voc``) backend (high-precision first pass).
         router: the :class:`EmbeddingMediaClassifier` (keyword-less fallback).
+        online: optional online backend (e.g.
+            :class:`~ovos_media_classifier.metadatarr_backend.MetadatarrMediaClassifier`),
+            consulted last and only when the cheaper layers abstain.
     """
 
     def __init__(self, keyword: AbstractMediaClassifier,
-                 router: EmbeddingMediaClassifier) -> None:
+                 router: EmbeddingMediaClassifier,
+                 online: Optional[AbstractMediaClassifier] = None) -> None:
         self.keyword = keyword
         self.router = router
+        self.online = online
 
     @classmethod
     def from_path(cls, model_dir: str,
                   locale_dir: Optional[str] = None,
-                  keyword: Optional[AbstractMediaClassifier] = None
+                  keyword: Optional[AbstractMediaClassifier] = None,
+                  online: Optional[AbstractMediaClassifier] = None
                   ) -> "HybridMediaClassifier":
-        """Load the router bundle and pair it with a keyword first pass."""
+        """Load the router bundle and pair it with a keyword first pass.
+
+        Pass *online* (an instantiated online backend) to enable the network
+        last-resort layer; omit it to keep the hybrid fully offline.
+        """
         from ovos_media_classifier.keyword import KeywordMediaClassifier
 
         router = EmbeddingMediaClassifier.from_path(model_dir, locale_dir)
-        return cls(keyword or KeywordMediaClassifier(), router)
+        return cls(keyword or KeywordMediaClassifier(), router, online=online)
 
     # ---- runtime entity injection delegates to the router ----
     def register_user_entities(self, name: str, samples: List[str]) -> None:
@@ -461,6 +585,12 @@ class HybridMediaClassifier(AbstractMediaClassifier):
 
     def register_user_library(self, library: Dict[str, List[str]]) -> None:
         self.router.register_user_library(library)
+
+    def register_default_gazetteer(self, top_n: Optional[int] = None,
+                                   path: Optional[str] = None) -> int:
+        """Inject the Layer A offline gazetteer into the router (see
+        :meth:`EmbeddingMediaClassifier.register_default_gazetteer`)."""
+        return self.router.register_default_gazetteer(top_n=top_n, path=path)
 
     # ---- gate + content policy: keyword is authoritative ----
     def classify_domain(self, query: str, lang: str) -> Tuple[OCPDomain, float]:
@@ -506,7 +636,11 @@ class HybridMediaClassifier(AbstractMediaClassifier):
         3. The router, which routes the keyword-less cases and abstains when
            unsure (so the keyword floor's mis-routes are never made worse).
         """
-        ent_mt = self.router._entity_media_type(query)
+        # only the USER tier overrides a confident keyword leaf; the gazetteer
+        # (lower precision) must not — it only fills keyword abstains via the
+        # router fallback below, so "listen to attack on titan soundtrack" keeps
+        # its confident keyword MUSIC route instead of being hijacked to anime.
+        ent_mt = self.router._entity_media_type(query, tier="user")
         if ent_mt is not None:
             if valid_labels is None or ent_mt in valid_labels:
                 return ent_mt, max(0.5, self.router._mt.threshold)
@@ -514,7 +648,15 @@ class HybridMediaClassifier(AbstractMediaClassifier):
         kw_mt, kw_conf = self.keyword.classify(query, lang, valid_labels)
         if kw_mt != MediaType.GENERIC:
             return kw_mt, kw_conf
-        return self.router.classify(query, lang, valid_labels)
+        rt_mt, rt_conf = self.router.classify(query, lang, valid_labels)
+        if rt_mt != MediaType.GENERIC:
+            return rt_mt, rt_conf
+        # Layer 3 — online metadatarr, only when keyword + offline both abstain.
+        if self.online is not None:
+            on_mt, on_conf = self.online.classify(query, lang, valid_labels)
+            if on_mt != MediaType.GENERIC:
+                return on_mt, on_conf
+        return MediaType.GENERIC, 0.0
 
     def classify_playback_type(self, query: str, lang: str):
         """Playback kept consistent with the leaf :meth:`classify` returns.
@@ -527,16 +669,25 @@ class HybridMediaClassifier(AbstractMediaClassifier):
         """
         from mediavocab import infer_playback_type
 
-        # entity override / keyword confident leaf → derive from that leaf so the
-        # two axes never disagree for the headline injected-library case.
-        ent_mt = self.router._entity_media_type(query)
+        # user-tier entity override / keyword confident leaf → derive from that
+        # leaf so the two axes never disagree for the headline injected-library
+        # case (gazetteer entities are NOT an override here, only a fallback).
+        ent_mt = self.router._entity_media_type(query, tier="user")
         if ent_mt is not None:
             return infer_playback_type(ent_mt)
         kw_mt, _ = self.keyword.classify(query, lang)
         if kw_mt != MediaType.GENERIC:
             return self.keyword.classify_playback_type(query, lang)
         # keyword-less: the router decides both leaf and playback.
-        rt_pb = self.router.classify_playback_type(query, lang)
-        if rt_pb is not None and rt_pb != infer_playback_type(MediaType.GENERIC):
-            return rt_pb
+        rt_mt, _ = self.router.classify(query, lang)
+        if rt_mt != MediaType.GENERIC:
+            rt_pb = self.router.classify_playback_type(query, lang)
+            if rt_pb is not None and rt_pb != infer_playback_type(MediaType.GENERIC):
+                return rt_pb
+            return infer_playback_type(rt_mt)
+        # Layer 3 — online: derive playback from whatever online resolved.
+        if self.online is not None:
+            on_mt, _ = self.online.classify(query, lang)
+            if on_mt != MediaType.GENERIC:
+                return self.online.classify_playback_type(query, lang)
         return self.keyword.classify_playback_type(query, lang)

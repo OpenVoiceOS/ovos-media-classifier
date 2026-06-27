@@ -21,7 +21,10 @@ templates_new/
 .venv/
 venv/
 .claude/
-data/
+# top-level data/ scratch (entity pools, generated gazetteer, trained bundles)
+# is gitignored; the small bundled default under the package IS tracked.
+/data/
+!ovos_media_classifier/data/
 
 # generated template output
 /templates/
