@@ -52,7 +52,6 @@ from training.train_sklearn import (
     CONTENT_GENRE_TOP_K,
     DEFAULT_MULTILABEL_THRESHOLD,
     HEAD_SPECS,
-    TAGS_TOP_K,
     _json_list,
     _read_split,
     ensure_dataset,
@@ -279,7 +278,7 @@ def run_variant(name, cfg, train_df, val_df, out_root, seed):
         if kind == "single":
             info = train_single_head(axis, column, cfg, train_df, val_df)
         else:
-            top_k = {"tags": TAGS_TOP_K, "content_genre": CONTENT_GENRE_TOP_K}.get(axis)
+            top_k = {"content_genres": CONTENT_GENRE_TOP_K}.get(axis)
             info = train_multi_head(axis, column, cfg, train_df, val_df, top_k=top_k)
         heads[axis] = info
         if info.get("status") == "skipped":

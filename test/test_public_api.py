@@ -176,25 +176,32 @@ class TestPerAxisContract(unittest.TestCase):
         self.clf = KeywordMediaClassifier()
 
     def test_axis_methods_exist_and_typed(self):
+        from mediavocab.taxonomy import (
+            ContentForm, ProgrammeFormat, VariantKind, AccessibilityKind,
+        )
         q, lang = "play a black and white movie", "en-us"
         self.assertIsInstance(self.clf.classify_content_form_genres(q, lang), list)
-        self.assertIsInstance(self.clf.classify_content_genres(q, lang), list)
-        self.assertIsInstance(self.clf.classify_qualifiers(q, lang), list)
-        self.assertIsInstance(self.clf.classify_tags(q, lang), list)
+        self.assertIsInstance(self.clf.classify_genres(q, lang), list)
         self.assertIn(self.clf.classify_explicitness(q, lang), ("clean", "adult"))
-        # mood/era default to None for the keyword backend
-        self.assertIsNone(self.clf.classify_mood(q, lang))
-        self.assertIsNone(self.clf.classify_era(q, lang))
+        # the mediavocab axes
+        cf = self.clf.classify_content_form(q, lang)
+        self.assertTrue(cf is None or isinstance(cf, ContentForm))
+        pf = self.clf.classify_programme_format(q, lang)
+        self.assertTrue(pf is None or isinstance(pf, ProgrammeFormat))
+        var = self.clf.classify_variant(q, lang)
+        self.assertTrue(var is None or isinstance(var, VariantKind))
+        acc = self.clf.classify_accessibility(q, lang)
+        self.assertIsInstance(acc, list)
+        for a in acc:
+            self.assertIsInstance(a, AccessibilityKind)
+        # the classifier-local presentation placeholder (Phase-2 PictureFormat)
+        self.assertIsInstance(self.clf.classify_presentation(q, lang), list)
 
-    def test_tags_are_namespaced(self):
-        # every tag the contract emits is namespaced (genre:/mood:/era:)
-        tags = self.clf.classify_tags("play some jazz", "en-us")
-        for t in tags:
-            self.assertRegex(t, r"^(genre|mood|era):")
-        # the genre: slice is the genre-classifier view
-        self.assertEqual(
-            self.clf.tags_namespace(["genre:rock", "mood:chill", "era:1980s"],
-                                    "genre"), ["rock"])
+    def test_genres_constrained_to_known_genres(self):
+        from mediavocab.taxonomy import KNOWN_GENRES
+        for q in ("play hentai", "watch the anime", "play some asmr"):
+            self.assertTrue(set(self.clf.classify_genres(q, "en-us"))
+                            <= set(KNOWN_GENRES), q)
 
     def test_explicitness_derives_from_form_genres(self):
         self.assertEqual(self.clf.classify_explicitness("play porn", "en-us"),
@@ -301,14 +308,28 @@ class TestOnnxParity(unittest.TestCase):
         genres = self.onnx.classify_content_form_genres("play porn", "en-us")
         self.assertIn("adult", genres)
 
-    def test_onnx_qualifiers_head(self):
-        quals = self.onnx.classify_qualifiers("play a silent film", "en-us")
-        self.assertIn("silent", quals)
+    def test_onnx_new_axis_methods_derive_when_no_head(self):
+        # The shipped bundle predates the mediavocab-axes heads (retrain is a
+        # separate planned step), so these axes fall back to the inherited
+        # derive/empty defaults — the methods must still return the right types.
+        from mediavocab.taxonomy import (
+            ContentForm, ProgrammeFormat, VariantKind, AccessibilityKind,
+        )
+        cf = self.onnx.classify_content_form("the Dune trailer", "en-us")
+        self.assertTrue(cf is None or isinstance(cf, ContentForm))
+        pf = self.onnx.classify_programme_format("a documentary", "en-us")
+        self.assertTrue(pf is None or isinstance(pf, ProgrammeFormat))
+        var = self.onnx.classify_variant("the directors cut", "en-us")
+        self.assertTrue(var is None or isinstance(var, VariantKind))
+        acc = self.onnx.classify_accessibility("with subtitles", "en-us")
+        self.assertIsInstance(acc, list)
+        for a in acc:
+            self.assertIsInstance(a, AccessibilityKind)
 
     def test_onnx_multi_axis_heads_present(self):
-        # the multi-task bundle carries one head per axis
+        # the multi-task bundle carries one head per (currently trained) axis
         for axis in ("media_type", "playback_type", "structure",
-                     "content_form_genres", "qualifiers"):
+                     "content_form_genres"):
             self.assertIn(axis, self.onnx._heads)
 
     def test_onnx_classify_full_shape(self):

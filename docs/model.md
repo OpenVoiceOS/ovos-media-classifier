@@ -78,18 +78,24 @@ runs whichever heads the bundle carries.
 per-label probabilities; the runtime keeps every label whose probability is
 ≥ a per-label `threshold` (default `0.5`, recorded in `meta.json`):
 
-| head | axis | label space |
-|---|---|---|
-| `content_form_genres` | sensitive / content-form tags | `adult` / `anime` / `animation` / `asmr` |
-| `tags` | the **namespaced descriptive axis** — genre, mood and era folded into one | `genre:rock` / `genre:action` / `mood:chill` / `era:1980s` / … (capped to the top-K most frequent, `TAGS_TOP_K = 80`) |
-| `qualifiers` | result-narrowing filters | `black_and_white` / `silent` / `live` / `subtitled` / `dubbed` / `audio_described` / `trailer` / … |
+| head | axis | kind | label space |
+|---|---|---|---|
+| `content_form_genres` | sensitive / content-form tags | multi | `adult` / `anime` / `animation` / `asmr` |
+| `content_genres` | the real genre(s) | multi | `mediavocab.KNOWN_GENRES` (capped to the top-`CONTENT_GENRE_TOP_K = 40`) |
+| `content_form` | experiential kind (`mediavocab.ContentForm`) | single | `trailer` / `teaser` / `behind_scenes` / `excerpt` / `supplement` / … |
+| `programme_format` | structural format (`mediavocab.ProgrammeFormat`) | single | `documentary` / `news` / `concert` / `stand_up` / `sports` / … |
+| `accessibility` | a11y assets (`mediavocab.AccessibilityKind`) | multi | `subtitles` / `audio_description` / `sign_language` / … |
+| `variant` | work-level cut (`mediavocab.VariantKind`) | single | `directors` / `extended` / `remastered` / `colorized` / `fanedit` / … |
 
-**Axes vs tags.** The single-label heads above are the **axes** — one answer per
-query. `tags` is the multi-label catch-all for the open-vocabulary *descriptive*
-signals (genre, mood, era) that all live in slot *value text*: rather than three
-starved single-label heads, they are one namespaced multi-label head. The
-`classify_content_genres` / `classify_mood` / `classify_era` convenience methods
-read the `genre:` / `mood:` / `era:` slice of this one head.
+**mediavocab axes.** Every descriptive head emits **mediavocab's own vocabulary**
+so the classifier and the resolver / providers share one taxonomy. The finer
+classifier cues collapse onto mediavocab's set (making_of / bloopers /
+deleted_scenes / featurette → `behind_scenes`; clip → `excerpt`; interview →
+`supplement`). `black_and_white` / `silent` / `3d` are picture-presentation
+attributes with no mediavocab home yet — they ride a classifier-local
+`presentation` axis until Phase 2 adds a `PictureFormat` enum. `dubbed` likewise
+has no mediavocab home yet (deferred to Phase 2). `mood` / `era` are dropped from
+the taxonomy (not axiom-admissible; a release year feeds `Signals.year`).
 
 The `content_form_genres` head is the one the **content filter reads**. Because it
 is its own head, it can flag `adult` **independently of the leaf** — a request can
@@ -152,8 +158,11 @@ out-of-band knowledge of what it trained on:
   ├── playback_type.onnx       # audio / video / paged / interactive
   ├── structure.onnx           # single / episodic / continuous / collection
   ├── content_form_genres.onnx # MULTI-LABEL adult/anime/animation/asmr  ← content filter
-  ├── tags.onnx                # MULTI-LABEL genre:rock/mood:chill/era:1980s
-  ├── qualifiers.onnx          # MULTI-LABEL black_and_white/silent/live/…
+  ├── content_genres.onnx      # MULTI-LABEL  mediavocab.KNOWN_GENRES
+  ├── content_form.onnx        # SINGLE  trailer/teaser/behind_scenes/excerpt/…
+  ├── programme_format.onnx    # SINGLE  documentary/news/concert/stand_up/…
+  ├── accessibility.onnx       # MULTI-LABEL subtitles/audio_description/sign_language
+  ├── variant.onnx             # SINGLE  directors/extended/remastered/colorized/…
   ├── explicitness.onnx        # clean / adult  (when trained)
   ├── play.onnx                # back-compat alias of the media_type head
   └── meta.json
@@ -225,6 +234,15 @@ and run on `onnxruntime`+`numpy` only.
 
 ## 5. Benchmark
 
+> **Note.** The numbers below were measured on the *pre-alignment* taxonomy
+> (`tags` / `qualifiers` heads). The mediavocab-axes alignment (this change)
+> replaces those with the `content_form` / `programme_format` / `accessibility` /
+> `variant` / `content_genres` heads; the dataset schema is already aligned, but
+> the model retrain is a separate planned step, so these figures will be
+> re-measured after the retrain on the aligned taxonomy. The single-label
+> media-axis rows (`domain` / `media_type` / `playback_type` / `structure` /
+> `explicitness`) are unaffected.
+
 Held-out **test split: 34,700 utterances**. Per axis, the lift across the three
 implemented rungs (**rules → learned context-only → learned context+NER**) is the
 result. (Source: [benchmarks/ladder_results.md](../benchmarks/ladder_results.md).)
@@ -241,17 +259,19 @@ result. (Source: [benchmarks/ladder_results.md](../benchmarks/ladder_results.md)
 
 ### Multi-label axes — macro-F1
 
-| axis | rules | learned-context | learned-context+NER |
-|---|---|---|---|
-| content_form_genres | 0.720 | 0.729 | 0.979 |
-| tags | 0.000 | 0.561 | 0.596 |
-| qualifiers | 0.000 | 0.780 | 0.945 |
+| axis (pre-alignment) | maps to (post-alignment) | rules | learned-context | learned-context+NER |
+|---|---|---|---|---|
+| content_form_genres | content_form_genres | 0.720 | 0.729 | 0.979 |
+| tags (genre slice) | content_genres | 0.000 | 0.561 | 0.596 |
+| qualifiers | content_form + accessibility + presentation | 0.000 | 0.780 | 0.945 |
 
-The `tags` macro-F1 is scored over the head's **modelled label space** (its
-top-`TAGS_TOP_K` namespaced labels) — the honest in-scope task, not over the
-thousands of distinct raw genre values it cannot model (§6b). Folding genre, mood
-and era into this one head lifts it from the ~0.00–0.10 the old three starved
-single-label heads scored to **0.56 → 0.60**.
+The `content_genres` macro-F1 is scored over the head's **modelled label space**
+(its top-`CONTENT_GENRE_TOP_K` ⊆ `KNOWN_GENRES` labels) — the honest in-scope
+task, not over the thousands of distinct raw genre values it cannot model (§6b).
+The `qualifiers` row aggregated cues that the alignment splits across the
+`content_form` (trailer / behind_scenes / …), `accessibility` (audio_description)
+and classifier-local `presentation` (bw / silent) axes; per-axis figures land
+with the retrain.
 
 ### Content filter (driven by the `content_form_genres` axis)
 
@@ -264,7 +284,8 @@ single-label heads scored to **0.56 → 0.60**.
 The headline lifts (rules → context → context+NER): `media_type` accuracy
 0.66 → 0.79 → 0.97; `playback_type` 0.72 → 0.90 → 0.99; `structure`
 0.74 → 0.91 → 0.99; `content_form_genres` macro-F1 0.72 → 0.73 → 0.98;
-`qualifiers` 0 → 0.78 → 0.95; `tags` 0 → 0.56 → 0.60; adult-block recall
+the pre-alignment `qualifiers`/`tags` heads 0 → 0.78 → 0.95 / 0 → 0.56 → 0.60
+(re-measured per the new axes after the retrain); adult-block recall
 0.48 → 0.48 → 0.93; hentai recall 0.45 → 0.45 → 0.94 — at a near-zero false-block
 rate and sub-millisecond latency in a 289 KiB bundle. The saturated `.intent`
 templates and the enriched `kw_*` keyword vocabularies lift the **rules floor**
@@ -287,16 +308,14 @@ ground truth lives in the slot value — not in a cue word — is fundamentally
 under-determined by these features. This is a property of the representation, not
 of the chosen estimator; a bigger model on the same features hits the same wall.
 
-**(b) the `tags` axis (genre / mood / era) is starved.** The folded `tags` head
-scores low and barely moves from context to context+NER, because its signal is
-exactly the value text the features drop: the decade is *in* the year string, the
-mood is *in* the activity phrase, the real genre is *in* the genre slot value.
-Folding the three into one namespaced multi-label head (instead of three starved
-single-label heads) keeps the axis count honest, but does not by itself recover
-the signal — that is the direct motivation for the **semantic** rung (§3):
-embedding the surface string is the only way to read which genre / mood / era was
-named. The head is shipped so the rung is ready to train, not because the current
-features predict it well.
+**(b) the `content_genres` axis is starved.** The genre head scores low and
+barely moves from context to context+NER, because its signal is exactly the value
+text the features drop: the real genre is *in* the genre slot value, not in a cue
+word. This is the direct motivation for the **semantic** rung (§3): embedding the
+surface string is the only way to read which genre was named. The head is shipped
+so the rung is ready to train, not because the current features predict it well.
+(`mood` / `era` are no longer modelled axes — dropped in the mediavocab-axes
+alignment; a release year feeds `Signals.year` directly.)
 
 **(c) Synthetic / degenerate label regions.** The `domain` head's negative class
 is **synthetic** — the all-zero feature vector (no keyword or NER evidence)

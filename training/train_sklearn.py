@@ -72,8 +72,8 @@ _HERE = os.path.dirname(os.path.abspath(__file__))
 REPO_ROOT = os.path.dirname(_HERE)
 
 # Keyword (context) feature columns — the order the runtime extractor uses.
-# Plain .voc presence flags + the per-value genre/mood/era flags so the
-# content_genre / mood / era heads can learn *which* value was named.
+# Plain .voc presence flags + the per-value genre flags so the genre head can
+# learn *which* value was named.
 KEYWORD_COLS: List[str] = ([col for _voc, col in _KEYWORD_VOCABS]
                            + list(VALUE_FEATURE_COLS))
 
@@ -81,12 +81,9 @@ FEATURE_SETS = ("context", "context_ner")
 
 # Default per-label threshold for the multi-label (sigmoid) heads.
 DEFAULT_MULTILABEL_THRESHOLD = 0.5
-# Cap the open-vocabulary descriptive heads to their most frequent labels so they
-# stay a tractable multi-label problem (the long tail collapses to "no tag").  The
-# ``tags`` head carries the namespaced genre/mood/era values, so it gets a larger
-# cap than the old standalone content_genre head did.
+# Cap the open-vocabulary ``content_genres`` head to its most frequent labels so
+# it stays a tractable multi-label problem (the long tail collapses to "no tag").
 CONTENT_GENRE_TOP_K = 40
-TAGS_TOP_K = 80
 
 
 # ---------------------------------------------------------------------------
@@ -109,11 +106,12 @@ HEAD_SPECS: List[Tuple[str, str, str]] = [
     ("explicitness", "explicitness", "single"),
     ("control_intent", "control_intent", "single"),
     ("content_form_genres", "content_form_genres", "multi"),
-    # the namespaced descriptive axis — genre/mood/era folded into ONE multi-label
-    # head (``genre:rock`` / ``mood:chill`` / ``era:1980s``).  The standalone
-    # mood / era / content_genre heads were demoted to this single tags head.
-    ("tags", "tags", "multi"),
-    ("qualifiers", "qualifiers", "multi"),
+    # the mediavocab axes (the classifier emits mediavocab's own vocabulary)
+    ("content_genres", "content_genres", "multi"),
+    ("content_form", "content_form", "single"),
+    ("programme_format", "programme_format", "single"),
+    ("accessibility", "accessibility", "multi"),
+    ("variant", "variant", "single"),
 ]
 
 
@@ -464,8 +462,7 @@ def train(data_dir, out_dir, seed=42):
             if kind == "single":
                 info = train_single_head(axis, column, train_df, val_df, cols)
             else:
-                top_k = {"content_genre": CONTENT_GENRE_TOP_K,
-                         "tags": TAGS_TOP_K}.get(axis)
+                top_k = {"content_genres": CONTENT_GENRE_TOP_K}.get(axis)
                 info = train_multi_head(axis, column, train_df, val_df, cols,
                                         top_k=top_k)
             heads[axis] = info

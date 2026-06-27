@@ -108,8 +108,9 @@ load_media_classifier({"media_classifier_onnx_model": "/models/ocp-bundle"})
 ```
 
 A trained classifier with **one ONNX head per axis** — `domain`, `media_type`,
-`playback_type`, `structure`, `explicitness` (single-label) and
-`content_form_genres`, `tags`, `qualifiers` (multi-label) — plus `numpy`. It
+`playback_type`, `structure`, `explicitness`, `content_form`, `programme_format`,
+`variant` (single-label) and `content_form_genres`, `content_genres`,
+`accessibility` (multi-label) — plus `numpy`. It
 depends on raw `onnxruntime` + `numpy` only. The factory loads it from a
 self-describing **model-bundle directory** of `<axis>.onnx` files plus a
 `meta.json` manifest (which carries the ordered feature names, the per-head

@@ -93,20 +93,18 @@ _KEYWORD_VOCABS: List[Tuple[str, str]] = [
 # Per-VALUE keyword features for the bounded categorical axes.
 #
 # The plain keyword vocabs above fire ``ner_music_genre=1`` / ``kw_music=1`` —
-# they signal *that* a genre/mood/era was named but not *which* one, so the
-# ``content_genre`` / ``mood`` / ``era`` heads cannot tell metal from jazz.
-# These tables add ONE feature **per canonical value** (``kw_genre_horror``,
-# ``kw_mood_workout``, ``kw_era_1980s``) that fires when any of its surface words
-# appears in the utterance (word-boundary).  The value space is **bounded and
-# curated** (the mediavocab ``KNOWN_GENRES`` ∪ the common entity-pool genres /
-# moods / decades) so the feature set stays small — see docs/model.md.  Open /
-# unseen genres are out of scope for this path (the semantic backend handles
-# those — the next rung).
+# they signal *that* a genre was named but not *which* one, so the genre head
+# cannot tell metal from jazz.  This table adds ONE feature **per canonical
+# value** (``kw_genre_horror``) that fires when any of its surface words appears
+# in the utterance (word-boundary).  The value space is **bounded and curated**
+# to mediavocab ``KNOWN_GENRES`` so the feature set stays small and the
+# classifier never emits a tag the taxonomy does not recognise — see
+# docs/model.md.  Open / unseen genres are out of scope for this path (the
+# semantic backend handles those — the next rung).
 #
-# Each table maps ``canonical_value -> (surface words / synonyms)``.  Words are
+# The table maps ``canonical_value -> (surface words / synonyms)``.  Words are
 # matched case-insensitively on word boundaries; the canonical value is what the
-# ``content_genre`` / ``mood`` / ``era`` heads learn to predict, so it MUST match
-# the label the dataset writes for that axis (lowercased slot value / decade).
+# genre head learns to predict, so it MUST be a ``KNOWN_GENRES`` value.
 # ---------------------------------------------------------------------------
 
 GENRE_VALUE_VOCAB: Dict[str, Tuple[str, ...]] = {
@@ -124,15 +122,13 @@ GENRE_VALUE_VOCAB: Dict[str, Tuple[str, ...]] = {
     "crime": ("crime", "gangster"),
     "western": ("western",),
     "war": ("war",),
-    "documentary": ("documentary", "documentaries", "docu"),
     "biography": ("biography", "biopic", "biographical"),
-    "history": ("history", "historical"),
+    "historical": ("history", "historical"),
     "musical": ("musical",),
     "family": ("family",),
     "animation": ("animation", "animated"),
     "anime": ("anime",),
     "noir": ("noir", "film noir"),
-    "sport": ("sport", "sports"),
     # --- music ---
     "rock": ("rock",),
     "metal": ("metal", "heavy metal", "death metal"),
@@ -159,7 +155,6 @@ GENRE_VALUE_VOCAB: Dict[str, Tuple[str, ...]] = {
     "gospel": ("gospel",),
     "latin": ("latin",),
     # --- spoken / other ---
-    "comedy_standup": ("stand up", "standup", "stand-up"),
     "true_crime": ("true crime",),
     "educational": ("educational", "education"),
     "cooking": ("cooking",),
@@ -167,52 +162,16 @@ GENRE_VALUE_VOCAB: Dict[str, Tuple[str, ...]] = {
     "travel": ("travel",),
 }
 
-MOOD_VALUE_VOCAB: Dict[str, Tuple[str, ...]] = {
-    "chill": ("chill", "chilled", "relaxing", "relaxed", "mellow", "lofi", "lo fi"),
-    "relax": ("relax", "relaxation", "calm", "calming", "soothing"),
-    "workout": ("workout", "gym", "exercise", "training", "pump up"),
-    "study": ("study", "studying", "homework", "concentration"),
-    "focus": ("focus", "deep work", "productivity"),
-    "party": ("party", "partying", "dance party", "rave"),
-    "sleep": ("sleep", "sleeping", "bedtime", "night night"),
-    "morning": ("morning", "wake up", "good morning"),
-    "dinner": ("dinner", "dining"),
-    "driving": ("driving", "road trip", "roadtrip", "car ride"),
-    "romantic": ("romantic mood", "date night"),
-    "happy": ("happy", "feel good", "upbeat", "cheerful"),
-    "sad": ("sad", "melancholy", "moody"),
-    "energetic": ("energetic", "energy", "high energy"),
-    "summer": ("summer",),
-    "throwback": ("throwback", "nostalgia", "nostalgic"),
-    "meditation": ("meditation", "meditate", "mindfulness"),
-    "running": ("running", "jogging", "run"),
-    "yoga": ("yoga",),
-    "gaming": ("gaming",),
-}
-
-# Decade canonical value -> surface forms.  Canonical matches the dataset's
-# ``decade`` column (e.g. ``1980s``), which is what the ``era`` head predicts.
-ERA_VALUE_VOCAB: Dict[str, Tuple[str, ...]] = {
-    "1950s": ("50s", "1950s", "fifties", "nineteen fifties"),
-    "1960s": ("60s", "1960s", "sixties", "nineteen sixties"),
-    "1970s": ("70s", "1970s", "seventies", "nineteen seventies"),
-    "1980s": ("80s", "1980s", "eighties", "nineteen eighties"),
-    "1990s": ("90s", "1990s", "nineties", "nineteen nineties"),
-    "2000s": ("2000s", "noughties", "two thousands", "early 2000s"),
-    "2010s": ("2010s", "twenty tens"),
-    "2020s": ("2020s", "twenty twenties"),
-}
-
 # (axis prefix, value-vocab table) — the menu of per-value feature columns.
+# Only the genre value-vocab remains: mood / era are no longer modelled axes
+# (dropped from the taxonomy in the mediavocab-axes alignment).
 _VALUE_VOCABS: List[Tuple[str, Dict[str, Tuple[str, ...]]]] = [
     ("kw_genre", GENRE_VALUE_VOCAB),
-    ("kw_mood", MOOD_VALUE_VOCAB),
-    ("kw_era", ERA_VALUE_VOCAB),
 ]
 
 
 def _value_feature_columns() -> List[str]:
-    """Ordered ``kw_genre_* / kw_mood_* / kw_era_*`` feature column names."""
+    """Ordered ``kw_genre_*`` feature column names."""
     cols: List[str] = []
     for prefix, table in _VALUE_VOCABS:
         for value in table:
@@ -254,7 +213,7 @@ class CategoricalFeatureExtractor:
     """
 
     # compiled once per process — the per-value vocabs are language-agnostic
-    # (genre/mood/era surface words are matched the same across locales).
+    # (genre surface words are matched the same across locales).
     _VALUE_MATCHERS: List[Tuple[str, "re.Pattern"]] = _compile_value_matchers()
 
     def __init__(
@@ -291,10 +250,10 @@ class CategoricalFeatureExtractor:
                     # a missing/unreadable .voc file simply yields no feature
                     continue
 
-        # Per-VALUE genre / mood / era features (curated bounded vocab) — these
-        # tell the content_genre / mood / era heads *which* value was named, not
-        # just that some genre word occurred.  Independent of the .voc matcher so
-        # they fire even when ``voc_matcher`` is None.
+        # Per-VALUE genre features (curated bounded vocab ⊆ KNOWN_GENRES) — these
+        # tell the genre head *which* value was named, not just that some genre
+        # word occurred.  Independent of the .voc matcher so they fire even when
+        # ``voc_matcher`` is None.
         for col_name, rx in self._VALUE_MATCHERS:
             if rx.search(utterance):
                 feat[col_name] = "1"

@@ -63,7 +63,6 @@ from ovos_media_classifier.intents import OCPDomain
 from training.train_sklearn import (
     HEAD_SPECS,
     KEYWORD_COLS,
-    TAGS_TOP_K,
     CONTENT_GENRE_TOP_K,
     DEFAULT_MULTILABEL_THRESHOLD,
     _json_list,
@@ -452,7 +451,7 @@ def build_tasks(train_df, val_df):
                 "_column": column,
             }
         else:
-            top_k = {"tags": TAGS_TOP_K, "content_genre": CONTENT_GENRE_TOP_K}.get(axis)
+            top_k = {"content_genres": CONTENT_GENRE_TOP_K}.get(axis)
             labels = _multi_labels(train_df, column, top_k)
             if not labels:
                 continue

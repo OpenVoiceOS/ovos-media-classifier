@@ -29,7 +29,7 @@ OCPControlIntent
   The string values match the padatious intent names (without the ".intent" suffix).
 """
 from enum import Enum
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 # The canonical media taxonomy is owned by ``mediavocab`` (a str-Enum), not by
 # this package.  We re-export it under the historical name ``MediaType`` so the
@@ -38,6 +38,12 @@ from typing import Dict, List
 # genre tags at the boundary (see ``LABEL_TO_MEDIA_TYPE`` / ``LABEL_TO_GENRES``).
 from mediavocab import MediaType
 from mediavocab.taxonomy.genre import KNOWN_GENRES
+from mediavocab.taxonomy import (
+    ContentForm,
+    ProgrammeFormat,
+    AccessibilityKind,
+    VariantKind,
+)
 
 
 class OCPDomain(str, Enum):
@@ -268,7 +274,7 @@ LABEL_TO_MEDIA_TYPE: Dict[str, MediaType] = {
     "music_video":        MediaType.MUSIC_VIDEO,
     # Supplementary / promotional video content — the parent media_type stays
     # MOVIE; the "I want the trailer / BTS, not the full title" distinction is
-    # carried on the orthogonal QUALIFIERS axis (see ``LABEL_TO_QUALIFIERS``).
+    # carried on the orthogonal ContentForm axis (see ``LABEL_TO_CONTENT_FORM``).
     "trailer":            MediaType.MOVIE,
     "teaser":             MediaType.MOVIE,
     "behind_the_scenes":  MediaType.MOVIE,
@@ -307,42 +313,128 @@ def genres_for_label(label: str) -> List[str]:
 
 
 # ---------------------------------------------------------------------------
-# Raw detection label → result-narrowing QUALIFIERS
+# Raw detection label → mediavocab ContentForm  (the experiential-kind axis)
 #
 # Some labels are not a media *type* but a **supplementary / promotional form**
 # of a parent title — a trailer, a teaser, behind-the-scenes, the making-of,
 # bloopers, deleted scenes, a featurette, a cast interview, a clip.  Their
-# ``MediaType`` stays the parent (MOVIE — see ``LABEL_TO_MEDIA_TYPE``); the
-# "I want the trailer / BTS, NOT the full title" signal would otherwise be lost,
-# so it is promoted onto the orthogonal **qualifiers** axis (alongside
-# ``black_and_white`` / ``silent`` / ``audio_described``).  A provider can then
-# narrow the result set to the extra/supplement rather than the feature.
+# ``MediaType`` stays the parent (MOVIE / EPISODIC — see ``LABEL_TO_MEDIA_TYPE``);
+# the "I want the trailer / BTS, NOT the full title" signal rides the orthogonal
+# ``mediavocab.ContentForm`` axis.  The finer classifier labels collapse onto
+# mediavocab's set (making_of / bloopers / deleted_scenes / featurette →
+# ``behind_scenes``; clip → ``excerpt``; interview → ``supplement``).
 # ---------------------------------------------------------------------------
-LABEL_TO_QUALIFIERS: Dict[str, List[str]] = {
-    "trailer":           ["trailer"],
-    "teaser":            ["teaser"],
-    "behind_the_scenes": ["behind_the_scenes"],
-    "making_of":         ["making_of"],
-    "bloopers":          ["bloopers"],
-    "deleted_scenes":    ["deleted_scenes"],
-    "featurette":        ["featurette"],
-    "interview":         ["interview"],
-    "clip":              ["clip"],
-    # form qualifiers carried by the silent / b&w / audio-description labels
-    "silent_movie":      ["silent"],
-    "bw_movie":          ["black_and_white"],
-    "audio_description":  ["audio_described"],
+LABEL_TO_CONTENT_FORM: Dict[str, ContentForm] = {
+    "trailer":           ContentForm.TRAILER,
+    "teaser":            ContentForm.TEASER,
+    "behind_the_scenes": ContentForm.BEHIND_SCENES,
+    "making_of":         ContentForm.BEHIND_SCENES,
+    "bloopers":          ContentForm.BEHIND_SCENES,
+    "deleted_scenes":    ContentForm.BEHIND_SCENES,
+    "featurette":        ContentForm.BEHIND_SCENES,
+    "interview":         ContentForm.SUPPLEMENT,
+    "clip":              ContentForm.EXCERPT,
 }
 
 
-def qualifiers_for_label(label: str) -> List[str]:
-    """Return the result-narrowing qualifiers implied by a raw detection label.
+def content_form_for_label(label: str) -> Optional[ContentForm]:
+    """Return the :class:`mediavocab.ContentForm` implied by a raw label, or None.
 
-    Mirrors :func:`genres_for_label`: supplementary-content labels (``trailer`` /
-    ``behind_the_scenes`` / ``bloopers`` / …) keep their parent ``MediaType`` but
-    surface the distinguishing qualifier here so the signal is never lost.
+    Supplementary-content labels (``trailer`` / ``behind_the_scenes`` /
+    ``bloopers`` / …) keep their parent ``MediaType`` but surface the
+    distinguishing experiential kind here so the signal is never lost.
     """
-    return list(LABEL_TO_QUALIFIERS.get(label, []))
+    return LABEL_TO_CONTENT_FORM.get(label)
+
+
+# ---------------------------------------------------------------------------
+# Raw detection label → mediavocab ProgrammeFormat  (structural-format axis)
+#
+# A documentary / news / concert / stand-up / talk-show / sports broadcast is a
+# *structural programme format*, not a media type — un-collapsed from the old
+# leaf squashing (documentary→MOVIE, news→RADIO).  The ``media_type`` stays the
+# carrier (video / episodic / movie); the format rides this orthogonal axis.
+# ``documentary`` is also a genre (T1), so it is *additionally* emitted in
+# ``LABEL_TO_GENRES`` where natural.
+# ---------------------------------------------------------------------------
+LABEL_TO_PROGRAMME_FORMAT: Dict[str, ProgrammeFormat] = {
+    "documentary": ProgrammeFormat.DOCUMENTARY,
+    "news":        ProgrammeFormat.NEWS,
+    "concert":     ProgrammeFormat.CONCERT,
+    "stand_up":    ProgrammeFormat.STAND_UP,
+    "talk_show":   ProgrammeFormat.TALK_SHOW,
+    "sports":      ProgrammeFormat.SPORTS,
+}
+
+
+def programme_format_for_label(label: str) -> Optional[ProgrammeFormat]:
+    """Return the :class:`mediavocab.ProgrammeFormat` implied by a raw label."""
+    return LABEL_TO_PROGRAMME_FORMAT.get(label)
+
+
+# ---------------------------------------------------------------------------
+# Raw detection label → mediavocab AccessibilityKind  (per-release a11y axis)
+#
+# ``subtitled`` / ``audio_described`` / ``sign_language`` cues request an
+# accessibility asset on the release, not a different work.  ``dubbed`` has no
+# mediavocab home yet (deferred to Phase 2).
+# ---------------------------------------------------------------------------
+LABEL_TO_ACCESSIBILITY: Dict[str, AccessibilityKind] = {
+    "subtitled":        AccessibilityKind.SUBTITLES,
+    "audio_described":  AccessibilityKind.AUDIO_DESCRIPTION,
+    "audio_description": AccessibilityKind.AUDIO_DESCRIPTION,
+    "sign_language":    AccessibilityKind.SIGN_LANGUAGE,
+}
+
+
+def accessibility_for_label(label: str) -> Optional[AccessibilityKind]:
+    """Return the :class:`mediavocab.AccessibilityKind` implied by a raw label."""
+    return LABEL_TO_ACCESSIBILITY.get(label)
+
+
+# ---------------------------------------------------------------------------
+# Raw detection label → mediavocab VariantKind  (work-level restructuring axis)
+#
+# A colorized / director's-cut / extended / remastered / fan-edit is a distinct
+# *cut* of the canonical work.
+# ---------------------------------------------------------------------------
+LABEL_TO_VARIANT: Dict[str, VariantKind] = {
+    "colorized":     VariantKind.COLORIZED,
+    "directors_cut": VariantKind.DIRECTORS,
+    "extended":      VariantKind.EXTENDED,
+    "remastered":    VariantKind.REMASTERED,
+    "fanedit":       VariantKind.FANEDIT,
+}
+
+
+def variant_for_label(label: str) -> Optional[VariantKind]:
+    """Return the :class:`mediavocab.VariantKind` implied by a raw label."""
+    return LABEL_TO_VARIANT.get(label)
+
+
+# ---------------------------------------------------------------------------
+# Raw detection label → classifier-local PRESENTATION flag  (Phase 2 placeholder)
+#
+# ``black_and_white`` / ``silent`` / ``3d`` are picture/presentation technical
+# attributes that have **no mediavocab home yet** — Phase 2 adds a
+# ``PictureFormat`` enum to mediavocab and these redirect to it.  Until then they
+# stay an isolated classifier-local flag set so the signal is not lost and the
+# redirect is a single, contained change.
+# ---------------------------------------------------------------------------
+LABEL_TO_PRESENTATION: Dict[str, str] = {
+    "bw_movie":      "black_and_white",
+    "silent_movie":  "silent",
+    "3d":            "3d",
+}
+
+
+def presentation_for_label(label: str) -> Optional[str]:
+    """Return the classifier-local presentation flag implied by a raw label.
+
+    Placeholder until Phase 2 gives black_and_white / silent / 3d a mediavocab
+    ``PictureFormat`` home.
+    """
+    return LABEL_TO_PRESENTATION.get(label)
 
 
 # ---------------------------------------------------------------------------

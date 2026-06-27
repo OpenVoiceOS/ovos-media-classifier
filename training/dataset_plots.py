@@ -99,15 +99,16 @@ def plot_axes(df, out):
         ax.bar(vc.index, vc.values, color="#c44e52")
         ax.set_title(title)
         ax.tick_params(axis="x", labelrotation=30, labelsize=8)
-    # the tags namespace mix (genre:/mood:/era:)
+    # the mediavocab ContentForm distribution (trailer / behind_scenes / …)
     ns = Counter()
-    for v in df["tags"]:
-        for t in json.loads(v) if isinstance(v, str) else (v or []):
-            ns[t.split(":")[0]] += 1
+    if "content_form" in df.columns:
+        for v in df["content_form"]:
+            ns[v or "primary"] += 1
     ax = axs[1][1]
     if ns:
         ax.bar(list(ns.keys()), list(ns.values()), color="#8172b3")
-    ax.set_title("tags namespace mix (genre / mood / era)")
+        ax.tick_params(axis="x", labelrotation=30, labelsize=8)
+    ax.set_title("content_form distribution")
     fig.suptitle("coarse axis distributions")
     fig.tight_layout()
     fig.savefig(os.path.join(out, "axis_distributions.png"), dpi=110)
