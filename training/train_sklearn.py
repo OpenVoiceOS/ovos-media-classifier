@@ -308,6 +308,13 @@ def train_multi_head(name, column, train_df, val_df, cols, top_k=None):
     labels = [g for g, _ in counts.most_common(top_k)] if top_k \
         else sorted(counts)
     labels = sorted(labels)
+    # A single-label column is degenerate as a multi-label head: a one-column
+    # indicator makes OneVsRestClassifier emit a 1-D proba that the
+    # multilabel-indicator scorer cannot read.  Skip it (the runtime derives the
+    # axis instead), the same way a degenerate single-label head is skipped.
+    if len(labels) < 2:
+        return {"head": name, "kind": "multi", "status": "skipped",
+                "reason": f"degenerate column ({len(labels)} label)"}
     mlb = MultiLabelBinarizer(classes=labels)
 
     def _Y(df):
