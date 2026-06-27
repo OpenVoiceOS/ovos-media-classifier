@@ -1,6 +1,14 @@
 from abc import ABC, abstractmethod
 from typing import Tuple, List, Optional
 
+from mediavocab.taxonomy import (
+    ContentForm,
+    ProgrammeFormat,
+    AccessibilityKind,
+    VariantKind,
+    KNOWN_GENRES,
+)
+
 from ovos_media_classifier.intents import MediaType, OCPDomain, OCPControlIntent
 
 
@@ -24,15 +32,25 @@ class AbstractMediaClassifier(ABC):
     surface genre signal (keyword, guided, m2v) should override
     classify_genres() so the content filter can block on it.
 
-    Axes vs tags
-    ------------
-    The single-label **axes** (``domain`` / ``media_type`` / ``playback_type`` /
-    ``structure`` / ``explicitness`` / ``is_ocp_query`` / ``control_intent``) each
-    have one answer per query.  The multi-label **tags** axis
-    (:meth:`classify_tags`) collapses the open-vocabulary descriptive signals —
-    genre, mood and era — into ONE namespaced label space
-    (``genre:rock`` / ``mood:chill`` / ``era:1980s``); ``content_form_genres``
-    (the content-filter axis) and ``qualifiers`` (Signals) stay separate.
+    mediavocab axes
+    ---------------
+    The descriptive output is expressed in **mediavocab's own taxonomy** so the
+    classifier emits the same vocabulary the resolver / providers consume:
+
+      * :meth:`classify_content_form`   → ``mediavocab.ContentForm | None``
+        (primary / trailer / teaser / behind_scenes / excerpt / supplement / …)
+      * :meth:`classify_programme_format` → ``mediavocab.ProgrammeFormat | None``
+        (documentary / news / concert / stand_up / talk_show / sports / …)
+      * :meth:`classify_accessibility`  → ``list[mediavocab.AccessibilityKind]``
+        (subtitles / audio_description / sign_language / …)
+      * :meth:`classify_variant`        → ``mediavocab.VariantKind | None``
+        (directors / extended / remastered / colorized / fanedit / …)
+      * :meth:`classify_genres`         → ``list[str] ⊆ mediavocab.KNOWN_GENRES``
+        (the content filter reads ``adult`` / ``anime`` / … from here)
+
+    ``black_and_white`` / ``silent`` / ``3d`` are picture-presentation flags with
+    no mediavocab home yet; they ride :meth:`classify_presentation` as a
+    classifier-local placeholder until Phase 2 adds ``PictureFormat``.
     """
 
     @abstractmethod
@@ -95,10 +113,12 @@ class AbstractMediaClassifier(ABC):
         return domain != OCPDomain.NOT_OCP, conf
 
     def classify_genres(self, query: str, lang: str) -> List[str]:
-        """Return mediavocab genre tags implied by the query (default: none).
+        """Return ``mediavocab.KNOWN_GENRES`` tags implied by the query (default: none).
 
         Genres are orthogonal to ``MediaType`` and are what the content filter
-        blocks on (e.g. ``adult``).  Backends that can cheaply surface genre
+        blocks on (e.g. ``adult``).  Output is constrained to
+        ``mediavocab.KNOWN_GENRES`` so the classifier never emits a tag the
+        taxonomy does not recognise.  Backends that can cheaply surface genre
         (keyword, guided, m2v) should override this.
         """
         return []
@@ -144,70 +164,56 @@ class AbstractMediaClassifier(ABC):
         """
         return self.classify_genres(query, lang)
 
-    def classify_tags(self, query: str, lang: str) -> List[str]:
-        """The **namespaced descriptive tags** (multi-label) for the query.
+    def classify_content_form(self, query: str, lang: str) -> Optional[ContentForm]:
+        """The :class:`mediavocab.ContentForm` (trailer / teaser / behind_scenes
+        / excerpt / supplement / …) or ``None`` for a primary work.
 
-        A single multi-label axis that collapses the open-vocabulary *genre*,
-        *mood* and *era* signals into one namespaced label space::
-
-            ["genre:rock", "mood:chill", "era:1980s"]
-
-        Returns the empty set when no descriptive tag is implied.  The namespace
-        prefix (``genre:`` / ``mood:`` / ``era:``) keeps the three orthogonal
-        signals distinguishable while letting one head model them together (they
-        all live in the slot *value text*, not in a cue word).
-
-        Default: derived from the legacy :meth:`classify_content_genres` /
-        :meth:`classify_mood` / :meth:`classify_era` helpers, so untrained
-        backends still surface whatever they can.  A trained backend overrides
-        with its dedicated multi-label ``tags`` head.
+        Default: ``None`` — backends that surface supplementary-content cues
+        (keyword via ``TrailerKeyword`` / ``BloopersKeyword`` / …, trained
+        ``content_form`` head) override this.  The parent ``MediaType`` stays the
+        feature (MOVIE / EPISODIC); the experiential kind rides this axis.
         """
-        tags: List[str] = []
-        for g in self.classify_content_genres(query, lang):
-            tags.append(f"genre:{g}")
-        mood = self.classify_mood(query, lang)
-        if mood:
-            tags.append(f"mood:{mood}")
-        era = self.classify_era(query, lang)
-        if era:
-            tags.append(f"era:{era}")
-        return list(dict.fromkeys(tags))
+        return None
 
-    @staticmethod
-    def tags_namespace(tags: List[str], namespace: str) -> List[str]:
-        """The bare values of one ``namespace:`` slice of a ``tags`` list.
+    def classify_programme_format(
+        self, query: str, lang: str
+    ) -> Optional[ProgrammeFormat]:
+        """The :class:`mediavocab.ProgrammeFormat` (documentary / news / concert
+        / stand_up / talk_show / sports / …) or ``None``.
 
-        ``tags_namespace(["genre:rock", "mood:chill"], "genre") == ["rock"]`` —
-        the ``genre:`` slice is the *genre-classifier* view of the tags head.
+        Structural programme format, orthogonal to genre and media type.
+        Default: ``None`` — backends that surface format cues override this.
         """
-        pre = f"{namespace}:"
-        return [t[len(pre):] for t in tags if t.startswith(pre)]
+        return None
 
-    def classify_content_genres(self, query: str, lang: str) -> List[str]:
-        """The **real** genre(s) — rock/jazz/action/comedy/horror/… (multi-label).
+    def classify_accessibility(
+        self, query: str, lang: str
+    ) -> List[AccessibilityKind]:
+        """The requested :class:`mediavocab.AccessibilityKind` assets
+        (subtitles / audio_description / sign_language / …), multi-label.
 
-        Orthogonal to the content-form tags.  This is the **genre-classifier**
-        view of the ``tags`` axis: the bare values of its ``genre:`` slice.
-        Default: ``[]`` (the keyword backend does not model open-vocabulary
-        genre); a trained backend surfaces it from the ``tags`` head.
+        Default: ``[]`` — backends that surface accessibility cues override this.
         """
         return []
 
-    def classify_mood(self, query: str, lang: str) -> Optional[str]:
-        """The mood / activity (chill/workout/study/party/sleep/…) or ``None``.
+    def classify_variant(self, query: str, lang: str) -> Optional[VariantKind]:
+        """The :class:`mediavocab.VariantKind` (directors / extended / remastered
+        / colorized / fanedit / …) or ``None`` for the canonical cut.
 
-        The ``mood:`` slice of the ``tags`` axis (first value).  Default:
-        ``None`` — a trained backend surfaces it from the ``tags`` head.
+        Default: ``None`` — backends that surface variant cues override this.
         """
         return None
 
-    def classify_era(self, query: str, lang: str) -> Optional[str]:
-        """The release era / decade (e.g. ``"1980s"``) or ``None``.
+    def classify_presentation(self, query: str, lang: str) -> List[str]:
+        """Classifier-local picture-presentation flags (``black_and_white`` /
+        ``silent`` / ``3d``), multi-label.
 
-        The ``era:`` slice of the ``tags`` axis (first value).  Default:
-        ``None`` — a trained backend surfaces it from the ``tags`` head.
+        These technical presentation attributes have **no mediavocab home yet**;
+        Phase 2 adds a ``PictureFormat`` enum and this axis redirects to it.
+        Until then they are surfaced here so the signal is not lost.  Default:
+        ``[]``.
         """
-        return None
+        return []
 
     def classify_explicitness(self, query: str, lang: str) -> str:
         """``"adult"`` when an adult content-form tag is present, else ``"clean"``.
@@ -216,21 +222,6 @@ class AbstractMediaClassifier(ABC):
         """
         return "adult" if "adult" in self.classify_content_form_genres(query, lang) \
             else "clean"
-
-    def classify_qualifiers(self, query: str, lang: str) -> List[str]:
-        """Result-narrowing qualifiers (multi-label): ``black_and_white`` /
-        ``silent`` / ``live`` / ``subtitled`` / ``dubbed`` / ``audio_described``
-        and the supplementary-content forms ``trailer`` / ``teaser`` /
-        ``behind_the_scenes`` / ``making_of`` / ``bloopers`` / ``deleted_scenes``
-        / ``featurette`` / ``interview`` / ``clip`` — strong filter signals that
-        are *not* media types (their parent ``MediaType`` stays MOVIE; the
-        qualifier carries the "the trailer/BTS, not the full title" distinction).
-
-        Default: ``[]`` — backends that surface them (keyword via ``BWKeyword`` /
-        ``SilentKeyword`` / ``TrailerKeyword`` / ``BloopersKeyword`` / …, trained
-        ``qualifiers`` head) override this.
-        """
-        return []
 
     def classify_control_intent(self, query: str, lang: str):
         """The :class:`~ovos_media_classifier.intents.OCPControlIntent`, or ``None``.
@@ -261,31 +252,38 @@ class AbstractMediaClassifier(ABC):
         forwards the returned ``Signals`` straight to ``MediaProvider.search``
         without doing any parsing of its own.
 
-        The base populates the classification axes (``medium`` /
-        ``playback_type`` / ``content_genres``) plus the raw ``title``; backends
-        that extract entities (artist / year / season / episode) should override
-        to enrich the ``Signals`` further.
+        Every descriptive axis is emitted in **mediavocab's own vocabulary** so
+        the signals are lossless and directly comparable:
 
-        ``content_genres`` carries both the **content-form** tags (``adult`` /
-        ``anime`` / …) and the **real** genres (rock / action / …) so a provider
-        can filter on either.  The result-narrowing **qualifiers**
-        (``black_and_white`` / ``silent`` / ``subtitled`` / …) are joined into
-        the ``edition`` filter field — a strong cut on the candidate set.
+          * ``medium``        ← the leaf ``MediaType``
+          * ``playback_type`` ← the modality axis
+          * ``content_genres``← ``classify_genres`` (⊆ ``KNOWN_GENRES``)
+          * ``content_form``  ← ``classify_content_form`` (trailer / supplement / …)
+          * ``variant_kind``  ← ``classify_variant`` (directors / remastered / …)
+
+        ``programme_format`` (documentary / news / …) and ``accessibility`` are
+        *not* set: :class:`mediavocab.Signals` has no field for them in this
+        spec version (Signals forbids extra keys), so they are exposed on the
+        per-axis methods only until mediavocab grows the fields (Phase 2).  The
+        picture-presentation flags (``black_and_white`` / ``silent`` / ``3d``)
+        likewise wait for Phase 2's ``picture_format``.
+
+        Backends that extract entities (artist / year / season / episode) should
+        override to enrich the ``Signals`` further.
         """
         from mediavocab import Signals, MediaType
         full = self.classify_full(query, lang)
         sentinels = {MediaType.GENERIC, MediaType.NOT_MEDIA, MediaType.CONTROL}
 
-        # form genres (the content-filter axis) + the real genre(s)
-        genres = list(dict.fromkeys(
-            list(full.genres) + list(self.classify_content_genres(query, lang))))
-        qualifiers = self.classify_qualifiers(query, lang)
+        # genres constrained to KNOWN_GENRES (the content-filter axis)
+        genres = [g for g in dict.fromkeys(full.genres) if g in KNOWN_GENRES]
 
         return Signals.as_query(
             title=query or None,
             medium=full.media_type if full.media_type not in sentinels else None,
             playback_type=full.playback_type,
             content_genres=genres,
-            edition=", ".join(qualifiers) or None,
+            content_form=self.classify_content_form(query, lang),
+            variant_kind=self.classify_variant(query, lang),
             language=(lang.split("-")[0] if lang else None),
         )

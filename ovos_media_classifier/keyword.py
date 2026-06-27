@@ -55,6 +55,7 @@ from mediavocab import (
     PlaybackType,
     infer_playback_type,
 )
+from mediavocab.taxonomy import ContentForm, AccessibilityKind, ProgrammeFormat
 
 from ovos_media_classifier.axes import (
     Structure,
@@ -187,30 +188,47 @@ _CONTROL_VOC_ORDER: List[Tuple[str, "OCPControlIntent"]] = [
 ]
 
 # ---------------------------------------------------------------------------
-# Result-narrowing QUALIFIER voc resolution
+# Supplementary-content voc → mediavocab.ContentForm
 #
-# Supplementary-content + editorial-form cues that are NOT a media type: their
-# parent ``MediaType`` stays MOVIE (see ``LABEL_TO_QUALIFIERS``) but the
-# distinguishing qualifier is surfaced here so the "trailer / BTS, not the full
-# title" signal is never lost.  ``classify_qualifiers`` matches every entry on
-# word boundaries (multi-label — several may fire).  The order is informational
-# only; all matches are collected.  Each entry: (voc_name, qualifier_label).
+# Cues that are NOT a media type but an experiential *kind* of a parent title:
+# the parent ``MediaType`` stays MOVIE / EPISODIC but the "trailer / BTS, not
+# the full title" signal rides ``mediavocab.ContentForm``.  ``classify_content_form``
+# returns the FIRST match in this order (the experiential kind is single-valued
+# on a work), so the more-specific cue is preferred.  Each entry:
+# (voc_name, ContentForm).
 # ---------------------------------------------------------------------------
-_QUALIFIER_VOC_ORDER: List[Tuple[str, str]] = [
-    # supplementary / promotional content
-    ("TeaserKeyword",          "teaser"),
-    ("TrailerKeyword",         "trailer"),
-    ("MakingOfKeyword",        "making_of"),
-    ("BehindTheScenesKeyword", "behind_the_scenes"),
-    ("BloopersKeyword",        "bloopers"),
-    ("DeletedScenesKeyword",   "deleted_scenes"),
-    ("FeaturetteKeyword",      "featurette"),
-    ("InterviewKeyword",       "interview"),
-    ("ClipKeyword",            "clip"),
-    # editorial / presentation forms
+_CONTENT_FORM_VOC_ORDER: List[Tuple[str, ContentForm]] = [
+    ("TeaserKeyword",          ContentForm.TEASER),
+    ("TrailerKeyword",         ContentForm.TRAILER),
+    ("MakingOfKeyword",        ContentForm.BEHIND_SCENES),
+    ("BehindTheScenesKeyword", ContentForm.BEHIND_SCENES),
+    ("BloopersKeyword",        ContentForm.BEHIND_SCENES),
+    ("DeletedScenesKeyword",   ContentForm.BEHIND_SCENES),
+    ("FeaturetteKeyword",      ContentForm.BEHIND_SCENES),
+    ("InterviewKeyword",       ContentForm.SUPPLEMENT),
+    ("ClipKeyword",            ContentForm.EXCERPT),
+]
+
+# Programme-format voc → mediavocab.ProgrammeFormat (single-valued).
+# Only the cues with bundled vocabulary are wired; the rest of the enum
+# (concert / stand_up / talk_show / reality / sports / quiz) has no .voc yet.
+# documentary / news keep their carrier ``MediaType`` (MOVIE / RADIO) — the
+# structural format rides this orthogonal axis (un-collapsed from the leaf).
+_PROGRAMME_FORMAT_VOC_ORDER: List[Tuple[str, ProgrammeFormat]] = [
+    ("DocumentaryKeyword",     ProgrammeFormat.DOCUMENTARY),
+    ("NewsKeyword",            ProgrammeFormat.NEWS),
+]
+
+# Accessibility-asset voc → mediavocab.AccessibilityKind (multi-label).
+_ACCESSIBILITY_VOC_ORDER: List[Tuple[str, AccessibilityKind]] = [
+    ("ADKeyword",              AccessibilityKind.AUDIO_DESCRIPTION),
+]
+
+# Picture-presentation voc → classifier-local flag (Phase-2 PictureFormat home).
+# Multi-label; ``classify_presentation`` collects every match.
+_PRESENTATION_VOC_ORDER: List[Tuple[str, str]] = [
     ("SilentKeyword",          "silent"),
     ("BWKeyword",              "black_and_white"),
-    ("ADKeyword",              "audio_described"),
 ]
 
 
@@ -409,30 +427,64 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
         _media_type, genres, _ = self._classify_leaf(query, lang, None)
         return list(genres)
 
-    def classify_qualifiers(self, query: str, lang: str) -> List[str]:
-        """Return result-narrowing qualifiers implied by the query.
+    def classify_content_form(self, query: str, lang: str) -> Optional[ContentForm]:
+        """Return the :class:`mediavocab.ContentForm` implied by the query.
 
-        These are strong filter signals that are *not* media types — the
-        supplementary-content forms (``trailer`` / ``teaser`` /
-        ``behind_the_scenes`` / ``making_of`` / ``bloopers`` / ``deleted_scenes``
-        / ``featurette`` / ``interview`` / ``clip``) and the editorial forms
-        (``silent`` / ``black_and_white`` / ``audio_described``).  The parent
-        ``MediaType`` stays MOVIE; the qualifier carries the "I want the
-        trailer / BTS, not the full title" distinction that would otherwise be
-        lost.
-
-        Matched directly from the ``.voc`` evidence (each on word boundaries), so
-        "show me bloopers" → ``["bloopers"]`` and "the making of X" →
-        ``["making_of"]`` fire even with no title present.
+        Supplementary-content cues (``trailer`` / ``teaser`` / ``behind_scenes``
+        / ``excerpt`` / ``supplement``) are NOT media types — the parent
+        ``MediaType`` stays MOVIE / EPISODIC; the experiential kind rides this
+        axis.  The first match in ``_CONTENT_FORM_VOC_ORDER`` wins (single-valued
+        on a work), so "show me bloopers" → ``ContentForm.BEHIND_SCENES`` and
+        "the Dune teaser" → ``ContentForm.TEASER`` fire even with no title.
         """
         m = self._match
-        q = query
-        quals: List[str] = []
-        for voc_name, qualifier in _QUALIFIER_VOC_ORDER:
-            if m(q, voc_name, lang):
-                quals.append(qualifier)
-        # de-dup preserving first-seen order
-        return list(dict.fromkeys(quals))
+        for voc_name, form in _CONTENT_FORM_VOC_ORDER:
+            if m(query, voc_name, lang):
+                return form
+        return None
+
+    def classify_programme_format(self, query: str, lang: str):
+        """Return the :class:`mediavocab.ProgrammeFormat` implied by the query.
+
+        A documentary / news broadcast is a structural programme format, not a
+        media type — the ``MediaType`` stays the carrier; the format rides this
+        orthogonal axis.  The first match in ``_PROGRAMME_FORMAT_VOC_ORDER``
+        wins (single-valued).
+        """
+        m = self._match
+        for voc_name, fmt in _PROGRAMME_FORMAT_VOC_ORDER:
+            if m(query, voc_name, lang):
+                return fmt
+        return None
+
+    def classify_accessibility(
+        self, query: str, lang: str
+    ) -> List[AccessibilityKind]:
+        """Return the :class:`mediavocab.AccessibilityKind` assets requested.
+
+        Matched directly from the ``.voc`` evidence (word boundaries), multi-label.
+        """
+        m = self._match
+        kinds: List[AccessibilityKind] = []
+        for voc_name, kind in _ACCESSIBILITY_VOC_ORDER:
+            if m(query, voc_name, lang) and kind not in kinds:
+                kinds.append(kind)
+        return kinds
+
+    def classify_presentation(self, query: str, lang: str) -> List[str]:
+        """Return the classifier-local picture-presentation flags
+        (``silent`` / ``black_and_white``), multi-label.
+
+        Placeholder until Phase 2 gives them a mediavocab ``PictureFormat`` home.
+        Matched directly from the ``.voc`` evidence (word boundaries), so
+        "a silent film" → ``["silent"]`` fires even with no title.
+        """
+        m = self._match
+        flags: List[str] = []
+        for voc_name, flag in _PRESENTATION_VOC_ORDER:
+            if m(query, voc_name, lang) and flag not in flags:
+                flags.append(flag)
+        return flags
 
     # ------------------------------------------------------------------
     # Multi-axis output — PREDICT each axis top-down (do not derive from leaf).
@@ -791,9 +843,9 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
                 return T.MOVIE, [], DEFAULT_KEYWORD_CONFIDENCE
         # Supplementary / promotional content — all collapse onto the parent
         # MOVIE type; the distinguishing form (trailer / teaser / BTS / making_of
-        # / bloopers / …) rides the orthogonal qualifiers axis
-        # (see ``classify_qualifiers`` / ``LABEL_TO_QUALIFIERS``), so even a
-        # title-less "show me bloopers" resolves to MOVIE + ``[bloopers]``.
+        # / bloopers / …) rides the orthogonal mediavocab.ContentForm axis
+        # (see ``classify_content_form`` / ``LABEL_TO_CONTENT_FORM``), so even a
+        # title-less "show me bloopers" resolves to MOVIE + ContentForm.BEHIND_SCENES.
         for _supp_voc in ("TrailerKeyword", "TeaserKeyword",
                           "BehindTheScenesKeyword", "MakingOfKeyword",
                           "BloopersKeyword", "DeletedScenesKeyword",

@@ -21,8 +21,10 @@ does (so partial bundles — and old 2-head ``domain``/``play`` bundles — load
       ├── playback_type.onnx       # audio / video / paged / interactive
       ├── structure.onnx           # single / episodic / continuous / collection
       ├── content_form_genres.onnx # MULTI-LABEL adult/anime/animation/asmr  ← content filter
-      ├── tags.onnx                # MULTI-LABEL genre:rock/mood:chill/era:1980s
-      ├── qualifiers.onnx          # MULTI-LABEL black_and_white/silent/live/…
+      ├── content_form.onnx        # SINGLE  trailer/teaser/behind_scenes/excerpt/…
+      ├── programme_format.onnx    # SINGLE  documentary/news/concert/stand_up/…
+      ├── accessibility.onnx       # MULTI-LABEL subtitles/audio_description/sign_language
+      ├── variant.onnx             # SINGLE  directors/extended/remastered/colorized/…
       ├── explicitness.onnx        # clean / adult  (when trained)
       ├── play.onnx                # back-compat alias of the media_type head
       └── meta.json
@@ -63,9 +65,9 @@ does (so partial bundles — and old 2-head ``domain``/``play`` bundles — load
   ``LABEL_TO_MEDIA_TYPE`` / ``LABEL_TO_GENRES``.
 
 Per-axis methods (``classify`` / ``classify_domain`` / ``classify_genres`` /
-``classify_content_form_genres`` / ``classify_tags`` / ``classify_content_genres``
-(the ``genre:`` slice) / ``classify_playback_type`` / ``classify_structure`` /
-``classify_mood`` / ``classify_era`` / ``classify_qualifiers``) each use their
+``classify_content_form_genres`` / ``classify_content_form`` /
+``classify_programme_format`` / ``classify_accessibility`` / ``classify_variant`` /
+``classify_playback_type`` / ``classify_structure``) each use their
 head when the bundle carries it, else fall back to the inherited derive/empty
 default — so a backend
 can **soft-gate**: trust an axis head even when the leaf is uncertain (the whole
@@ -117,8 +119,9 @@ class OnnxMediaClassifier(AbstractMediaClassifier):
     Loaded from a self-describing multi-task bundle (see module docstring) via
     :meth:`from_path`.  The ``domain`` and ``play`` (media-type) heads are
     always present; any further per-axis head (``media_type`` /
-    ``playback_type`` / ``structure`` / ``content_form_genres`` / ``tags`` /
-    ``qualifiers`` / ``explicitness``) is loaded into ``extra_heads`` when the
+    ``playback_type`` / ``structure`` / ``content_form_genres`` /
+    ``content_form`` / ``programme_format`` / ``accessibility`` / ``variant`` /
+    ``explicitness``) is loaded into ``extra_heads`` when the
     bundle carries it, and the axis is *derived* otherwise.  Use the factory
     rather than the constructor directly unless you are wiring sessions in by
     hand (e.g. in tests).
@@ -189,8 +192,8 @@ class OnnxMediaClassifier(AbstractMediaClassifier):
                            if i not in set(self._txt_idx) | set(self._wv_idx)]
         # axis -> {"session", "kind", "labels": {idx: label}, "threshold"}
         # for the extended multi-task heads (media_type/playback_type/structure/
-        # content_form_genres/tags/qualifiers/explicitness).  The genre/mood/era
-        # signals are folded into the single multi-label ``tags`` head.
+        # content_form_genres/content_form/programme_format/accessibility/variant/
+        # explicitness), each emitting mediavocab's own vocabulary.
         self._heads: Dict[str, dict] = extra_heads or {}
 
     # ------------------------------------------------------------------
@@ -576,39 +579,60 @@ class OnnxMediaClassifier(AbstractMediaClassifier):
         label, _, _ = self._play_label(query, lang)
         return list(LABEL_TO_GENRES.get(label, []))
 
-    def classify_tags(self, query: str, lang: str) -> List[str]:
-        """The namespaced descriptive tags (``genre:`` / ``mood:`` / ``era:``).
+    def classify_content_form(self, query: str, lang: str):
+        """The :class:`mediavocab.ContentForm` from the ``content_form`` head.
 
-        Prefers the dedicated multi-label ``tags`` head (genre/mood/era folded
-        into one); falls back to the base derivation from the legacy per-axis
-        helpers when the bundle carries no ``tags`` head.
+        Falls back to the inherited ``None`` default when the bundle carries no
+        ``content_form`` head.
         """
-        if self._has_head("tags"):
-            out = self._multi_head("tags", query, lang)
-            if out is not None:
-                return out
-        return super().classify_tags(query, lang)
+        from mediavocab.taxonomy import ContentForm
+        res = self._single_head("content_form", query, lang)
+        if res is not None and res[0]:
+            try:
+                return ContentForm(res[0])
+            except ValueError:
+                pass
+        return super().classify_content_form(query, lang)
 
-    def classify_content_genres(self, query: str, lang: str) -> List[str]:
-        """The real genre(s) (rock/jazz/action/…) — the ``genre:`` slice of tags."""
-        if self._has_head("tags"):
-            return self.tags_namespace(self.classify_tags(query, lang), "genre")
-        return []
+    def classify_programme_format(self, query: str, lang: str):
+        """The :class:`mediavocab.ProgrammeFormat` from the head, else ``None``."""
+        from mediavocab.taxonomy import ProgrammeFormat
+        res = self._single_head("programme_format", query, lang)
+        if res is not None and res[0]:
+            try:
+                return ProgrammeFormat(res[0])
+            except ValueError:
+                pass
+        return super().classify_programme_format(query, lang)
 
-    def classify_qualifiers(self, query: str, lang: str) -> List[str]:
-        """Result-narrowing qualifiers from the ``qualifiers`` head.
+    def classify_accessibility(self, query: str, lang: str) -> List:
+        """The :class:`mediavocab.AccessibilityKind` assets from the head.
 
-        Surfaces the editorial forms (``black_and_white`` / ``silent`` /
-        ``audio_described``) and the supplementary-content forms (``trailer`` /
-        ``teaser`` / ``behind_the_scenes`` / ``making_of`` / ``bloopers`` /
-        ``deleted_scenes`` / ``featurette`` / ``interview`` / ``clip``) the head
-        learned from the dataset ``qualifiers`` column.
+        Multi-label; falls back to the inherited empty default.
         """
-        if self._has_head("qualifiers"):
-            out = self._multi_head("qualifiers", query, lang)
+        from mediavocab.taxonomy import AccessibilityKind
+        if self._has_head("accessibility"):
+            out = self._multi_head("accessibility", query, lang)
             if out is not None:
-                return out
-        return []
+                kinds = []
+                for v in out:
+                    try:
+                        kinds.append(AccessibilityKind(v))
+                    except ValueError:
+                        continue
+                return kinds
+        return super().classify_accessibility(query, lang)
+
+    def classify_variant(self, query: str, lang: str):
+        """The :class:`mediavocab.VariantKind` from the ``variant`` head, else ``None``."""
+        from mediavocab.taxonomy import VariantKind
+        res = self._single_head("variant", query, lang)
+        if res is not None and res[0]:
+            try:
+                return VariantKind(res[0])
+            except ValueError:
+                pass
+        return super().classify_variant(query, lang)
 
     def classify_playback_type(self, query: str, lang: str):
         """PlaybackType from the head when present, else derived from the leaf."""
@@ -631,20 +655,6 @@ class OnnxMediaClassifier(AbstractMediaClassifier):
             except ValueError:
                 pass
         return super().classify_structure(query, lang)
-
-    def classify_mood(self, query: str, lang: str) -> Optional[str]:
-        """Mood / activity — the ``mood:`` slice of the ``tags`` head (first value)."""
-        if self._has_head("tags"):
-            vals = self.tags_namespace(self.classify_tags(query, lang), "mood")
-            return vals[0] if vals else None
-        return None
-
-    def classify_era(self, query: str, lang: str) -> Optional[str]:
-        """Release era / decade — the ``era:`` slice of the ``tags`` head."""
-        if self._has_head("tags"):
-            vals = self.tags_namespace(self.classify_tags(query, lang), "era")
-            return vals[0] if vals else None
-        return None
 
     def classify_explicitness(self, query: str, lang: str) -> str:
         """Explicitness from the head when present, else derived from the form genres."""
