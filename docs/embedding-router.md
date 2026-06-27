@@ -25,6 +25,11 @@ The model input is `[static | entity]` concatenated:
   media library**, injected at runtime via `register_user_entities` — **no
   retraining**. This is what closes the keyword backend's entity-gap mis-routes.
 
+> **Bounded for live use.** Entity matching cost scales with the injected title
+> count, so live routing runs on a bounded set — the user's library plus a capped
+> popular gazetteer (default ~1000/type). A 1M-entity set is for offline tagging
+> only. Full latency curve and the cap: [metadatarr-routing.md](metadatarr-routing.md#live-size-must-be-bounded-latency).
+
 ## Routing-aware objective
 
 Each axis is a GCE `LabelGuidedTrainer` (via `PerAxisRouter`) with a learned
@@ -99,9 +104,7 @@ adult-leak and false-hijack are exactly the keyword floor.
 | hybrid + gazetteer | 0.050 | **0.534** | 0.000 | 0.208 | 0.103 | 0.516 |
 | **hybrid + user library** | **0.029 (4/139)** | **0.625** | **0.000** | **0.208** | 0.103 | 0.516 |
 
-(222-case set incl. the 36-case `conversational` slice; the older 186-case run
-read keyword 0.035 / hybrid+gazetteer 0.520 — the slightly higher floor here is
-the 36 harder spoken cases, not a regression.)
+(222-case set, including the 36-case `conversational` spoken-register slice.)
 
 **Verdict — promote as a recommended optional backend, default stays keyword.**
 The hybrid **with the user's library injected** lowers mis-route below the
@@ -110,10 +113,11 @@ the keyword floor (0.208) and false-miss at the keyword floor (0.103) — it
 recovers keyword abstains as correct media routes (resolved 0.318 → 0.625) and
 closes keyword entity-gap mis-routes (`watch attack on titan` → EPISODIC_SERIES,
 `listen to harry potter` → AUDIOBOOK, `the daily` → podcast). On the
-`conversational` slice it is the strongest router (0.040 mis-route, 0.667
-resolved) — entity injection reads bare titles out of disfluent speech that the
-orthography-invariant categorical features cannot. The router never moves the
-gate (keyword owns it), so a common short title cannot hijack ordinary speech.
+`conversational` slice (36 messy-spoken cases) it is the strongest router (0.040
+mis-route, 0.667 resolved) — entity injection reads bare titles out of disfluent
+speech that the orthography-invariant categorical features cannot. The router
+never moves the gate (keyword owns it), so a common short title cannot hijack
+ordinary speech.
 
 The honest caveat: the win is delivered through **runtime entity injection**.
 Without an injected library the hybrid only *matches* keyword (the router
