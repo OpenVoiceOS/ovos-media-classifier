@@ -131,3 +131,15 @@ a graphic novel to relax with
 <lead_read> a comic about {artist_name}
 <lead_read> a graphic novel biography of {artist_name}
 <lead_read> a comic written by {movie_writer}
+um can you read me {comic_title}
+read {comic_title}, actually no a {comic_genre} one
+hey so pull up {comic_title}
+you know what throw on {comic_title}
+wanna read {comic_title}
+lemme read some {comic_title}
+gimme a {comic_genre} comic
+i could really go for a {comic_genre} comic
+i never finished {comic_title}
+is there a new issue of {comic_title}
+got any {comic_genre} comics?
+how about {comic_title}

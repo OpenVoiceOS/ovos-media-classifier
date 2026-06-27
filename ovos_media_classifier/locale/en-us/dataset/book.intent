@@ -162,3 +162,18 @@ a {book_genre} novel because i can't sleep
 <lead_read> the art book for {game_title}
 <lead_read> a book about the director {movie_director}
 <lead_read> the biography of the band {artist_name}
+um can you read me {book_title}
+read {book_title}, actually no the one by {book_author}
+uh maybe something by {book_author}
+hey so read me {book_title}
+you know what read me some {book_genre}
+wanna read {book_title}
+lemme pick up {book_title}
+gimme something by {book_author}
+i can't sleep read me {book_title}
+i could really go for a {book_genre} book
+i never finished {book_title}
+i'm in the mood for something by {book_author}
+is there anything by {book_author}
+got {book_title}?
+how about we read {book_title}
