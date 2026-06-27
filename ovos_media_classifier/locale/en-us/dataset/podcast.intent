@@ -66,3 +66,18 @@ the newest {podcast_title} episode
 a {podcast_genre} podcast while i commute
 something with {podcast_host} for the road
 a {podcast_genre} podcast because i'm bored
+<lead_play_audio> a podcast with {movie_actor}
+<lead_play_audio> an interview podcast featuring {movie_actor}
+<lead_play_audio> a podcast episode interviewing {movie_actor}
+<lead_play_audio> a podcast episode about {artist_name}
+<lead_play_audio> a podcast where they interview {artist_name}
+<lead_play_audio> a podcast hosted by {movie_director}
+<lead_play_audio> a podcast interview with the director {movie_director}
+<lead_play_audio> a podcast with the author {book_author}
+<lead_play_audio> a podcast interview with {book_author}
+<lead_play_audio> a podcast discussing the novel {book_title}
+<lead_play_audio> a podcast breaking down the movie {movie_title}
+<lead_play_audio> a podcast reviewing the film {movie_title}
+<lead_play_audio> a podcast about the game {game_title}
+<lead_play_audio> a podcast discussing the album {album_name}
+<lead_play_audio> a podcast about the show {tv_show_title}

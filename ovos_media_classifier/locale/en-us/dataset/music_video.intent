@@ -72,3 +72,7 @@ any {artist_name} music videos around?
 the new {artist_name} music video everyone's talking about
 some music videos because it's party time
 the {track_name} music video, please
+<lead_watch> the music video for the song {track_name}
+<lead_watch> the official music video of {track_name}
+<lead_watch> the video clip for {track_name}
+<lead_watch> the music video off the album {album_name}

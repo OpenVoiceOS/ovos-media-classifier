@@ -65,3 +65,12 @@ is there anything by {anime_studio}
 a {anime_genre} anime to binge tonight
 something from {anime_studio} because i'm bored
 the new season of {anime_title}, please
+<lead_watch> an anime adaptation of {game_title}
+<lead_watch> the anime based on the game {game_title}
+<lead_watch> the {game_title} anime
+<lead_watch> an anime based on the manga {comic_title}
+<lead_watch> the anime adaptation of {comic_title}
+<lead_watch> the {comic_title} anime
+<lead_watch> an anime based on the novel {book_title}
+<lead_watch> the anime adaptation of {book_title}
+<lead_watch> an anime based on the movie {movie_title}

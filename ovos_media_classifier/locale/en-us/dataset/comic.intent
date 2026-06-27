@@ -95,3 +95,13 @@ the newest chapter of {comic_title}
 a {comic_genre} comic for the weekend
 some manga because i'm bored
 a graphic novel to relax with
+<lead_read> the {movie_title} comic
+<lead_read> a comic based on {movie_title}
+<lead_read> the graphic novel adaptation of {movie_title}
+<lead_read> the {tv_show_title} comic
+<lead_read> a comic based on the show {tv_show_title}
+<lead_read> the {game_title} comic
+<lead_read> a comic based on the game {game_title}
+<lead_read> the {anime_title} manga
+<lead_read> the manga the anime {anime_title} is based on
+<lead_read> the graphic novel adaptation of {book_title}

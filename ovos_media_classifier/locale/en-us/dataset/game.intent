@@ -88,3 +88,17 @@ is there a game like {game_title}
 a quick {game_genre} game to kill time
 {game_title} because i'm bored
 a {game_genre} game on {game_platform}, please
+<lead_game> the {movie_title} game
+<lead_game> a game based on {movie_title}
+<lead_game> the game adaptation of {movie_title}
+<lead_game> the video game based on the movie {movie_title}
+<lead_game> the {book_title} game
+<lead_game> a game based on the novel {book_title}
+<lead_game> the {tv_show_title} game
+<lead_game> a game based on the show {tv_show_title}
+<lead_game> the {anime_title} game
+<lead_game> a game based on the anime {anime_title}
+<lead_game> the {comic_title} game
+<lead_game> a game based on the comic {comic_title}
+<lead_game> a game featuring {movie_actor}
+<lead_game> the official {movie_title} tie-in game
