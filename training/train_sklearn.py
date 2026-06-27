@@ -112,6 +112,7 @@ HEAD_SPECS: List[Tuple[str, str, str]] = [
     ("programme_format", "programme_format", "single"),
     ("accessibility", "accessibility", "multi"),
     ("variant", "variant", "single"),
+    ("picture_format", "picture_format", "multi"),
 ]
 
 

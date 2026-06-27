@@ -7,7 +7,8 @@ prune the leaf label space.  Rather than a brittle hard hierarchy, the axes are
 * **domain**        — is this a media request at all (play / control / not_media)
 * **playback_type** — modality / "physical type": audio / video / paged /
   interactive (``mediavocab.PlaybackType``) — the coarse, high-confidence axis.
-* **structure**     — single / episodic / continuous / collection (this module).
+* **structure**     — single / episodic / continuous / collection
+  (``mediavocab.Structure``, re-exported here).
 * **media_type**    — the concrete ``mediavocab.MediaType`` leaf.
 * **genres**        — orthogonal tags (the ``adult`` genre drives content filtering).
 
@@ -21,52 +22,18 @@ own head and soft-gate the leaf — see OVOS-MEDIA-CLASSIFY.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from enum import Enum
 from typing import List, Optional
 
-from mediavocab import MediaType, PlaybackType, infer_playback_type
+from mediavocab import (
+    MediaType,
+    PlaybackType,
+    infer_playback_type,
+    Structure,
+    MEDIA_TYPE_TO_STRUCTURE,
+    infer_structure,
+)
 
 from ovos_media_classifier.intents import OCPDomain, OCPControlIntent
-
-
-class Structure(str, Enum):
-    """How a work is structured in time — orthogonal to modality."""
-    SINGLE = "single"          # one self-contained work: a movie, a track, a book
-    EPISODIC = "episodic"      # a series of discrete instalments: tv series, podcast
-    CONTINUOUS = "continuous"  # an unbounded live/looping stream: radio, live tv, ambient
-    COLLECTION = "collection"  # an ordered set of works: a playlist
-    UNKNOWN = "unknown"
-
-
-# MediaType → default Structure.  Largely intrinsic to the type; a trained model
-# MAY override per-utterance (e.g. "play the *album*" → COLLECTION).
-MEDIA_TYPE_TO_STRUCTURE = {
-    MediaType.MOVIE: Structure.SINGLE,
-    MediaType.SHORT_FILM: Structure.SINGLE,
-    MediaType.MUSIC: Structure.SINGLE,
-    MediaType.MUSIC_VIDEO: Structure.SINGLE,
-    MediaType.AUDIOBOOK: Structure.SINGLE,
-    MediaType.BOOK: Structure.SINGLE,
-    MediaType.COMIC: Structure.SINGLE,
-    MediaType.GAME: Structure.SINGLE,
-    MediaType.INTERACTIVE_FICTION: Structure.SINGLE,
-    MediaType.SOUND_EFFECT: Structure.SINGLE,
-    MediaType.EPISODIC_SERIES: Structure.EPISODIC,
-    MediaType.PODCAST: Structure.EPISODIC,
-    MediaType.AUDIO_DRAMA: Structure.EPISODIC,
-    MediaType.TV: Structure.CONTINUOUS,        # live channel
-    MediaType.RADIO: Structure.CONTINUOUS,
-    MediaType.PROCEDURAL_AMBIENT: Structure.CONTINUOUS,
-    MediaType.PLAYLIST: Structure.COLLECTION,
-    MediaType.GENERIC: Structure.UNKNOWN,
-    MediaType.NOT_MEDIA: Structure.UNKNOWN,
-    MediaType.CONTROL: Structure.UNKNOWN,
-}
-
-
-def infer_structure(media_type: MediaType) -> Structure:
-    """Default :class:`Structure` for a ``MediaType``."""
-    return MEDIA_TYPE_TO_STRUCTURE.get(media_type, Structure.UNKNOWN)
 
 
 @dataclass

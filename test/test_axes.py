@@ -95,3 +95,18 @@ class TestToSignals(unittest.TestCase):
     def test_to_signals_non_media_has_no_medium(self):
         s = self.clf.to_signals("what time is it", "en-us")
         self.assertIsNone(s.medium)
+
+    def test_to_signals_emits_picture_format(self):
+        from mediavocab import PictureFormat
+        s = self.clf.to_signals("play the silent film Nosferatu", "en-us")
+        self.assertEqual(s.picture_format, PictureFormat.SILENT)
+
+    def test_to_signals_emits_programme_format(self):
+        from mediavocab import ProgrammeFormat
+        s = self.clf.to_signals("a documentary about whales", "en-us")
+        self.assertEqual(s.programme_format, ProgrammeFormat.DOCUMENTARY)
+
+    def test_to_signals_accessibility_is_list(self):
+        # accessibility rides Signals.accessibility (routing hint), lossless.
+        s = self.clf.to_signals("play some jazz", "en-us")
+        self.assertIsInstance(s.accessibility, list)

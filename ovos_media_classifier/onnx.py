@@ -25,6 +25,7 @@ does (so partial bundles — and old 2-head ``domain``/``play`` bundles — load
       ├── programme_format.onnx    # SINGLE  documentary/news/concert/stand_up/…
       ├── accessibility.onnx       # MULTI-LABEL subtitles/audio_description/sign_language
       ├── variant.onnx             # SINGLE  directors/extended/remastered/colorized/…
+      ├── picture_format.onnx      # MULTI-LABEL black_and_white/silent/3d
       ├── explicitness.onnx        # clean / adult  (when trained)
       ├── play.onnx                # back-compat alias of the media_type head
       └── meta.json
@@ -634,6 +635,24 @@ class OnnxMediaClassifier(AbstractMediaClassifier):
                 pass
         return super().classify_variant(query, lang)
 
+    def classify_picture_format(self, query: str, lang: str) -> List:
+        """The :class:`mediavocab.PictureFormat` attributes from the head.
+
+        Multi-label; falls back to the inherited empty default.
+        """
+        from mediavocab.taxonomy import PictureFormat
+        if self._has_head("picture_format"):
+            out = self._multi_head("picture_format", query, lang)
+            if out is not None:
+                formats = []
+                for v in out:
+                    try:
+                        formats.append(PictureFormat(v))
+                    except ValueError:
+                        continue
+                return formats
+        return super().classify_picture_format(query, lang)
+
     def classify_playback_type(self, query: str, lang: str):
         """PlaybackType from the head when present, else derived from the leaf."""
         from mediavocab import PlaybackType
@@ -647,7 +666,7 @@ class OnnxMediaClassifier(AbstractMediaClassifier):
 
     def classify_structure(self, query: str, lang: str):
         """Structure from the head when present, else derived from the leaf."""
-        from ovos_media_classifier.axes import Structure
+        from mediavocab import Structure
         res = self._single_head("structure", query, lang)
         if res is not None and res[0]:
             try:

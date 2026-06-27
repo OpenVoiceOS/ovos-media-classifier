@@ -610,14 +610,15 @@ class TestSupplementaryContentForm(unittest.TestCase):
     def test_clip(self):
         self._check("a movie clip", self.ContentForm.EXCERPT)
 
-    def test_silent_and_bw_stay_presentation_flags(self):
-        # bw/silent have no mediavocab home yet — they ride the classifier-local
-        # presentation axis (Phase-2 PictureFormat), NOT content_form.
-        self.assertIn("silent",
-                      self.clf.classify_presentation("a silent film", "en-us"))
-        self.assertIn("black_and_white",
-                      self.clf.classify_presentation("a black and white movie",
-                                                     "en-us"))
+    def test_silent_and_bw_are_picture_format(self):
+        # bw/silent are mediavocab PictureFormat presentation attributes (T6),
+        # NOT content_form.
+        from mediavocab import PictureFormat
+        self.assertIn(PictureFormat.SILENT,
+                      self.clf.classify_picture_format("a silent film", "en-us"))
+        self.assertIn(PictureFormat.BLACK_AND_WHITE,
+                      self.clf.classify_picture_format("a black and white movie",
+                                                       "en-us"))
 
     def test_label_to_content_form_map(self):
         from ovos_media_classifier.intents import (

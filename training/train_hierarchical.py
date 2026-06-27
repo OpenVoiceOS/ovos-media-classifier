@@ -10,7 +10,7 @@ leaves differ only on a coarse axis (``music``[audio] vs ``music_video``[video];
 
 The taxonomy is near-deterministic in the *forward* direction
 (``media_type`` → ``playback_type``/``structure`` via
-:func:`mediavocab.infer_playback_type` / :func:`ovos_media_classifier.axes.infer_structure`).
+:func:`mediavocab.infer_playback_type` / :func:`mediavocab.infer_structure`).
 So the inverse — a (playback_type, structure) **group** → the set of leaves
 compatible with it — is a clean mask we can apply to a flat leaf head, or use to
 shard a cascade of per-group fine classifiers.
@@ -56,7 +56,7 @@ import numpy as np
 import pandas as pd
 
 from mediavocab import MediaType, infer_playback_type
-from ovos_media_classifier.axes import infer_structure
+from mediavocab import infer_structure
 from training.train_sklearn import (
     REPO_ROOT,
     ensure_dataset,

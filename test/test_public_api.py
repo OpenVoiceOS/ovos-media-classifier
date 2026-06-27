@@ -178,6 +178,7 @@ class TestPerAxisContract(unittest.TestCase):
     def test_axis_methods_exist_and_typed(self):
         from mediavocab.taxonomy import (
             ContentForm, ProgrammeFormat, VariantKind, AccessibilityKind,
+            PictureFormat,
         )
         q, lang = "play a black and white movie", "en-us"
         self.assertIsInstance(self.clf.classify_content_form_genres(q, lang), list)
@@ -194,8 +195,11 @@ class TestPerAxisContract(unittest.TestCase):
         self.assertIsInstance(acc, list)
         for a in acc:
             self.assertIsInstance(a, AccessibilityKind)
-        # the classifier-local presentation placeholder (Phase-2 PictureFormat)
-        self.assertIsInstance(self.clf.classify_presentation(q, lang), list)
+        # the mediavocab PictureFormat presentation axis (multi-label)
+        pic = self.clf.classify_picture_format(q, lang)
+        self.assertIsInstance(pic, list)
+        for p in pic:
+            self.assertIsInstance(p, PictureFormat)
 
     def test_genres_constrained_to_known_genres(self):
         from mediavocab.taxonomy import KNOWN_GENRES

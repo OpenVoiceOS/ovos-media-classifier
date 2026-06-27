@@ -380,7 +380,7 @@ ships, per row:
 | `programme_format` | `mediavocab.ProgrammeFormat` (single) | the intent alias (`documentary` / `news`) |
 | `accessibility` | `mediavocab.AccessibilityKind` (multi-label) | the intent alias (`audio_description` / …) |
 | `variant` | `mediavocab.VariantKind` (single) | the intent alias (`directors` / `remastered` / …) |
-| `presentation` | classifier-local (multi-label, Phase-2 `PictureFormat`) | the intent alias (`black_and_white` / `silent`) |
+| `picture_format` | `mediavocab.PictureFormat` (multi-label) | the intent alias (`black_and_white` / `silent` / `3d`) |
 
 Because every coarse column is derived from the same `infer_*` functions the
 runtime uses (§4.1), a model trained on these columns and a model that derives at

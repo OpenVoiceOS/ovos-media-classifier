@@ -43,6 +43,7 @@ from mediavocab.taxonomy import (
     ProgrammeFormat,
     AccessibilityKind,
     VariantKind,
+    PictureFormat,
 )
 
 
@@ -375,15 +376,15 @@ def programme_format_for_label(label: str) -> Optional[ProgrammeFormat]:
 # ---------------------------------------------------------------------------
 # Raw detection label → mediavocab AccessibilityKind  (per-release a11y axis)
 #
-# ``subtitled`` / ``audio_described`` / ``sign_language`` cues request an
-# accessibility asset on the release, not a different work.  ``dubbed`` has no
-# mediavocab home yet (deferred to Phase 2).
+# ``subtitled`` / ``audio_described`` / ``sign_language`` / ``dubbed`` cues
+# request an accessibility asset on the release, not a different work.
 # ---------------------------------------------------------------------------
 LABEL_TO_ACCESSIBILITY: Dict[str, AccessibilityKind] = {
     "subtitled":        AccessibilityKind.SUBTITLES,
     "audio_described":  AccessibilityKind.AUDIO_DESCRIPTION,
     "audio_description": AccessibilityKind.AUDIO_DESCRIPTION,
     "sign_language":    AccessibilityKind.SIGN_LANGUAGE,
+    "dubbed":           AccessibilityKind.DUBBED,
 }
 
 
@@ -413,28 +414,24 @@ def variant_for_label(label: str) -> Optional[VariantKind]:
 
 
 # ---------------------------------------------------------------------------
-# Raw detection label → classifier-local PRESENTATION flag  (Phase 2 placeholder)
+# Raw detection label → mediavocab PictureFormat  (per-release presentation axis)
 #
 # ``black_and_white`` / ``silent`` / ``3d`` are picture/presentation technical
-# attributes that have **no mediavocab home yet** — Phase 2 adds a
-# ``PictureFormat`` enum to mediavocab and these redirect to it.  Until then they
-# stay an isolated classifier-local flag set so the signal is not lost and the
-# redirect is a single, contained change.
+# attributes (T6) — a Release-level attribute, routing-family (A6).  They map to
+# the mediavocab ``PictureFormat`` enum.  ``colorized`` is NOT a PictureFormat:
+# a colorized cut is a distinct *work variant* → ``LABEL_TO_VARIANT`` /
+# ``VariantKind.COLORIZED``.
 # ---------------------------------------------------------------------------
-LABEL_TO_PRESENTATION: Dict[str, str] = {
-    "bw_movie":      "black_and_white",
-    "silent_movie":  "silent",
-    "3d":            "3d",
+LABEL_TO_PICTURE_FORMAT: Dict[str, PictureFormat] = {
+    "bw_movie":      PictureFormat.BLACK_AND_WHITE,
+    "silent_movie":  PictureFormat.SILENT,
+    "3d":            PictureFormat.THREE_D,
 }
 
 
-def presentation_for_label(label: str) -> Optional[str]:
-    """Return the classifier-local presentation flag implied by a raw label.
-
-    Placeholder until Phase 2 gives black_and_white / silent / 3d a mediavocab
-    ``PictureFormat`` home.
-    """
-    return LABEL_TO_PRESENTATION.get(label)
+def picture_format_for_label(label: str) -> Optional[PictureFormat]:
+    """Return the :class:`mediavocab.PictureFormat` implied by a raw label."""
+    return LABEL_TO_PICTURE_FORMAT.get(label)
 
 
 # ---------------------------------------------------------------------------
