@@ -166,3 +166,41 @@ is there anything good on {tv_network}
 got any {tv_genre} shows?
 how about we binge {tv_show_title}
 what about that {tv_genre} series everyone's watching
+<lead_watch> that {tv_genre} series everyone's talking about
+hey <lead_watch> a box set of {tv_show_title}
+<lead_watch> a sitcom starring {movie_actor}
+so i'm in the mood for a {tv_genre} tv series from the {release_decade}
+lemme watch a miniseries directed by {movie_director}
+<lead_watch> got any {tv_genre} shows on {tv_network}
+i wanna see a series based on {book_title}
+<lead_watch> that web series with {movie_actor}
+how about a sitcom from {media_country} please
+<lead_watch> a boxset of {tv_show_title} by {tv_network}
+um <lead_watch> a {tv_genre} series from {release_year}
+let's check out a mini series written by {movie_writer}
+<lead_watch> a tv show adapted from that {comic_title} comic
+gimme a good sitcom from the {release_decade} thanks
+so <lead_watch> a tv adaptation of the movie {movie_title}
+<lead_watch> that series starring {movie_actor} and uh that {tv_genre} one
+i'm looking for a {tv_genre} tv show on {tv_network}
+<lead_watch> episodes from {tv_show_title}
+you know any {tv_genre} miniseries from {media_country}
+<lead_watch> a series based on {book_author}'s books
+i'm in the mood for a {tv_genre} box set
+so hey <lead_watch> a new {tv_genre} series i can get into
+lemme find a good miniseries maybe a {tv_genre} one
+feels like a {tv_genre} marathon night got any good series
+<lead_watch> that {release_decade} sitcom everyone talks about
+how about we binge a show on {tv_network} tonight
+i wanna watch a web series similar to {tv_show_title}
+<lead_watch> episodes of that series set in the {release_decade}
+so i'm looking for a tv show [um] like {tv_show_title}
+we should <lead_watch> a {tv_genre} mini series
+got any good sitcoms from {release_decade} or {release_year}
+<lead_watch> the [new] boxset of {tv_show_title} [please]
+i'm after a tv series starring {movie_actor}
+how about we <lead_watch> a miniseries directed by {movie_director}
+let's <lead_watch> a series created by {movie_writer}
+<lead_watch> a {tv_genre} series from {release_year}
+so like a sitcom or [maybe] a drama from {tv_network}
+wanna <lead_watch> episodes of {tv_show_title} [tonight]

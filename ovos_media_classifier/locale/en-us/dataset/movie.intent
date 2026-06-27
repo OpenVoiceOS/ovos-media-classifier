@@ -204,3 +204,40 @@ i never got around to watching {movie_title}
 is there anything good with {movie_actor}
 got any {movie_genre} movies?
 what do you think we should watch, maybe {movie_title}
+so like, <lead_watch> a movie with {movie_actor} in it or something
+hey you got any {movie_genre} movies starring {movie_actor}
+i wanna watch a {movie_genre} flick tonight
+lemme see what {movie_genre} films you got from the {release_decade}
+im in the mood for a motion picture directed by {movie_director}
+got any flicks that came out in {release_year}
+i heard {movie_title} is good, can you play that movie
+so um is there a movie version of {tv_show_title} i could check out
+<lead_watch> a feature length film produced by {movie_producer}
+you know any good cinema from {movie_director}
+hey find me a {movie_genre} motion picture from {media_country}
+i wanna see that film with {movie_actor} where they play a detective or whatever
+lets watch a movie written by {movie_writer}
+gimme something from the {release_decade} like a classic film
+so i was thinking <lead_watch> a movie and um maybe something by {movie_director}
+play a movie like that one with {movie_actor} you know the action flick
+<lead_watch> a feature film composed by {movie_composer}
+hey, how about we watch {movie_title} tonight
+lemme see what {movie_genre} movies you got
+i'm in the mood for a {movie_genre} flick directed by {movie_director}
+so i was thinking maybe we could watch {movie_title} with {movie_actor}
+got any good {movie_genre} films from {release_decade}
+what {movie_genre} movies do you have starring {movie_actor}
+i wanna watch that new {movie_genre} feature film
+how about a {movie_genre} motion picture from {release_year}
+feels like a {movie_genre} night — got anything good
+we should check out {movie_title} i heard it's great
+is there a {movie_genre} movie directed by {movie_director}
+gimme a {movie_genre} blockbuster with {movie_actor}
+i'm looking for a film directed by {movie_director} from {release_year}
+let's put on a {movie_genre} film, any suggestions
+can you find {movie_title} with {movie_actor}
+hey so i want a {movie_genre} movie from {release_decade} starring {movie_actor}
+find me a film produced by {movie_producer} with {movie_actor}
+what's a good {movie_genre} flick from the {release_decade}
+wanna watch a {movie_genre} film directed by {movie_director} starring {movie_actor}
+i'm in the mood for a cinema classic a {movie_genre} film from {release_year}

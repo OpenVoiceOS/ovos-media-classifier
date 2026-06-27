@@ -125,3 +125,39 @@ i'm in the mood for a documentary on {movie_genre}
 is there a good documentary about {artist_name}
 got any documentaries about {music_genre}?
 how about a documentary on {movie_title}
+<lead_watch> can you find a documentary about {movie_director} [for me|please]
+gimme that documentary {documentary_title} [please|thanks]
+[hey|ok|so] <lead_watch> any good documentaries on {book_author} [right now|for me]
+let's watch a docuseries [about {podcast_host}|on {tv_show_title}]
+<lead_watch> the documentary featuring {documentary_title} [please|thanks]
+[um|hey|so] can you throw on a doc about {comic_title} [right now|please]
+i'm feeling a documentary tonight [about {movie_genre}|on {anime_studio}]
+<lead_watch> lemme watch a documentary on {game_title} [please|right now]
+[hey|please|ok] <lead_watch> got any documentaries about {podcast_title} [thanks]
+wanna watch that docu about {movie_actor} [right now|tonight]
+<lead_watch> how about a documentary on {music_genre} [for me|please]
+i'd like to watch a doc about {book_author} [please|for me]
+<lead_watch> any docs on {tv_show_title} [right now|please]
+[hey|ok|so] lemme watch a documentary about {anime_title} [please]
+<lead_watch> got a documentary about {track_name} [for me|thanks]
+[um|hey|so] play the documentary about {album_name} [please|right now]
+<lead_watch> i'm in the mood for a docuseries on {movie_director} [tonight]
+so how about we watch a documentary on {tv_show_title}
+let's check out a documentary about the making of {game_title}
+we should watch a documentary about {movie_director} [tonight|soon]
+feels like a documentary night, got anything about {movie_genre}
+hey do you have a documentary about {anime_studio}
+i wanna watch a documentary about {comic_title} [please|if you can]
+gimme a doc about {movie_actor} [you know|like what they've been up to]
+so i was thinking a documentary about the writer of {book_title}
+what documentaries do you have about {movie_title}
+can you find me a good docuseries about {podcast_host}
+um i'd really like to watch something about {artist_name}, like a documentary
+got any documentaries about {documentary_title}
+<lead_watch> a documentary about the history of {tv_show_title}
+i'm looking for a documentary about {podcast_title}
+how about we put on a documentary about {anime_title}
+a doc about {book_title} by {book_author} sounds good [right now|actually]
+hey so i heard there's a documentary about {movie_director} directing {movie_title}
+we should check out a documentary about {music_genre} [or something|maybe]
+lemme find a good documentary about the making of {album_name}

@@ -77,3 +77,19 @@ gimme {movie_title} with audio description
 i could really go for a described {movie_genre} film
 is there an audio described version of {movie_title}
 got {movie_title} with audio description?
+[hey|ok|so] <lead_watch> the audio description version of {movie_title} [please]
+[so] <lead_watch> a {movie_genre} flick with audio description [for me]
+[hey] i wanna see a {movie_genre} film with audio description
+[so] <lead_watch> the audio description cut of {movie_title} — [yeah] that one
+i'm after a film with audio description starring {movie_actor}
+[hey|so] how about we find an audio description version of {movie_title}
+[um] can you find a {movie_genre} movie with audio description
+[ok] <lead_watch> that {movie_genre} film with {movie_actor} and audio description — no wait {tv_show_title}
+i need a movie with audio description — maybe {movie_genre}
+[hey] gimme the audio description of {movie_title} [please] — no wait {tv_show_title}
+[so] <lead_watch> a described {movie_genre} movie with audio description [please]
+[hey|ok] let's check out the audio description version of {movie_title}
+i'm looking for a {movie_genre} film that has audio description
+[so] <lead_watch> {movie_title} but with audio description [please]
+[um] could we watch something with audio description — {movie_genre} maybe
+[hey] feels like a movie night <lead_watch> a {movie_genre} film with audio description

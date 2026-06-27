@@ -99,7 +99,17 @@ platform slots that have no metadata dump ship as committed seed lists in
   [content filtering](../docs/content-filtering.md). No adult provider/scraper
   work here.
 - **agentpipe** (`generate_agentpipe.py`) adds an optional naturalistic LLM layer
-  using **FREE agents only** (`opencode-free`/`kilo`) — never claude or paid.
+  of finished *utterances* using **FREE agents only** (`opencode-free`/`kilo`) —
+  never claude or paid.
+- **agentpipe templates** (`generate_agentpipe_templates.py`) is the sibling that
+  grows the *source-of-truth* `.intent` files themselves: it drives the same free
+  agents to emit new **conversational OVOS-INTENT-1 template lines** (live
+  `{slot}` / `(a|b)` / `[opt]` / `<lead_*>` grammar), then RIGOROUSLY validates
+  each (expand() succeeds, only allowed per-intent slot names, carries a media cue,
+  unique vs the expanded corpus) before appending the survivors to
+  `locale/en-us/dataset/<intent>.intent`. Checkpoint/resume via a
+  `.agentpipe_templates.done.jsonl` sidecar; en-us only (other langs via
+  ovos-localize). Run: `python -m training.generate_agentpipe_templates`.
 - Homeserver loaders (`generate_dataset_from_media.py`) and the metadatarr
   refresher (`gather_metadatarr.py`) pull live entities from a user's own
   Radarr/Sonarr/Lidarr/Jellyfin/Music-Assistant stack.

@@ -56,3 +56,18 @@ gimme a {sound_name} sound
 is there a {sound_name} effect i can play
 got a {sound_name} sound?
 how about the {sound_name} sound
+[um|hey|so] lemme hear a {sound_name} sound effect [please|thanks]
+gimme that {sound_name} sfx [right now|please]
+got any {sound_name} sound effects [for me]
+<lead_play_audio> the sound of a {sound_name} [i guess|alright]
+wanna play the {sound_name} sound effect
+[hey|so] <lead_play_audio> gimme a {sound_name} sound effect
+sound of a {sound_name} [yeah|please|thanks]
+just the {sound_name} sound effect [please|thanks]
+i wanna hear some {sound_name} sfx
+so <lead_play_audio> lemme get a {sound_name} sound effect
+a {sound_name} sound effect [please|thanks] <lead_play_audio>
+<lead_play_audio> a sound of {sound_name} [maybe]
+[ok|hey] gimme a {sound_name} sound effect
+<lead_play_audio> play a {sound_name} sound effect [please]
+sound effects of {sound_name} [please|thanks]

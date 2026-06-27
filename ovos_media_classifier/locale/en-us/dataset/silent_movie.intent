@@ -82,3 +82,23 @@ i'm feeling nostalgic put on a silent movie
 i could really go for a silent film
 is there a good silent {movie_genre} movie
 got any silent movies?
+i wanna watch a silent movie tonight
+so <lead_watch> one of those old silent films
+hey, got any silent movies with {movie_genre}?
+lemme see a classic silent film
+i'm in the mood for a silent movie, got anything?
+<lead_watch> a silent film [maybe] with {movie_genre}
+how about we <lead_watch> a silent movie?
+um, <lead_watch> a silent classic [please]
+can you <lead_watch> a silent film for me?
+i feel like a silent movie, {silent_movie_title} maybe
+so, any silent films with {movie_genre}?
+gimme a silent movie to watch
+i wanna check out an old silent film
+<lead_watch> something silent, like a classic
+what silent movies you got? {movie_genre} maybe
+let's <lead_watch> a silent film, i'm in the mood
+got any good silent movies starring {silent_movie_title}?
+hey, <lead_watch> a silent film classic for me
+i'd love to see a silent movie right now
+so how about we <lead_watch> that silent film {silent_movie_title}?

@@ -99,3 +99,40 @@ gimme the next episode of {tv_show_title}
 i could really go for another episode of {tv_show_title}
 is there a new episode of {tv_show_title}
 got the next episode of {tv_show_title}?
+i'm in the mood for a web series marathon from season {season_number}
+hey um let's check out that tv series {tv_show_title}
+so i wanna watch episode {episode_number} of {tv_show_title}
+gimme the next episode of that sitcom please
+let's binge that whole mini series {tv_show_title}
+how about we start a new tv show tonight
+i'm looking for season {season_number} of {tv_show_title}
+hey put on that web series {tv_show_title} from the beginning
+what's the latest episode of {tv_show_title} called {episode_title}
+wanna watch that box set of {tv_show_title} from season {season_number}
+so um where can i find episodes of {tv_show_title} online
+let's catch up on {tv_show_title} season {season_number}
+gonna watch the next episode of that series
+hey lemme see episode {episode_number} of {tv_show_title}
+i feel like watching a tv series maybe {tv_show_title}
+so there's this web series called {tv_show_title} can we watch it
+play the latest season {season_number} of {tv_show_title}
+[hey|ok|please] <lead_watch> clips from {tv_show_title} [please|for me|right now|thanks]
+how about that miniseries {tv_show_title} from the start
+i'm in the mood for a tv series marathon [please]
+let's watch {episode_number} of that web series
+[hey|so] <lead_watch> a miniseries to get into [please|thanks]
+we should catch up on {tv_show_title} episodes
+[ok|so] i wanna binge a box set tonight
+feels like a sitcom kinda night [you know]
+how about we <lead_watch> {tv_show_title} from {season_number}
+lemme <lead_watch> some episodes i haven't seen
+got any good web series to recommend
+let's <lead_watch> {tv_show_title} the mini series
+i'm looking for a tv show to start watching
+so <lead_watch> {season_number} of {tv_show_title} [please]
+[hey|um] <lead_watch> that sitcom from the beginning
+how about we watch some video clips instead
+i could go for a box set right now
+[hey|so] <lead_watch> {episode_title} the one where [you know|um]
+we should marathon that web series this weekend
+gimme some episodes of a good tv show to binge

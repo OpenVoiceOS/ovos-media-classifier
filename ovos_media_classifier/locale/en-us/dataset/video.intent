@@ -83,3 +83,26 @@ gimme something to watch
 i could really go for a video right now
 is there a video about {documentary_title}
 how about you put on a video
+<lead_watch> something cool to watch [for a bit|real quick]
+[hey|ok] so <lead_watch> a video about {documentary_title} maybe
+wanna watch a clip [real quick|right now]
+[hey|um] <lead_watch> got any good videos [lately|today]
+let's find a video to watch [together|while we hang]
+<lead_watch> a random clip [please|for me|right now|thanks]
+got any videos about {documentary_title} [maybe|i guess]
+[hey|ok|please] <lead_watch> something on video [please|for me|right now|thanks]
+[so|hey] <lead_watch> find me a video [please|for me|right now|thanks]
+<lead_watch> a short clip [please|for me|right now|thanks]
+[hey|ok|please] <lead_watch> is there a video about {documentary_title} [please|for me|right now|thanks]
+gimme a video to watch [real quick|for a bit]
+[hey|um] <lead_watch> play any video [i guess|you pick|surprise me]
+how about a clip about {documentary_title} [maybe|or something]
+so <lead_watch> throw on a video [please|for me|right now|thanks]
+got any good videos [lately|right now]
+feels like a video kind of [night|moment|day]
+i wanna check out a video [real quick|while i can]
+[um|so] <lead_watch> a video called {documentary_title} [i guess]
+let's just put on a video [and relax|for a bit]
+<lead_watch> a video i haven't seen before
+[well|so] how about a clip or something [to watch|you know]
+you got any videos about {documentary_title} [lately|by chance]
