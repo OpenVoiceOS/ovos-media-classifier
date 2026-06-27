@@ -560,65 +560,76 @@ class TestKeywordMediaClassifierNewTypes(unittest.TestCase):
         self.assertEqual(mt, MediaType.TV)
 
 
-class TestSupplementaryContentQualifiers(unittest.TestCase):
+class TestSupplementaryContentForm(unittest.TestCase):
     """Supplementary content (trailer / BTS / bloopers / …) is MOVIE + a
-    qualifier, never a bare MOVIE with the signal lost."""
+    mediavocab ``ContentForm``, never a bare MOVIE with the signal lost.
+
+    The finer classifier labels collapse onto mediavocab's set (making_of /
+    bloopers / deleted_scenes / featurette → ``behind_scenes``; clip →
+    ``excerpt``; interview → ``supplement``)."""
 
     def setUp(self):
+        from mediavocab.taxonomy import ContentForm
+        self.ContentForm = ContentForm
         # bundled-locale standalone classifier (real .voc word-boundary match)
         self.clf = KeywordMediaClassifier()
 
-    def _check(self, query, expected_qualifier):
+    def _check(self, query, expected_form):
         mt, _conf = self.clf.classify(query, "en-us")
-        quals = self.clf.classify_qualifiers(query, "en-us")
+        form = self.clf.classify_content_form(query, "en-us")
         self.assertEqual(mt, MediaType.MOVIE, f"{query!r} should be MOVIE")
-        self.assertIn(expected_qualifier, quals,
-                      f"{query!r} → {quals}, expected {expected_qualifier!r}")
+        self.assertEqual(form, expected_form,
+                         f"{query!r} → {form}, expected {expected_form!r}")
 
     def test_trailer_with_title(self):
-        self._check("the Top Gun trailer", "trailer")
+        self._check("the Top Gun trailer", self.ContentForm.TRAILER)
 
     def test_teaser(self):
-        self._check("the Dune teaser", "teaser")
+        self._check("the Dune teaser", self.ContentForm.TEASER)
 
     def test_behind_the_scenes(self):
-        self._check("behind the scenes of Dune", "behind_the_scenes")
+        self._check("behind the scenes of Dune", self.ContentForm.BEHIND_SCENES)
 
     def test_making_of(self):
-        self._check("the making of Inception", "making_of")
+        self._check("the making of Inception", self.ContentForm.BEHIND_SCENES)
 
     def test_bloopers_no_title(self):
-        # the regression case: "show me bloopers" must still fire the qualifier
-        self._check("show me bloopers", "bloopers")
+        # the regression case: "show me bloopers" must still fire the axis
+        self._check("show me bloopers", self.ContentForm.BEHIND_SCENES)
 
     def test_deleted_scenes(self):
-        self._check("the deleted scenes from Avatar", "deleted_scenes")
+        self._check("the deleted scenes from Avatar",
+                    self.ContentForm.BEHIND_SCENES)
 
     def test_featurette(self):
-        self._check("the Dune featurette", "featurette")
+        self._check("the Dune featurette", self.ContentForm.BEHIND_SCENES)
 
     def test_interview(self):
-        self._check("cast interview for Barbie", "interview")
+        self._check("cast interview for Barbie", self.ContentForm.SUPPLEMENT)
 
     def test_clip(self):
-        self._check("a movie clip", "clip")
+        self._check("a movie clip", self.ContentForm.EXCERPT)
 
-    def test_silent_and_bw_still_qualify(self):
+    def test_silent_and_bw_stay_presentation_flags(self):
+        # bw/silent have no mediavocab home yet — they ride the classifier-local
+        # presentation axis (Phase-2 PictureFormat), NOT content_form.
         self.assertIn("silent",
-                      self.clf.classify_qualifiers("a silent film", "en-us"))
+                      self.clf.classify_presentation("a silent film", "en-us"))
         self.assertIn("black_and_white",
-                      self.clf.classify_qualifiers("a black and white movie",
-                                                   "en-us"))
+                      self.clf.classify_presentation("a black and white movie",
+                                                     "en-us"))
 
-    def test_label_to_qualifiers_map(self):
+    def test_label_to_content_form_map(self):
         from ovos_media_classifier.intents import (
-            LABEL_TO_QUALIFIERS, qualifiers_for_label,
+            LABEL_TO_CONTENT_FORM, content_form_for_label,
         )
-        self.assertEqual(LABEL_TO_QUALIFIERS["trailer"], ["trailer"])
-        self.assertEqual(LABEL_TO_QUALIFIERS["behind_the_scenes"],
-                         ["behind_the_scenes"])
-        self.assertEqual(qualifiers_for_label("bloopers"), ["bloopers"])
-        self.assertEqual(qualifiers_for_label("music"), [])
+        self.assertEqual(LABEL_TO_CONTENT_FORM["trailer"],
+                         self.ContentForm.TRAILER)
+        self.assertEqual(LABEL_TO_CONTENT_FORM["behind_the_scenes"],
+                         self.ContentForm.BEHIND_SCENES)
+        self.assertEqual(content_form_for_label("bloopers"),
+                         self.ContentForm.BEHIND_SCENES)
+        self.assertIsNone(content_form_for_label("music"))
 
 
 if __name__ == "__main__":
