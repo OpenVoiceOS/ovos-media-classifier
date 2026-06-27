@@ -54,6 +54,10 @@ from ovos_media_classifier.embedding import (
     EmbeddingMediaClassifier,
     HybridMediaClassifier,
 )
+from ovos_media_classifier.gazetteer import (
+    build_gazetteer,
+    load_default_gazetteer,
+)
 from ovos_media_classifier.slots import (
     KeywordFeatureSlot,
     KEYWORD_FEATURE_SLOTS,
@@ -85,6 +89,8 @@ __all__ = [
     "KeywordMediaClassifier",
     "EmbeddingMediaClassifier",
     "HybridMediaClassifier",
+    "build_gazetteer",
+    "load_default_gazetteer",
     "KeywordFeatureSlot",
     "KEYWORD_FEATURE_SLOTS",
     "slot_for_label",
@@ -171,10 +177,38 @@ def load_media_classifier(
             hybrid = config.get("media_classifier_embedding_router_hybrid", True)
             if hybrid:
                 from ovos_media_classifier.embedding import HybridMediaClassifier
-                clf = HybridMediaClassifier.from_path(router_bundle)
+                # Layer B — online metadatarr last-resort. Opt-in (latency), OFF
+                # by default; lazy-imported only when enabled so the runtime
+                # stays lean. Falls through to offline-only on import failure.
+                online = None
+                if config.get("media_classifier_online_metadatarr", False):
+                    try:
+                        from ovos_media_classifier.metadatarr_backend import (
+                            MetadatarrMediaClassifier,
+                        )
+                        online = MetadatarrMediaClassifier(
+                            timeout_s=config.get(
+                                "media_classifier_online_timeout", 4.0),
+                            min_confidence=config.get(
+                                "media_classifier_online_min_confidence", 0.5),
+                        )
+                        LOG.info("OCP media classifier: online metadatarr layer enabled")
+                    except Exception as e:
+                        LOG.warning(
+                            f"online metadatarr layer requested but unavailable "
+                            f"({e}); install the 'online' extra. Offline-only.")
+                clf = HybridMediaClassifier.from_path(router_bundle, online=online)
             else:
                 from ovos_media_classifier.embedding import EmbeddingMediaClassifier
                 clf = EmbeddingMediaClassifier.from_path(router_bundle)
+            # Layer A — default OFFLINE gazetteer of common real titles, injected
+            # so bare titles route without a network call or user setup.  On by
+            # default; ``media_classifier_gazetteer=False`` disables it,
+            # ``media_classifier_gazetteer_size`` caps titles per type.
+            if config.get("media_classifier_gazetteer", True):
+                size = config.get("media_classifier_gazetteer_size")
+                n = clf.register_default_gazetteer(top_n=size)
+                LOG.info(f"OCP media classifier: offline gazetteer ({n} titles)")
             library = config.get("media_classifier_entity_library")
             if library:
                 clf.register_user_library(library)

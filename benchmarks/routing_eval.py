@@ -215,6 +215,20 @@ class BackendReport:
     control_total: int = 0
     control_hit_n: int = 0          # control cases routed to ocp_control
     n: int = 0
+    # per-utterance predictions (for cross-layer fix attribution)
+    preds: Dict[str, "Pred"] = field(default_factory=dict)
+    # per-query latency (ms), populated only for the online layer
+    latencies_ms: List[float] = field(default_factory=list)
+
+    def latency_summary(self) -> Optional[dict]:
+        if not self.latencies_ms:
+            return None
+        xs = sorted(self.latencies_ms)
+        n = len(xs)
+        median = xs[n // 2] if n % 2 else (xs[n // 2 - 1] + xs[n // 2]) / 2
+        p95 = xs[min(n - 1, int(round(0.95 * (n - 1))))]
+        return {"n": n, "median_ms": round(median, 1), "p95_ms": round(p95, 1),
+                "max_ms": round(xs[-1], 1)}
 
     @property
     def mis_route_rate(self) -> float:
@@ -284,15 +298,25 @@ class BackendReport:
                 "hit_n": self.control_hit_n,
                 "recall": round(self.control_recall, 4),
             },
+            "latency": self.latency_summary(),
         }
 
 
-def evaluate(clf, cases: List[Case], name: str) -> BackendReport:
+def evaluate(clf, cases: List[Case], name: str,
+             measure_latency: bool = False) -> BackendReport:
+    import time
+
     rep = BackendReport(name=name)
     rep.n = len(cases)
 
     for c in cases:
-        p = predict(clf, c)
+        if measure_latency:
+            t0 = time.perf_counter()
+            p = predict(clf, c)
+            rep.latencies_ms.append((time.perf_counter() - t0) * 1000.0)
+        else:
+            p = predict(clf, c)
+        rep.preds[c.utterance] = p
 
         # ---- gate (every case) -----------------------------------------
         if not c.is_ocp_query:
@@ -394,10 +418,19 @@ def _embedding_loader(bundle_dir: str) -> Callable:
     return _load
 
 
-def _hybrid_loader(bundle_dir: str, inject: bool = False) -> Callable:
+def _hybrid_loader(bundle_dir: str, inject: bool = False,
+                   gazetteer: bool = False, online: bool = False) -> Callable:
     def _load():
         from ovos_media_classifier.embedding import HybridMediaClassifier
-        clf = HybridMediaClassifier.from_path(bundle_dir)
+        online_clf = None
+        if online:
+            from ovos_media_classifier.metadatarr_backend import (
+                MetadatarrMediaClassifier,
+            )
+            online_clf = MetadatarrMediaClassifier()
+        clf = HybridMediaClassifier.from_path(bundle_dir, online=online_clf)
+        if gazetteer:
+            clf.register_default_gazetteer()
         if inject:
             clf.register_user_library(DEMO_LIBRARY)
         return clf
@@ -448,7 +481,8 @@ def discover_bundles() -> Dict[str, str]:
 # ---------------------------------------------------------------------------
 
 def run(extra_bundles: Optional[List[str]] = None,
-        only_keyword: bool = False) -> Dict[str, object]:
+        only_keyword: bool = False,
+        online: bool = False) -> Dict[str, object]:
     cases = load_cases()
 
     loaders: Dict[str, Callable] = {"keyword": _load_keyword}
@@ -463,9 +497,17 @@ def run(extra_bundles: Optional[List[str]] = None,
         for label, path in discover_router_bundles().items():
             loaders[f"embedding-router:{label}"] = _embedding_loader(path)
             loaders[f"hybrid:{label}"] = _hybrid_loader(path, inject=False)
+            # Layer A — hybrid + offline gazetteer (no network, no user setup)
+            loaders[f"hybrid+gazetteer:{label}"] = _hybrid_loader(
+                path, gazetteer=True)
             loaders[f"hybrid+inject:{label}"] = _hybrid_loader(path, inject=True)
+            if online:
+                # Layer B — hybrid + gazetteer + online metadatarr (network)
+                loaders[f"hybrid+gazetteer+online:{label}"] = _hybrid_loader(
+                    path, gazetteer=True, online=True)
 
     reports: Dict[str, dict] = {}
+    objs: Dict[str, BackendReport] = {}
     for name, loader in loaders.items():
         try:
             clf = loader()
@@ -474,10 +516,56 @@ def run(extra_bundles: Optional[List[str]] = None,
                                 reason=f"{type(e).__name__}: {e}")
             reports[name] = rep.as_dict()
             continue
-        reports[name] = evaluate(clf, cases, name).as_dict()
+        rep = evaluate(clf, cases, name, measure_latency="online" in name)
+        objs[name] = rep
+        reports[name] = rep.as_dict()
 
     composition = _composition(cases)
-    return {"composition": composition, "backends": reports}
+    fixes = _layer_fixes(objs, cases)
+    return {"composition": composition, "backends": reports, "fixes": fixes}
+
+
+# Which open-vocab cases each layer CLOSES relative to the cheaper layer.  A case
+# is "closed" when the cheaper layer abstained/mis-routed it and the richer layer
+# routes it correctly (a non-GENERIC media_type matching the expected one).
+_LAYER_CHAIN = ["keyword", "hybrid", "hybrid+gazetteer", "hybrid+gazetteer+online"]
+
+
+def _correct(p: "Pred", c: Case) -> bool:
+    return (c.domain == "ocp_play"
+            and c.media_type not in ABSTAIN_TYPES
+            and p.media_type == c.media_type)
+
+
+def _layer_fixes(objs: Dict[str, BackendReport], cases: List[Case]) -> dict:
+    """For each adjacent layer pair, list the play-cases the richer one fixes."""
+    # resolve each layer label to the actual report (bundle-suffixed names)
+    def _find(prefix: str) -> Optional[BackendReport]:
+        if prefix == "keyword":
+            return objs.get("keyword")
+        for name, rep in objs.items():
+            base = name.split(":", 1)[0]
+            if base == prefix:
+                return rep
+        return None
+
+    by_utt = {c.utterance: c for c in cases}
+    out: Dict[str, List[dict]] = {}
+    for prev, cur in zip(_LAYER_CHAIN, _LAYER_CHAIN[1:]):
+        rp, rc = _find(prev), _find(cur)
+        if rp is None or rc is None:
+            continue
+        fixed: List[dict] = []
+        for utt, c in by_utt.items():
+            pp, pc = rp.preds.get(utt), rc.preds.get(utt)
+            if pp is None or pc is None:
+                continue
+            if not _correct(pp, c) and _correct(pc, c):
+                fixed.append({"utterance": utt, "expected": c.media_type,
+                              "was": pp.media_type, "now": pc.media_type,
+                              "category": c.category, "note": c.note})
+        out[f"{prev} -> {cur}"] = fixed
+    return out
 
 
 def _composition(cases: List[Case]) -> dict:
@@ -523,22 +611,43 @@ def write_md(report: dict, path: str = RESULTS_MD) -> str:
         "(harmless).\n")
 
     lines.append("## Headline\n")
-    lines.append("| backend | mis-route | adult-leak | false-hijack | false-miss | control recall |")
-    lines.append("|---|---|---|---|---|---|")
+    lines.append("| backend | mis-route | adult-leak | false-hijack | false-miss | control recall | latency med/p95 |")
+    lines.append("|---|---|---|---|---|---|---|")
     for name, b in report["backends"].items():
         if b.get("status") != "available":
-            lines.append(f"| {name} | unavailable | – | – | – | – |")
+            lines.append(f"| {name} | unavailable | – | – | – | – | – |")
             continue
         g = b["gate"]; a = b["adult_leak"]; c = b["control"]
+        lat = b.get("latency")
+        lat_s = (f"{lat['median_ms']:.0f}/{lat['p95_ms']:.0f} ms"
+                 if lat else "–")
         lines.append(
             f"| {name} | **{b['mis_route_rate']:.3f}** "
             f"({b['media_type']['confident_wrong']}/{b['media_type']['n']}) | "
             f"**{a['leak_rate']:.3f}** ({a['leak_n']}/{a['adult_total']}) | "
             f"{g['false_hijack_rate']:.3f} ({g['false_hijack_n']}/{g['false_hijack_total']}) | "
             f"{g['false_miss_rate']:.3f} ({g['false_miss_n']}/{g['false_miss_total']}) | "
-            f"{c['recall']:.3f} ({c['hit_n']}/{c['total']}) |"
+            f"{c['recall']:.3f} ({c['hit_n']}/{c['total']}) | {lat_s} |"
         )
     lines.append("")
+
+    # ---- per-layer open-vocab fixes -----------------------------------------
+    fixes = report.get("fixes") or {}
+    if any(fixes.values()):
+        lines.append("## Open-vocab cases each layer closes\n")
+        lines.append(
+            "Each row is a play-case the cheaper layer abstained on or "
+            "mis-routed that the richer layer routes correctly.\n")
+        for pair, items in fixes.items():
+            if not items:
+                continue
+            lines.append(f"### {pair}  ({len(items)} fixed)\n")
+            lines.append("| utterance | expected | was | now |")
+            lines.append("|---|---|---|---|")
+            for it in items:
+                lines.append(f"| {it['utterance']} | {it['expected']} | "
+                             f"{it['was']} | **{it['now']}** |")
+            lines.append("")
 
     lines.append("## Routing axes — confident-wrong vs abstain (safe)\n")
     lines.append("| backend | media_type wrong | media_type abstain | playback wrong | playback abstain | adult over-flag |")
@@ -570,15 +679,72 @@ def write_md(report: dict, path: str = RESULTS_MD) -> str:
     return path
 
 
+def gazetteer_latency_sweep(bundle_dir: str,
+                            sizes: Optional[List[int]] = None) -> dict:
+    """Per-query routing latency as a function of gazetteer size (entities/type).
+
+    The entity matcher is word-boundary regex whose cost grows with the number
+    of injected phrases, so a LIVE gazetteer must stay bounded.  This sweeps
+    ``register_default_gazetteer(top_n=N)`` over *sizes*, routes every eval
+    utterance, and reports median / p95 ms per query at each size — so the
+    default cap can be picked at the latency knee.  ``0`` = no gazetteer baseline.
+    """
+    import time
+
+    from ovos_media_classifier.embedding import HybridMediaClassifier
+
+    sizes = sizes or [0, 100, 500, 1000, 5000, 10000, 50000, 100000]
+    cases = load_cases()
+    rows = {}
+    for n in sizes:
+        clf = HybridMediaClassifier.from_path(bundle_dir)
+        injected = 0
+        if n > 0:
+            injected = clf.register_default_gazetteer(top_n=n)
+        lat = []
+        for c in cases:
+            t0 = time.perf_counter()
+            predict(clf, c)
+            lat.append((time.perf_counter() - t0) * 1000.0)
+        lat.sort()
+        k = len(lat)
+        med = lat[k // 2] if k % 2 else (lat[k // 2 - 1] + lat[k // 2]) / 2
+        p95 = lat[min(k - 1, int(round(0.95 * (k - 1))))]
+        rows[n] = {"cap_per_type": n, "injected_titles": injected,
+                   "median_ms": round(med, 3), "p95_ms": round(p95, 3),
+                   "max_ms": round(lat[-1], 3)}
+    return rows
+
+
 def main(argv: Optional[List[str]] = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--bundle", action="append", default=[],
                     help="path to an extra ONNX bundle dir to evaluate")
     ap.add_argument("--only-keyword", action="store_true",
                     help="skip ONNX bundles (keyword backend only)")
+    ap.add_argument("--online", action="store_true",
+                    help="evaluate the online metadatarr layer (makes NETWORK "
+                         "calls; reports per-query latency)")
+    ap.add_argument("--latency-sweep", action="store_true",
+                    help="report routing latency vs gazetteer size and exit")
     args = ap.parse_args(argv)
 
-    report = run(extra_bundles=args.bundle, only_keyword=args.only_keyword)
+    if args.latency_sweep:
+        bundles = discover_router_bundles()
+        if not bundles:
+            print("no router bundle found for the latency sweep")
+            return 1
+        bundle = sorted(bundles.values())[0]
+        rows = gazetteer_latency_sweep(bundle)
+        print(f"gazetteer latency sweep (bundle={bundle}, {len(load_cases())} queries):")
+        print(f"  {'cap/type':>10} {'titles':>8} {'median ms':>10} {'p95 ms':>8} {'max ms':>8}")
+        for n, r in rows.items():
+            print(f"  {r['cap_per_type']:>10} {r['injected_titles']:>8} "
+                  f"{r['median_ms']:>10.3f} {r['p95_ms']:>8.3f} {r['max_ms']:>8.3f}")
+        return 0
+
+    report = run(extra_bundles=args.bundle, only_keyword=args.only_keyword,
+                 online=args.online)
     jp = write_json(report)
     mp = write_md(report)
 

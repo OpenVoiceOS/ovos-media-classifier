@@ -37,6 +37,13 @@ ner = [
 media_servers = [
     "requests",
 ]
+# --- Layer B online metadatarr backend (network, opt-in, OFF by default) ---
+# Adds the metadatarr metadata-resolution layer the online classifier calls to
+# resolve a bare title's canonical media_type. Latency-aware: enable only via
+# ``media_classifier_online_metadatarr: true``.
+online = [
+    "metadatarr>=0.5.0a1",
+]
 huggingface = [
     "datasets",
 ]
@@ -86,5 +93,6 @@ include = ["ovos_media_classifier*"]
 ovos_media_classifier = [
     "locale/*/*.voc",
     "locale/*/dataset/*.intent",
+    "data/gazetteer.json",
     "py.typed",
 ]
