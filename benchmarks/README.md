@@ -123,6 +123,54 @@ generalization**, and it is the number that matters:
 See `benchmarks/results.md` for the full per-type tables and
 `benchmarks/results.json` for the raw numbers and confusion matrices.
 
+## Harm-weighted routing eval (the honest OOD ground truth)
+
+`benchmarks/run.py` above grades backends on an **in-distribution** set built
+from the keyword backend's own `.voc` files — so the keyword backend scores ~0.99
+by construction (a false green). The **routing eval** is the separate, honest
+measurement: a hand-curated, **out-of-distribution** set scored by a
+**harm-weighted** metric that reflects how the classifier is actually used — as a
+**router** (gate `is_ocp_query`, route by `media_type`/`playback_type`, apply
+adult content-policy), where the error cost is asymmetric.
+
+```bash
+# keyword + every trained data/models/* bundle
+~/.venvs/ovos/bin/python -m benchmarks.routing_eval
+# keyword only (zero deps)
+~/.venvs/ovos/bin/python -m benchmarks.routing_eval --only-keyword
+# add an explicit ONNX bundle
+~/.venvs/ovos/bin/python -m benchmarks.routing_eval --bundle path/to/bundle
+```
+
+| File | What it is |
+|---|---|
+| `benchmarks/routing_eval.jsonl` | The hand-curated, OOD eval set (186 cases). |
+| `benchmarks/routing_eval.py` | The harm-weighted harness (mis-route / false-hijack / false-miss / adult-leak). |
+| `benchmarks/routing_eval_results.{json,md}` | Results (regenerated each run). |
+
+**The metric is mis-route rate** (confident-wrong `media_type`), and
+**GENERIC/abstain is scored as SAFE** — a confident-wrong route prunes the
+correct provider (harm), while an abstain still lets every provider search
+(harmless). Gate **false-hijack** (non-media → OCP) and **adult-leak** (adult not
+flagged) are reported as separate headlines. The full rationale, metric
+definitions, and an honest read of the baseline are in
+[`docs/routing-eval.md`](../docs/routing-eval.md).
+
+### Routing eval set provenance
+
+The 186 cases in `routing_eval.jsonl` are **authored by hand** and every label
+was hand-checked against the [`mediavocab`](../ovos_media_classifier/intents.py)
+taxonomy and the routing semantics in `docs/routing-eval.md`. They are
+deliberately **out-of-distribution**: the phrasings do **not** reuse the
+`locale/<lang>/dataset/*.intent` template structure — they are written the way
+people actually speak (elliptical, slang, typo'd, keyword-less bare titles), so
+the set measures *generalization*, not vocabulary coverage. Real titles/artists
+(the Matrix, Miles Davis, Bluey, Breaking Bad, …) are used as natural content.
+Languages: `en-us` (140) plus `es-es`, `de-de`, `pt-pt` (15–16 each, native
+phrasings). The set is small on purpose — **quality and OOD-ness over volume**;
+agentpipe (free agents only) can extend it later, but every generated label must
+still be hand-checked before it is added. No network is needed to run the eval.
+
 ## Plots
 
 All saved under `docs/benchmarks/` at dpi 140.
