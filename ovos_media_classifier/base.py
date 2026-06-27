@@ -219,11 +219,16 @@ class AbstractMediaClassifier(ABC):
 
     def classify_qualifiers(self, query: str, lang: str) -> List[str]:
         """Result-narrowing qualifiers (multi-label): ``black_and_white`` /
-        ``silent`` / ``live`` / ``subtitled`` / ``dubbed`` / ``audio_described`` /
-        ``trailer`` / … — strong filter signals that are *not* media types.
+        ``silent`` / ``live`` / ``subtitled`` / ``dubbed`` / ``audio_described``
+        and the supplementary-content forms ``trailer`` / ``teaser`` /
+        ``behind_the_scenes`` / ``making_of`` / ``bloopers`` / ``deleted_scenes``
+        / ``featurette`` / ``interview`` / ``clip`` — strong filter signals that
+        are *not* media types (their parent ``MediaType`` stays MOVIE; the
+        qualifier carries the "the trailer/BTS, not the full title" distinction).
 
         Default: ``[]`` — backends that surface them (keyword via ``BWKeyword`` /
-        ``SilentKeyword`` / …, trained ``qualifiers`` head) override this.
+        ``SilentKeyword`` / ``TrailerKeyword`` / ``BloopersKeyword`` / …, trained
+        ``qualifiers`` head) override this.
         """
         return []
 

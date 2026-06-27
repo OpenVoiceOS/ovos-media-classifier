@@ -596,7 +596,14 @@ class OnnxMediaClassifier(AbstractMediaClassifier):
         return []
 
     def classify_qualifiers(self, query: str, lang: str) -> List[str]:
-        """Result-narrowing qualifiers from the ``qualifiers`` head."""
+        """Result-narrowing qualifiers from the ``qualifiers`` head.
+
+        Surfaces the editorial forms (``black_and_white`` / ``silent`` /
+        ``audio_described``) and the supplementary-content forms (``trailer`` /
+        ``teaser`` / ``behind_the_scenes`` / ``making_of`` / ``bloopers`` /
+        ``deleted_scenes`` / ``featurette`` / ``interview`` / ``clip``) the head
+        learned from the dataset ``qualifiers`` column.
+        """
         if self._has_head("qualifiers"):
             out = self._multi_head("qualifiers", query, lang)
             if out is not None:
