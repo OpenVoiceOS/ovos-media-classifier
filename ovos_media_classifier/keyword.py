@@ -54,12 +54,14 @@ from mediavocab import (
     MediaType,
     PlaybackType,
     infer_playback_type,
-)
-from mediavocab.taxonomy import ContentForm, AccessibilityKind, ProgrammeFormat
-
-from ovos_media_classifier.axes import (
     Structure,
     infer_structure,
+)
+from mediavocab.taxonomy import (
+    ContentForm, AccessibilityKind, ProgrammeFormat, PictureFormat,
+)
+
+from ovos_media_classifier.axes import (
     MediaClassification,
 )
 from ovos_media_classifier.base import AbstractMediaClassifier
@@ -224,11 +226,11 @@ _ACCESSIBILITY_VOC_ORDER: List[Tuple[str, AccessibilityKind]] = [
     ("ADKeyword",              AccessibilityKind.AUDIO_DESCRIPTION),
 ]
 
-# Picture-presentation voc → classifier-local flag (Phase-2 PictureFormat home).
-# Multi-label; ``classify_presentation`` collects every match.
-_PRESENTATION_VOC_ORDER: List[Tuple[str, str]] = [
-    ("SilentKeyword",          "silent"),
-    ("BWKeyword",              "black_and_white"),
+# Picture-presentation voc → mediavocab.PictureFormat (multi-label).
+# ``classify_picture_format`` collects every match.
+_PICTURE_FORMAT_VOC_ORDER: List[Tuple[str, PictureFormat]] = [
+    ("SilentKeyword",          PictureFormat.SILENT),
+    ("BWKeyword",              PictureFormat.BLACK_AND_WHITE),
 ]
 
 
@@ -471,20 +473,19 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
                 kinds.append(kind)
         return kinds
 
-    def classify_presentation(self, query: str, lang: str) -> List[str]:
-        """Return the classifier-local picture-presentation flags
+    def classify_picture_format(self, query: str, lang: str) -> List[PictureFormat]:
+        """Return the :class:`mediavocab.PictureFormat` presentation attributes
         (``silent`` / ``black_and_white``), multi-label.
 
-        Placeholder until Phase 2 gives them a mediavocab ``PictureFormat`` home.
         Matched directly from the ``.voc`` evidence (word boundaries), so
-        "a silent film" → ``["silent"]`` fires even with no title.
+        "a silent film" → ``[PictureFormat.SILENT]`` fires even with no title.
         """
         m = self._match
-        flags: List[str] = []
-        for voc_name, flag in _PRESENTATION_VOC_ORDER:
-            if m(query, voc_name, lang) and flag not in flags:
-                flags.append(flag)
-        return flags
+        formats: List[PictureFormat] = []
+        for voc_name, fmt in _PICTURE_FORMAT_VOC_ORDER:
+            if m(query, voc_name, lang) and fmt not in formats:
+                formats.append(fmt)
+        return formats
 
     # ------------------------------------------------------------------
     # Multi-axis output — PREDICT each axis top-down (do not derive from leaf).

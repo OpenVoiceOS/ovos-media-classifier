@@ -55,7 +55,7 @@ axis method only when your backend has real signal for it:
 | `classify_variant` | `None` | you predict the `mediavocab.VariantKind` cut |
 | `classify_playback_type` | derives from the leaf | you have a modality head |
 | `classify_structure` | derives from the leaf | you have a structure head |
-| `classify_presentation` | `[]` | you surface bw / silent / 3d (Phase-2 `PictureFormat` placeholder) |
+| `classify_picture_format` | `[]` | you predict `mediavocab.PictureFormat` (bw / silent / 3d) |
 | `classify_explicitness` | derives from the form genres | you have an explicitness head |
 | `classify_control_intent` | delegates to `classify_control()` | — |
 | `classify_full` | combines the above (derive-from-leaf) | you predict the axes directly and want to soft-gate the leaf |

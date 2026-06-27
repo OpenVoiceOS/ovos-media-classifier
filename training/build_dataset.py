@@ -51,7 +51,7 @@ import pandas as pd
 from ovos_spec_tools import expand, find_lang_dir
 
 from mediavocab import MediaType, infer_playback_type
-from ovos_media_classifier.axes import infer_structure
+from mediavocab import infer_structure
 from ovos_media_classifier.intents import (
     LABEL_TO_MEDIA_TYPE,
     LABEL_TO_GENRES,
@@ -388,6 +388,7 @@ _INTENT_ACCESSIBILITY: Dict[str, List[str]] = {
     "audio_description": ["audio_description"],
     "subtitled":         ["subtitles"],
     "sign_language":     ["sign_language"],
+    "dubbed":            ["dubbed"],
 }
 
 # ``intent`` aliases that name a mediavocab ``VariantKind`` (work-level cut).
@@ -399,11 +400,11 @@ _INTENT_VARIANT: Dict[str, str] = {
     "fanedit":       "fanedit",
 }
 
-# ``intent`` aliases that are a classifier-local picture-presentation flag.
-# These have no mediavocab home yet — Phase 2 redirects to ``PictureFormat``.
-_INTENT_PRESENTATION: Dict[str, List[str]] = {
+# ``intent`` aliases → mediavocab PictureFormat (presentation attribute, T6).
+_INTENT_PICTURE_FORMAT: Dict[str, List[str]] = {
     "bw_movie":     ["black_and_white"],
     "silent_movie": ["silent"],
+    "3d":           ["3d"],
 }
 
 # Keyword feature column → mediavocab ContentForm.  A row whose realised sentence
@@ -422,11 +423,11 @@ _KW_FEATURE_CONTENT_FORM: Dict[str, str] = {
     "kw_clip":            "excerpt",
 }
 
-# Keyword feature column → accessibility / presentation.
+# Keyword feature column → accessibility / picture_format.
 _KW_FEATURE_ACCESSIBILITY: Dict[str, str] = {
     "kw_ad":              "audio_description",
 }
-_KW_FEATURE_PRESENTATION: Dict[str, str] = {
+_KW_FEATURE_PICTURE_FORMAT: Dict[str, str] = {
     "kw_silent":          "silent",
     "kw_bw":              "black_and_white",
 }
@@ -446,8 +447,8 @@ def _derive_axes(intent: str, genres: List[str],
     ``content_genres`` from the genre slot value (⊆ KNOWN_GENRES at runtime),
     ``content_form`` / ``programme_format`` / ``accessibility`` / ``variant``
     from the intent alias, ``year`` from the release-year slot,
-    ``explicitness`` from the ``adult`` form-genre, ``presentation`` is a
-    classifier-local placeholder for bw/silent (no mediavocab home yet).
+    ``explicitness`` from the ``adult`` form-genre, ``picture_format`` from the
+    intent alias (mediavocab PictureFormat: black_and_white / silent / 3d).
     """
     content_genre = sorted({
         slot_values[s].lower() for s in _GENRE_SLOTS if s in slot_values
@@ -459,7 +460,7 @@ def _derive_axes(intent: str, genres: List[str],
     programme_format = _INTENT_PROGRAMME_FORMAT.get(intent, "")
     accessibility = list(_INTENT_ACCESSIBILITY.get(intent, []))
     variant = _INTENT_VARIANT.get(intent, "")
-    presentation = list(_INTENT_PRESENTATION.get(intent, []))
+    picture_format = list(_INTENT_PICTURE_FORMAT.get(intent, []))
 
     is_adult = "adult" in genres
     explicitness = "adult" if is_adult else "clean"
@@ -479,8 +480,8 @@ def _derive_axes(intent: str, genres: List[str],
         "variant": variant,
         # release year → Signals.year
         "year": year,
-        # classifier-local picture-presentation placeholder (Phase-2 PictureFormat)
-        "presentation": json.dumps(presentation),
+        # mediavocab PictureFormat (multi) — black_and_white / silent / 3d
+        "picture_format": json.dumps(picture_format),
         "explicitness": explicitness,
         # control axis — play rows carry no control intent
         "control_intent": "",
@@ -658,7 +659,7 @@ def add_feature_columns(df: pd.DataFrame) -> pd.DataFrame:
     # behind_the_scenes-intent row that actually says "bloopers" / "the making
     # of" gets ``content_form=behind_scenes`` too).
     #   * content_form (single): a fired cue sets it only when not already set.
-    #   * accessibility / presentation (multi): the fired cue is appended.
+    #   * accessibility / picture_format (multi): the fired cue is appended.
     if "content_form" in out.columns:
         cf_updates: List[str] = []
         for pos in range(len(out)):
@@ -672,7 +673,7 @@ def add_feature_columns(df: pd.DataFrame) -> pd.DataFrame:
         out["content_form"] = cf_updates
 
     for col, kw_map in (("accessibility", _KW_FEATURE_ACCESSIBILITY),
-                        ("presentation", _KW_FEATURE_PRESENTATION)):
+                        ("picture_format", _KW_FEATURE_PICTURE_FORMAT)):
         if col not in out.columns:
             continue
         updates: List[str] = []
@@ -797,7 +798,7 @@ split. See `docs/dataset.md` and `docs/data-sources.md`.
 | group | columns |
 |---|---|
 | core | `sentence`, `lang`, `domain`, `intent`, `media_type`, `genres`, `playback_type`, `structure`, `binary_label` |
-| mediavocab axes | `content_form` (ContentForm), `programme_format` (ProgrammeFormat), `accessibility` (AccessibilityKind, JSON), `variant` (VariantKind), `content_genres` (⊆ KNOWN_GENRES, JSON), `content_form_genres` (filter axis, JSON), `year`, `presentation` (classifier-local bw/silent, JSON), `explicitness`, `control_intent` |
+| mediavocab axes | `content_form` (ContentForm), `programme_format` (ProgrammeFormat), `accessibility` (AccessibilityKind, JSON), `variant` (VariantKind), `content_genres` (⊆ KNOWN_GENRES, JSON), `content_form_genres` (filter axis, JSON), `year`, `picture_format` (PictureFormat bw/silent/3d, JSON), `explicitness`, `control_intent` |
 | keyword features | `kw_*`, `verb_*`, `mod_*`, `fmt_*` — 0/1, computed on `sentence` by the runtime `CategoricalFeatureExtractor` |
 | NER-by-construction | `ner_<entity_label>` — 0/1 ground-truth flag set where `{{entity_label}}` was filled; `slot_values` maps each filled slot to its entity |
 | provenance | `template_id`, `template`, `n_slots`, `entity_labels` |
@@ -834,11 +835,11 @@ _CORE = ["sentence", "lang", "domain", "intent", "media_type", "genres",
          "playback_type", "structure", "binary_label"]
 # the free, ground-truth-by-construction multi-task axis columns (one head each),
 # all expressed in mediavocab's own vocabulary.  ``content_genres`` doubles as
-# provenance + benchmark ground truth; ``presentation`` is a classifier-local
-# placeholder (Phase-2 PictureFormat); ``year`` feeds Signals.year.
+# provenance + benchmark ground truth; ``picture_format`` is the mediavocab
+# PictureFormat axis (bw/silent/3d); ``year`` feeds Signals.year.
 _AXES = ["content_form_genres", "content_genres", "content_form",
          "programme_format", "accessibility", "variant", "year",
-         "presentation", "explicitness", "control_intent"]
+         "picture_format", "explicitness", "control_intent"]
 _PROV = ["template_id", "template", "n_slots", "entity_labels", "slot_values"]
 
 

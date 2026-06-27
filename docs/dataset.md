@@ -64,9 +64,9 @@ Each row is one natural-language command. Columns are grouped:
 | `content_genres` | JSON list of the real genre(s), constrained to `mediavocab.KNOWN_GENRES` |
 | `content_form` | `mediavocab.ContentForm` (single) — `trailer` / `teaser` / `behind_scenes` / `excerpt` / `supplement` |
 | `programme_format` | `mediavocab.ProgrammeFormat` (single) — `documentary` / `news` |
-| `accessibility` | JSON list of `mediavocab.AccessibilityKind` (`subtitles` / `audio_description` / `sign_language`) |
+| `accessibility` | JSON list of `mediavocab.AccessibilityKind` (`subtitles` / `audio_description` / `sign_language` / `dubbed`) |
 | `variant` | `mediavocab.VariantKind` (single) — `directors` / `extended` / `remastered` / `colorized` / `fanedit` |
-| `presentation` | JSON list of classifier-local picture flags (`black_and_white` / `silent`) — Phase-2 `PictureFormat` placeholder |
+| `picture_format` | JSON list of `mediavocab.PictureFormat` (`black_and_white` / `silent` / `3d`) |
 | `year` | the release year (feeds `Signals.year`) |
 | `explicitness` | `clean` / `adult` |
 

@@ -6,6 +6,7 @@ from mediavocab.taxonomy import (
     ProgrammeFormat,
     AccessibilityKind,
     VariantKind,
+    PictureFormat,
     KNOWN_GENRES,
 )
 
@@ -48,9 +49,8 @@ class AbstractMediaClassifier(ABC):
       * :meth:`classify_genres`         → ``list[str] ⊆ mediavocab.KNOWN_GENRES``
         (the content filter reads ``adult`` / ``anime`` / … from here)
 
-    ``black_and_white`` / ``silent`` / ``3d`` are picture-presentation flags with
-    no mediavocab home yet; they ride :meth:`classify_presentation` as a
-    classifier-local placeholder until Phase 2 adds ``PictureFormat``.
+      * :meth:`classify_picture_format` → ``list[mediavocab.PictureFormat]``
+        (black_and_white / silent / 3d / … — technical presentation attributes)
     """
 
     @abstractmethod
@@ -139,9 +139,9 @@ class AbstractMediaClassifier(ABC):
         return infer_playback_type(media_type)
 
     def classify_structure(self, query: str, lang: str):
-        """Return the :class:`~ovos_media_classifier.axes.Structure`
+        """Return the :class:`mediavocab.Structure`
         (single/episodic/continuous/collection).  Default: derived from MediaType."""
-        from ovos_media_classifier.axes import infer_structure
+        from mediavocab import infer_structure
         media_type, _ = self.classify(query, lang)
         return infer_structure(media_type)
 
@@ -204,14 +204,12 @@ class AbstractMediaClassifier(ABC):
         """
         return None
 
-    def classify_presentation(self, query: str, lang: str) -> List[str]:
-        """Classifier-local picture-presentation flags (``black_and_white`` /
-        ``silent`` / ``3d``), multi-label.
+    def classify_picture_format(self, query: str, lang: str) -> List[PictureFormat]:
+        """The :class:`mediavocab.PictureFormat` presentation attributes
+        (``black_and_white`` / ``silent`` / ``3d`` / …), multi-label.
 
-        These technical presentation attributes have **no mediavocab home yet**;
-        Phase 2 adds a ``PictureFormat`` enum and this axis redirects to it.
-        Until then they are surfaced here so the signal is not lost.  Default:
-        ``[]``.
+        A technical Release attribute (T6); routing-family (A6).  Default:
+        ``[]`` — backends that surface presentation cues override this.
         """
         return []
 
@@ -255,18 +253,19 @@ class AbstractMediaClassifier(ABC):
         Every descriptive axis is emitted in **mediavocab's own vocabulary** so
         the signals are lossless and directly comparable:
 
-          * ``medium``        ← the leaf ``MediaType``
-          * ``playback_type`` ← the modality axis
-          * ``content_genres``← ``classify_genres`` (⊆ ``KNOWN_GENRES``)
-          * ``content_form``  ← ``classify_content_form`` (trailer / supplement / …)
-          * ``variant_kind``  ← ``classify_variant`` (directors / remastered / …)
+          * ``medium``           ← the leaf ``MediaType``
+          * ``playback_type``    ← the modality axis
+          * ``content_genres``   ← ``classify_genres`` (⊆ ``KNOWN_GENRES``)
+          * ``content_form``     ← ``classify_content_form`` (trailer / supplement / …)
+          * ``programme_format`` ← ``classify_programme_format`` (documentary / news / …)
+          * ``variant_kind``     ← ``classify_variant`` (directors / remastered / …)
+          * ``accessibility``    ← ``classify_accessibility`` (subtitles / dubbed / …)
+          * ``picture_format``   ← ``classify_picture_format`` (black_and_white / silent / 3d)
 
-        ``programme_format`` (documentary / news / …) and ``accessibility`` are
-        *not* set: :class:`mediavocab.Signals` has no field for them in this
-        spec version (Signals forbids extra keys), so they are exposed on the
-        per-axis methods only until mediavocab grows the fields (Phase 2).  The
-        picture-presentation flags (``black_and_white`` / ``silent`` / ``3d``)
-        likewise wait for Phase 2's ``picture_format``.
+        Every descriptive axis the classifier predicts now has a
+        :class:`mediavocab.Signals` field, so ``to_signals`` is lossless.
+        ``picture_format`` is single-valued on ``Signals``; the first predicted
+        format wins when the backend surfaces several.
 
         Backends that extract entities (artist / year / season / episode) should
         override to enrich the ``Signals`` further.
@@ -278,12 +277,17 @@ class AbstractMediaClassifier(ABC):
         # genres constrained to KNOWN_GENRES (the content-filter axis)
         genres = [g for g in dict.fromkeys(full.genres) if g in KNOWN_GENRES]
 
+        picture_formats = self.classify_picture_format(query, lang)
+
         return Signals.as_query(
             title=query or None,
             medium=full.media_type if full.media_type not in sentinels else None,
             playback_type=full.playback_type,
             content_genres=genres,
             content_form=self.classify_content_form(query, lang),
+            programme_format=self.classify_programme_format(query, lang),
             variant_kind=self.classify_variant(query, lang),
+            accessibility=self.classify_accessibility(query, lang),
+            picture_format=picture_formats[0] if picture_formats else None,
             language=(lang.split("-")[0] if lang else None),
         )

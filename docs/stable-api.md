@@ -105,9 +105,9 @@ The classifier emits its descriptive signals in **mediavocab's own taxonomy**, s
   `directors` / `extended` / `remastered` / `colorized` / `fanedit` / …
 - `classify_genres(query, lang) -> list[str]` — genre tags constrained to
   `mediavocab.KNOWN_GENRES` (the content filter reads `adult` / `anime` / … here).
-- `classify_presentation(query, lang) -> list[str]` — a classifier-local
-  placeholder for `black_and_white` / `silent` / `3d` (no mediavocab home yet;
-  redirected to a `PictureFormat` enum in Phase 2).
+- `classify_picture_format(query, lang) -> list[PictureFormat]` — the
+  `mediavocab.PictureFormat` presentation attributes (`black_and_white` /
+  `silent` / `3d`), multi-label.
 
 ```python
 clf.classify_content_form("watch the Dune trailer", "en-us")  # <ContentForm.TRAILER: 'trailer'>
@@ -146,7 +146,7 @@ This ABC is both the interface the bundled keyword classifier implements and the
 | `classify_programme_format` | optional override | returns `None` |
 | `classify_accessibility` | optional override | returns `[]` |
 | `classify_variant` | optional override | returns `None` |
-| `classify_presentation` | optional override | returns `[]` (Phase-2 `PictureFormat` placeholder) |
+| `classify_picture_format` | optional override | returns `[]` (`mediavocab.PictureFormat`) |
 | `classify_full` | optional override | combines the above (derive-from-leaf) |
 
 Override guidance (for plugin authors — the bundled keyword classifier only

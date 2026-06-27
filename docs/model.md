@@ -86,16 +86,17 @@ per-label probabilities; the runtime keeps every label whose probability is
 | `programme_format` | structural format (`mediavocab.ProgrammeFormat`) | single | `documentary` / `news` / `concert` / `stand_up` / `sports` / … |
 | `accessibility` | a11y assets (`mediavocab.AccessibilityKind`) | multi | `subtitles` / `audio_description` / `sign_language` / … |
 | `variant` | work-level cut (`mediavocab.VariantKind`) | single | `directors` / `extended` / `remastered` / `colorized` / `fanedit` / … |
+| `picture_format` | presentation attr (`mediavocab.PictureFormat`) | multi | `black_and_white` / `silent` / `3d` |
 
 **mediavocab axes.** Every descriptive head emits **mediavocab's own vocabulary**
 so the classifier and the resolver / providers share one taxonomy. The finer
 classifier cues collapse onto mediavocab's set (making_of / bloopers /
 deleted_scenes / featurette → `behind_scenes`; clip → `excerpt`; interview →
 `supplement`). `black_and_white` / `silent` / `3d` are picture-presentation
-attributes with no mediavocab home yet — they ride a classifier-local
-`presentation` axis until Phase 2 adds a `PictureFormat` enum. `dubbed` likewise
-has no mediavocab home yet (deferred to Phase 2). `mood` / `era` are dropped from
-the taxonomy (not axiom-admissible; a release year feeds `Signals.year`).
+attributes (T6) that map to the `mediavocab.PictureFormat` axis
+(`classify_picture_format`); `dubbed` maps to `mediavocab.AccessibilityKind`.
+`mood` / `era` are dropped from the taxonomy (not axiom-admissible; a release
+year feeds `Signals.year`).
 
 The `content_form_genres` head is the one the **content filter reads**. Because it
 is its own head, it can flag `adult` **independently of the leaf** — a request can
@@ -263,15 +264,15 @@ result. (Source: [benchmarks/ladder_results.md](../benchmarks/ladder_results.md)
 |---|---|---|---|---|
 | content_form_genres | content_form_genres | 0.720 | 0.729 | 0.979 |
 | tags (genre slice) | content_genres | 0.000 | 0.561 | 0.596 |
-| qualifiers | content_form + accessibility + presentation | 0.000 | 0.780 | 0.945 |
+| qualifiers | content_form + accessibility + picture_format | 0.000 | 0.780 | 0.945 |
 
 The `content_genres` macro-F1 is scored over the head's **modelled label space**
 (its top-`CONTENT_GENRE_TOP_K` ⊆ `KNOWN_GENRES` labels) — the honest in-scope
 task, not over the thousands of distinct raw genre values it cannot model (§6b).
 The `qualifiers` row aggregated cues that the alignment splits across the
 `content_form` (trailer / behind_scenes / …), `accessibility` (audio_description)
-and classifier-local `presentation` (bw / silent) axes; per-axis figures land
-with the retrain.
+and `picture_format` (bw / silent / 3d) axes; per-axis figures land with the
+retrain.
 
 ### Content filter (driven by the `content_form_genres` axis)
 
