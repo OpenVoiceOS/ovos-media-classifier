@@ -27,6 +27,27 @@ python -m training.build_dataset --push --repo TigreGotico/ocp-media-intents
 The `.intent` / `.voc` templates are the hand-authored **source of truth** —
 nothing regenerates them, so ovos-localize translations stick.
 
+### Train a model bundle
+
+```bash
+# sklearn ladder (categorical features → tiny ONNX bundles, the reference path)
+python -m training.train_sklearn                       # → data/models/<feature_set>/
+
+# neural path (PyTorch → ONNX) with richer text features
+python -m training.build_corpus                        # domain word vectors → data/wordvec/
+python -m training.train_torch                         # → data/models_torch/<variant>/
+
+# head-to-head benchmark: rules → sklearn → neural × feature set, on the test split
+python -m benchmarks.ladder                            # → benchmarks/ladder_results.{md,json}
+```
+
+`train_torch.py` trains a shared-trunk multi-task net on categorical ⊕ char-hash ⊕
+trained-word-vector features and exports the **same** self-describing bundle the
+runtime already loads (runtime stays `onnxruntime` + `numpy`; torch/gensim are
+train-only). See [`docs/model.md` §7](../docs/model.md) for the comparison and
+[`docs/extending.md`](../docs/extending.md) Part C for adding an architecture.
+All model artifacts land under the gitignored `data/` — they stay **local**.
+
 `build_dataset` is the **single entry point** and is fully reproducible for a
 fixed `--seed`. See [`docs/dataset.md`](../docs/dataset.md) for every column, the
 rebuild recipe, and how to add/translate templates; see

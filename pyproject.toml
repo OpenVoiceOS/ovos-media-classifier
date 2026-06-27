@@ -53,6 +53,12 @@ train = [
     "onnxruntime",
     "numpy",
     "pandas",
+    # neural (PyTorch → ONNX) training path (training/train_torch.py) + the
+    # domain word-vector corpus (training/build_corpus.py).  Inference stays on
+    # onnxruntime + numpy only — torch/gensim are TRAIN-ONLY, never imported at
+    # runtime (the exported bundle is a plain ONNX graph + a saved .npy matrix).
+    "torch",
+    "gensim",
 ]
 
 # test deps — optional-backend deps are mocked in the suite, so [test] runs green
