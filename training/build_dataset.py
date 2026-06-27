@@ -351,112 +351,137 @@ def _label_axes(media_label: str) -> Tuple[str, List[str], str, str, str]:
 # dataset column and a trained head.  See docs/model.md.
 # ---------------------------------------------------------------------------
 
-# slot names whose VALUE is a real (non-form) genre → the ``content_genre`` axis
+# slot names whose VALUE is a real (non-form) genre → the ``content_genres`` axis
 _GENRE_SLOTS = (
     "music_genre", "movie_genre", "video_genre", "tv_genre", "game_genre",
     "radio_genre", "podcast_genre", "book_genre", "comic_genre",
     "audiobook_genre",
 )
-# slot names whose value is a mood / activity → the ``mood`` axis
-_MOOD_SLOTS = ("playlist_mood", "playlist_activity")
-# slot names carrying a release year / decade → the ``era`` axis
+# slot names carrying a release year → the ``year`` Signals field.
 _YEAR_SLOTS = ("release_year",)
-_DECADE_SLOTS = ("release_decade",)
 
-# ``intent`` aliases that are really a base media type + a result-narrowing
-# qualifier (the qualifier is the real signal; the type is the base).
-_INTENT_QUALIFIERS: Dict[str, List[str]] = {
-    "bw_movie":     ["black_and_white"],
-    "silent_movie": ["silent"],
-    "audio_description": ["audio_described"],
-    # supplementary / promotional content — parent media_type stays MOVIE; the
-    # distinguishing form rides the qualifiers axis (see LABEL_TO_QUALIFIERS).
-    "trailer":      ["trailer"],
-    "teaser":       ["teaser"],
-    "behind_the_scenes": ["behind_the_scenes"],
-    "making_of":    ["making_of"],
-    "bloopers":     ["bloopers"],
-    "deleted_scenes": ["deleted_scenes"],
-    "featurette":   ["featurette"],
-    "interview":    ["interview"],
-    "clip":         ["clip"],
+# ``intent`` aliases that are really a base media type + a mediavocab
+# ``ContentForm`` (the experiential kind is the signal; the type is the base).
+# making_of / bloopers / deleted_scenes / featurette → behind_scenes;
+# clip → excerpt; interview → supplement.
+_INTENT_CONTENT_FORM: Dict[str, str] = {
+    "trailer":           "trailer",
+    "teaser":            "teaser",
+    "behind_the_scenes": "behind_scenes",
+    "making_of":         "behind_scenes",
+    "bloopers":          "behind_scenes",
+    "deleted_scenes":    "behind_scenes",
+    "featurette":        "behind_scenes",
+    "interview":         "supplement",
+    "clip":              "excerpt",
 }
 
-# Keyword feature column → qualifier label.  A row whose realised sentence fires
-# one of these ``kw_*`` features carries the qualifier even when its *intent*
-# alias did not declare it (e.g. a ``behind_the_scenes`` template row that says
-# "bloopers" / "deleted scenes" / "the making of").  This lets the trained
-# ``qualifiers`` head learn the cue word, not just the leaf label.
-_KW_FEATURE_QUALIFIERS: Dict[str, str] = {
+# ``intent`` aliases that name a mediavocab ``ProgrammeFormat`` (un-collapsed
+# from the leaf; documentary / news keep their carrier media type).
+_INTENT_PROGRAMME_FORMAT: Dict[str, str] = {
+    "documentary": "documentary",
+    "news":        "news",
+}
+
+# ``intent`` aliases that request a mediavocab ``AccessibilityKind`` asset.
+_INTENT_ACCESSIBILITY: Dict[str, List[str]] = {
+    "audio_description": ["audio_description"],
+    "subtitled":         ["subtitles"],
+    "sign_language":     ["sign_language"],
+}
+
+# ``intent`` aliases that name a mediavocab ``VariantKind`` (work-level cut).
+_INTENT_VARIANT: Dict[str, str] = {
+    "colorized":     "colorized",
+    "directors_cut": "directors",
+    "extended":      "extended",
+    "remastered":    "remastered",
+    "fanedit":       "fanedit",
+}
+
+# ``intent`` aliases that are a classifier-local picture-presentation flag.
+# These have no mediavocab home yet — Phase 2 redirects to ``PictureFormat``.
+_INTENT_PRESENTATION: Dict[str, List[str]] = {
+    "bw_movie":     ["black_and_white"],
+    "silent_movie": ["silent"],
+}
+
+# Keyword feature column → mediavocab ContentForm.  A row whose realised sentence
+# fires one of these ``kw_*`` features carries the content_form even when its
+# *intent* alias did not declare it, so the trained ``content_form`` head learns
+# the cue word, not just the leaf label.
+_KW_FEATURE_CONTENT_FORM: Dict[str, str] = {
     "kw_trailer":         "trailer",
     "kw_teaser":          "teaser",
-    "kw_bts":             "behind_the_scenes",
-    "kw_making_of":       "making_of",
-    "kw_bloopers":        "bloopers",
-    "kw_deleted_scenes":  "deleted_scenes",
-    "kw_featurette":      "featurette",
-    "kw_interview":       "interview",
-    "kw_clip":            "clip",
+    "kw_bts":             "behind_scenes",
+    "kw_making_of":       "behind_scenes",
+    "kw_bloopers":        "behind_scenes",
+    "kw_deleted_scenes":  "behind_scenes",
+    "kw_featurette":      "behind_scenes",
+    "kw_interview":       "supplement",
+    "kw_clip":            "excerpt",
+}
+
+# Keyword feature column → accessibility / presentation.
+_KW_FEATURE_ACCESSIBILITY: Dict[str, str] = {
+    "kw_ad":              "audio_description",
+}
+_KW_FEATURE_PRESENTATION: Dict[str, str] = {
     "kw_silent":          "silent",
     "kw_bw":              "black_and_white",
-    "kw_ad":              "audio_described",
 }
 _YEAR_RE = re.compile(r"\b(19|20)\d{2}\b")
 
 
-def _decade_of(year: str) -> Optional[str]:
+def _year_of(year: str) -> str:
     m = _YEAR_RE.search(year or "")
-    if not m:
-        return None
-    y = int(m.group(0))
-    return f"{(y // 10) * 10}s"
+    return m.group(0) if m else ""
 
 
 def _derive_axes(intent: str, genres: List[str],
                  slot_values: Dict[str, str]) -> Dict[str, object]:
-    """Compute the free multi-task axis labels for one row.
+    """Compute the mediavocab-aligned multi-task axis labels for one row.
 
-    All labels are ground-truth: ``content_genre`` / ``mood`` / ``era`` come
-    straight from the slot value that filled the template, ``qualifiers`` from
-    the intent alias, ``explicitness`` from the ``adult`` form-genre.
+    All labels are ground-truth and expressed in **mediavocab's vocabulary**:
+    ``content_genres`` from the genre slot value (⊆ KNOWN_GENRES at runtime),
+    ``content_form`` / ``programme_format`` / ``accessibility`` / ``variant``
+    from the intent alias, ``year`` from the release-year slot,
+    ``explicitness`` from the ``adult`` form-genre, ``presentation`` is a
+    classifier-local placeholder for bw/silent (no mediavocab home yet).
     """
     content_genre = sorted({
         slot_values[s].lower() for s in _GENRE_SLOTS if s in slot_values
     })
-    mood = next((slot_values[s] for s in _MOOD_SLOTS if s in slot_values), "")
-    era = next((slot_values[s] for s in _YEAR_SLOTS if s in slot_values), "")
-    decade = next((slot_values[s] for s in _DECADE_SLOTS if s in slot_values), "")
-    if not decade and era:
-        decade = _decade_of(era) or ""
+    year_raw = next((slot_values[s] for s in _YEAR_SLOTS if s in slot_values), "")
+    year = _year_of(year_raw)
 
-    qualifiers = list(_INTENT_QUALIFIERS.get(intent, []))
+    content_form = _INTENT_CONTENT_FORM.get(intent, "")
+    programme_format = _INTENT_PROGRAMME_FORMAT.get(intent, "")
+    accessibility = list(_INTENT_ACCESSIBILITY.get(intent, []))
+    variant = _INTENT_VARIANT.get(intent, "")
+    presentation = list(_INTENT_PRESENTATION.get(intent, []))
 
     is_adult = "adult" in genres
     explicitness = "adult" if is_adult else "clean"
 
-    # The multi-label, namespaced ``tags`` axis collapses the open-vocabulary
-    # genre / mood / era signals into ONE head: ``genre:rock`` / ``mood:chill`` /
-    # ``era:1980s``.  Empty set when none apply.  (The standalone content_genre /
-    # mood / era / decade columns are kept as provenance + benchmark ground truth.)
-    tags: List[str] = [f"genre:{g}" for g in content_genre]
-    if mood:
-        tags.append(f"mood:{mood.lower()}")
-    if decade:
-        tags.append(f"era:{decade}")
-
     return {
         # multi-label sensitive/form genres — what the content filter reads
         "content_form_genres": json.dumps(list(genres)),
-        # the namespaced multi-label descriptive axis (genre/mood/era in one head)
-        "tags": json.dumps(list(dict.fromkeys(tags))),
-        # provenance / benchmark ground truth for the three folded signals
-        "content_genre": json.dumps(content_genre),
-        "mood": mood,
-        "era": era,
-        "decade": decade,
+        # the real genre(s) (⊆ KNOWN_GENRES) — provenance + benchmark ground truth
+        "content_genres": json.dumps(content_genre),
+        # mediavocab ContentForm (single) — trailer / behind_scenes / excerpt / …
+        "content_form": content_form,
+        # mediavocab ProgrammeFormat (single) — documentary / news / …
+        "programme_format": programme_format,
+        # mediavocab AccessibilityKind (multi) — subtitles / audio_description / …
+        "accessibility": json.dumps(accessibility),
+        # mediavocab VariantKind (single) — directors / extended / remastered / …
+        "variant": variant,
+        # release year → Signals.year
+        "year": year,
+        # classifier-local picture-presentation placeholder (Phase-2 PictureFormat)
+        "presentation": json.dumps(presentation),
         "explicitness": explicitness,
-        # multi-label result-narrowing qualifiers (bw / silent / …)
-        "qualifiers": json.dumps(qualifiers),
         # control axis — play rows carry no control intent
         "control_intent": "",
     }
@@ -590,8 +615,8 @@ def build_rows_for_lang(
 # Rich feature columns
 # ---------------------------------------------------------------------------
 
-# keyword feature columns = plain .voc presence flags + the per-value genre /
-# mood / era flags (kw_genre_* / kw_mood_* / kw_era_*) the extractor now emits.
+# keyword feature columns = plain .voc presence flags + the per-value genre
+# flags (kw_genre_*) the extractor now emits.
 _KEYWORD_COLS = [col for _voc, col in _KEYWORD_VOCABS] + list(VALUE_FEATURE_COLS)
 _NER_COLS = [f"ner_{label}" for label in ENTITY_LABELS]
 
@@ -628,23 +653,40 @@ def add_feature_columns(df: pd.DataFrame) -> pd.DataFrame:
     feat_df = pd.DataFrame({**kw_data, **ner_data}, index=df.index)
     out = pd.concat([df, feat_df], axis=1)
 
-    # Fold any qualifier signalled by a fired ``kw_*`` cue back into the
-    # ``qualifiers`` column, so the trained head learns the cue word and not just
-    # the leaf label (a behind_the_scenes-intent row that actually says
-    # "bloopers" / "the making of" gets ``bloopers`` / ``making_of`` too).
-    if "qualifiers" in out.columns:
-        qual_updates: List[str] = []
+    # Fold any axis value signalled by a fired ``kw_*`` cue back into its column,
+    # so the trained head learns the cue word and not just the leaf label (a
+    # behind_the_scenes-intent row that actually says "bloopers" / "the making
+    # of" gets ``content_form=behind_scenes`` too).
+    #   * content_form (single): a fired cue sets it only when not already set.
+    #   * accessibility / presentation (multi): the fired cue is appended.
+    if "content_form" in out.columns:
+        cf_updates: List[str] = []
+        for pos in range(len(out)):
+            base = out["content_form"].iat[pos] or ""
+            if not base:
+                for kw_col, form in _KW_FEATURE_CONTENT_FORM.items():
+                    if kw_col in feat_df.columns and feat_df[kw_col].iat[pos]:
+                        base = form
+                        break
+            cf_updates.append(base)
+        out["content_form"] = cf_updates
+
+    for col, kw_map in (("accessibility", _KW_FEATURE_ACCESSIBILITY),
+                        ("presentation", _KW_FEATURE_PRESENTATION)):
+        if col not in out.columns:
+            continue
+        updates: List[str] = []
         for pos in range(len(out)):
             try:
-                base = list(json.loads(out["qualifiers"].iat[pos]) or [])
+                base = list(json.loads(out[col].iat[pos]) or [])
             except Exception:
                 base = []
-            for kw_col, qualifier in _KW_FEATURE_QUALIFIERS.items():
+            for kw_col, value in kw_map.items():
                 if kw_col in feat_df.columns and feat_df[kw_col].iat[pos]:
-                    if qualifier not in base:
-                        base.append(qualifier)
-            qual_updates.append(json.dumps(base))
-        out["qualifiers"] = qual_updates
+                    if value not in base:
+                        base.append(value)
+            updates.append(json.dumps(base))
+        out[col] = updates
     return out
 
 
@@ -755,6 +797,7 @@ split. See `docs/dataset.md` and `docs/data-sources.md`.
 | group | columns |
 |---|---|
 | core | `sentence`, `lang`, `domain`, `intent`, `media_type`, `genres`, `playback_type`, `structure`, `binary_label` |
+| mediavocab axes | `content_form` (ContentForm), `programme_format` (ProgrammeFormat), `accessibility` (AccessibilityKind, JSON), `variant` (VariantKind), `content_genres` (⊆ KNOWN_GENRES, JSON), `content_form_genres` (filter axis, JSON), `year`, `presentation` (classifier-local bw/silent, JSON), `explicitness`, `control_intent` |
 | keyword features | `kw_*`, `verb_*`, `mod_*`, `fmt_*` — 0/1, computed on `sentence` by the runtime `CategoricalFeatureExtractor` |
 | NER-by-construction | `ner_<entity_label>` — 0/1 ground-truth flag set where `{{entity_label}}` was filled; `slot_values` maps each filled slot to its entity |
 | provenance | `template_id`, `template`, `n_slots`, `entity_labels` |
@@ -789,11 +832,13 @@ a normal class so the model learns to detect it without it dominating training.
 # column order: core first, then the multi-task axes, then features, provenance
 _CORE = ["sentence", "lang", "domain", "intent", "media_type", "genres",
          "playback_type", "structure", "binary_label"]
-# the free, ground-truth-by-construction multi-task axis columns (one head each)
-# ``tags`` is the namespaced multi-label head; content_genre/mood/era/decade are
-# kept as provenance + benchmark ground truth (no standalone head trains on them).
-_AXES = ["content_form_genres", "tags", "content_genre", "mood", "era", "decade",
-         "explicitness", "qualifiers", "control_intent"]
+# the free, ground-truth-by-construction multi-task axis columns (one head each),
+# all expressed in mediavocab's own vocabulary.  ``content_genres`` doubles as
+# provenance + benchmark ground truth; ``presentation`` is a classifier-local
+# placeholder (Phase-2 PictureFormat); ``year`` feeds Signals.year.
+_AXES = ["content_form_genres", "content_genres", "content_form",
+         "programme_format", "accessibility", "variant", "year",
+         "presentation", "explicitness", "control_intent"]
 _PROV = ["template_id", "template", "n_slots", "entity_labels", "slot_values"]
 
 
