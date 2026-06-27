@@ -282,6 +282,28 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
     def _match(self, phrase: str, vocab: str, lang: str) -> bool:
         return bool(self._voc_match(phrase, vocab, lang=lang))
 
+    def _game_evidence(self, query: str, lang: str) -> bool:
+        """True when there is genuine GAME evidence, not a play-verb collision.
+
+        In several languages the play-initiation imperative is spelled exactly
+        like the GAME noun ("spiel(e)" de, "spil" da). A bare "spiel <music>"
+        is a transport request, not a game request, so a *leading* play verb
+        must not, by itself, trigger the GAME leaf. We therefore strip a leading
+        play verb before testing ``GameKeyword``; an explicit ``VerbGame`` cue
+        (launch / boot / "spiel das spiel") always counts as game evidence.
+        """
+        if self._match(query, "VerbGame", lang):
+            return True
+        if not self._match(query, "GameKeyword", lang):
+            return False
+        # Strip a leading play verb (Play.voc) and re-test: if the only game
+        # cue was the leading "play" verb itself, no game evidence remains.
+        words = [w for w in re.split(r"\s+", query.strip()) if w]
+        if len(words) > 1 and self._match(words[0], "Play", lang):
+            remainder = " ".join(words[1:])
+            return self._match(remainder, "GameKeyword", lang)
+        return True
+
     # ------------------------------------------------------------------
     # Public API
     # ------------------------------------------------------------------
@@ -631,8 +653,9 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
                     "InterviewKeyword", "ClipKeyword", "ADKeyword"):
             if m(q, voc, lang):
                 scores[PlaybackType.VIDEO] += 1
-        # interactive
-        if m(q, "GameKeyword", lang):
+        # interactive (a leading play verb that is spelled like the GAME noun,
+        # e.g. de "spiel"/da "spil", must not count as game evidence)
+        if self._game_evidence(q, lang):
             scores[PlaybackType.INTERACTIVE] += 1
         # paged
         if m(q, "ComicBookKeyword", lang):
@@ -740,7 +763,8 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
                 return (MediaType.EPISODIC_SERIES, ["anime", "adult"],
                         DEFAULT_KEYWORD_LOW_CONFIDENCE)
             if (_ok(MediaType.MUSIC) and
-                    (m(q, "AudioKeyword", lang) or m(q, "ASMRKeyword", lang))):
+                    (m(q, "AudioKeyword", lang) or m(q, "ASMRKeyword", lang) or
+                     m(q, "VerbAudio", lang))):
                 return MediaType.MUSIC, ["adult"], DEFAULT_KEYWORD_LOW_CONFIDENCE
             if _ok(MediaType.MOVIE):
                 return MediaType.MOVIE, ["adult"], DEFAULT_KEYWORD_LOW_CONFIDENCE
@@ -856,7 +880,7 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
                 return T.MOVIE, [], DEFAULT_KEYWORD_HIGH_CONFIDENCE
         if allow(T.COMIC) and m(q, "ComicBookKeyword", lang):
             return T.COMIC, [], DEFAULT_KEYWORD_LOW_CONFIDENCE
-        if allow(T.GAME) and m(q, "GameKeyword", lang):
+        if allow(T.GAME) and self._game_evidence(q, lang):
             return T.GAME, [], DEFAULT_KEYWORD_LOW_CONFIDENCE
         if allow(T.MOVIE) and m(q, "ADKeyword", lang):
             return T.MOVIE, [], DEFAULT_KEYWORD_LOW_CONFIDENCE
