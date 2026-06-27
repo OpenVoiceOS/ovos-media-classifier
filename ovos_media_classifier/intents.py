@@ -207,7 +207,14 @@ class OCPEntityLabel(str, Enum):
     AUDIO_DESCRIPTION_KEYWORD  = "audio_description"
     MUSIC_VIDEO_KEYWORD        = "music_video"
     TRAILER_KEYWORD            = "trailer"
+    TEASER_KEYWORD             = "teaser"
     BEHIND_THE_SCENES_KEYWORD  = "behind_the_scenes"
+    MAKING_OF_KEYWORD          = "making_of"
+    BLOOPERS_KEYWORD           = "bloopers"
+    DELETED_SCENES_KEYWORD     = "deleted_scenes"
+    FEATURETTE_KEYWORD         = "featurette"
+    INTERVIEW_KEYWORD          = "interview"
+    CLIP_KEYWORD               = "clip"
     ADULT_KEYWORD              = "adult"
     ADULT_AUDIO_KEYWORD        = "adult_audio"
     HENTAI_KEYWORD             = "hentai"
@@ -259,8 +266,18 @@ LABEL_TO_MEDIA_TYPE: Dict[str, MediaType] = {
     "asmr":               MediaType.PROCEDURAL_AMBIENT,
     "audio_description":  MediaType.MOVIE,
     "music_video":        MediaType.MUSIC_VIDEO,
+    # Supplementary / promotional video content — the parent media_type stays
+    # MOVIE; the "I want the trailer / BTS, not the full title" distinction is
+    # carried on the orthogonal QUALIFIERS axis (see ``LABEL_TO_QUALIFIERS``).
     "trailer":            MediaType.MOVIE,
+    "teaser":             MediaType.MOVIE,
     "behind_the_scenes":  MediaType.MOVIE,
+    "making_of":          MediaType.MOVIE,
+    "bloopers":           MediaType.MOVIE,
+    "deleted_scenes":     MediaType.MOVIE,
+    "featurette":         MediaType.MOVIE,
+    "interview":          MediaType.MOVIE,
+    "clip":               MediaType.MOVIE,
     "adult":              MediaType.MOVIE,
     "adult_audio":        MediaType.MUSIC,
     "hentai":             MediaType.EPISODIC_SERIES,
@@ -287,6 +304,45 @@ LABEL_TO_GENRES: Dict[str, List[str]] = {
 def genres_for_label(label: str) -> List[str]:
     """Return the mediavocab genre tags implied by a raw detection label."""
     return list(LABEL_TO_GENRES.get(label, []))
+
+
+# ---------------------------------------------------------------------------
+# Raw detection label → result-narrowing QUALIFIERS
+#
+# Some labels are not a media *type* but a **supplementary / promotional form**
+# of a parent title — a trailer, a teaser, behind-the-scenes, the making-of,
+# bloopers, deleted scenes, a featurette, a cast interview, a clip.  Their
+# ``MediaType`` stays the parent (MOVIE — see ``LABEL_TO_MEDIA_TYPE``); the
+# "I want the trailer / BTS, NOT the full title" signal would otherwise be lost,
+# so it is promoted onto the orthogonal **qualifiers** axis (alongside
+# ``black_and_white`` / ``silent`` / ``audio_described``).  A provider can then
+# narrow the result set to the extra/supplement rather than the feature.
+# ---------------------------------------------------------------------------
+LABEL_TO_QUALIFIERS: Dict[str, List[str]] = {
+    "trailer":           ["trailer"],
+    "teaser":            ["teaser"],
+    "behind_the_scenes": ["behind_the_scenes"],
+    "making_of":         ["making_of"],
+    "bloopers":          ["bloopers"],
+    "deleted_scenes":    ["deleted_scenes"],
+    "featurette":        ["featurette"],
+    "interview":         ["interview"],
+    "clip":              ["clip"],
+    # form qualifiers carried by the silent / b&w / audio-description labels
+    "silent_movie":      ["silent"],
+    "bw_movie":          ["black_and_white"],
+    "audio_description":  ["audio_described"],
+}
+
+
+def qualifiers_for_label(label: str) -> List[str]:
+    """Return the result-narrowing qualifiers implied by a raw detection label.
+
+    Mirrors :func:`genres_for_label`: supplementary-content labels (``trailer`` /
+    ``behind_the_scenes`` / ``bloopers`` / …) keep their parent ``MediaType`` but
+    surface the distinguishing qualifier here so the signal is never lost.
+    """
+    return list(LABEL_TO_QUALIFIERS.get(label, []))
 
 
 # ---------------------------------------------------------------------------
@@ -409,7 +465,14 @@ NER_LABEL_TO_MEDIA_TYPE: Dict[str, MediaType] = {
     OCPEntityLabel.AUDIO_DESCRIPTION_KEYWORD.value:  MediaType.MOVIE,
     OCPEntityLabel.MUSIC_VIDEO_KEYWORD.value:        MediaType.MUSIC_VIDEO,
     OCPEntityLabel.TRAILER_KEYWORD.value:            MediaType.MOVIE,
+    OCPEntityLabel.TEASER_KEYWORD.value:             MediaType.MOVIE,
     OCPEntityLabel.BEHIND_THE_SCENES_KEYWORD.value:  MediaType.MOVIE,
+    OCPEntityLabel.MAKING_OF_KEYWORD.value:          MediaType.MOVIE,
+    OCPEntityLabel.BLOOPERS_KEYWORD.value:           MediaType.MOVIE,
+    OCPEntityLabel.DELETED_SCENES_KEYWORD.value:     MediaType.MOVIE,
+    OCPEntityLabel.FEATURETTE_KEYWORD.value:         MediaType.MOVIE,
+    OCPEntityLabel.INTERVIEW_KEYWORD.value:          MediaType.MOVIE,
+    OCPEntityLabel.CLIP_KEYWORD.value:               MediaType.MOVIE,
     OCPEntityLabel.ADULT_KEYWORD.value:              MediaType.MOVIE,
     OCPEntityLabel.ADULT_AUDIO_KEYWORD.value:        MediaType.MUSIC,
     OCPEntityLabel.HENTAI_KEYWORD.value:             MediaType.EPISODIC_SERIES,

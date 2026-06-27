@@ -435,7 +435,14 @@ class TestLabelToMediaTypeMapping(unittest.TestCase):
         "audio_description": MediaType.MOVIE,
         "music_video":       MediaType.MUSIC_VIDEO,
         "trailer":           MediaType.MOVIE,
+        "teaser":            MediaType.MOVIE,
         "behind_the_scenes": MediaType.MOVIE,
+        "making_of":         MediaType.MOVIE,
+        "bloopers":          MediaType.MOVIE,
+        "deleted_scenes":    MediaType.MOVIE,
+        "featurette":        MediaType.MOVIE,
+        "interview":         MediaType.MOVIE,
+        "clip":              MediaType.MOVIE,
         "adult":             MediaType.MOVIE,
         "adult_audio":       MediaType.MUSIC,
         "hentai":            MediaType.EPISODIC_SERIES,
@@ -552,6 +559,66 @@ class TestKeywordMediaClassifierNewTypes(unittest.TestCase):
         mt, conf = clf.classify("tv", "en-us")
         self.assertEqual(mt, MediaType.TV)
 
+
+class TestSupplementaryContentQualifiers(unittest.TestCase):
+    """Supplementary content (trailer / BTS / bloopers / …) is MOVIE + a
+    qualifier, never a bare MOVIE with the signal lost."""
+
+    def setUp(self):
+        # bundled-locale standalone classifier (real .voc word-boundary match)
+        self.clf = KeywordMediaClassifier()
+
+    def _check(self, query, expected_qualifier):
+        mt, _conf = self.clf.classify(query, "en-us")
+        quals = self.clf.classify_qualifiers(query, "en-us")
+        self.assertEqual(mt, MediaType.MOVIE, f"{query!r} should be MOVIE")
+        self.assertIn(expected_qualifier, quals,
+                      f"{query!r} → {quals}, expected {expected_qualifier!r}")
+
+    def test_trailer_with_title(self):
+        self._check("the Top Gun trailer", "trailer")
+
+    def test_teaser(self):
+        self._check("the Dune teaser", "teaser")
+
+    def test_behind_the_scenes(self):
+        self._check("behind the scenes of Dune", "behind_the_scenes")
+
+    def test_making_of(self):
+        self._check("the making of Inception", "making_of")
+
+    def test_bloopers_no_title(self):
+        # the regression case: "show me bloopers" must still fire the qualifier
+        self._check("show me bloopers", "bloopers")
+
+    def test_deleted_scenes(self):
+        self._check("the deleted scenes from Avatar", "deleted_scenes")
+
+    def test_featurette(self):
+        self._check("the Dune featurette", "featurette")
+
+    def test_interview(self):
+        self._check("cast interview for Barbie", "interview")
+
+    def test_clip(self):
+        self._check("a movie clip", "clip")
+
+    def test_silent_and_bw_still_qualify(self):
+        self.assertIn("silent",
+                      self.clf.classify_qualifiers("a silent film", "en-us"))
+        self.assertIn("black_and_white",
+                      self.clf.classify_qualifiers("a black and white movie",
+                                                   "en-us"))
+
+    def test_label_to_qualifiers_map(self):
+        from ovos_media_classifier.intents import (
+            LABEL_TO_QUALIFIERS, qualifiers_for_label,
+        )
+        self.assertEqual(LABEL_TO_QUALIFIERS["trailer"], ["trailer"])
+        self.assertEqual(LABEL_TO_QUALIFIERS["behind_the_scenes"],
+                         ["behind_the_scenes"])
+        self.assertEqual(qualifiers_for_label("bloopers"), ["bloopers"])
+        self.assertEqual(qualifiers_for_label("music"), [])
 
 
 if __name__ == "__main__":

@@ -186,6 +186,34 @@ _CONTROL_VOC_ORDER: List[Tuple[str, "OCPControlIntent"]] = [
     ("CtrlLike", OCPControlIntent.LIKE_SONG),
 ]
 
+# ---------------------------------------------------------------------------
+# Result-narrowing QUALIFIER voc resolution
+#
+# Supplementary-content + editorial-form cues that are NOT a media type: their
+# parent ``MediaType`` stays MOVIE (see ``LABEL_TO_QUALIFIERS``) but the
+# distinguishing qualifier is surfaced here so the "trailer / BTS, not the full
+# title" signal is never lost.  ``classify_qualifiers`` matches every entry on
+# word boundaries (multi-label — several may fire).  The order is informational
+# only; all matches are collected.  Each entry: (voc_name, qualifier_label).
+# ---------------------------------------------------------------------------
+_QUALIFIER_VOC_ORDER: List[Tuple[str, str]] = [
+    # supplementary / promotional content
+    ("TeaserKeyword",          "teaser"),
+    ("TrailerKeyword",         "trailer"),
+    ("MakingOfKeyword",        "making_of"),
+    ("BehindTheScenesKeyword", "behind_the_scenes"),
+    ("BloopersKeyword",        "bloopers"),
+    ("DeletedScenesKeyword",   "deleted_scenes"),
+    ("FeaturetteKeyword",      "featurette"),
+    ("InterviewKeyword",       "interview"),
+    ("ClipKeyword",            "clip"),
+    # editorial / presentation forms
+    ("SilentKeyword",          "silent"),
+    ("BWKeyword",              "black_and_white"),
+    ("ADKeyword",              "audio_described"),
+]
+
+
 # A trailing duration ("30 seconds", "a minute", "2 mins") turns an ambiguous
 # directional cue ("go back", "forward") into a *seek* rather than a track skip.
 _DURATION_RE = re.compile(
@@ -381,6 +409,31 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
         _media_type, genres, _ = self._classify_leaf(query, lang, None)
         return list(genres)
 
+    def classify_qualifiers(self, query: str, lang: str) -> List[str]:
+        """Return result-narrowing qualifiers implied by the query.
+
+        These are strong filter signals that are *not* media types — the
+        supplementary-content forms (``trailer`` / ``teaser`` /
+        ``behind_the_scenes`` / ``making_of`` / ``bloopers`` / ``deleted_scenes``
+        / ``featurette`` / ``interview`` / ``clip``) and the editorial forms
+        (``silent`` / ``black_and_white`` / ``audio_described``).  The parent
+        ``MediaType`` stays MOVIE; the qualifier carries the "I want the
+        trailer / BTS, not the full title" distinction that would otherwise be
+        lost.
+
+        Matched directly from the ``.voc`` evidence (each on word boundaries), so
+        "show me bloopers" → ``["bloopers"]`` and "the making of X" →
+        ``["making_of"]`` fire even with no title present.
+        """
+        m = self._match
+        q = query
+        quals: List[str] = []
+        for voc_name, qualifier in _QUALIFIER_VOC_ORDER:
+            if m(q, voc_name, lang):
+                quals.append(qualifier)
+        # de-dup preserving first-seen order
+        return list(dict.fromkeys(quals))
+
     # ------------------------------------------------------------------
     # Multi-axis output — PREDICT each axis top-down (do not derive from leaf).
     # ------------------------------------------------------------------
@@ -520,7 +573,9 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
         for voc in ("MovieKeyword", "VideoKeyword", "TVKeyword", "IPTVKeyword",
                     "SeriesKeyword", "AnimeKeyword", "CartoonKeyword",
                     "DocumentaryKeyword", "MusicVideoKeyword", "TrailerKeyword",
-                    "BehindTheScenesKeyword", "ADKeyword"):
+                    "TeaserKeyword", "BehindTheScenesKeyword", "MakingOfKeyword",
+                    "BloopersKeyword", "DeletedScenesKeyword", "FeaturetteKeyword",
+                    "InterviewKeyword", "ClipKeyword", "ADKeyword"):
             if m(q, voc, lang):
                 scores[PlaybackType.VIDEO] += 1
         # interactive
@@ -734,10 +789,18 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
                 return T.MOVIE, [], DEFAULT_KEYWORD_HIGH_CONFIDENCE
             if allow(T.MOVIE):
                 return T.MOVIE, [], DEFAULT_KEYWORD_CONFIDENCE
-        if allow(T.MOVIE) and m(q, "TrailerKeyword", lang):
-            return T.MOVIE, [], DEFAULT_KEYWORD_HIGH_CONFIDENCE
-        if allow(T.MOVIE) and m(q, "BehindTheScenesKeyword", lang):
-            return T.MOVIE, [], DEFAULT_KEYWORD_HIGH_CONFIDENCE
+        # Supplementary / promotional content — all collapse onto the parent
+        # MOVIE type; the distinguishing form (trailer / teaser / BTS / making_of
+        # / bloopers / …) rides the orthogonal qualifiers axis
+        # (see ``classify_qualifiers`` / ``LABEL_TO_QUALIFIERS``), so even a
+        # title-less "show me bloopers" resolves to MOVIE + ``[bloopers]``.
+        for _supp_voc in ("TrailerKeyword", "TeaserKeyword",
+                          "BehindTheScenesKeyword", "MakingOfKeyword",
+                          "BloopersKeyword", "DeletedScenesKeyword",
+                          "FeaturetteKeyword", "InterviewKeyword",
+                          "ClipKeyword"):
+            if allow(T.MOVIE) and m(q, _supp_voc, lang):
+                return T.MOVIE, [], DEFAULT_KEYWORD_HIGH_CONFIDENCE
         if allow(T.COMIC) and m(q, "ComicBookKeyword", lang):
             return T.COMIC, [], DEFAULT_KEYWORD_LOW_CONFIDENCE
         if allow(T.GAME) and m(q, "GameKeyword", lang):

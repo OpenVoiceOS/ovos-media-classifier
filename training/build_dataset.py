@@ -369,8 +369,37 @@ _INTENT_QUALIFIERS: Dict[str, List[str]] = {
     "bw_movie":     ["black_and_white"],
     "silent_movie": ["silent"],
     "audio_description": ["audio_described"],
+    # supplementary / promotional content — parent media_type stays MOVIE; the
+    # distinguishing form rides the qualifiers axis (see LABEL_TO_QUALIFIERS).
     "trailer":      ["trailer"],
+    "teaser":       ["teaser"],
     "behind_the_scenes": ["behind_the_scenes"],
+    "making_of":    ["making_of"],
+    "bloopers":     ["bloopers"],
+    "deleted_scenes": ["deleted_scenes"],
+    "featurette":   ["featurette"],
+    "interview":    ["interview"],
+    "clip":         ["clip"],
+}
+
+# Keyword feature column → qualifier label.  A row whose realised sentence fires
+# one of these ``kw_*`` features carries the qualifier even when its *intent*
+# alias did not declare it (e.g. a ``behind_the_scenes`` template row that says
+# "bloopers" / "deleted scenes" / "the making of").  This lets the trained
+# ``qualifiers`` head learn the cue word, not just the leaf label.
+_KW_FEATURE_QUALIFIERS: Dict[str, str] = {
+    "kw_trailer":         "trailer",
+    "kw_teaser":          "teaser",
+    "kw_bts":             "behind_the_scenes",
+    "kw_making_of":       "making_of",
+    "kw_bloopers":        "bloopers",
+    "kw_deleted_scenes":  "deleted_scenes",
+    "kw_featurette":      "featurette",
+    "kw_interview":       "interview",
+    "kw_clip":            "clip",
+    "kw_silent":          "silent",
+    "kw_bw":              "black_and_white",
+    "kw_ad":              "audio_described",
 }
 _YEAR_RE = re.compile(r"\b(19|20)\d{2}\b")
 
@@ -597,7 +626,26 @@ def add_feature_columns(df: pd.DataFrame) -> pd.DataFrame:
 
     # assemble all feature columns at once (avoids fragmentation)
     feat_df = pd.DataFrame({**kw_data, **ner_data}, index=df.index)
-    return pd.concat([df, feat_df], axis=1)
+    out = pd.concat([df, feat_df], axis=1)
+
+    # Fold any qualifier signalled by a fired ``kw_*`` cue back into the
+    # ``qualifiers`` column, so the trained head learns the cue word and not just
+    # the leaf label (a behind_the_scenes-intent row that actually says
+    # "bloopers" / "the making of" gets ``bloopers`` / ``making_of`` too).
+    if "qualifiers" in out.columns:
+        qual_updates: List[str] = []
+        for pos in range(len(out)):
+            try:
+                base = list(json.loads(out["qualifiers"].iat[pos]) or [])
+            except Exception:
+                base = []
+            for kw_col, qualifier in _KW_FEATURE_QUALIFIERS.items():
+                if kw_col in feat_df.columns and feat_df[kw_col].iat[pos]:
+                    if qualifier not in base:
+                        base.append(qualifier)
+            qual_updates.append(json.dumps(base))
+        out["qualifiers"] = qual_updates
+    return out
 
 
 # ---------------------------------------------------------------------------
