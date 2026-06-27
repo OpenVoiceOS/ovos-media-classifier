@@ -368,6 +368,59 @@ def _onnx_loader(bundle_dir: str) -> Callable:
     return _load
 
 
+# A small representative user media library for the runtime-entity-injection
+# demo: injecting it lets the embedding router close the keyword backend's
+# entity-gap mis-routes WITHOUT retraining (e.g. "watch attack on titan" → the
+# user's anime library → EPISODIC_SERIES, not the generic ``watch`` → MOVIE cue).
+DEMO_LIBRARY: Dict[str, List[str]] = {
+    "anime_title": ["Attack on Titan", "Naruto"],
+    "audiobook_title": ["Harry Potter", "Moby Dick"],
+    "artist_name": ["Radiohead", "Billie Eilish", "Kendrick", "The Beatles",
+                    "Despacito", "Beethoven"],
+    "tv_show_title": ["Seinfeld", "Sherlock", "Stranger Things", "The Witcher",
+                      "Wednesday", "Spongebob"],
+    "game_title": ["The Legend of Zelda"],
+    "podcast_title": ["Serial", "The Daily"],
+    "tv_channel": ["CNN"],
+    "radio_station": ["Classic FM"],
+    "movie_title": ["Interstellar", "The Godfather", "Hamilton"],
+}
+
+
+def _embedding_loader(bundle_dir: str) -> Callable:
+    def _load():
+        from ovos_media_classifier.embedding import EmbeddingMediaClassifier
+        return EmbeddingMediaClassifier.from_path(bundle_dir)
+    return _load
+
+
+def _hybrid_loader(bundle_dir: str, inject: bool = False) -> Callable:
+    def _load():
+        from ovos_media_classifier.embedding import HybridMediaClassifier
+        clf = HybridMediaClassifier.from_path(bundle_dir)
+        if inject:
+            clf.register_user_library(DEMO_LIBRARY)
+        return clf
+    return _load
+
+
+def discover_router_bundles() -> Dict[str, str]:
+    """Find embedding-router bundles under ``data/`` (a dir with router_meta.json)."""
+    roots = [
+        os.path.join(REPO_ROOT, "data", "models"),
+        os.path.join(REPO_ROOT, "data", "release", "models"),
+    ]
+    found: Dict[str, str] = {}
+    for root in roots:
+        if not os.path.isdir(root):
+            continue
+        for entry in sorted(os.listdir(root)):
+            d = os.path.join(root, entry)
+            if os.path.isdir(d) and os.path.isfile(os.path.join(d, "router_meta.json")):
+                found[entry] = d
+    return found
+
+
 def discover_bundles() -> Dict[str, str]:
     """Find trained ONNX bundles under ``data/`` (a dir with domain.onnx+meta.json)."""
     roots = [
@@ -404,6 +457,13 @@ def run(extra_bundles: Optional[List[str]] = None,
             loaders[label] = _onnx_loader(path)
         for path in (extra_bundles or []):
             loaders[f"onnx:{os.path.basename(path.rstrip('/'))}"] = _onnx_loader(path)
+        # embedding-router bundles: report the router alone, the keyword+router
+        # hybrid, and the hybrid with a demo user library injected (the
+        # runtime-injection result) so the promote/hold verdict is reproducible.
+        for label, path in discover_router_bundles().items():
+            loaders[f"embedding-router:{label}"] = _embedding_loader(path)
+            loaders[f"hybrid:{label}"] = _hybrid_loader(path, inject=False)
+            loaders[f"hybrid+inject:{label}"] = _hybrid_loader(path, inject=True)
 
     reports: Dict[str, dict] = {}
     for name, loader in loaders.items():

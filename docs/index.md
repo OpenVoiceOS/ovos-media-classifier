@@ -55,7 +55,8 @@ New to the vocabulary (OCP, OPM, domain, axis, NER, …)? Read
 | [model.md](model.md) | The trained model for an ML engineer: the feature representation, the multi-task per-axis heads + soft-gating, the rules→context→context+NER ladder, the self-describing bundle/retrain contract, the benchmark table, and the honest limitations |
 | [extending.md](extending.md) | Step-by-step: implement a new `AbstractMediaClassifier` backend + register it under `opm.media.classifier`, retrain the ONNX bundle with `train_sklearn.py`, and add a new axis/head end-to-end |
 | [taxonomy.md](taxonomy.md) | `mediavocab.MediaType` enforcement, the raw label→type/genre mapping, and the query-vs-content distinction |
-| [backends.md](backends.md) | The keyword, NER and ONNX backends, how `load_media_classifier` selects between them, and adding an external classifier |
+| [backends.md](backends.md) | The keyword, NER, ONNX and embedding-router backends, how `load_media_classifier` selects between them, and adding an external classifier |
+| [embedding-router.md](embedding-router.md) | The learned guided-categorical-embeddings router: two-stream `[categorical | entity]` features, the routing-aware cost-matrix/abstain/calibration objective, the keyword+router hybrid gating, runtime entity injection (no retraining), and the routing-eval promote/hold verdict |
 | [entity-lists.md](entity-lists.md) | Entity lists (`label → list of strings`): the source-agnostic store (runtime / `.csv` / `.tsv` / `.jsonl` / HuggingFace / media-server / inline) the NER backend consumes |
 | [dataset.md](dataset.md) | The canonical `ocp-media-intents` dataset and its on-demand generator: every column, the rebuild command, the `.intent`/`.voc` templates, confusables, and the content-filter slice |
 | [data-sources.md](data-sources.md) | Every HF dataset + local scraper feeding the entity pools, the slot label each feeds, licenses, and how the training set is assembled |

@@ -37,8 +37,15 @@ python -m training.train_sklearn                       # → data/models/<featur
 python -m training.build_corpus                        # domain word vectors → data/wordvec/
 python -m training.train_torch                         # → data/models_torch/<variant>/
 
+# guided-categorical-embeddings routing-aware per-axis router (the embedding-router
+# backend) — two-stream [categorical | entity] features, cost-matrix abstain,
+# temperature-calibrated; supports runtime entity injection without retraining
+python -m training.train_embedding_router              # → data/models/embedding_router/
+
 # head-to-head benchmark: rules → sklearn → neural × feature set, on the test split
 python -m benchmarks.ladder                            # → benchmarks/ladder_results.{md,json}
+# harm-weighted OOD routing eval: keyword vs embedding-router vs hybrid(+inject)
+python -m benchmarks.routing_eval                      # → benchmarks/routing_eval_results.{md,json}
 ```
 
 `train_torch.py` trains a shared-trunk multi-task net on categorical ⊕ char-hash ⊕
@@ -97,4 +104,5 @@ platform slots that have no metadata dump ship as committed seed lists in
   refresher (`gather_metadatarr.py`) pull live entities from a user's own
   Radarr/Sonarr/Lidarr/Jellyfin/Music-Assistant stack.
 - Model export → an ONNX bundle the optional [`onnx`](../docs/backends.md)
-  backend loads (`train_guided_embeddings.py`).
+  backend loads (`train_sklearn.py` / `train_torch.py`), and the learned
+  [embedding-router](../docs/embedding-router.md) bundle (`train_embedding_router.py`).

@@ -5,8 +5,9 @@ Every backend implements [`AbstractMediaClassifier`](stable-api.md), so callers
 treat them identically — the choice only affects accuracy, dependencies and what
 signal is available.
 
-The package ships three backends. The **keyword** backend is the default and has
-no ML dependencies; **NER** and **ONNX** are opt-in extras. Any
+The package ships several backends. The **keyword** backend is the default and
+has no ML dependencies; **ONNX**, the learned **embedding-router**
+([embedding-router.md](embedding-router.md)) and **NER** are opt-in extras. Any
 `opm.media.classifier` plugin can also be loaded by name.
 
 ## Selection
@@ -19,14 +20,17 @@ zero-dependency default is always available:
 |---|---|---|---|
 | 1 | external plugin | `config["media_classifier_plugin"]` | a plugin package |
 | 2 | ONNX | `config["media_classifier_onnx_model"]` | `[onnx]` |
-| 3 | NER | `config["media_classifier_entities"]`, `media_classifier_wordlists`, or `media_classifier_ner_csv` | `[ner]` |
-| 4 | keyword (default) | nothing else set | core |
+| 3 | embedding-router (hybrid) | `config["media_classifier_embedding_router"]` | `[onnx]` |
+| 4 | NER | `config["media_classifier_entities"]`, `media_classifier_wordlists`, or `media_classifier_ner_csv` | `[ner]` |
+| 5 | keyword (default) | nothing else set | core |
 
 ```python
 from ovos_media_classifier import load_media_classifier
 
 load_media_classifier()                                                   # keyword (default)
 load_media_classifier({"media_classifier_onnx_model": "/models/ocp"})     # ONNX bundle dir
+load_media_classifier({"media_classifier_embedding_router": "/models/router",  # learned router (hybrid)
+                       "media_classifier_entity_library": {"anime_title": ["Attack on Titan"]}})
 load_media_classifier({"media_classifier_entities": {"entity_lists": [...]}})  # NER
 load_media_classifier({"media_classifier_plugin": "my-classifier"})       # external plugin
 ```
