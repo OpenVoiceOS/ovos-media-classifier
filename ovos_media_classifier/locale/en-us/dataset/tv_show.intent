@@ -85,3 +85,16 @@ a {tv_genre} series on {tv_network} starring {movie_actor}, please
 a {tv_genre} show to binge this weekend
 something on {tv_network} because i'm bored
 the {tv_genre} one on {tv_network}
+<lead_watch> a tv series based on {book_title}
+<lead_watch> the {book_title} show
+<lead_watch> the series adaptation of {book_title}
+<lead_watch> the tv adaptation of the novel {book_title}
+<lead_watch> the series based on a book by {book_author}
+<lead_watch> the {movie_title} series
+<lead_watch> the tv series based on the movie {movie_title}
+<lead_watch> the show based on {movie_title}
+<lead_watch> the {game_title} series
+<lead_watch> a tv series based on the game {game_title}
+<lead_watch> the {comic_title} series
+<lead_watch> a series based on the comic {comic_title}
+<lead_watch> the show adapted from {comic_title}

@@ -65,3 +65,12 @@ the audiobook everyone's talking about by {audiobook_author}
 a {audiobook_genre} audiobook for the long drive
 an audiobook narrated by {audiobook_narrator} for bedtime
 something by {audiobook_author} because i can't sleep
+<lead_play_audio> the audiobook of {book_title}
+<lead_play_audio> the audiobook version of {book_title}
+<lead_play_audio> the audiobook of the novel {book_title}
+<lead_play_audio> the audiobook narrated by {book_author}
+<lead_play_audio> an audiobook by {book_author}
+<lead_play_audio> the audiobook of {book_author}'s latest book
+<lead_play_audio> the audiobook memoir of {movie_actor}
+<lead_play_audio> {movie_actor} reading their memoir
+<lead_play_audio> the audiobook autobiography of {artist_name}

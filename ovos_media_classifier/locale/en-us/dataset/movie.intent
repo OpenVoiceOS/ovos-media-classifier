@@ -105,3 +105,30 @@ a {movie_genre} movie for movie night
 something with {movie_actor} to relax to
 a {movie_genre} film because it's raining
 the {movie_genre} one directed by {movie_director}
+<lead_watch> a movie about {book_title}
+<lead_watch> the film adaptation of {book_title}
+<lead_watch> a movie based on {book_title}
+<lead_watch> the movie based on the book {book_title}
+<lead_watch> a film version of {book_title}
+<lead_watch> the live action {book_title} movie
+<lead_watch> a movie based on the novel {book_title}
+<lead_watch> the movie based on a book by {book_author}
+<lead_watch> a film adapted from a {book_author} novel
+<lead_watch> a biopic about {book_author}
+<lead_watch> a movie based on {game_title}
+<lead_watch> the film adaptation of {game_title}
+<lead_watch> a movie based on the game {game_title}
+<lead_watch> the live action {game_title} movie
+<lead_watch> the {tv_show_title} movie
+<lead_watch> a movie based on {tv_show_title}
+<lead_watch> the film spinoff of {tv_show_title}
+<lead_watch> the movie version of {tv_show_title}
+<lead_watch> the {comic_title} movie
+<lead_watch> a movie based on the comic {comic_title}
+<lead_watch> the film adaptation of {comic_title}
+<lead_watch> the live action {anime_title} movie
+<lead_watch> a movie based on the anime {anime_title}
+<lead_watch> a biopic about {artist_name}
+<lead_watch> a movie about the life of {artist_name}
+<lead_watch> the {artist_name} biopic
+<lead_watch> a film about the band {artist_name}

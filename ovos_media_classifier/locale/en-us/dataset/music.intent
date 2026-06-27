@@ -153,3 +153,26 @@ some {music_genre} while i clean
 {artist_name} on shuffle
 nothing but {artist_name} tonight
 just {music_genre} for now
+<lead_play_audio> the original soundtrack of {movie_title}
+<lead_play_audio> the songs featured in {movie_title}
+<lead_play_audio> the love theme from {movie_title}
+<lead_play_audio> the score from {movie_title}
+<lead_play_audio> songs from the movie {movie_title}
+<lead_play_audio> the main theme of {movie_title}
+<lead_play_audio> the soundtrack to the film {movie_title}
+<lead_play_audio> the end credits song from {movie_title}
+<lead_play_audio> the {tv_show_title} theme song
+<lead_play_audio> the theme from {tv_show_title}
+<lead_play_audio> the opening theme of {tv_show_title}
+<lead_play_audio> music from the show {tv_show_title}
+<lead_play_audio> the {game_title} soundtrack
+<lead_play_audio> music from the game {game_title}
+<lead_play_audio> the {game_title} main theme
+<lead_play_audio> the battle music from {game_title}
+<lead_play_audio> the {anime_title} opening
+<lead_play_audio> the opening song from {anime_title}
+<lead_play_audio> the {anime_title} ending theme
+<lead_play_audio> the soundtrack composed by {movie_composer}
+<lead_play_audio> a film score by {movie_composer}
+<lead_play_audio> the score written by {movie_composer}
+<lead_play_audio> music for the movie scored by {movie_composer}

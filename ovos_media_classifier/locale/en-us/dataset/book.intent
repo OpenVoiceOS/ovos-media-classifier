@@ -100,3 +100,18 @@ that famous {book_genre} novel
 a {book_genre} book to unwind with
 something by {book_author} for the night
 a {book_genre} novel because i can't sleep
+<lead_read> a biography of {movie_actor}
+<lead_read> the memoir of {movie_actor}
+<lead_read> {movie_actor}'s memoir
+<lead_read> the autobiography of {movie_actor}
+<lead_read> a biography of {artist_name}
+<lead_read> {artist_name}'s autobiography
+<lead_read> a biography of the director {movie_director}
+<lead_read> the memoir of {podcast_host}
+<lead_read> the novelization of {movie_title}
+<lead_read> the novel based on the film {movie_title}
+<lead_read> the book version of {movie_title}
+<lead_read> the tie-in novel for {game_title}
+<lead_read> the novel based on the game {game_title}
+<lead_read> the companion book to {tv_show_title}
+<lead_read> a book written by {movie_writer}

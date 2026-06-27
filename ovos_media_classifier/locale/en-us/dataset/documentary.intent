@@ -61,3 +61,18 @@ the {artist_name} documentary, please
 a documentary because i want to learn something
 something educational while i eat
 the documentary everyone's recommending
+<lead_watch> a documentary about the show {tv_show_title}
+<lead_watch> a documentary about the making of {tv_show_title}
+<lead_watch> a documentary about the game {game_title}
+<lead_watch> a documentary about the comic {comic_title}
+<lead_watch> a documentary about the author {book_author}
+<lead_watch> a documentary about the writer {book_author}
+<lead_watch> the {book_author} documentary
+<lead_watch> a documentary about the podcaster {podcast_host}
+<lead_watch> a documentary about the band behind {album_name}
+<lead_watch> the making of the album {album_name}
+<lead_watch> a documentary about the studio {anime_studio}
+<lead_watch> a documentary about the making of {game_title}
+<lead_watch> a documentary on the history of {music_genre}
+<lead_watch> a documentary about the song {track_name}
+<lead_watch> a documentary about the writing of {book_title}
