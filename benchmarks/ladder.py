@@ -9,8 +9,10 @@ Evaluates the three rungs the project builds toward, on the real
 
 and reports **every axis the multi-task heads predict**:
 
-  accuracy        domain · media_type · playback_type · structure · explicitness
-  macro-F1        content_form_genres · tags (genre:/mood:/era:) · qualifiers
+  accuracy        domain · media_type · playback_type · structure ·
+                  explicitness · content_form · programme_format
+  macro-F1        content_form_genres · content_genres (⊆ KNOWN_GENRES) ·
+                  picture_format (bw/silent/3d)
   content filter  adult / hentai recall from the content_form_genres axis
 
 The headline is the lift from rules → context-only → +NER across these axes.
@@ -62,12 +64,16 @@ SINGLE_AXES = [
     ("playback_type", "playback_type"),
     ("structure", "structure"),
     ("explicitness", "explicitness"),
+    # mediavocab single-label descriptive axes (replaced the old ``qualifiers``)
+    ("content_form", "content_form"),
+    ("programme_format", "programme_format"),
 ]
 MULTI_AXES = [
     ("content_form_genres", "content_form_genres"),
-    # the namespaced descriptive axis — genre/mood/era folded into one head
-    ("tags", "tags"),
-    ("qualifiers", "qualifiers"),
+    # mediavocab multi-label axes (replaced the old namespaced ``tags`` head):
+    # the real genre(s) (open-vocab, capped) + the PictureFormat presentation axis
+    ("content_genres", "content_genres"),
+    ("picture_format", "picture_format"),
 ]
 
 # Capped (open-vocabulary) multi-label heads model only their top-K labels, so a
@@ -75,7 +81,7 @@ MULTI_AXES = [
 # thousands of distinct (mostly un-modelled, junk-tail) values present in the raw
 # truth column.  Scoring uses the bundle's own label set (recorded in meta.json),
 # applied uniformly across rungs so the comparison stays apples-to-apples.
-CAPPED_MULTI_AXES = {"tags"}
+CAPPED_MULTI_AXES = {"content_genres"}
 
 
 # ---------------------------------------------------------------------------
@@ -164,12 +170,17 @@ def _collect_rules(df: pd.DataFrame) -> Dict[str, object]:
     pred: Dict[str, list] = {a: [] for a, _ in SINGLE_AXES}
     multi: Dict[str, list] = {a: [] for a, _ in MULTI_AXES}
     lat = []
+    def _val(x):
+        return getattr(x, "value", x) or ""
+
     for sent, lang in zip(df["sentence"], df["lang"]):
         t0 = time.perf_counter()
         full = clf.classify_full(sent, lang)
-        cform = clf.classify_content_form_genres(sent, lang)
-        tags = clf.classify_tags(sent, lang)
-        quals = clf.classify_qualifiers(sent, lang)
+        cform_g = clf.classify_content_form_genres(sent, lang)
+        cgenres = clf.classify_genres(sent, lang)
+        cform = clf.classify_content_form(sent, lang)
+        pfmt = clf.classify_programme_format(sent, lang)
+        picfmt = clf.classify_picture_format(sent, lang)
         expl = clf.classify_explicitness(sent, lang)
         lat.append((time.perf_counter() - t0) * 1000.0)
         pred["domain"].append(full.domain.value)
@@ -177,9 +188,11 @@ def _collect_rules(df: pd.DataFrame) -> Dict[str, object]:
         pred["playback_type"].append(full.playback_type.value)
         pred["structure"].append(full.structure.value)
         pred["explicitness"].append(expl)
-        multi["content_form_genres"].append(cform)
-        multi["tags"].append(tags)
-        multi["qualifiers"].append(quals)
+        pred["content_form"].append(_val(cform))
+        pred["programme_format"].append(_val(pfmt))
+        multi["content_form_genres"].append(cform_g)
+        multi["content_genres"].append([_val(g) for g in (cgenres or [])])
+        multi["picture_format"].append([_val(p) for p in (picfmt or [])])
     return {"pred": pred, "multi": multi, "lat": lat,
             "model_bytes": 0, "status": "available", "label_space": {}}
 
@@ -254,18 +267,22 @@ def _collect_onnx(df: pd.DataFrame, bundle_dir: str) -> Dict[str, object]:
         pb = _single("playback_type") or "unknown"
         st = _single("structure") or "unknown"
         expl = _single("explicitness") or "clean"
-        cform = _multi("content_form_genres")
-        tags = _multi("tags")
-        quals = _multi("qualifiers")
+        cf = _single("content_form") or ""
+        pf = _single("programme_format") or ""
+        cform_g = _multi("content_form_genres")
+        cgenres = _multi("content_genres")
+        picfmt = _multi("picture_format")
         lat.append((time.perf_counter() - t0) * 1000.0)
         pred["domain"].append(domain)
         pred["media_type"].append(mt)
         pred["playback_type"].append(pb)
         pred["structure"].append(st)
         pred["explicitness"].append(expl)
-        multi["content_form_genres"].append(cform)
-        multi["tags"].append(tags)
-        multi["qualifiers"].append(quals)
+        pred["content_form"].append(cf)
+        pred["programme_format"].append(pf)
+        multi["content_form_genres"].append(cform_g)
+        multi["content_genres"].append(cgenres)
+        multi["picture_format"].append(picfmt)
 
     size = sum(os.path.getsize(os.path.join(bundle_dir, f))
                for f in os.listdir(bundle_dir))

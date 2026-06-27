@@ -558,7 +558,71 @@ def run(extra_bundles: Optional[List[str]] = None,
 
     composition = _composition(cases)
     fixes = _layer_fixes(objs, cases)
-    return {"composition": composition, "backends": reports, "fixes": fixes}
+    slices = _category_slices(objs, cases)
+    return {"composition": composition, "backends": reports, "fixes": fixes,
+            "category_slices": slices}
+
+
+# Categories worth reporting as their own slice (the ASR/realism slice is the
+# one the conversational/spoken training is meant to move).
+_SLICE_CATEGORIES = ["conversational"]
+
+
+def _category_slices(objs: Dict[str, BackendReport],
+                     cases: List[Case]) -> dict:
+    """Re-score mis-route / resolved / adult-leak over a single category subset.
+
+    Uses each backend's stored per-utterance predictions (so no re-inference),
+    re-running the SAME metric accounting on the filtered case list — the honest
+    way to see whether a slice (e.g. ``conversational``) moved without diluting
+    it into the overall number.
+    """
+    out: Dict[str, dict] = {}
+    for cat in _SLICE_CATEGORIES:
+        sub = [c for c in cases if c.category == cat]
+        if not sub:
+            continue
+        per_backend: Dict[str, dict] = {}
+        for name, rep in objs.items():
+            mt = AxisCount()
+            resolved_total = resolved_n = 0
+            adult_total = adult_leak = 0
+            for c in sub:
+                p = rep.preds.get(c.utterance)
+                if p is None:
+                    continue
+                if c.explicit:
+                    adult_total += 1
+                    if not p.adult:
+                        adult_leak += 1
+                if c.domain == "ocp_play" and c.media_type not in ABSTAIN_TYPES:
+                    if c.abstain_ok:
+                        resolved_total += 1
+                        if (p.media_type not in ABSTAIN_TYPES
+                                and p.media_type == c.media_type):
+                            resolved_n += 1
+                    if p.media_type in ABSTAIN_TYPES:
+                        mt.add_abstain()
+                    elif p.media_type == c.media_type:
+                        mt.add_correct()
+                    else:
+                        mt.add_wrong()
+            per_backend[name] = {
+                "mis_route_rate": round(mt.mis_route_rate, 4),
+                "confident_wrong": mt.confident_wrong,
+                "media_n": mt.n,
+                "abstain": mt.abstain,
+                "resolved_rate": round(
+                    resolved_n / resolved_total if resolved_total else 0.0, 4),
+                "resolved_n": resolved_n,
+                "resolved_total": resolved_total,
+                "adult_leak_rate": round(
+                    adult_leak / adult_total if adult_total else 0.0, 4),
+                "adult_leak_n": adult_leak,
+                "adult_total": adult_total,
+            }
+        out[cat] = {"n_cases": len(sub), "backends": per_backend}
+    return out
 
 
 # Which open-vocab cases each layer CLOSES relative to the cheaper layer.  A case
@@ -672,6 +736,25 @@ def write_md(report: dict, path: str = RESULTS_MD) -> str:
             f"{c['recall']:.3f} ({c['hit_n']}/{c['total']}) | {lat_s} |"
         )
     lines.append("")
+
+    # ---- per-category slices (the conversational / ASR-realism slice) -------
+    slices = report.get("category_slices") or {}
+    for cat, sl in slices.items():
+        lines.append(f"## Slice: {cat} ({sl['n_cases']} cases)\n")
+        lines.append(
+            "Mis-route / resolved / adult-leak scored over ONLY this category "
+            "(the realism slice the conversational/ASR training targets).\n")
+        lines.append("| backend | mis-route | resolved | adult-leak |")
+        lines.append("|---|---|---|---|")
+        for name, b in sl["backends"].items():
+            lines.append(
+                f"| {name} | **{b['mis_route_rate']:.3f}** "
+                f"({b['confident_wrong']}/{b['media_n']}) | "
+                f"**{b['resolved_rate']:.3f}** "
+                f"({b['resolved_n']}/{b['resolved_total']}) | "
+                f"**{b['adult_leak_rate']:.3f}** "
+                f"({b['adult_leak_n']}/{b['adult_total']}) |")
+        lines.append("")
 
     # ---- per-layer open-vocab fixes -----------------------------------------
     fixes = report.get("fixes") or {}
@@ -804,6 +887,12 @@ def main(argv: Optional[List[str]] = None) -> int:
               f"hijack={b['gate']['false_hijack_rate']:.3f} "
               f"miss={b['gate']['false_miss_rate']:.3f} "
               f"ctrl={b['control']['recall']:.3f}")
+    for cat, sl in (report.get("category_slices") or {}).items():
+        print(f"\n[slice: {cat}] ({sl['n_cases']} cases)")
+        for name, b in sl["backends"].items():
+            print(f"  {name:28s} mis-route={b['mis_route_rate']:.3f} "
+                  f"resolved={b['resolved_rate']:.3f} "
+                  f"adult-leak={b['adult_leak_rate']:.3f}")
     print(f"wrote {jp}\nwrote {mp}")
     return 0
 
