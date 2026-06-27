@@ -46,10 +46,16 @@ does (so partial bundles — and old 2-head ``domain``/``play`` bundles — load
       "domain_threshold": 0.5, "play_threshold": 0.3
     }
 
-* ``feature_names`` — ordered categorical feature columns the model was trained
-  on.  At inference the sparse feature dict from
-  :class:`~ovos_media_classifier.features.CategoricalFeatureExtractor` is
-  vectorized into a dense ``float32`` row in this exact order.
+* ``feature_names`` — the ordered feature columns the model was trained on.  At
+  inference the sparse categorical dict from
+  :class:`~ovos_media_classifier.features.CategoricalFeatureExtractor` fills the
+  categorical columns; when the bundle also declares richer **text feature
+  blocks** — ``meta["text_hash"]`` (hashed char n-grams,
+  :mod:`~ovos_media_classifier.features_text`) and/or ``meta["wordvec"]`` (pooled
+  domain word vectors, :mod:`~ovos_media_classifier.features_wordvec`) — the
+  ``txt_*`` / ``wv_*`` columns are filled from the **raw utterance** in numpy
+  (no torch / gensim).  A neural bundle trained by ``training/train_torch.py``
+  carries these; a categorical-only sklearn bundle omits them (back-compat).
 * ``heads`` — one entry per trained axis.  ``kind == "single"`` heads argmax over
   their ``labels``; ``kind == "multi"`` heads keep every label whose probability
   is ≥ ``threshold`` (sigmoid-style multi-label).  ``media_type`` labels are raw
@@ -80,6 +86,8 @@ from ovos_media_classifier.constants import (
     DEFAULT_PLAY_THRESHOLD,
 )
 from ovos_media_classifier.features import CategoricalFeatureExtractor
+from ovos_media_classifier.features_text import TextHashSpec, hash_vector
+from ovos_media_classifier.features_wordvec import WordVecPooler, WordVecSpec
 from ovos_media_classifier.intents import (
     LABEL_TO_GENRES,
     LABEL_TO_MEDIA_TYPE,
@@ -141,6 +149,10 @@ class OnnxMediaClassifier(AbstractMediaClassifier):
         domain_threshold: float = DEFAULT_DOMAIN_THRESHOLD,
         play_threshold: float = DEFAULT_PLAY_THRESHOLD,
         extra_heads: Optional[Dict[str, dict]] = None,
+        text_spec: Optional[TextHashSpec] = None,
+        wordvec_spec: Optional[WordVecSpec] = None,
+        wordvec_pooler: Optional[WordVecPooler] = None,
+        input_kind: str = "features",
     ) -> None:
         self._domain_session = domain_session
         self._play_session = play_session
@@ -151,6 +163,30 @@ class OnnxMediaClassifier(AbstractMediaClassifier):
         self._input_name = input_name
         self._domain_thresh = domain_threshold
         self._play_thresh = play_threshold
+        # ---- richer text feature blocks (optional; back-compat with bundles
+        # that only carry categorical columns — both specs are then None) ----
+        # ``feature_names`` lists EVERY column the model expects, in order,
+        # including the ``txt_*`` (char-hash) and ``wv_*`` (word-vector) blocks.
+        # The categorical extractor only produces the non-text columns, so the
+        # text blocks are filled separately from the raw utterance.
+        self._text_spec = text_spec
+        self._wordvec_spec = wordvec_spec
+        self._wordvec_pooler = wordvec_pooler
+        # ``"features"`` (default) → heads consume the dense numeric feature row;
+        # ``"text"`` → the bundle is a self-contained skl2onnx TfidfVectorizer→clf
+        # pipeline whose graph takes the RAW utterance as a (1,1) string tensor,
+        # so no python featurization runs at all (the vectorizer is baked in).
+        self._input_kind = input_kind
+        # offsets of the contiguous text blocks inside the feature row, derived
+        # once from the column-name prefixes (the trainer always appends the
+        # txt_* block then the wv_* block after the categorical columns).
+        self._txt_idx = [i for i, n in enumerate(self._feature_names)
+                         if text_spec and n.startswith(f"{text_spec.prefix}_")]
+        self._wv_idx = [i for i, n in enumerate(self._feature_names)
+                        if wordvec_spec and n.startswith(f"{wordvec_spec.prefix}_")]
+        # the categorical column subset (everything that is not a text block)
+        self._cat_names = [n for i, n in enumerate(self._feature_names)
+                           if i not in set(self._txt_idx) | set(self._wv_idx)]
         # axis -> {"session", "kind", "labels": {idx: label}, "threshold"}
         # for the extended multi-task heads (media_type/playback_type/structure/
         # content_form_genres/tags/qualifiers/explicitness).  The genre/mood/era
@@ -199,18 +235,36 @@ class OnnxMediaClassifier(AbstractMediaClassifier):
         with open(meta_path, encoding="utf-8") as fh:
             meta = json.load(fh)
 
-        feature_names = meta.get("feature_names")
+        input_kind = meta.get("input_kind", "features")
+        # a text-input (baked-vectorizer) bundle needs no feature_names — its
+        # graph tokenizes the raw string itself, so only the labels are required.
+        feature_names = meta.get("feature_names") or []
         domain_labels = meta.get("domain_labels")
         play_labels = meta.get("play_labels")
-        if not feature_names or not domain_labels or not play_labels:
+        if not domain_labels or not play_labels or (
+                input_kind != "text" and not feature_names):
             raise ValueError(
-                f"{meta_path} must define feature_names, domain_labels and play_labels"
+                f"{meta_path} must define feature_names (unless input_kind=='text'), "
+                "domain_labels and play_labels"
             )
 
         domain_session = onnxruntime.InferenceSession(domain_path)
         play_session = onnxruntime.InferenceSession(play_path)
 
         extractor = CategoricalFeatureExtractor.from_locale_dir(locale_dir)
+
+        # ---- richer text feature blocks (optional, self-describing) ----
+        # ``meta["text_hash"]`` / ``meta["wordvec"]`` declare the char-hash and
+        # pooled-word-vector featurizers a neural bundle was trained with; the
+        # runtime rebuilds them in numpy only (no torch / gensim). Absent keys →
+        # categorical-only bundle (the sklearn ladder), unchanged.
+        text_spec = TextHashSpec.from_meta(meta.get("text_hash"))
+        wordvec_spec = WordVecSpec.from_meta(meta.get("wordvec"))
+        wordvec_pooler = (WordVecPooler.from_bundle(model_dir, wordvec_spec)
+                          if wordvec_spec is not None else None)
+        if wordvec_spec is not None and wordvec_pooler is None:
+            LOG.warning(f"bundle declares a wordvec spec but the matrix/vocab "
+                        f"files are missing in {model_dir}; wv_* columns stay 0")
 
         # ---- load the extended multi-task heads (when present) ----
         # ``meta["heads"]`` is the multi-head manifest; each entry names its own
@@ -244,21 +298,55 @@ class OnnxMediaClassifier(AbstractMediaClassifier):
             domain_threshold=float(meta.get("domain_threshold", DEFAULT_DOMAIN_THRESHOLD)),
             play_threshold=float(meta.get("play_threshold", DEFAULT_PLAY_THRESHOLD)),
             extra_heads=extra_heads,
+            text_spec=text_spec,
+            wordvec_spec=wordvec_spec,
+            wordvec_pooler=wordvec_pooler,
+            input_kind=meta.get("input_kind", "features"),
         )
 
     # ------------------------------------------------------------------
     # Internal helpers
     # ------------------------------------------------------------------
 
-    def _vectorize(self, feat: Dict[str, str]):
-        """Dense ``float32`` row of shape ``(1, n_features)`` in feature_names order."""
+    def _vectorize(self, feat: Dict[str, str], query: Optional[str] = None):
+        """Dense ``float32`` row ``(1, n_features)`` in feature_names order.
+
+        Fills the categorical columns from the sparse *feat* dict (binary 0/1).
+        When the bundle declares text feature blocks (``txt_*`` char-hash and/or
+        ``wv_*`` word-vector) **and** *query* is supplied, those contiguous
+        blocks are filled from the raw utterance with the bundle's recorded spec
+        (numpy only — no torch). Categorical-only bundles ignore *query* and the
+        behaviour is unchanged (back-compat).
+        """
         import numpy as np
 
         row = np.zeros((1, len(self._feature_names)), dtype="float32")
         for i, name in enumerate(self._feature_names):
             if name in feat:
                 row[0, i] = 1.0
+
+        if query:
+            if self._text_spec is not None and self._txt_idx:
+                hv = hash_vector(query, self._text_spec)
+                row[0, self._txt_idx[0]:self._txt_idx[0] + len(self._txt_idx)] = hv
+            if self._wordvec_pooler is not None and self._wv_idx:
+                wv = self._wordvec_pooler.pool(query)
+                row[0, self._wv_idx[0]:self._wv_idx[0] + len(self._wv_idx)] = wv
         return row
+
+    def _row_for(self, query: str, lang: str):
+        """The model input for *query*.
+
+        ``input_kind == "text"`` → a ``(1, 1)`` object array of the raw utterance
+        (the baked-in skl2onnx vectorizer tokenizes it in-graph); otherwise the
+        dense numeric feature row (categorical ⊕ optional text blocks).
+        """
+        import numpy as np
+
+        if self._input_kind == "text":
+            return np.array([[query or ""]], dtype=object)
+        feat = self._extractor.extract(query, lang)
+        return self._vectorize(feat, query=query)
 
     def _run(self, session, row) -> "list":
         """Run a head and return a 1-D probability array over its classes.
@@ -299,9 +387,9 @@ class OnnxMediaClassifier(AbstractMediaClassifier):
             return _softmax(probs)
         return probs
 
-    def _predict_domain(self, feat: Dict[str, str]) -> Tuple[OCPDomain, float]:
+    def _predict_domain(self, row) -> Tuple[OCPDomain, float]:
         try:
-            probs = self._run(self._domain_session, self._vectorize(feat))
+            probs = self._run(self._domain_session, row)
         except Exception as exc:
             LOG.error(f"OnnxMediaClassifier domain prediction failed: {exc}")
             return OCPDomain.NOT_OCP, 0.0
@@ -317,10 +405,10 @@ class OnnxMediaClassifier(AbstractMediaClassifier):
         except ValueError:
             return OCPDomain.NOT_OCP, conf
 
-    def _predict_play(self, feat: Dict[str, str]) -> Tuple[str, float]:
+    def _predict_play(self, row) -> Tuple[str, float]:
         """Return (play_label_string, confidence); ("generic", 0.0) on failure."""
         try:
-            probs = self._run(self._play_session, self._vectorize(feat))
+            probs = self._run(self._play_session, row)
         except Exception as exc:
             LOG.error(f"OnnxMediaClassifier play prediction failed: {exc}")
             return "generic", 0.0
@@ -333,11 +421,11 @@ class OnnxMediaClassifier(AbstractMediaClassifier):
 
     def _play_label(self, query: str, lang: str) -> Tuple[str, float, OCPDomain]:
         """Resolve the winning play label (domain-gated). Shared by the axes."""
-        feat = self._extractor.extract(query, lang)
-        domain, dconf = self._predict_domain(feat)
+        row = self._row_for(query, lang)
+        domain, dconf = self._predict_domain(row)
         if domain != OCPDomain.OCP_PLAY:
             return "generic", dconf, domain
-        label, pconf = self._predict_play(feat)
+        label, pconf = self._predict_play(row)
         if pconf < self._play_thresh:
             return "generic", pconf, domain
         return label, pconf, domain
@@ -356,9 +444,8 @@ class OnnxMediaClassifier(AbstractMediaClassifier):
             return None
         import numpy as np
 
-        feat = self._extractor.extract(query, lang)
         try:
-            probs = self._run(head["session"], self._vectorize(feat))
+            probs = self._run(head["session"], self._row_for(query, lang))
         except Exception as exc:
             LOG.error(f"OnnxMediaClassifier {axis} head failed: {exc}")
             return None
@@ -377,8 +464,7 @@ class OnnxMediaClassifier(AbstractMediaClassifier):
             return None
         import numpy as np
 
-        feat = self._extractor.extract(query, lang)
-        row = self._vectorize(feat)
+        row = self._row_for(query, lang)
         thr = head["threshold"]
         labels = head["labels"]
         name = self._input_name or head["session"].get_inputs()[0].name
@@ -414,8 +500,7 @@ class OnnxMediaClassifier(AbstractMediaClassifier):
 
     def classify_domain(self, query: str, lang: str) -> Tuple[OCPDomain, float]:
         """Classify the OCP domain via the dedicated domain head."""
-        feat = self._extractor.extract(query, lang)
-        return self._predict_domain(feat)
+        return self._predict_domain(self._row_for(query, lang))
 
     def _media_type_from_head(self, query: str, lang: str):
         """``(MediaType, conf)`` from the dedicated media_type head, or ``None``.
@@ -425,8 +510,7 @@ class OnnxMediaClassifier(AbstractMediaClassifier):
         """
         if not self._has_head("media_type"):
             return None
-        feat = self._extractor.extract(query, lang)
-        domain, _ = self._predict_domain(feat)
+        domain, _ = self._predict_domain(self._row_for(query, lang))
         if domain != OCPDomain.OCP_PLAY:
             return MediaType.GENERIC, 0.0
         res = self._single_head("media_type", query, lang)

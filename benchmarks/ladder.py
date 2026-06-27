@@ -47,6 +47,8 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 REPO_ROOT = os.path.dirname(HERE)
 DEFAULT_DATA_DIR = os.path.join(REPO_ROOT, "data", "release")
 DEFAULT_MODELS_DIR = os.path.join(REPO_ROOT, "data", "models")
+DEFAULT_TORCH_DIR = os.path.join(REPO_ROOT, "data", "models_torch")
+DEFAULT_TEXT_DIR = os.path.join(REPO_ROOT, "data", "models_text")
 RESULTS_JSON = os.path.join(HERE, "ladder_results.json")
 RESULTS_MD = os.path.join(HERE, "ladder_results.md")
 
@@ -183,16 +185,32 @@ def _collect_rules(df: pd.DataFrame) -> Dict[str, object]:
 
 
 def _collect_onnx(df: pd.DataFrame, bundle_dir: str) -> Dict[str, object]:
-    """ONNX bundle over the precomputed feature columns; predicts each axis."""
+    """Run an ONNX bundle over the test split; predict every axis.
+
+    Two feature paths, both apples-to-apples on the same rows:
+
+    * **categorical-only bundles** (the sklearn ladder) read the precomputed 0/1
+      feature columns straight from the split — the fast path.
+    * **text-bearing bundles** (the neural ``cat_text`` / ``cat_wordvec`` /
+      ``cat_all`` variants) declare a char-hash / word-vector spec, so the row is
+      built from the **raw utterance** through the runtime featurizer
+      (``clf._row_for``) — numpy-only, exactly what production does. Latency is
+      measured INCLUDING this featurization so the cost is honest.
+    """
     from ovos_media_classifier.onnx import OnnxMediaClassifier
 
     clf = OnnxMediaClassifier.from_path(bundle_dir)
-    feat_names = clf._feature_names
-    missing = [c for c in feat_names if c not in df.columns]
-    if missing:
-        raise ValueError(f"test split missing {len(missing)} feature cols "
-                         f"(e.g. {missing[:3]})")
-    X = df[feat_names].to_numpy(dtype="float32")
+    # the runtime row is built from raw text when the bundle carries a numpy text
+    # block (char-hash / word-vec) OR is a baked-vectorizer string-input pipeline
+    has_text = (clf._text_spec is not None or clf._wordvec_spec is not None
+                or clf._input_kind == "text")
+    if not has_text:
+        feat_names = clf._feature_names
+        missing = [c for c in feat_names if c not in df.columns]
+        if missing:
+            raise ValueError(f"test split missing {len(missing)} feature cols "
+                             f"(e.g. {missing[:3]})")
+        X = df[feat_names].to_numpy(dtype="float32")
 
     pred: Dict[str, list] = {a: [] for a, _ in SINGLE_AXES}
     multi: Dict[str, list] = {a: [] for a, _ in MULTI_AXES}
@@ -222,10 +240,14 @@ def _collect_onnx(df: pd.DataFrame, bundle_dir: str) -> Dict[str, object]:
         return [h["labels"][i] for i in range(len(h["labels"]))
                 if v[i] >= h["threshold"]]
 
-    # domain head label set (legacy domain head)
+    sentences = df["sentence"].astype(str).tolist()
+    langs = df["lang"].astype(str).tolist()
     for i in range(len(df)):
-        row = X[i:i + 1]
         t0 = time.perf_counter()
+        # build the feature row: precomputed columns (categorical) or the runtime
+        # featurizer over the raw utterance (text-bearing bundles)
+        row = (clf._row_for(sentences[i], langs[i]) if has_text
+               else X[i:i + 1])
         dprob = clf._run(clf._domain_session, row)
         domain = clf._domain_labels.get(int(np.argmax(dprob)), "not_ocp")
         mt = _single("media_type") or "generic"
@@ -338,30 +360,65 @@ def _cf_recall(df: pd.DataFrame, form_preds: List[List[str]]) -> Dict[str, objec
 # Orchestration
 # ---------------------------------------------------------------------------
 
-RUNGS = [
+# The full ladder: rules → sklearn (categorical) → neural × feature sets.  Each
+# entry is ``(display_name, bundle_dir_or_None)``; ``None`` is the rules backend.
+# sklearn bundles live under ``--models-dir`` (data/models); the neural variants
+# under ``--torch-dir`` (data/models_torch).  Missing bundles report
+# ``unavailable`` rather than crash.
+SKLEARN_RUNGS = [
     ("rules", None),
-    ("learned-context", "context"),
-    ("learned-context+NER", "context_ner"),
+    ("sklearn context", "context"),
+    ("sklearn context+NER", "context_ner"),
+]
+# self-contained TF-IDF→clf string-input pipelines (vectorizer baked in-graph) —
+# the classic bag-of-n-grams representations + a linear/NB classifier
+TEXT_RUNGS = [
+    ("tfidf word(1,2)+linear", "tfidf_word12"),
+    ("tfidf word(1,3)+linear", "tfidf_word13"),
+    ("tfidf char(3,5)+linear", "tfidf_char35"),
+]
+# neural variant dir → display name (the head-to-head feature-set comparison)
+TORCH_RUNGS = [
+    ("neural cat", "cat"),
+    ("neural cat+text(char-hash)", "cat_text"),
+    ("neural cat+wordvec(skip)", "cat_wordvec"),
+    ("neural cat+wordvec(cbow)", "cat_wordvec_cbow"),
+    ("neural cat+all", "cat_all"),
+    ("neural cat+all (deep)", "cat_all_deep"),
+    ("neural cat+all (wide)", "cat_all_wide"),
 ]
 
 
-def run(data_dir: str, models_dir: str, limit: int = 0) -> Dict[str, object]:
+def _ladder(models_dir: str, torch_dir: str, text_dir: str):
+    """Resolve the rung list to ``(name, bundle_dir_or_None)`` absolute paths."""
+    rungs = []
+    for name, fs in SKLEARN_RUNGS:
+        rungs.append((name, None if fs is None else os.path.join(models_dir, fs)))
+    for name, variant in TEXT_RUNGS:
+        rungs.append((name, os.path.join(text_dir, variant)))
+    for name, variant in TORCH_RUNGS:
+        rungs.append((name, os.path.join(torch_dir, variant)))
+    return rungs
+
+
+def run(data_dir: str, models_dir: str, torch_dir: str, text_dir: str,
+        limit: int = 0) -> Dict[str, object]:
     df = load_test(data_dir, limit=limit)
+    ladder = _ladder(models_dir, torch_dir, text_dir)
 
     # Collect raw predictions first so the capped multi-label label space (from a
     # trained bundle's meta) can be shared with the rules rung for a fair,
     # apples-to-apples macro-F1 on the in-scope task (see CAPPED_MULTI_AXES).
     collected: Dict[str, Dict[str, object]] = {}
-    for name, fs in RUNGS:
-        if fs is None:
+    for name, bundle in ladder:
+        if bundle is None:
             print(f"[{name}] rules backend on {len(df):,} rows …")
             collected[name] = _collect_rules(df)
             continue
-        bundle = os.path.join(models_dir, fs)
         if not os.path.isfile(os.path.join(bundle, "meta.json")):
             collected[name] = {"status": "unavailable",
                                "reason": f"no bundle at {bundle}; "
-                                         f"run python -m training.train_sklearn"}
+                                         f"run the matching trainer"}
             print(f"[{name}] unavailable (no bundle)")
             continue
         print(f"[{name}] ONNX bundle {bundle} on {len(df):,} rows …")
@@ -388,7 +445,9 @@ def run(data_dir: str, models_dir: str, limit: int = 0) -> Dict[str, object]:
             c["label_space"].setdefault(axis, sp)
         rungs[name] = _score_collected(df, c)
     return {"n_test_rows": len(df), "data_dir": data_dir,
-            "models_dir": models_dir, "rungs": rungs}
+            "models_dir": models_dir, "torch_dir": torch_dir,
+            "text_dir": text_dir,
+            "rung_order": [n for n, _ in ladder], "rungs": rungs}
 
 
 def write_json(report, path: str = RESULTS_JSON) -> str:
@@ -406,13 +465,17 @@ def _fmt_bytes(n: int) -> str:
 
 
 def write_md(report, path: str = RESULTS_MD) -> str:
-    avail = [(n, report["rungs"][n]) for n, _ in RUNGS
+    order = report.get("rung_order") or [n for n, _ in SKLEARN_RUNGS]
+    avail = [(n, report["rungs"][n]) for n in order
              if report["rungs"].get(n, {}).get("status") == "available"]
     L: List[str] = []
     L.append("# ovos-media-classifier — the multi-task ladder\n")
-    L.append(f"Held-out **test split**: {report['n_test_rows']:,} utterances. Per "
-             "axis, the lift from **rules → learned (context-only) → learned "
-             "(context+NER)** is the headline result.\n")
+    L.append(f"Held-out **test split**: {report['n_test_rows']:,} utterances. "
+             "The ladder runs **rules → sklearn (categorical) → neural × feature "
+             "set** (categorical → +char-hash text → +domain word-vectors → all) "
+             "on the SAME rows. Neural rungs build their text features from the "
+             "raw utterance at inference (numpy only); latency is measured "
+             "including that featurization.\n")
 
     # per-axis accuracy table (single-label axes)
     L.append("## Single-label axes — accuracy\n")
@@ -450,7 +513,7 @@ def write_md(report, path: str = RESULTS_MD) -> str:
                  f"{_fmt_bytes(b['model_bytes'])} |")
     L.append("")
 
-    unavailable = [n for n, _ in RUNGS
+    unavailable = [n for n in order
                    if report["rungs"].get(n, {}).get("status") != "available"]
     if unavailable:
         L.append("## Unavailable rungs\n")
@@ -468,19 +531,22 @@ def main(argv: Optional[List[str]] = None) -> int:
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--data-dir", default=DEFAULT_DATA_DIR)
     ap.add_argument("--models-dir", default=DEFAULT_MODELS_DIR)
+    ap.add_argument("--torch-dir", default=DEFAULT_TORCH_DIR)
+    ap.add_argument("--text-dir", default=DEFAULT_TEXT_DIR)
     ap.add_argument("--limit", type=int, default=0)
     args = ap.parse_args(argv)
-    report = run(args.data_dir, args.models_dir, limit=args.limit)
+    report = run(args.data_dir, args.models_dir, args.torch_dir, args.text_dir,
+                 limit=args.limit)
     jp = write_json(report)
     mp = write_md(report)
     print()
-    for n, _ in RUNGS:
+    for n in report.get("rung_order", []):
         b = report["rungs"].get(n, {})
         if b.get("status") != "available":
-            print(f"  {n:22s} unavailable")
+            print(f"  {n:24s} unavailable")
             continue
         ax = b["axes"]
-        print(f"  {n:22s} media_type={ax['media_type']['accuracy']} "
+        print(f"  {n:24s} media_type={ax['media_type']['accuracy']} "
               f"form_genres_F1={ax['content_form_genres']['macro_f1']} "
               f"CFrecall={b['content_filter']['recall']}")
     print(f"wrote {jp}\nwrote {mp}")

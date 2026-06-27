@@ -143,6 +143,74 @@ clf = OnnxMediaClassifier.from_path("data/models/context_ner")
 
 ---
 
+## Part C — Neural backend + custom architectures (PyTorch → ONNX)
+
+[`training/train_torch.py`](../training/train_torch.py) is the **neural** trainer.
+It produces the *same* self-describing bundle format as `train_sklearn.py` — one
+ONNX graph per axis + `meta.json` — so `OnnxMediaClassifier.from_path` loads a
+torch bundle **unchanged**. The difference is the model (a shared-trunk multi-task
+net) and the *features* (it can add char-hash text + trained word vectors that the
+sklearn ladder's binary flags can't express). The why/what + the full head-to-head
+comparison live in [model.md §7](model.md#7-neural-backend--richer-text-features-does-seeing-the-value-text-help);
+this is the how-to. `torch` + `gensim` ship in the `[train]` extra and are
+**train-only** — runtime stays `onnxruntime` + `numpy`.
+
+### 1. (optional) train the domain word vectors
+
+```bash
+python -m training.build_corpus            # data/{entities,relational,release} → data/wordvec/
+```
+
+Trains a `gensim` Word2Vec over every entity pool + relational record + utterance,
+and writes `wordvec.npy` (the matrix) + `wordvec_vocab.json`. Skip this if you only
+want the `cat` / `cat_text` variants (no word-vector block).
+
+### 2. train the neural variants
+
+```bash
+python -m training.train_torch             # data/release → data/models_torch/<variant>/
+python -m training.train_torch --variants cat cat_text --epochs 12
+```
+
+Each variant in `VARIANTS` trains the shared trunk on a different feature block and
+exports a bundle. The benchmark compares them with
+`python -m benchmarks.ladder` (which adds the `neural *` rungs automatically).
+
+### Add a custom architecture
+
+A variant is one dict entry in `VARIANTS` in
+[`train_torch.py`](../training/train_torch.py):
+
+```python
+VARIANTS["my_arch"] = {
+    "blocks": ("cat", "text", "wordvec"),  # any subset; drives the input dim
+    "hidden": [768, 512, 256],             # the shared-trunk layer widths
+    "residual": True,                      # skip-connections between equal widths
+}
+```
+
+`blocks` selects the feature families (`cat` = categorical, `text` = char-hash,
+`wordvec` = pooled word vectors); `build_features` assembles
+`[cat ⊕ text ⊕ wordvec]` and records the exact column order in `feature_names`.
+The trunk (`Trunk` in `_build_modules`) is a plain LayerNorm-MLP — change its body
+to try a different architecture (e.g. a learned char-embedding + attention pool):
+keep the `forward(x) -> z` shape so each axis head reads a fixed-width trunk
+output, and keep the per-axis `HeadExport` (trunk → head → softmax|sigmoid) so the
+export still emits the bundle's expected tensors. Everything else — multi-task
+loss, class weighting, early stop, ONNX export, the round-trip parity check — is
+architecture-agnostic and reused.
+
+The featurizer spec is written into `meta.json` (`text_hash` / `wordvec`) by
+`export_bundle`, so the runtime reproduces your exact input vector in numpy with no
+code change. To add a *new feature family*, write a numpy-only featurizer like
+[`features_text.py`](../ovos_media_classifier/features_text.py) /
+[`features_wordvec.py`](../ovos_media_classifier/features_wordvec.py) (a `*Spec`
+dataclass with `to_meta` / `from_meta` + `feature_names`), wire it into
+`build_features` (train) and `OnnxMediaClassifier._vectorize` (runtime), and record
+its spec in `meta.json`.
+
+---
+
 ## Add a NEW axis/head end-to-end
 
 Adding a new classification axis is a four-step change. Use the real function and

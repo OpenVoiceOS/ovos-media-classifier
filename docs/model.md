@@ -314,6 +314,123 @@ matching), so a missing language is under-served, not broken.
 
 ---
 
+## 7. Neural backend + richer text features (does seeing the value text help?)
+
+§6(a–b) names the load-bearing limitation: the categorical features encode *which
+cue/entity-label fired*, never the *value text*, so any axis whose ground truth
+lives in the slot value is under-determined. This section is the experiment that
+attacks that wall directly — two new feature families that **can** read the
+surface string, a neural (PyTorch → ONNX) trainer that consumes them, and a
+head-to-head benchmark against the sklearn ladder on the same held-out test split.
+
+### 7.1 Two text feature families (numpy-only at runtime)
+
+Both run at train time *and* inference from the same code, so a bundle stays
+self-describing — the spec goes in `meta.json` and the runtime rebuilds the exact
+vector in numpy (no torch, no gensim, no transformers):
+
+* **Hashed character n-grams** —
+  [`features_text.py`](../ovos_media_classifier/features_text.py). Char 3–5 grams
+  of the utterance → a fixed `dim` (default 4096) via the signed hashing trick,
+  L2-normalized. This *sees subwords*: `jazz`, `horror`, title fragments — the
+  exact tokens the binary flags drop. Spec (`dim` / ngram range / analyzer) is
+  recorded in `meta.json["text_hash"]`.
+* **Trained domain word vectors** —
+  [`features_wordvec.py`](../ovos_media_classifier/features_wordvec.py) +
+  [`training/build_corpus.py`](../training/build_corpus.py). A `gensim` Word2Vec
+  (skip-gram, dim 100) trained on the **full domain corpus**: every entity pool
+  (~4.35 M artist / track / album / movie / tv / anime / book / podcast / game
+  strings), the relational co-occurrence records (~1.17 M — each record's fields
+  joined so an artist, its album and its genre share a window), and the 347 k
+  utterances. The learned matrix captures media semantics the flags can't —
+  `jazz ≈ swing, reggae`; `horror ≈ thriller, mystery`; `rock ≈ punk, pop`. An
+  utterance is mean-pooled over its in-vocab token rows; the matrix is saved as a
+  pruned `.npy` (only tokens reachable from the dataset utterances) + a token→row
+  vocab in the bundle, and `meta.json["wordvec"]` records the pooling config.
+
+The model input becomes `[categorical ⊕ char-hash ⊕ word-vectors]`, any subset
+selectable per variant.
+
+### 7.2 The neural net —
+[`training/train_torch.py`](../training/train_torch.py)
+
+A **shared-trunk multi-task** net: featurizer → shared MLP trunk (LayerNorm +
+ReLU + dropout, optional residual skips) → one linear head per axis (softmax for
+single-label, sigmoid for multi-label). AdamW, class-weighting / `pos_weight` for
+the imbalanced axes, early-stop on mean val macro-F1, fixed seed. Each head exports
+as its **own** ONNX graph into the *existing* bundle format, so
+[`OnnxMediaClassifier`](../ovos_media_classifier/onnx.py) loads it unchanged — the
+only addition is reading the featurizer spec from `meta.json` to build the
+`txt_*` / `wv_*` blocks at runtime (categorical-only sklearn bundles are
+untouched, back-compat). torch→onnxruntime round-trip parity is verified at export
+(max |Δ| ≈ 1e-7 on the softmax outputs).
+
+### 7.3 The comparison (held-out test split, 34 700 utterances)
+
+Single-label **accuracy** / multi-label **macro-F1**, scored identically across
+rungs. `cat` is categorical-only (the neural counterpart of `sklearn context`);
+`+text` adds char-hash, `+wordvec` adds the trained word vectors, `+all` both,
+`(deep)` / `(wide)` are arch sweeps on `+all`. Full table + content-filter +
+latency + size in
+[`benchmarks/ladder_results.md`](../benchmarks/ladder_results.md).
+
+| axis | rules | sklearn ctx | sklearn ctx+NER | neural cat | neural cat+text | neural cat+wv | neural cat+all | cat+all (wide) |
+|---|---|---|---|---|---|---|---|---|
+| media_type (acc) | 0.663 | 0.786 | **0.967** | 0.787 | 0.972 | 0.965 | 0.975 | 0.974 |
+| playback_type | 0.717 | 0.895 | 0.990 | 0.887 | 0.987 | 0.984 | 0.988 | 0.988 |
+| structure | 0.738 | 0.908 | 0.992 | 0.833 | 0.985 | 0.978 | 0.986 | 0.986 |
+| content_form_genres (F1) | 0.720 | 0.729 | **0.979** | 0.510 | 0.858 | 0.717 | 0.875 | 0.876 |
+| tags (F1) | 0.000 | 0.561 | 0.596 | 0.511 | **0.800** | 0.528 | 0.762 | **0.840** |
+| qualifiers (F1) | 0.000 | 0.780 | 0.945 | 0.561 | 0.964 | 0.730 | 0.952 | 0.956 |
+| adult recall | 0.479 | 0.479 | 0.932 | 0.867 | 0.921 | **0.977** | 0.919 | 0.943 |
+| median ms | 0.43 | 0.23 | 0.22 | 0.16 | 6.29 | 0.62 | 6.10 | 16.1 |
+| bundle size | — | 380 KiB | 289 KiB | 1.3 MiB | 79 MiB | 42 MiB | 114 MiB | 204 MiB |
+
+### 7.4 Findings — honest
+
+**Does the char-hash text help? Emphatically yes, and it is the headline.** On the
+realistic *no-NER* inputs, adding char-hash to the categorical block lifts exactly
+the value-text-dependent axes §6(b) said were starved: `tags` 0.511 → **0.800**,
+`media_type` 0.787 → 0.972, `content_form_genres` 0.510 → 0.858, `qualifiers`
+0.561 → 0.964. Seeing subwords is what reads the genre / title / qualifier out of
+the surface string. This is the direct answer to §6(a–b): the wall was the
+representation, and a text-aware representation climbs it.
+
+**Do the trained domain word-vectors help?** On the *value-text* axes that depend
+on **semantics over an open vocabulary** they help most for the **content filter**:
+`+wordvec` gives the best adult recall of any rung (**0.977**, beating even the
+NER-oracle), because the embedding pulls unseen adult-domain titles/terms toward
+the blocked region. They lift `media_type` to 0.965 on raw text alone. But on
+`tags` (0.528) mean-pooling *underperforms* char-hash — pooling averages away the
+specific token that names the decade/mood, which the order-preserving char-hash
+keeps. So word-vectors buy **semantic generalization** (content safety, coarse
+type) more than fine descriptive precision.
+
+**Does neural beat sklearn?** *Not on the same features* — `neural cat` ≈
+`sklearn context` on `media_type` (0.787 vs 0.786) and is **worse** on the
+multi-label axes (content_form_genres 0.510 vs 0.729). A plain MLP buys nothing
+over a calibrated linear model on the binary flags. Neural wins **only because it
+unlocks the richer features**: a linear model cannot consume a 4096-dim hashed
+block as usefully, and the trunk lets all axes share that representation. The
+lift is the *features*, delivered through the net — not the net itself.
+
+**The honest caveat about `sklearn context+NER`.** It tops `media_type` (0.967)
+and `content_form_genres` (0.979) — but its `ner_*` columns are **ground-truth by
+construction** (set from the slot that filled the row, §1); it is a near-oracle
+that the runtime only realizes once a NER store is wired in. The neural text/wv
+rungs reach comparable accuracy reading **only the raw utterance**, which is what a
+fresh install actually sees — so for the out-of-the-box, no-NER deployment the
+char-hash neural bundle is the strongest realistic option.
+
+**Is it worth the size / latency?** That is the real tradeoff. Char-hash costs
+~6 ms/utterance (vs 0.2 ms sklearn) and a 79–204 MiB bundle — fine for a server,
+heavy for a Pi. Word-vectors are the **sweet spot for content safety**: 0.6 ms,
+42 MiB, best adult recall. The artifacts stay **local** (gitignored `data/`); the
+shipped default remains the lean zero-config keyword classifier, with these bundles
+an opt-in for deployments that can pay for the accuracy.
+
+---
+
 ## See also
 
 * [classification-model.md](classification-model.md) — why the output is
