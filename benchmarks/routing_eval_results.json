@@ -67,6 +67,135 @@
         "hit_n": 14,
         "recall": 0.5
       }
+    },
+    "embedding-router:embedding_router": {
+      "status": "available",
+      "reason": "",
+      "n": 186,
+      "mis_route_rate": 0.0,
+      "media_type": {
+        "confident_correct": 0,
+        "confident_wrong": 0,
+        "abstain": 114,
+        "n": 114,
+        "mis_route_rate": 0.0,
+        "abstain_rate": 1.0
+      },
+      "playback_type": {
+        "confident_correct": 0,
+        "confident_wrong": 0,
+        "abstain": 114,
+        "n": 114,
+        "mis_route_rate": 0.0,
+        "abstain_rate": 1.0
+      },
+      "gate": {
+        "false_hijack_n": 0,
+        "false_hijack_total": 44,
+        "false_hijack_rate": 0.0,
+        "false_miss_n": 142,
+        "false_miss_total": 142,
+        "false_miss_rate": 1.0
+      },
+      "adult_leak": {
+        "adult_total": 21,
+        "leak_n": 21,
+        "leak_rate": 1.0,
+        "clean_total": 165,
+        "overflag_n": 0,
+        "overflag_rate": 0.0
+      },
+      "control": {
+        "total": 28,
+        "hit_n": 0,
+        "recall": 0.0
+      }
+    },
+    "hybrid:embedding_router": {
+      "status": "available",
+      "reason": "",
+      "n": 186,
+      "mis_route_rate": 0.0351,
+      "media_type": {
+        "confident_correct": 61,
+        "confident_wrong": 4,
+        "abstain": 49,
+        "n": 114,
+        "mis_route_rate": 0.0351,
+        "abstain_rate": 0.4298
+      },
+      "playback_type": {
+        "confident_correct": 61,
+        "confident_wrong": 3,
+        "abstain": 50,
+        "n": 114,
+        "mis_route_rate": 0.0263,
+        "abstain_rate": 0.4386
+      },
+      "gate": {
+        "false_hijack_n": 10,
+        "false_hijack_total": 44,
+        "false_hijack_rate": 0.2273,
+        "false_miss_n": 16,
+        "false_miss_total": 142,
+        "false_miss_rate": 0.1127
+      },
+      "adult_leak": {
+        "adult_total": 21,
+        "leak_n": 0,
+        "leak_rate": 0.0,
+        "clean_total": 165,
+        "overflag_n": 0,
+        "overflag_rate": 0.0
+      },
+      "control": {
+        "total": 28,
+        "hit_n": 14,
+        "recall": 0.5
+      }
+    },
+    "hybrid+inject:embedding_router": {
+      "status": "available",
+      "reason": "",
+      "n": 186,
+      "mis_route_rate": 0.0263,
+      "media_type": {
+        "confident_correct": 83,
+        "confident_wrong": 3,
+        "abstain": 28,
+        "n": 114,
+        "mis_route_rate": 0.0263,
+        "abstain_rate": 0.2456
+      },
+      "playback_type": {
+        "confident_correct": 81,
+        "confident_wrong": 4,
+        "abstain": 29,
+        "n": 114,
+        "mis_route_rate": 0.0351,
+        "abstain_rate": 0.2544
+      },
+      "gate": {
+        "false_hijack_n": 10,
+        "false_hijack_total": 44,
+        "false_hijack_rate": 0.2273,
+        "false_miss_n": 16,
+        "false_miss_total": 142,
+        "false_miss_rate": 0.1127
+      },
+      "adult_leak": {
+        "adult_total": 21,
+        "leak_n": 0,
+        "leak_rate": 0.0,
+        "clean_total": 165,
+        "overflag_n": 0,
+        "overflag_rate": 0.0
+      },
+      "control": {
+        "total": 28,
+        "hit_n": 14,
+        "recall": 0.5
+      }
     }
   }
 }

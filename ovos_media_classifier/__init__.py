@@ -50,6 +50,10 @@ from ovos_media_classifier.intents import (
     genres_for_label,
 )
 from ovos_media_classifier.keyword import KeywordMediaClassifier
+from ovos_media_classifier.embedding import (
+    EmbeddingMediaClassifier,
+    HybridMediaClassifier,
+)
 from ovos_media_classifier.slots import (
     KeywordFeatureSlot,
     KEYWORD_FEATURE_SLOTS,
@@ -79,6 +83,8 @@ __all__ = [
     "NER_LABEL_TO_GENRES",
     "genres_for_label",
     "KeywordMediaClassifier",
+    "EmbeddingMediaClassifier",
+    "HybridMediaClassifier",
     "KeywordFeatureSlot",
     "KEYWORD_FEATURE_SLOTS",
     "slot_for_label",
@@ -145,6 +151,45 @@ def load_media_classifier(
         except Exception as e:
             LOG.warning(
                 f"Failed to load ONNX media classifier from {onnx_model!r}: {e}. "
+                "Falling back to the keyword classifier."
+            )
+
+    # Optional embedding-router backend — the learned guided-categorical
+    # -embeddings router.  ``media_classifier_embedding_router`` is a bundle dir
+    # (``router_meta.json`` + per-axis sub-dirs).  By default it is wired as a
+    # *hybrid*: the keyword backend stays the high-precision first pass (gate +
+    # adult lexicon) and the router fills the keyword-less cases, abstaining to
+    # GENERIC when unsure (never regressing adult-leak / false-hijack).  Set
+    # ``media_classifier_embedding_router_hybrid=False`` for the router alone.
+    # ``media_classifier_entity_library`` ({label: [titles]}) injects the user's
+    # own media library at runtime (no retraining) so bare titles route. Numpy +
+    # onnxruntime only (the ``[onnx]`` extra); falls through to keyword on any
+    # failure so the zero-ML default is always preserved.
+    router_bundle = config.get("media_classifier_embedding_router")
+    if router_bundle:
+        try:
+            hybrid = config.get("media_classifier_embedding_router_hybrid", True)
+            if hybrid:
+                from ovos_media_classifier.embedding import HybridMediaClassifier
+                clf = HybridMediaClassifier.from_path(router_bundle)
+            else:
+                from ovos_media_classifier.embedding import EmbeddingMediaClassifier
+                clf = EmbeddingMediaClassifier.from_path(router_bundle)
+            library = config.get("media_classifier_entity_library")
+            if library:
+                clf.register_user_library(library)
+            LOG.info(f"OCP media classifier: embedding router "
+                     f"({'hybrid' if hybrid else 'standalone'}, {router_bundle})")
+            return clf
+        except ImportError as e:
+            LOG.warning(
+                f"Embedding router requested but onnxruntime/numpy are not "
+                f"installed ({e}). Install the 'onnx' extra. "
+                "Falling back to the keyword classifier."
+            )
+        except Exception as e:
+            LOG.warning(
+                f"Failed to load embedding router from {router_bundle!r}: {e}. "
                 "Falling back to the keyword classifier."
             )
 
