@@ -68,3 +68,11 @@ any good short films around?
 the award-winning short {short_film_title}
 a short film while i wait
 an animated short because i only have a minute
+<lead_watch> a short film based on {book_title}
+<lead_watch> a short film adaptation of {book_title}
+<lead_watch> a short film based on the story {book_title}
+<lead_watch> a short film prequel to {movie_title}
+<lead_watch> a short film set in the world of {movie_title}
+<lead_watch> a short film about {artist_name}
+<lead_watch> a short film by the director {movie_director}
+<lead_watch> an animated short based on the comic {comic_title}

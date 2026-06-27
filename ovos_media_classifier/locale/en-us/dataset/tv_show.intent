@@ -98,3 +98,52 @@ the {tv_genre} one on {tv_network}
 <lead_watch> the {comic_title} series
 <lead_watch> a series based on the comic {comic_title}
 <lead_watch> the show adapted from {comic_title}
+<lead_watch> a series based on {book_title}
+<lead_watch> a series based on {movie_title}
+<lead_watch> a series based on {game_title}
+<lead_watch> a series based on {comic_title}
+<lead_watch> a series based on {podcast_title}
+<lead_watch> a show based on {book_title}
+<lead_watch> a show based on {movie_title}
+<lead_watch> a show based on {game_title}
+<lead_watch> a show based on {comic_title}
+<lead_watch> a show based on {podcast_title}
+<lead_watch> a tv series based on {movie_title}
+<lead_watch> a tv series based on {game_title}
+<lead_watch> a tv series based on {comic_title}
+<lead_watch> a tv series based on {podcast_title}
+<lead_watch> a series adapted from {book_title}
+<lead_watch> a series adapted from {movie_title}
+<lead_watch> a series adapted from {game_title}
+<lead_watch> a series adapted from {comic_title}
+<lead_watch> a series adapted from {podcast_title}
+<lead_watch> a tv adaptation of {book_title}
+<lead_watch> a tv adaptation of {movie_title}
+<lead_watch> a tv adaptation of {game_title}
+<lead_watch> a tv adaptation of {comic_title}
+<lead_watch> a tv adaptation of {podcast_title}
+<lead_watch> the series version of {book_title}
+<lead_watch> the series version of {movie_title}
+<lead_watch> the series version of {game_title}
+<lead_watch> the series version of {comic_title}
+<lead_watch> the series version of {podcast_title}
+<lead_watch> a show inspired by {book_title}
+<lead_watch> a show inspired by {movie_title}
+<lead_watch> a show inspired by {game_title}
+<lead_watch> a show inspired by {comic_title}
+<lead_watch> a show inspired by {podcast_title}
+<lead_watch> a tv series based on the novel {book_title}
+<lead_watch> a tv adaptation of the novel {book_title}
+<lead_watch> a show based on a {book_author} novel
+<lead_watch> a show based on the film {movie_title}
+<lead_watch> a tv adaptation of the podcast {podcast_title}
+<lead_watch> a show based on the podcast {podcast_title}
+<lead_watch> a series about {artist_name}
+<lead_watch> a docuseries about {artist_name}
+<lead_watch> a docuseries about {movie_actor}
+<lead_watch> a series about the making of {movie_title}
+<lead_watch> a show about the band {artist_name}
+<lead_watch> a show featuring {movie_actor}
+<lead_watch> a series directed by {movie_director}
+<lead_watch> a show written by {movie_writer}
+<lead_watch> a series about the author {book_author}

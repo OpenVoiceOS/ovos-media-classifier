@@ -105,3 +105,29 @@ a graphic novel to relax with
 <lead_read> the {anime_title} manga
 <lead_read> the manga the anime {anime_title} is based on
 <lead_read> the graphic novel adaptation of {book_title}
+<lead_read> the {book_title} comic
+<lead_read> the {anime_title} comic
+<lead_read> a comic based on {tv_show_title}
+<lead_read> a comic based on {game_title}
+<lead_read> a comic based on {book_title}
+<lead_read> a comic based on {anime_title}
+<lead_read> the graphic novel adaptation of {tv_show_title}
+<lead_read> the graphic novel adaptation of {game_title}
+<lead_read> the graphic novel adaptation of {anime_title}
+<lead_read> the graphic novel based on {movie_title}
+<lead_read> the graphic novel based on {tv_show_title}
+<lead_read> the graphic novel based on {game_title}
+<lead_read> the graphic novel based on {book_title}
+<lead_read> the graphic novel based on {anime_title}
+<lead_read> a manga based on {movie_title}
+<lead_read> a manga based on {tv_show_title}
+<lead_read> a manga based on {game_title}
+<lead_read> a manga based on {book_title}
+<lead_read> a manga based on {anime_title}
+<lead_read> a comic based on the movie {movie_title}
+<lead_read> the official comic of {game_title}
+<lead_read> the tie-in comic for {movie_title}
+<lead_read> a comic adaptation of the novel {book_title}
+<lead_read> a comic about {artist_name}
+<lead_read> a graphic novel biography of {artist_name}
+<lead_read> a comic written by {movie_writer}

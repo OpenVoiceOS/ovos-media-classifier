@@ -81,3 +81,44 @@ a {podcast_genre} podcast because i'm bored
 <lead_play_audio> a podcast about the game {game_title}
 <lead_play_audio> a podcast discussing the album {album_name}
 <lead_play_audio> a podcast about the show {tv_show_title}
+<lead_play_audio> a podcast about {movie_actor}
+<lead_play_audio> a podcast featuring {movie_actor}
+<lead_play_audio> an interview with {movie_actor}
+<lead_play_audio> a podcast interview with {movie_actor}
+<lead_play_audio> a podcast about {movie_director}
+<lead_play_audio> a podcast with {movie_director}
+<lead_play_audio> a podcast featuring {movie_director}
+<lead_play_audio> an interview with {movie_director}
+<lead_play_audio> a podcast interview with {movie_director}
+<lead_play_audio> a podcast episode interviewing {movie_director}
+<lead_play_audio> a podcast with {artist_name}
+<lead_play_audio> a podcast featuring {artist_name}
+<lead_play_audio> an interview with {artist_name}
+<lead_play_audio> a podcast interview with {artist_name}
+<lead_play_audio> a podcast episode interviewing {artist_name}
+<lead_play_audio> a podcast about {book_author}
+<lead_play_audio> a podcast with {book_author}
+<lead_play_audio> a podcast featuring {book_author}
+<lead_play_audio> an interview with {book_author}
+<lead_play_audio> a podcast episode interviewing {book_author}
+<lead_play_audio> a podcast about {movie_writer}
+<lead_play_audio> a podcast with {movie_writer}
+<lead_play_audio> a podcast featuring {movie_writer}
+<lead_play_audio> an interview with {movie_writer}
+<lead_play_audio> a podcast interview with {movie_writer}
+<lead_play_audio> a podcast episode interviewing {movie_writer}
+<lead_play_audio> a podcast about the movie {movie_title}
+<lead_play_audio> a podcast discussing the film {movie_title}
+<lead_play_audio> a podcast recapping {tv_show_title}
+<lead_play_audio> a podcast recapping the show {tv_show_title}
+<lead_play_audio> a podcast about the video game {game_title}
+<lead_play_audio> a podcast about the book {book_title}
+<lead_play_audio> a book club podcast about {book_title}
+<lead_play_audio> a podcast about the album {album_name}
+<lead_play_audio> a podcast about the band {artist_name}
+<lead_play_audio> a podcast about the anime {anime_title}
+<lead_play_audio> a podcast about the comic {comic_title}
+<lead_play_audio> a podcast about {music_genre}
+<lead_play_audio> a podcast about the history of {music_genre}
+<lead_play_audio> a podcast hosted by {movie_actor}
+<lead_play_audio> a true crime podcast about {movie_title}

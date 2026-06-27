@@ -102,3 +102,25 @@ a {game_genre} game on {game_platform}, please
 <lead_game> a game based on the comic {comic_title}
 <lead_game> a game featuring {movie_actor}
 <lead_game> the official {movie_title} tie-in game
+<lead_game> a game based on {book_title}
+<lead_game> a game based on {tv_show_title}
+<lead_game> a game based on {anime_title}
+<lead_game> a game based on {comic_title}
+<lead_game> the game adaptation of {book_title}
+<lead_game> the game adaptation of {tv_show_title}
+<lead_game> the game adaptation of {anime_title}
+<lead_game> the game adaptation of {comic_title}
+<lead_game> a video game based on {movie_title}
+<lead_game> a video game based on {book_title}
+<lead_game> a video game based on {tv_show_title}
+<lead_game> a video game based on {anime_title}
+<lead_game> a video game based on {comic_title}
+<lead_game> a game inspired by {movie_title}
+<lead_game> a game inspired by {book_title}
+<lead_game> a game inspired by {tv_show_title}
+<lead_game> a game inspired by {anime_title}
+<lead_game> a game inspired by {comic_title}
+<lead_game> the official tie-in game for {tv_show_title}
+<lead_game> a game with the voice of {movie_actor}
+<lead_game> a game with a soundtrack by {movie_composer}
+<lead_game> a game written by {book_author}

@@ -73,3 +73,9 @@ any visual stories around?
 the {visual_story_title} motion comic, please
 a visual story to wind down with
 an illustrated story because i'm tired of reading
+<lead_read> a webcomic based on {book_title}
+<lead_read> a visual story based on the game {game_title}
+<lead_read> a visual story based on the movie {movie_title}
+<lead_read> a webtoon based on the anime {anime_title}
+<lead_read> a visual novel based on {book_title}
+<lead_read> a motion comic adaptation of {movie_title}

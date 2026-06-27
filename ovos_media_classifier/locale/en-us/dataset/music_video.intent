@@ -76,3 +76,9 @@ the {track_name} music video, please
 <lead_watch> the official music video of {track_name}
 <lead_watch> the video clip for {track_name}
 <lead_watch> the music video off the album {album_name}
+<lead_watch> the music video for a song off {album_name}
+<lead_watch> the video for the single {track_name}
+<lead_watch> the lyric video for {track_name}
+<lead_watch> the visualizer for {track_name}
+<lead_watch> the music video featuring {movie_actor}
+<lead_watch> a music video directed by {movie_director}

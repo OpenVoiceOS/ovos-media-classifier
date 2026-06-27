@@ -74,3 +74,15 @@ something by {audiobook_author} because i can't sleep
 <lead_play_audio> the audiobook memoir of {movie_actor}
 <lead_play_audio> {movie_actor} reading their memoir
 <lead_play_audio> the audiobook autobiography of {artist_name}
+<lead_play_audio> {book_title} as an audiobook
+<lead_play_audio> the audiobook edition of {book_title}
+<lead_play_audio> the audiobook edition of {movie_title}
+<lead_play_audio> the audiobook written by {book_author}
+<lead_play_audio> the audiobook biography of {artist_name}
+<lead_play_audio> the memoir of {movie_director} as an audiobook
+<lead_play_audio> the audiobook narrated by {movie_actor}
+<lead_play_audio> an audiobook read by {movie_actor}
+<lead_play_audio> the audiobook of the biography of {artist_name}
+<lead_play_audio> the audiobook novelization of {movie_title}
+<lead_play_audio> the unabridged audiobook of {book_title}
+<lead_play_audio> the audiobook of the memoir of {podcast_host}
