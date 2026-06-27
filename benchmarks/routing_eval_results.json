@@ -67,6 +67,11 @@
         "hit_n": 14,
         "recall": 0.5
       },
+      "resolved": {
+        "total": 73,
+        "resolved_n": 22,
+        "rate": 0.3014
+      },
       "latency": null
     },
     "onnx:models/context": {
@@ -110,6 +115,11 @@
         "total": 28,
         "hit_n": 0,
         "recall": 0.0
+      },
+      "resolved": {
+        "total": 73,
+        "resolved_n": 24,
+        "rate": 0.3288
       },
       "latency": null
     },
@@ -155,6 +165,11 @@
         "hit_n": 0,
         "recall": 0.0
       },
+      "resolved": {
+        "total": 73,
+        "resolved_n": 17,
+        "rate": 0.2329
+      },
       "latency": null
     },
     "onnx:models_text/tfidf_char35": {
@@ -198,6 +213,11 @@
         "total": 28,
         "hit_n": 0,
         "recall": 0.0
+      },
+      "resolved": {
+        "total": 73,
+        "resolved_n": 37,
+        "rate": 0.5068
       },
       "latency": null
     },
@@ -243,6 +263,11 @@
         "hit_n": 0,
         "recall": 0.0
       },
+      "resolved": {
+        "total": 73,
+        "resolved_n": 34,
+        "rate": 0.4658
+      },
       "latency": null
     },
     "onnx:models_text/tfidf_word13": {
@@ -286,6 +311,11 @@
         "total": 28,
         "hit_n": 0,
         "recall": 0.0
+      },
+      "resolved": {
+        "total": 73,
+        "resolved_n": 34,
+        "rate": 0.4658
       },
       "latency": null
     },
@@ -331,6 +361,11 @@
         "hit_n": 0,
         "recall": 0.0
       },
+      "resolved": {
+        "total": 73,
+        "resolved_n": 34,
+        "rate": 0.4658
+      },
       "latency": null
     },
     "onnx:models_torch/cat_all": {
@@ -374,6 +409,11 @@
         "total": 28,
         "hit_n": 0,
         "recall": 0.0
+      },
+      "resolved": {
+        "total": 73,
+        "resolved_n": 34,
+        "rate": 0.4658
       },
       "latency": null
     },
@@ -419,6 +459,11 @@
         "hit_n": 0,
         "recall": 0.0
       },
+      "resolved": {
+        "total": 73,
+        "resolved_n": 35,
+        "rate": 0.4795
+      },
       "latency": null
     },
     "onnx:models_torch/cat_all_wide": {
@@ -462,6 +507,11 @@
         "total": 28,
         "hit_n": 0,
         "recall": 0.0
+      },
+      "resolved": {
+        "total": 73,
+        "resolved_n": 34,
+        "rate": 0.4658
       },
       "latency": null
     },
@@ -507,6 +557,11 @@
         "hit_n": 0,
         "recall": 0.0
       },
+      "resolved": {
+        "total": 73,
+        "resolved_n": 42,
+        "rate": 0.5753
+      },
       "latency": null
     },
     "onnx:models_torch/cat_wordvec": {
@@ -550,6 +605,11 @@
         "total": 28,
         "hit_n": 0,
         "recall": 0.0
+      },
+      "resolved": {
+        "total": 73,
+        "resolved_n": 41,
+        "rate": 0.5616
       },
       "latency": null
     },
@@ -595,6 +655,11 @@
         "hit_n": 0,
         "recall": 0.0
       },
+      "resolved": {
+        "total": 73,
+        "resolved_n": 33,
+        "rate": 0.4521
+      },
       "latency": null
     },
     "embedding-router:embedding_router": {
@@ -638,6 +703,11 @@
         "total": 28,
         "hit_n": 0,
         "recall": 0.0
+      },
+      "resolved": {
+        "total": 73,
+        "resolved_n": 0,
+        "rate": 0.0
       },
       "latency": null
     },
@@ -683,28 +753,33 @@
         "hit_n": 14,
         "recall": 0.5
       },
+      "resolved": {
+        "total": 73,
+        "resolved_n": 22,
+        "rate": 0.3014
+      },
       "latency": null
     },
     "hybrid+gazetteer:embedding_router": {
       "status": "available",
       "reason": "",
       "n": 186,
-      "mis_route_rate": 0.0526,
+      "mis_route_rate": 0.0351,
       "media_type": {
-        "confident_correct": 79,
-        "confident_wrong": 6,
-        "abstain": 29,
+        "confident_correct": 77,
+        "confident_wrong": 4,
+        "abstain": 33,
         "n": 114,
-        "mis_route_rate": 0.0526,
-        "abstain_rate": 0.2544
+        "mis_route_rate": 0.0351,
+        "abstain_rate": 0.2895
       },
       "playback_type": {
-        "confident_correct": 79,
-        "confident_wrong": 5,
-        "abstain": 30,
+        "confident_correct": 77,
+        "confident_wrong": 3,
+        "abstain": 34,
         "n": 114,
-        "mis_route_rate": 0.0439,
-        "abstain_rate": 0.2632
+        "mis_route_rate": 0.0263,
+        "abstain_rate": 0.2982
       },
       "gate": {
         "false_hijack_n": 10,
@@ -726,6 +801,11 @@
         "total": 28,
         "hit_n": 14,
         "recall": 0.5
+      },
+      "resolved": {
+        "total": 73,
+        "resolved_n": 38,
+        "rate": 0.5205
       },
       "latency": null
     },
@@ -770,6 +850,11 @@
         "total": 28,
         "hit_n": 14,
         "recall": 0.5
+      },
+      "resolved": {
+        "total": 73,
+        "resolved_n": 45,
+        "rate": 0.6164
       },
       "latency": null
     }
@@ -898,28 +983,12 @@
         "note": "binge verb + series"
       },
       {
-        "utterance": "put on naruto",
-        "expected": "episodic_series",
-        "was": "generic",
-        "now": "episodic_series",
-        "category": "keywordless",
-        "note": "anime title bare"
-      },
-      {
         "utterance": "play me something by hans zimmer",
         "expected": "music",
         "was": "generic",
         "now": "music",
         "category": "media",
         "note": "composer, music implied"
-      },
-      {
-        "utterance": "play the simpsons season 5",
-        "expected": "episodic_series",
-        "was": "generic",
-        "now": "episodic_series",
-        "category": "media",
-        "note": "season modifier => episodic"
       }
     ]
   }

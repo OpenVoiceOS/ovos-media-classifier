@@ -55,6 +55,13 @@ Metrics (all "GENERIC == safe")
   provider.  Reported as its own headline, weighted highest.
 * **media_type** confident-wrong vs abstain, and **playback_type** confident-wrong
   vs abstain — the routing axes broken out.
+* **resolved_rate** — over the ``abstain_ok`` play-cases (open-vocab: a bare title
+  where GENERIC/abstain is an *acceptable* answer, so mis-route can never credit a
+  win there), the fraction the backend turned into the CORRECT confident route.
+  This is the gazetteer / entity-injection VALUE metric: mis-route (GENERIC=safe)
+  cannot reward turning an abstain into a correct answer, so a layer's open-vocab
+  wins are invisible to it.  ``resolved_rate`` makes them visible — a clean win is
+  mis-route NOT WORSE *and* resolved_rate HIGHER than the cheaper layer.
 
 Usage::
 
@@ -214,6 +221,10 @@ class BackendReport:
     # control
     control_total: int = 0
     control_hit_n: int = 0          # control cases routed to ocp_control
+    # open-vocab resolution (the gazetteer / entity-injection value metric):
+    # abstain_ok play-cases the backend turned into a CORRECT confident route.
+    resolved_total: int = 0         # abstain_ok play-cases with a concrete type
+    resolved_n: int = 0             # of those, routed correctly + confidently
     n: int = 0
     # per-utterance predictions (for cross-layer fix attribution)
     preds: Dict[str, "Pred"] = field(default_factory=dict)
@@ -254,6 +265,16 @@ class BackendReport:
     @property
     def control_recall(self) -> float:
         return self.control_hit_n / self.control_total if self.control_total else 0.0
+
+    @property
+    def resolved_rate(self) -> float:
+        """Fraction of open-vocab (abstain_ok) play-cases routed correctly.
+
+        The complement of the harm metric: where mis-route credits "abstain is
+        safe", this credits "abstain turned into the right answer" — the
+        open-vocab value a richer layer (gazetteer / injected library) adds.
+        """
+        return self.resolved_n / self.resolved_total if self.resolved_total else 0.0
 
     def as_dict(self) -> dict:
         return {
@@ -297,6 +318,11 @@ class BackendReport:
                 "total": self.control_total,
                 "hit_n": self.control_hit_n,
                 "recall": round(self.control_recall, 4),
+            },
+            "resolved": {
+                "total": self.resolved_total,
+                "resolved_n": self.resolved_n,
+                "rate": round(self.resolved_rate, 4),
             },
             "latency": self.latency_summary(),
         }
@@ -350,6 +376,16 @@ def evaluate(clf, cases: List[Case], name: str,
         # Only score the leaf where there is a concrete expected type to route
         # to (skip control / not_ocp / noise — those have no media leaf).
         if c.domain == "ocp_play" and c.media_type not in ABSTAIN_TYPES:
+            # ---- open-vocab resolution (the gazetteer / injection value) ------
+            # abstain_ok cases are the ones the harm metric can never credit a
+            # win on (GENERIC is an accepted answer there).  Count how many a
+            # backend turns into the CORRECT confident route.
+            if c.abstain_ok:
+                rep.resolved_total += 1
+                if (p.media_type not in ABSTAIN_TYPES
+                        and p.media_type == c.media_type):
+                    rep.resolved_n += 1
+
             predicted_abstain = p.media_type in ABSTAIN_TYPES
             if predicted_abstain:
                 rep.media_type.add_abstain()       # safe (providers still search)
@@ -611,19 +647,25 @@ def write_md(report: dict, path: str = RESULTS_MD) -> str:
         "(harmless).\n")
 
     lines.append("## Headline\n")
-    lines.append("| backend | mis-route | adult-leak | false-hijack | false-miss | control recall | latency med/p95 |")
-    lines.append("|---|---|---|---|---|---|---|")
+    lines.append(
+        "**mis-route** is the harm (GENERIC=safe); **resolved** is the open-vocab "
+        "win (abstain_ok cases turned into the CORRECT confident route). A clean "
+        "win over a cheaper layer is mis-route NOT WORSE *and* resolved HIGHER.\n")
+    lines.append("| backend | mis-route | resolved | adult-leak | false-hijack | false-miss | control recall | latency med/p95 |")
+    lines.append("|---|---|---|---|---|---|---|---|")
     for name, b in report["backends"].items():
         if b.get("status") != "available":
-            lines.append(f"| {name} | unavailable | – | – | – | – | – |")
+            lines.append(f"| {name} | unavailable | – | – | – | – | – | – |")
             continue
         g = b["gate"]; a = b["adult_leak"]; c = b["control"]
+        rz = b.get("resolved", {"rate": 0.0, "resolved_n": 0, "total": 0})
         lat = b.get("latency")
         lat_s = (f"{lat['median_ms']:.0f}/{lat['p95_ms']:.0f} ms"
                  if lat else "–")
         lines.append(
             f"| {name} | **{b['mis_route_rate']:.3f}** "
             f"({b['media_type']['confident_wrong']}/{b['media_type']['n']}) | "
+            f"**{rz['rate']:.3f}** ({rz['resolved_n']}/{rz['total']}) | "
             f"**{a['leak_rate']:.3f}** ({a['leak_n']}/{a['adult_total']}) | "
             f"{g['false_hijack_rate']:.3f} ({g['false_hijack_n']}/{g['false_hijack_total']}) | "
             f"{g['false_miss_rate']:.3f} ({g['false_miss_n']}/{g['false_miss_total']}) | "
@@ -755,7 +797,9 @@ def main(argv: Optional[List[str]] = None) -> int:
         if b.get("status") != "available":
             print(f"  {name:28s} UNAVAILABLE: {b['reason']}")
             continue
+        rz = b.get("resolved", {"rate": 0.0})
         print(f"  {name:28s} mis-route={b['mis_route_rate']:.3f} "
+              f"resolved={rz['rate']:.3f} "
               f"adult-leak={b['adult_leak']['leak_rate']:.3f} "
               f"hijack={b['gate']['false_hijack_rate']:.3f} "
               f"miss={b['gate']['false_miss_rate']:.3f} "

@@ -103,6 +103,91 @@ class TestGazetteerLoad(unittest.TestCase):
                           or "hentai" in l])
 
 
+class TestGazetteerAmbiguityAbstain(unittest.TestCase):
+    """Cross-media-ambiguous titles (in >1 type pool) must ABSTAIN, not mis-route."""
+
+    def test_cross_pool_titles_detected(self):
+        gaz = {
+            "movie_title": ["Dune", "Interstellar"],
+            "book_title": ["Dune", "Moby Dick"],
+            "tv_show_title": ["Moby Dick", "Severance"],
+        }
+        cp = gz.cross_pool_titles(gaz)
+        self.assertIn("dune", cp)
+        self.assertIn("moby dick", cp)
+        self.assertNotIn("interstellar", cp)
+        self.assertNotIn("severance", cp)
+        self.assertEqual(set(cp["dune"]), {"movie_title", "book_title"})
+
+    def test_load_drops_ambiguous_by_default(self):
+        tmp = tempfile.mkdtemp()
+        path = os.path.join(tmp, "gaz.json")
+        with open(path, "w", encoding="utf-8") as fh:
+            json.dump({
+                "movie_title": ["Dune", "Interstellar"],
+                "book_title": ["Dune", "Moby Dick"],
+            }, fh)
+        # default: ambiguous "Dune" dropped from BOTH pools, unique titles kept
+        loaded = gz.load_default_gazetteer(top_n=None, path=path)
+        self.assertNotIn("Dune", loaded.get("movie_title", []))
+        self.assertNotIn("Dune", loaded.get("book_title", []))
+        self.assertIn("Interstellar", loaded["movie_title"])
+        self.assertIn("Moby Dick", loaded["book_title"])
+
+    def test_load_keep_ambiguous_when_disabled(self):
+        tmp = tempfile.mkdtemp()
+        path = os.path.join(tmp, "gaz.json")
+        with open(path, "w", encoding="utf-8") as fh:
+            json.dump({"movie_title": ["Dune"], "book_title": ["Dune"]}, fh)
+        loaded = gz.load_default_gazetteer(top_n=None, path=path,
+                                           drop_ambiguous=False)
+        self.assertIn("Dune", loaded["movie_title"])
+        self.assertIn("Dune", loaded["book_title"])
+
+    def test_ambiguous_title_abstains_in_router(self):
+        # "Dune" is in movie + book pools → must abstain (GENERIC), not route
+        clf = _router([0.3, 0.3, 0.4], ["music", "movie", GENERIC],
+                      entity_labels=["movie_title", "book_title"])
+        tmp = tempfile.mkdtemp()
+        path = os.path.join(tmp, "gaz.json")
+        with open(path, "w", encoding="utf-8") as fh:
+            json.dump({"movie_title": ["Dune"], "book_title": ["Dune"]}, fh)
+        clf.register_default_gazetteer(path=path)
+        self.assertEqual(clf.classify("start dune", "en-us")[0], MediaType.GENERIC)
+
+    def test_ambiguous_beats_shorter_subspan(self):
+        # "Moby Dick" (ambiguous book/tv) must abstain even though the artist
+        # "Moby" is an unambiguous gazetteer entity that fires inside it.
+        clf = _router([0.3, 0.3, 0.4], ["music", "movie", GENERIC],
+                      entity_labels=["artist_name", "book_title", "tv_show_title"])
+        tmp = tempfile.mkdtemp()
+        path = os.path.join(tmp, "gaz.json")
+        with open(path, "w", encoding="utf-8") as fh:
+            json.dump({
+                "artist_name": ["Moby"],
+                "book_title": ["Moby Dick"],
+                "tv_show_title": ["Moby Dick"],
+            }, fh)
+        clf.register_default_gazetteer(path=path)
+        # "Moby" alone (unambiguous) still routes to MUSIC
+        self.assertEqual(clf.classify("play moby", "en-us")[0], MediaType.MUSIC)
+        # "Moby Dick" abstains (the longer ambiguous match wins → GENERIC)
+        self.assertEqual(clf.classify("play moby dick", "en-us")[0],
+                         MediaType.GENERIC)
+
+    def test_unambiguous_title_still_routes(self):
+        clf = _router([0.3, 0.3, 0.4], ["music", "movie", GENERIC],
+                      entity_labels=["anime_title", "movie_title"])
+        tmp = tempfile.mkdtemp()
+        path = os.path.join(tmp, "gaz.json")
+        with open(path, "w", encoding="utf-8") as fh:
+            json.dump({"anime_title": ["Cowboy Bebop"],
+                       "movie_title": ["Interstellar"]}, fh)
+        clf.register_default_gazetteer(path=path)
+        self.assertEqual(clf.classify("play cowboy bebop", "en-us")[0],
+                         MediaType.EPISODIC_SERIES)
+
+
 class TestGazetteerInjectionOffline(unittest.TestCase):
     """Injecting the gazetteer lets the router route a bare title with NO network."""
 
