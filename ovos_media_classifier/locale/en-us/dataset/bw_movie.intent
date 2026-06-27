@@ -69,3 +69,5 @@ any black and white films around?
 a black and white classic for a cozy night
 a monochrome film because i'm feeling nostalgic
 the old {bw_movie_title} in black and white
+<lead_watch> the black and white film based on {book_title}
+<lead_watch> a black and white movie based on the novel {book_title}

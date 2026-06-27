@@ -115,3 +115,50 @@ a {book_genre} novel because i can't sleep
 <lead_read> the novel based on the game {game_title}
 <lead_read> the companion book to {tv_show_title}
 <lead_read> a book written by {movie_writer}
+<lead_read> the biography of {movie_actor}
+<lead_read> {movie_actor}'s autobiography
+<lead_read> a book about {movie_actor}
+<lead_read> a biography of {movie_director}
+<lead_read> the biography of {movie_director}
+<lead_read> the memoir of {movie_director}
+<lead_read> {movie_director}'s memoir
+<lead_read> the autobiography of {movie_director}
+<lead_read> {movie_director}'s autobiography
+<lead_read> a book about {movie_director}
+<lead_read> the biography of {artist_name}
+<lead_read> the memoir of {artist_name}
+<lead_read> {artist_name}'s memoir
+<lead_read> the autobiography of {artist_name}
+<lead_read> a book about {artist_name}
+<lead_read> the biography of {podcast_host}
+<lead_read> {podcast_host}'s memoir
+<lead_read> the autobiography of {podcast_host}
+<lead_read> {podcast_host}'s autobiography
+<lead_read> a book about {podcast_host}
+<lead_read> a biography of {movie_writer}
+<lead_read> the biography of {movie_writer}
+<lead_read> the memoir of {movie_writer}
+<lead_read> {movie_writer}'s memoir
+<lead_read> the autobiography of {movie_writer}
+<lead_read> {movie_writer}'s autobiography
+<lead_read> a book about {movie_writer}
+<lead_read> a biography of {movie_composer}
+<lead_read> the biography of {movie_composer}
+<lead_read> the memoir of {movie_composer}
+<lead_read> {movie_composer}'s memoir
+<lead_read> the autobiography of {movie_composer}
+<lead_read> {movie_composer}'s autobiography
+<lead_read> a book about {movie_composer}
+<lead_read> the novelization of the film {movie_title}
+<lead_read> the novelization of the game {game_title}
+<lead_read> the {game_title} novel
+<lead_read> the novel based on the show {tv_show_title}
+<lead_read> the book that inspired {movie_title}
+<lead_read> the book {movie_title} is based on
+<lead_read> a book about the making of {movie_title}
+<lead_read> a book about the band {artist_name}
+<lead_read> a book about {music_genre}
+<lead_read> the official book of the show {tv_show_title}
+<lead_read> the art book for {game_title}
+<lead_read> a book about the director {movie_director}
+<lead_read> the biography of the band {artist_name}

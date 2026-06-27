@@ -73,3 +73,11 @@ is there a trailer for {trailer_title}
 the {trailer_title} preview because i'm curious
 some trailers to check out before bed
 the new {trailer_title} trailer everyone's talking about
+<lead_watch> the trailer for the show {tv_show_title}
+<lead_watch> the trailer for the game {game_title}
+<lead_watch> the trailer for the anime {anime_title}
+<lead_watch> the trailer for the movie based on {book_title}
+<lead_watch> the official trailer for {tv_show_title}
+<lead_watch> the reveal trailer for {game_title}
+<lead_watch> the launch trailer for {game_title}
+<lead_watch> the announcement trailer for {game_title}

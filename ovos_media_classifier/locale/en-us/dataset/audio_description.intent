@@ -65,3 +65,5 @@ we should watch {movie_title} described
 is there an accessible version of {movie_title}
 the described {movie_title} because i can't see the screen
 an audio described {movie_genre} film for the evening
+<lead_watch> the described version of {tv_show_title}
+<lead_watch> the described version of the show {tv_show_title}

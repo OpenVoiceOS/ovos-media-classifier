@@ -132,3 +132,54 @@ the {movie_genre} one directed by {movie_director}
 <lead_watch> a movie about the life of {artist_name}
 <lead_watch> the {artist_name} biopic
 <lead_watch> a film about the band {artist_name}
+<lead_watch> a movie based on {comic_title}
+<lead_watch> a movie based on {anime_title}
+<lead_watch> a film based on {book_title}
+<lead_watch> a film based on {tv_show_title}
+<lead_watch> a film based on {game_title}
+<lead_watch> a film based on {comic_title}
+<lead_watch> a film based on {anime_title}
+<lead_watch> a movie adapted from {book_title}
+<lead_watch> a movie adapted from {tv_show_title}
+<lead_watch> a movie adapted from {game_title}
+<lead_watch> a movie adapted from {comic_title}
+<lead_watch> a movie adapted from {anime_title}
+<lead_watch> a film adaptation of {book_title}
+<lead_watch> a film adaptation of {tv_show_title}
+<lead_watch> a film adaptation of {game_title}
+<lead_watch> a film adaptation of {comic_title}
+<lead_watch> a film adaptation of {anime_title}
+<lead_watch> an adaptation of {book_title}
+<lead_watch> an adaptation of {tv_show_title}
+<lead_watch> an adaptation of {game_title}
+<lead_watch> an adaptation of {comic_title}
+<lead_watch> an adaptation of {anime_title}
+<lead_watch> the movie version of {book_title}
+<lead_watch> the movie version of {game_title}
+<lead_watch> the movie version of {comic_title}
+<lead_watch> the movie version of {anime_title}
+<lead_watch> the film version of {book_title}
+<lead_watch> the film version of {tv_show_title}
+<lead_watch> the film version of {game_title}
+<lead_watch> the film version of {comic_title}
+<lead_watch> the film version of {anime_title}
+<lead_watch> a movie inspired by {book_title}
+<lead_watch> a movie inspired by {tv_show_title}
+<lead_watch> a movie inspired by {game_title}
+<lead_watch> a movie inspired by {comic_title}
+<lead_watch> a movie inspired by {anime_title}
+<lead_watch> a movie based on the book {book_title}
+<lead_watch> a film adapted from the novel {book_title}
+<lead_watch> a movie based on a book by {book_author}
+<lead_watch> a movie based on the show {tv_show_title}
+<lead_watch> a movie continuation of {tv_show_title}
+<lead_watch> a film based on the video game {game_title}
+<lead_watch> a film based on the graphic novel {comic_title}
+<lead_watch> the live action {comic_title} movie
+<lead_watch> a film adaptation of the manga {comic_title}
+<lead_watch> a biopic about {podcast_host}
+<lead_watch> a movie about {artist_name}
+<lead_watch> a film about the making of {album_name}
+<lead_watch> a movie inspired by the song {track_name}
+<lead_watch> a movie inspired by true events from {podcast_title}
+<lead_watch> the story of {artist_name} on screen

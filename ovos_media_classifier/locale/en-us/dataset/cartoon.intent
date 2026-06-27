@@ -74,3 +74,13 @@ the {cartoon_title} cartoon, please
 a cartoon to keep the kids busy
 some cartoons because it's saturday morning
 the old {cartoon_title} cartoon i used to watch
+<lead_watch> a cartoon based on {comic_title}
+<lead_watch> a cartoon based on the comic {comic_title}
+<lead_watch> the animated series based on {comic_title}
+<lead_watch> a cartoon based on the movie {movie_title}
+<lead_watch> the animated adaptation of {movie_title}
+<lead_watch> a cartoon based on the game {game_title}
+<lead_watch> a cartoon based on the book {book_title}
+<lead_watch> an animated series based on the novel {book_title}
+<lead_watch> the {comic_title} cartoon
+<lead_watch> the {movie_title} animated series

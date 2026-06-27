@@ -74,3 +74,24 @@ the new season of {anime_title}, please
 <lead_watch> an anime based on the novel {book_title}
 <lead_watch> the anime adaptation of {book_title}
 <lead_watch> an anime based on the movie {movie_title}
+<lead_watch> an anime based on {comic_title}
+<lead_watch> an anime based on {book_title}
+<lead_watch> an anime based on {game_title}
+<lead_watch> an anime based on {movie_title}
+<lead_watch> an anime adaptation of {comic_title}
+<lead_watch> an anime adaptation of {book_title}
+<lead_watch> an anime adaptation of {movie_title}
+<lead_watch> the anime version of {comic_title}
+<lead_watch> the anime version of {book_title}
+<lead_watch> the anime version of {game_title}
+<lead_watch> the anime version of {movie_title}
+<lead_watch> an anime inspired by {comic_title}
+<lead_watch> an anime inspired by {book_title}
+<lead_watch> an anime inspired by {game_title}
+<lead_watch> an anime inspired by {movie_title}
+<lead_watch> the {book_title} anime
+<lead_watch> the {movie_title} anime
+<lead_watch> the anime adaptation of the manga {comic_title}
+<lead_watch> an anime based on the light novel {book_title}
+<lead_watch> an anime based on the game {game_title}
+<lead_watch> the anime adaptation of the game {game_title}

@@ -47,3 +47,11 @@ what radio plays do you have
 is there an audio drama called {radio_drama_title}
 a {radio_genre} radio drama to wind down with
 an old time radio show because i'm nostalgic
+<lead_play_audio> a radio drama based on {book_title}
+<lead_play_audio> a radio play based on the novel {book_title}
+<lead_play_audio> a radio dramatization of {book_title}
+<lead_play_audio> a radio drama adaptation of {movie_title}
+<lead_play_audio> a radio play based on the comic {comic_title}
+<lead_play_audio> a radio drama written by {book_author}
+<lead_play_audio> an audio drama based on the game {game_title}
+<lead_play_audio> a radio play adaptation of {tv_show_title}

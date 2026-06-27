@@ -87,3 +87,13 @@ is there a gamebook called {game_title}
 a {game_genre} text adventure for the evening
 an interactive story because i can't sleep
 the classic text adventure {game_title}
+<lead_game> a text adventure based on {book_title}
+<lead_game> an interactive story based on the novel {book_title}
+<lead_game> a text adventure based on the movie {movie_title}
+<lead_game> an interactive fiction based on {movie_title}
+<lead_game> a gamebook based on {book_title}
+<lead_game> an interactive story based on the show {tv_show_title}
+<lead_game> a text adventure set in the world of {game_title}
+<lead_game> a text adventure based on the comic {comic_title}
+<lead_game> an interactive story written by {book_author}
+<lead_game> an interactive fiction adaptation of {book_title}

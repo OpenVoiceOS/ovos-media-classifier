@@ -52,3 +52,8 @@ the {news_category} news because i'm out of the loop
 the headlines while i make coffee
 my morning news from {news_provider}
 the {news_category} update for the commute
+<lead_tune> the news about {movie_title}
+<lead_tune> news coverage of the {game_title} launch
+<lead_tune> a news segment about {artist_name}
+<lead_tune> the latest news on {tv_show_title}
+<lead_tune> news about the new {movie_title} release

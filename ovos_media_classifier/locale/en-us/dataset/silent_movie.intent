@@ -68,3 +68,6 @@ any silent films around?
 a silent classic for the evening
 a silent comedy because i need to laugh
 the old {silent_movie_title} from the silent days
+<lead_watch> the silent film adaptation of {book_title}
+<lead_watch> a silent movie based on the novel {book_title}
+<lead_watch> a silent film based on the play {book_title}

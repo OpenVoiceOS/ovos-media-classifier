@@ -176,3 +176,28 @@ just {music_genre} for now
 <lead_play_audio> a film score by {movie_composer}
 <lead_play_audio> the score written by {movie_composer}
 <lead_play_audio> music for the movie scored by {movie_composer}
+<lead_play_audio> the score to {movie_title}
+<lead_play_audio> the score of {movie_title}
+<lead_play_audio> the opening theme of {movie_title}
+<lead_play_audio> the closing theme from {movie_title}
+<lead_play_audio> the {tv_show_title} soundtrack
+<lead_play_audio> the closing credits song from {tv_show_title}
+<lead_play_audio> the theme tune to {tv_show_title}
+<lead_play_audio> the score to {game_title}
+<lead_play_audio> the title theme from {game_title}
+<lead_play_audio> the ost of {game_title}
+<lead_play_audio> the boss music from {game_title}
+<lead_play_audio> the {anime_title} opening theme
+<lead_play_audio> the ending song of {anime_title}
+<lead_play_audio> the insert song from {anime_title}
+<lead_play_audio> a soundtrack by {movie_composer}
+<lead_play_audio> the {movie_composer} score
+<lead_play_audio> a song about {movie_actor}
+<lead_play_audio> a song inspired by {book_title}
+<lead_play_audio> a song based on the movie {movie_title}
+<lead_play_audio> a tribute to {movie_actor}
+<lead_play_audio> a cover of the theme from {movie_title}
+<lead_play_audio> a cover of the {tv_show_title} theme
+<lead_play_audio> music inspired by {book_title}
+<lead_play_audio> a concept album based on {book_title}
+<lead_play_audio> songs inspired by the game {game_title}
