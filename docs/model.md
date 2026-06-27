@@ -196,6 +196,33 @@ from `data/models/`. Until then the bundle lives only in the local gitignored
 
 ---
 
+## Pre-trained models (download)
+
+The trained bundles are published as a private Hugging Face collection,
+**[OpenVoiceOS / OCP Media Classification](https://huggingface.co/collections/OpenVoiceOS/ocp-media-classification-6a3f21707a3e55a062d0d8d8)**
+(token-gated), one repo per approach so you can pick the cost/quality point:
+
+| repo | approach | pick it for |
+|---|---|---|
+| `OpenVoiceOS/ovos-media-classifier-onnx-default` | sklearn, keyword + NER | **recommended default** — lean (289 KiB, 0.25 ms), best content-filter precision |
+| `OpenVoiceOS/ovos-media-classifier-onnx-keyword` | sklearn, keyword-only | works with zero registered entities |
+| `OpenVoiceOS/ovos-media-classifier-onnx-tfidf-char` | TF-IDF char n-grams → linear | best `media_type` (0.978), no entities needed |
+| `OpenVoiceOS/ovos-media-classifier-onnx-tfidf-word` | TF-IDF word n-grams → linear | best `tags` / genre·mood·era (0.93 F1) |
+| `OpenVoiceOS/ovos-media-classifier-onnx-neural-wordvec` | neural + domain word-vectors | best content-filter recall (adult/hentai 0.98) |
+| `OpenVoiceOS/ovos-media-classifier-onnx-neural` | neural, all features | balanced across axes |
+
+```python
+from huggingface_hub import snapshot_download
+from ovos_media_classifier.onnx import OnnxMediaClassifier
+path = snapshot_download("OpenVoiceOS/ovos-media-classifier-onnx-default", token="<hf_token>")
+clf = OnnxMediaClassifier.from_path(path)
+```
+
+All bundles are trained on [`TigreGotico/ocp-media-intents`](https://huggingface.co/datasets/TigreGotico/ocp-media-intents)
+and run on `onnxruntime`+`numpy` only.
+
+---
+
 ## 5. Benchmark
 
 Held-out **test split: 34,700 utterances**. Per axis, the lift across the three
