@@ -144,7 +144,7 @@ adult content-policy), where the error cost is asymmetric.
 
 | File | What it is |
 |---|---|
-| `benchmarks/routing_eval.jsonl` | The hand-curated, OOD eval set (186 cases). |
+| `benchmarks/routing_eval.jsonl` | The hand-curated, OOD eval set (222 cases). |
 | `benchmarks/routing_eval.py` | The harm-weighted harness (mis-route / false-hijack / false-miss / adult-leak). |
 | `benchmarks/routing_eval_results.{json,md}` | Results (regenerated each run). |
 
@@ -158,7 +158,7 @@ definitions, and an honest read of the baseline are in
 
 ### Routing eval set provenance
 
-The 186 cases in `routing_eval.jsonl` are **authored by hand** and every label
+The 222 cases in `routing_eval.jsonl` are **authored by hand** and every label
 was hand-checked against the [`mediavocab`](../ovos_media_classifier/intents.py)
 taxonomy and the routing semantics in `docs/routing-eval.md`. They are
 deliberately **out-of-distribution**: the phrasings do **not** reuse the
@@ -166,10 +166,14 @@ deliberately **out-of-distribution**: the phrasings do **not** reuse the
 people actually speak (elliptical, slang, typo'd, keyword-less bare titles), so
 the set measures *generalization*, not vocabulary coverage. Real titles/artists
 (the Matrix, Miles Davis, Bluey, Breaking Bad, …) are used as natural content.
-Languages: `en-us` (140) plus `es-es`, `de-de`, `pt-pt` (15–16 each, native
-phrasings). The set is small on purpose — **quality and OOD-ness over volume**;
-agentpipe (free agents only) can extend it later, but every generated label must
-still be hand-checked before it is added. No network is needed to run the eval.
+A dedicated **`conversational`** slice (36 cases) is the messy-spoken/ASR-style
+register — disfluencies (`um` / `uh` / `like`), elisions (`wanna` / `gimme` /
+`lemme` / `gonna`), and no punctuation — scored as its own slice in the results
+so the ASR-realism training can be measured directly. Languages: `en-us` (176)
+plus `es-es`, `de-de`, `pt-pt` (15–16 each, native phrasings). The set is small
+on purpose — **quality and OOD-ness over volume**; agentpipe (free agents only)
+can extend it later, but every generated label must still be hand-checked before
+it is added. No network is needed to run the eval.
 
 ## Plots
 

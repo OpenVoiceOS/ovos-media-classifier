@@ -692,6 +692,168 @@ def add_feature_columns(df: pd.DataFrame) -> pd.DataFrame:
 
 
 # ---------------------------------------------------------------------------
+# ASR-noise augmentation
+#
+# The templates expand to CLEAN, well-punctuated text.  Real ASR output is
+# lowercase, unpunctuated, run-on, and full of casual spoken elisions
+# (``wanna`` / ``gimme`` / ``lemme`` / ``gonna``) plus the occasional short-word
+# mishear.  A model trained only on the clean surface over-fits orthography it
+# will never see at inference.  This layer produces a **spoken/ASR-style variant**
+# of a configurable fraction of rows (KEEPING the clean rows too), so the trained
+# heads see real-ASR-like input as well.  The variant re-uses the row's labels
+# and provenance; only ``sentence`` changes (features are recomputed downstream).
+# ---------------------------------------------------------------------------
+
+# casual spoken contractions ASR transcribes verbatim ("want to" → "wanna").
+# Applied as whole-word replacements on the lowercased, de-punctuated text.
+_ELISIONS: Dict[str, str] = {
+    "want to": "wanna",
+    "wanna": "wanna",
+    "going to": "gonna",
+    "got to": "gotta",
+    "give me": "gimme",
+    "let me": "lemme",
+    "kind of": "kinda",
+    "sort of": "sorta",
+    "out of": "outta",
+    "a lot of": "alotta",
+    "don't": "dont",
+    "can't": "cant",
+    "won't": "wont",
+    "i'm": "im",
+    "i'll": "ill",
+    "you're": "youre",
+    "that's": "thats",
+    "what's": "whats",
+    "let's": "lets",
+    "could you": "couldya",
+    "would you": "wouldya",
+    "did you": "didya",
+    "what is": "whats",
+    "i would": "id",
+    "i have": "ive",
+}
+
+# light homophone / near-homophone mishears ASR commonly produces on short
+# function words (kept conservative so the LABEL stays valid — never touches
+# content nouns).
+_HOMOPHONES: Dict[str, str] = {
+    "to": "too",
+    "for": "four",
+    "your": "you're",
+    "their": "there",
+    "than": "then",
+    "of": "uh",
+    "and": "an",
+}
+
+# spoken disfluency lead-ins ASR keeps verbatim.
+_DISFLUENCIES = ("um", "uh", "like", "so", "yeah", "okay so", "hmm")
+
+_PUNCT_RE = re.compile(r"[^\w\s']")
+_WS_RE = re.compile(r"\s+")
+
+
+def asr_noise(sentence: str, rng: random.Random) -> str:
+    """Return a spoken/ASR-style variant of ``sentence``.
+
+    Pipeline (each step probabilistic so variants stay diverse):
+      1. lowercase + strip punctuation (every ASR variant)
+      2. apply casual elisions (wanna / gimme / lemme / gonna …)
+      3. occasionally drop a leading filler/courtesy ("please", "could you")
+         or PREPEND a spoken disfluency ("um", "like")
+      4. light homophone mishear on a single function word
+      5. collapse whitespace into a run-on
+
+    The transformation never edits a slot-value token (it only touches the
+    function-word layer), so the row's labels remain ground truth.
+    """
+    s = sentence.lower()
+    s = _PUNCT_RE.sub(" ", s)          # drop punctuation (ASR has none)
+    s = _WS_RE.sub(" ", s).strip()
+
+    # 2. casual elisions (longest phrases first so "want to" beats "to")
+    for src in sorted(_ELISIONS, key=len, reverse=True):
+        if src in s:
+            s = re.sub(rf"\b{re.escape(src)}\b", _ELISIONS[src], s)
+
+    words = s.split()
+
+    # 3a. drop a leading courtesy filler some of the time (spoken commands are
+    #     terser than the templated lead-ins).
+    _LEAD_FILLERS = {"please", "hey", "ok", "okay", "yo"}
+    if words and words[0] in _LEAD_FILLERS and rng.random() < 0.5:
+        words = words[1:]
+    # 3b. or prepend a disfluency some of the time.
+    elif rng.random() < 0.18:
+        words = [rng.choice(_DISFLUENCIES)] + words
+
+    # 4. one light homophone mishear on a function word (25% of variants).
+    if rng.random() < 0.25:
+        cand_idx = [i for i, w in enumerate(words) if w in _HOMOPHONES]
+        if cand_idx:
+            i = rng.choice(cand_idx)
+            words[i] = _HOMOPHONES[words[i]]
+
+    out = " ".join(words)
+    return _WS_RE.sub(" ", out).strip()
+
+
+def augment_asr_noise(df: pd.DataFrame, fraction: float, seed: int,
+                      rng: Optional[random.Random] = None) -> pd.DataFrame:
+    """Append ASR-style variants of a ``fraction`` of rows (clean rows kept).
+
+    Sampling is stratified by ``media_type`` so the noise layer does not skew the
+    class balance.  Variant rows carry a ``asr_noise=1`` flag (clean rows ``0``)
+    and a ``-asr`` suffix on ``template_id`` for provenance; their feature columns
+    are recomputed by the caller (``add_feature_columns``) on the noised sentence.
+    Variants that collapse to a duplicate of an existing (sentence, lang) row, or
+    to empty text, are dropped.
+    """
+    if fraction <= 0:
+        df = df.copy()
+        df["asr_noise"] = 0
+        return df
+
+    rng = rng or random.Random(seed)
+    df = df.copy()
+    df["asr_noise"] = 0
+
+    # stratified sample of source rows to noise (per media_type)
+    picks: List[pd.DataFrame] = []
+    for _mt, grp in df.groupby("media_type"):
+        k = int(round(fraction * len(grp)))
+        if k > 0:
+            picks.append(grp.sample(n=min(k, len(grp)), random_state=seed))
+    if not picks:
+        return df
+    src = pd.concat(picks, ignore_index=True)
+
+    variants: List[dict] = []
+    for row in src.to_dict("records"):
+        noised = asr_noise(str(row["sentence"]), rng)
+        if not noised or noised == str(row["sentence"]).lower():
+            continue
+        new = dict(row)
+        new["sentence"] = noised
+        new["asr_noise"] = 1
+        tid = new.get("template_id")
+        if isinstance(tid, str):
+            new["template_id"] = tid + "-asr"
+        variants.append(new)
+
+    if not variants:
+        return df
+    var_df = pd.DataFrame(variants)
+    out = pd.concat([df, var_df], ignore_index=True)
+    before = len(out)
+    out.drop_duplicates(subset=["sentence", "lang"], inplace=True)
+    print(f"  ASR-noise: +{len(var_df):,} variants from {len(src):,} sampled rows "
+          f"({before - len(out):,} dropped as dup) → {len(out):,} rows")
+    return out.reset_index(drop=True)
+
+
+# ---------------------------------------------------------------------------
 # Balance + split
 # ---------------------------------------------------------------------------
 
@@ -801,7 +963,7 @@ split. See `docs/dataset.md` and `docs/data-sources.md`.
 | mediavocab axes | `content_form` (ContentForm), `programme_format` (ProgrammeFormat), `accessibility` (AccessibilityKind, JSON), `variant` (VariantKind), `content_genres` (⊆ KNOWN_GENRES, JSON), `content_form_genres` (filter axis, JSON), `year`, `picture_format` (PictureFormat bw/silent/3d, JSON), `explicitness`, `control_intent` |
 | keyword features | `kw_*`, `verb_*`, `mod_*`, `fmt_*` — 0/1, computed on `sentence` by the runtime `CategoricalFeatureExtractor` |
 | NER-by-construction | `ner_<entity_label>` — 0/1 ground-truth flag set where `{{entity_label}}` was filled; `slot_values` maps each filled slot to its entity |
-| provenance | `template_id`, `template`, `n_slots`, `entity_labels` |
+| provenance | `template_id`, `template`, `n_slots`, `entity_labels`, `asr_noise` (1 = spoken/ASR-style variant of a clean row) |
 
 `genres`, `entity_labels` and `slot_values` are JSON strings.
 
@@ -840,7 +1002,8 @@ _CORE = ["sentence", "lang", "domain", "intent", "media_type", "genres",
 _AXES = ["content_form_genres", "content_genres", "content_form",
          "programme_format", "accessibility", "variant", "year",
          "picture_format", "explicitness", "control_intent"]
-_PROV = ["template_id", "template", "n_slots", "entity_labels", "slot_values"]
+_PROV = ["template_id", "template", "n_slots", "entity_labels", "slot_values",
+         "asr_noise"]
 
 
 def build(out_dir: str, entities_dir: str, langs: List[str],
@@ -848,7 +1011,8 @@ def build(out_dir: str, entities_dir: str, langs: List[str],
           seed: int, push: bool = False,
           repo: str = "TigreGotico/ocp-media-intents",
           private: bool = False,
-          relational_dir: str = DEFAULT_RELATIONAL_DIR) -> None:
+          relational_dir: str = DEFAULT_RELATIONAL_DIR,
+          asr_noise_fraction: float = 0.0) -> None:
     os.makedirs(out_dir, exist_ok=True)
     rng = random.Random(seed)
 
@@ -872,6 +1036,13 @@ def build(out_dir: str, entities_dir: str, langs: List[str],
     df.drop_duplicates(subset=["sentence", "lang"], inplace=True)
     print(f"Generated {before:,} → {len(df):,} unique (sentence, lang) rows")
 
+    if asr_noise_fraction > 0:
+        print(f"Augmenting with ASR-style noise (fraction={asr_noise_fraction}) …")
+        df = augment_asr_noise(df, asr_noise_fraction, seed, rng=rng)
+    else:
+        df = df.copy()
+        df["asr_noise"] = 0
+
     print("Computing feature columns …")
     df = add_feature_columns(df)
 
@@ -880,6 +1051,11 @@ def build(out_dir: str, entities_dir: str, langs: List[str],
     df = balance(df, target_per_type, adult_cap, seed)
     adult_kept = int(df["genres"].map(_is_adult).sum())
     print(f"  adult rows {adult_total:,} → kept {adult_kept:,} (minority)")
+
+    if "asr_noise" in df.columns:
+        n_asr = int(df["asr_noise"].sum())
+        print(f"  ASR-noise rows kept: {n_asr:,} / {len(df):,} "
+              f"({n_asr / max(1, len(df)):.1%})")
 
     type_counts = df["media_type"].value_counts().to_dict()
     lang_counts = df["lang"].value_counts().to_dict()
@@ -937,6 +1113,11 @@ def main() -> None:
     ap.add_argument("--adult-cap", type=int, default=7000,
                     help="max adult rows total — the learnable minority (default: 7000)")
     ap.add_argument("--seed", type=int, default=42)
+    ap.add_argument("--asr-noise-fraction", type=float, default=0.0,
+                    help="fraction of rows to ALSO emit as spoken/ASR-style "
+                         "variants (lowercase, no punctuation, run-ons, "
+                         "wanna/gimme/lemme elisions, light mishears); clean "
+                         "rows are always kept. 0 disables (default: 0.0)")
     ap.add_argument("--push", action="store_true")
     ap.add_argument("--repo", default="TigreGotico/ocp-media-intents")
     ap.add_argument("--private", action="store_true")
@@ -946,7 +1127,8 @@ def main() -> None:
           fills_per_template=args.fills_per_template,
           target_per_type=args.target_per_type, adult_cap=args.adult_cap,
           seed=args.seed, push=args.push, repo=args.repo, private=args.private,
-          relational_dir=args.relational_dir)
+          relational_dir=args.relational_dir,
+          asr_noise_fraction=args.asr_noise_fraction)
 
 
 if __name__ == "__main__":

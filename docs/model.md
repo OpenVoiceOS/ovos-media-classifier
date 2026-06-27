@@ -235,14 +235,10 @@ and run on `onnxruntime`+`numpy` only.
 
 ## 5. Benchmark
 
-> **Note.** The numbers below were measured on the *pre-alignment* taxonomy
-> (`tags` / `qualifiers` heads). The mediavocab-axes alignment (this change)
-> replaces those with the `content_form` / `programme_format` / `accessibility` /
-> `variant` / `content_genres` heads; the dataset schema is already aligned, but
-> the model retrain is a separate planned step, so these figures will be
-> re-measured after the retrain on the aligned taxonomy. The single-label
-> media-axis rows (`domain` / `media_type` / `playback_type` / `structure` /
-> `explicitness`) are unaffected.
+Measured on the **aligned mediavocab axes** (`content_form` / `programme_format` /
+`content_genres` / `picture_format`), on a freshly rebuilt dataset that includes
+the full template set (conversational / agentpipe slot / context-aware /
+gazetteer-routing) **plus an ASR-noise realism layer** (§5a).
 
 Held-out **test split: 34,700 utterances**. Per axis, the lift across the three
 implemented rungs (**rules → learned context-only → learned context+NER**) is the
@@ -252,49 +248,76 @@ result. (Source: [benchmarks/ladder_results.md](../benchmarks/ladder_results.md)
 
 | axis | rules | learned-context | learned-context+NER |
 |---|---|---|---|
-| domain | 0.844 | 0.873 | 0.988 |
-| media_type | 0.663 | 0.786 | 0.967 |
-| playback_type | 0.717 | 0.895 | 0.990 |
-| structure | 0.738 | 0.908 | 0.992 |
-| explicitness | 0.989 | 0.989 | 0.998 |
+| domain | 0.878 | 0.873 | 0.989 |
+| media_type | 0.675 | 0.789 | 0.962 |
+| playback_type | 0.724 | 0.899 | 0.988 |
+| structure | 0.746 | 0.902 | 0.988 |
+| explicitness | 0.989 | 0.990 | 0.998 |
+| content_form | 0.751 | 0.984 | 0.997 |
+| programme_format | 0.896 | 0.993 | 0.998 |
 
 ### Multi-label axes — macro-F1
 
-| axis (pre-alignment) | maps to (post-alignment) | rules | learned-context | learned-context+NER |
-|---|---|---|---|---|
-| content_form_genres | content_form_genres | 0.720 | 0.729 | 0.979 |
-| tags (genre slice) | content_genres | 0.000 | 0.561 | 0.596 |
-| qualifiers | content_form + accessibility + picture_format | 0.000 | 0.780 | 0.945 |
+| axis | rules | learned-context | learned-context+NER |
+|---|---|---|---|
+| content_form_genres | 0.731 | 0.750 | 0.973 |
+| content_genres | 0.000 | 0.556 | 0.586 |
+| picture_format | 0.878 | 0.878 | 0.965 |
 
 The `content_genres` macro-F1 is scored over the head's **modelled label space**
 (its top-`CONTENT_GENRE_TOP_K` ⊆ `KNOWN_GENRES` labels) — the honest in-scope
 task, not over the thousands of distinct raw genre values it cannot model (§6b).
-The `qualifiers` row aggregated cues that the alignment splits across the
-`content_form` (trailer / behind_scenes / …), `accessibility` (audio_description)
-and `picture_format` (bw / silent / 3d) axes; per-axis figures land with the
-retrain.
+The `accessibility` and `variant` heads are **skipped** in this bundle: the
+current template set exercises a single accessibility value (`audio_description`)
+and no `variant` cut, so those columns are degenerate (one/zero class) and the
+runtime derives them instead of carrying a degenerate head (see §2's
+derive-fallback contract).
 
 ### Content filter (driven by the `content_form_genres` axis)
 
 | rung | adult recall | hentai recall | false-block | median ms | p95 ms | size |
 |---|---|---|---|---|---|---|
-| rules | 0.479 (350/731) | 0.453 | 0.001 | 0.509 | 0.822 | — |
-| learned-context | 0.479 (350/731) | 0.453 | 0.000 | 0.283 | 0.519 | 380 KiB |
-| learned-context+NER | 0.932 (681/731) | 0.937 | 0.001 | 0.261 | 0.382 | 289 KiB |
+| rules | 0.581 (436/751) | 0.510 | 0.002 | 0.59 | 0.97 | — |
+| learned-context | 0.578 (434/751) | 0.503 | 0.001 | 0.17 | 0.20 | 97 KiB |
+| learned-context+NER | 0.904 (679/751) | 0.903 | 0.000 | 0.25 | 0.39 | 2.1 MiB |
 
 The headline lifts (rules → context → context+NER): `media_type` accuracy
-0.66 → 0.79 → 0.97; `playback_type` 0.72 → 0.90 → 0.99; `structure`
-0.74 → 0.91 → 0.99; `content_form_genres` macro-F1 0.72 → 0.73 → 0.98;
-the pre-alignment `qualifiers`/`tags` heads 0 → 0.78 → 0.95 / 0 → 0.56 → 0.60
-(re-measured per the new axes after the retrain); adult-block recall
-0.48 → 0.48 → 0.93; hentai recall 0.45 → 0.45 → 0.94 — at a near-zero false-block
-rate and sub-millisecond latency in a 289 KiB bundle. The saturated `.intent`
-templates and the enriched `kw_*` keyword vocabularies lift the **rules floor**
-itself (`media_type` 0.63 → 0.66, `structure` 0.71 → 0.74,
-`content_form_genres` 0.71 → 0.72) — the deterministic backend reads more cues —
-while the canonical UNIFIED entity sets (cross-deduplicated artists / performers)
-and the **coherent bw/silent** qualifier data (real black-and-white / silent
-titles) sharpen the learned heads, lifting `qualifiers` 0.91 → 0.95.
+0.68 → 0.79 → 0.96; `playback_type` 0.72 → 0.90 → 0.99; `structure`
+0.75 → 0.90 → 0.99; `content_form` accuracy 0.75 → 0.98 → 1.00;
+`programme_format` 0.90 → 0.99 → 1.00; `content_form_genres` macro-F1
+0.73 → 0.75 → 0.97; `picture_format` 0.88 → 0.88 → 0.97; adult-block recall
+0.58 → 0.58 → 0.90; hentai recall 0.51 → 0.50 → 0.90 — at a near-zero false-block
+rate and sub-millisecond latency. The context+NER bundle's `ner_*` columns are
+ground-truth by construction (§7.4 caveat), so it is the near-oracle ceiling; the
+context bundle is the realistic no-NER floor a fresh install sees.
+
+### 5a. The ASR-noise realism layer — does it help?
+
+The rebuilt dataset adds a **spoken/ASR-style augmentation**
+([`training/build_dataset.py`](../training/build_dataset.py) `--asr-noise-fraction`):
+a configurable fraction of rows is *also* emitted as a lowercased,
+punctuation-stripped, run-on variant with casual elisions (`wanna` / `gimme` /
+`lemme` / `gonna`), dropped courtesy lead-ins, occasional disfluency prepends
+(`um` / `uh` / `like`), and a light function-word mishear — the clean rows are
+kept. At the shipped fraction (`0.20`, ≈ 11 % of the balanced set) the layer adds
+≈ 37 k spoken variants. A dedicated **`conversational` slice** (36 messy-spoken
+cases) was added to the routing eval to measure the effect
+([docs/routing-eval.md](routing-eval.md)).
+
+**Honest finding: ASR-noise is a near-no-op for the categorical-feature backends
+(the shipped sklearn / embedding heads), and it does not regress anything.** The
+reason is structural: the runtime
+[`CategoricalFeatureExtractor`](../ovos_media_classifier/features.py) is
+**orthography-invariant by construction** — it lowercases and matches `.voc`
+keywords on word boundaries — so a clean row and its ASR variant fire almost the
+same feature flags (measured: 1.69 vs 1.72 mean keyword flags, 0.97 vs 1.04 mean
+NER flags). The conversational-slice mis-route / resolved figures are therefore
+unchanged by the augmentation for these backends. The layer is retained because
+it is **harmless and adds genuine realism for the value-text backends** (the
+char-hash / word-vector neural variants of §7, which read the surface string and
+*can* be helped by it) and because the published dataset should carry the
+spoken register. The default `--asr-noise-fraction` is `0` so a plain
+`build_dataset` is unchanged; the shipped bundles' dataset was built at `0.20`.
 
 ---
 
