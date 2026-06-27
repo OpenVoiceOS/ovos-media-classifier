@@ -18,6 +18,8 @@ dist/
 scripts/ocp_*.csv
 **/ocp_agentpipe.csv*
 templates_new/
+# agentpipe template-generator checkpoint sidecar (resume state, not source)
+training/.agentpipe_templates.done.jsonl
 .venv/
 venv/
 .claude/
@@ -34,6 +36,10 @@ data/
 /*_utterances.json
 /*_questions.json
 /*_training_data.json
+/*_templates.json
+/templates_*.json
+/templates_*.txt
+/nsfw_*.json
 /de_de_*.json
 /fr_*.json
 .kilo/

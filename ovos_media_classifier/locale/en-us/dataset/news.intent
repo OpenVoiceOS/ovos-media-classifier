@@ -69,3 +69,17 @@ i'm out of the loop put on the {news_category} news
 i could really go for the headlines
 is there any news on {tv_show_title}
 got the latest from {news_provider}?
+<lead_tune> gimme the {news_category} news
+[hey] <lead_tune> latest {news_category} report
+so <lead_play_audio> what's the latest news [on {news_category}]
+got any {news_category} news [for me]
+[um] <lead_tune> the {news_category} news bulletin
+lemme get the headlines from {news_provider}
+[ok] <lead_play_audio> breaking news [on {news_category}]
+<lead_tune> top stories [from {news_provider}]
+[hey] can i get the {news_category} news [please]
+<lead_play_audio> the latest newscast from {news_provider}
+so um <lead_tune> any breaking news
+let's hear the {news_category} headlines
+<lead_tune> gimme the top stories [from {news_provider}]
+[hey] so <lead_play_audio> what's the news [on {news_category}]

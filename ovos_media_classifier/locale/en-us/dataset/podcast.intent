@@ -139,3 +139,40 @@ is there a new episode of {podcast_title}
 got any podcasts with {podcast_host}?
 how about that podcast {podcast_title}
 anything good from {podcast_host} lately?
+hey <lead_play_audio> that {podcast_title} episode i missed
+so <lead_play_audio> something about {music_genre} podcasts you know
+um can we hear that podcast with {podcast_host} again
+<lead_play_audio> a podcast series hosted by {podcast_host}
+lemme hear the latest episode of {podcast_title}
+<lead_play_audio> a podcast about {movie_title} with the director
+got any good podcasts about {book_title}
+<lead_play_audio> the one where {podcast_host} talks about {tv_show_title}
+hey play that podcast episode about {music_genre} please
+so i wanna hear a podcast interviewing {movie_actor}
+<lead_play_audio> some {podcast_genre} podcast i haven't heard yet
+um what was that podcast called {podcast_title}
+let's listen to a deep dive podcast on {game_title}
+<lead_play_audio> a podcast breaking down {comic_title}
+i never checked out that podcast with {movie_writer}
+<lead_play_audio> a {podcast_genre} show hosted by {podcast_host}
+hey so gimme a good podcast about {anime_title}
+can you play a podcast about {album_name} by {artist_name}
+<lead_play_audio> the podcast where they review {tv_show_title}
+hey so i wanna hear that {podcast_title} podcast with {podcast_host}
+lemme listen to the latest {podcast_title}
+how about we put on a {podcast_genre} podcast
+got any podcasts hosted by {podcast_host}
+i'm feeling like a {podcast_genre} podcast kind of day
+play the podcast where {podcast_host} talks about {movie_title}
+we should check out that {podcast_title} episode
+hey um can you find me a podcast about {tv_show_title}
+what about that podcast with {podcast_host}
+i wanna hear {podcast_host} on a podcast about {game_title}
+so there's this podcast called {podcast_title} play that
+play me a {podcast_genre} podcast i haven't heard yet
+how about a podcast about {book_title} by {book_author}
+i'm in the mood for {podcast_title} right now actually
+hey play that podcast about {anime_title}
+put on a podcast about {movie_director} movies or something
+let's hear what {podcast_host} has to say on {podcast_title}
+so i was thinking a podcast about {tv_show_title} would be great

@@ -90,3 +90,39 @@ i could really go for a visual novel
 i never finished {visual_story_title}
 is there a visual novel based on {anime_title}
 got any visual novels?
+maybe <lead_watch> a comic book {visual_story_title} or something
+i wanna <lead_watch> a graphic novel {visual_story_title}
+hey <lead_watch> got any comics i haven't seen
+so <lead_watch> that manga {visual_story_title} everyone's talking about
+lemme <lead_watch> a motion comic {visual_story_title}
+i'm in the mood for a comic book {visual_story_title}
+how about we <lead_watch> a visual story {visual_story_title}
+<lead_watch> um the animated graphic novel {visual_story_title}
+hey <lead_read> me a comic {visual_story_title} please
+i wanna <lead_read> a manga {visual_story_title}
+gimme a visual story to watch {visual_story_title}
+let's <lead_watch> the {visual_story_title} comic book adaptation
+so i'm thinking <lead_watch> a motion comic maybe {visual_story_title}
+<lead_read> that comic {visual_story_title} i keep hearing about
+hey got any graphic novels like {visual_story_title}
+um <lead_watch> a comic {visual_story_title} or something similar
+wanna <lead_watch> an animated visual story {visual_story_title}
+so like <lead_watch> the {visual_story_title} graphic novel or whatever
+please <lead_watch> a manga adaptation of {visual_story_title}
+gimme a comic book {visual_story_title} to check out
+[hey|ok] <lead_read> a graphic novel [please|for me]
+how about we check out {visual_story_title} [tonight]
+<lead_read> some manga [for me|tonight]
+[ok|so] we should watch a comic book adaptation [or something]
+feels like a comic book kind of night
+got any animated comic books to watch [with me]
+[um] i'm trying to find a visual story like {visual_story_title}
+<lead_watch> {movie_title} as an animated comic
+[hey] lemme see some graphic novels [please]
+i'm looking for an illustrated story [or] a comic [to read|to watch]
+<lead_watch> a motion comic version of {visual_story_title}
+let's watch something like a graphic novel come to life
+maybe {visual_story_title} is a graphic novel i'd like
+<lead_watch> illustrated stories [or animated comics]
+<lead_read> comics [or] graphic novels [please]
+i want something like a comic but with motion [please]

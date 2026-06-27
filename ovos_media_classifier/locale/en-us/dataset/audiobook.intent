@@ -101,3 +101,30 @@ i never finished the audiobook of {book_title}
 i'm in the mood for something by {book_author}
 is there an audiobook read by {movie_actor}
 got the audiobook of {book_title}?
+hey <lead_play_audio> i wanna listen to {audiobook_title}
+so <lead_play_audio> the audio book version of {book_title} alright
+lemme hear that audiobook by {audiobook_author} you know
+hey <lead_play_audio> anything read by {movie_actor} as an audiobook
+got any audiobooks in the {audiobook_genre} genre
+so like i wanna hear the audiobook of {book_title} by {book_author}
+hey <lead_play_audio> that audio book narrated by {audiobook_narrator} yeah
+so <lead_play_audio> the audiobook version of {book_title} please
+um lemme get the narration by {audiobook_narrator} thanks
+<lead_play_audio> the audiobook written by {audiobook_author} and read by {audiobook_narrator}
+i wanna hear an audio book of {audiobook_title} please
+so got any audiobooks read by {audiobook_narrator}
+i'm in the mood for an audiobook by {audiobook_narrator}
+say, got any {audiobook_genre} audio books i could check out
+how about we listen to a narrated book by {audiobook_author}
+i wanna hear that {audiobook_title} audiobook
+lemme get a {audiobook_genre} audiobook narrated by {audiobook_narrator}
+<lead_play_audio> um i'm looking for something by {book_author} maybe an audiobook
+so i was thinking an audio book by {audiobook_author} would be nice
+feels like a good night for a {audiobook_genre} narration
+<lead_play_audio> could you find me the audiobook of {book_title}
+how about that narrated book by {audiobook_narrator}
+i'd love to hear {audiobook_author} narrate something
+<lead_play_audio> do you have the audio book version of {book_title}
+let's put on an audiobook maybe something by {audiobook_author}
+gimme a {audiobook_genre} audio book to listen to
+<lead_play_audio> you know what i want that audiobook by {audiobook_narrator}

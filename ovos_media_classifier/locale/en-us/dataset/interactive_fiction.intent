@@ -109,3 +109,18 @@ i never finished {game_title}
 is there a good interactive fiction game
 got any text adventures?
 how about {game_title}
+<lead_game> got any text adventures [{game_genre}] [right now]
+so <lead_game> lemme play a choose your own adventure
+<lead_game> um i wanna try a text adventure [please]
+let's play an interactive story [game] [thanks]
+<lead_game> gimme a text adventure [{game_genre}] [please]
+so <lead_game> i'm looking for an interactive fiction game [{game_title}]
+<lead_game> that text adventure based on {movie_title} [please]
+wanna play a choose your own adventure [{game_genre}] [right now]
+hey <lead_game> got any interactive novels [{game_genre}]
+<lead_game> maybe an interactive story based on {tv_show_title}
+so lemme get a choose your own adventure game [thanks]
+<lead_game> um i need an interactive novel like {game_title} [please]
+hey so <lead_game> i wanna play a text adventure [{game_title}] [please]
+<lead_game> any good interactive novels [{game_genre}] [right now]
+i'm kinda in the mood for a choose your own adventure [{game_title}]

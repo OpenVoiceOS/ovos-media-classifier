@@ -87,3 +87,31 @@ i only have a few minutes put on a short film
 i could really go for a short film
 is there a good short film by {movie_director}
 got any {movie_genre} short films?
+hey so <lead_watch> a short film maybe about {movie_genre}
+i wanna watch a short film called {short_film_title}
+got any short films by {movie_director}
+lemme watch a short film starring {artist_name}
+how about we watch a short film, um, {short_film_title} maybe
+so there's this short film i heard about called {short_film_title}
+gimme some short films in the {movie_genre} genre
+i'm in the mood for a short film, y'know, something like {movie_title}
+hey <lead_watch> a short film directed by {movie_director}
+wanna watch {short_film_title} it's a short film
+let's check out a short film, how about {short_film_title}
+could you play that short film {short_film_title} for me
+what short films do you have based on {book_title}
+i'd like to watch a short film, maybe like that {movie_title} vibe
+please <lead_watch> any short films by {artist_name}
+how about we watch a short film like {short_film_title} [tonight|right now]
+let's check out some short films [maybe] by {movie_director}
+<lead_watch> a short film spin-off of {movie_title}
+got any short films based on {comic_title}
+i wanna see a short film [please|maybe] directed by {movie_director}
+hey so i'm looking for short films starring {artist_name}
+we should watch a {movie_genre} short movie [tonight]
+feels like a shorts kind of [day|night] [so] <lead_watch> something
+can you find me a short film version of {comic_title}
+um let's check out {short_film_title} [it's a short film i hear]
+<lead_watch> a short film [i guess|maybe] by {movie_director}
+i'm in the mood for shorts <lead_watch> a {movie_genre} one
+so like lemme see some short films [please|i mean] {movie_genre} maybe

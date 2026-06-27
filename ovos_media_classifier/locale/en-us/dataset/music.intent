@@ -227,3 +227,39 @@ feels like a {music_genre} kind of evening
 got anything by {artist_name}?
 you got that new {artist_name} album {album_name}?
 could we listen to {track_name}
+hey i wanna hear something from {album_name}
+lemme get that {track_name} track
+gimme some {music_genre} to vibe to
+<lead_play_audio> that {record_label} sound from back in {release_decade}
+how about we put on {album_name}
+so um got any {music_genre} tunes handy
+<lead_play_audio> the greatest hits album by {artist_name}
+wanna hear that ballad from {release_year}
+is there a record called {album_name} by {artist_name}
+<lead_play_audio> something by {artist_name} off of {album_name}
+i'm feeling like some vinyl today spin {album_name}
+what's that hit song by {artist_name} from {release_decade}
+hey can you play the soundtrack to {movie_title}
+got any {music_genre} albums you'd recommend
+so i really wanna hear {track_name} right now
+<lead_play_audio> {music_genre} from the {release_decade} era
+let's hear that number one by {artist_name}
+i need my {music_genre} fix gimme {artist_name}
+um could you put on that ep by {artist_name} titled {album_name}
+<lead_play_audio> {track_name} from that {music_genre} album {album_name}
+hey [so] <lead_play_audio> that {release_decade} song {track_name} by {artist_name}
+how about we listen to {artist_name}'s album {album_name}
+got any {music_genre} tunes [you'd recommend]?
+so i heard {artist_name} dropped a new record {album_name} [can you play it]
+lemme hear that {music_genre} track {track_name} [please]
+wanna spin some {release_decade} records [tonight]?
+<lead_play_audio> {track_name} [the] remix [version]
+i'm in the mood for {artist_name} [maybe] their album {album_name}
+feels like a {music_genre} kinda night [so] <lead_play_audio> something good
+we should put on {album_name} by {artist_name} [what do you think]
+um <lead_play_audio> that song {track_name} [i think it's by {artist_name}]
+hey <lead_play_audio> any {music_genre} ballads [from the {release_decade}]
+i wanna hear {artist_name}'s greatest hits [or] just their album {album_name}
+how about some {music_genre} anthems [to get us going]?
+so <lead_play_audio> the soundtrack album {album_name} [by {artist_name}]
+i'm looking for that song {track_name} by {artist_name} [um] from {album_name}
