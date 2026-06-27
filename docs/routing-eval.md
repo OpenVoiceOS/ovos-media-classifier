@@ -52,13 +52,19 @@ Categories (see `category` field):
 | `control` | 28 | transport control (pause / next / volume) → `ocp_control` |
 | `content_policy` | 21 | adult requests — **must** be flagged; a leak is the worst error |
 | `playback_divergent` | 13 | "read me X" (book) vs "play the audiobook X" (audiobook); "watch X" vs "listen to X" |
+| `conversational` | 36 | messy spoken / ASR-style register — disfluencies (`um`/`uh`/`like`), elisions (`wanna`/`gimme`/`lemme`/`gonna`), no punctuation — the realism slice the ASR-noise training targets |
 | `noise` | 3 | ASR garbage / social — must not hijack |
 
 Each case carries explicit labels: `is_ocp_query`, `domain`, `media_type` (or
 `generic`), `playback_type` (or `unknown`), `explicit` (adult), and an
 **`abstain_ok`** flag marking cases where GENERIC is an acceptable route (a
-genuinely ambiguous bare title — 145 of 186 cases). `abstain_ok` only excuses an
+genuinely ambiguous bare title — 171 of 222 cases). `abstain_ok` only excuses an
 **abstain**; a confident *wrong* answer is still a mis-route.
+
+The `conversational` slice is reported **separately** in
+`routing_eval_results.md` (a "Slice: conversational" table) so the effect of the
+ASR-noise training layer on spoken-register input is visible without diluting it
+into the overall number.
 
 Provenance: see [`benchmarks/README.md`](../benchmarks/README.md#routing-eval-set-provenance).
 
@@ -87,38 +93,62 @@ Outputs `benchmarks/routing_eval_results.{json,md}`.
 ## The real baseline
 
 Numbers from the committed run (see
-[`benchmarks/routing_eval_results.md`](../benchmarks/routing_eval_results.md)).
-The two `data/models/context*` bundles are the current categorical-feature
-trained output; the `models_text/*` and `models_torch/*` rows are
-training-sweep artifacts kept for contrast.
+[`benchmarks/routing_eval_results.md`](../benchmarks/routing_eval_results.md)),
+on the **222-case** set (incl. the 36-case `conversational` slice). The two
+`data/models/context*` bundles are the current categorical-feature trained
+output; the `models_text/*` and `models_torch/*` rows are training-sweep
+artifacts kept for contrast.
 
-| backend | mis-route | adult-leak | false-hijack | false-miss | control |
-|---|---|---|---|---|---|
-| **keyword** (default) | **0.070** (8/114) | 0.429 (9/21) | 0.227 (10/44) | 0.204 (29/142) | 0.500 (14/28) |
-| onnx context (trained) | 0.097 (11/114) | 0.429 (9/21) | 0.182 (8/44) | **0.479** (68/142) | 0.000 (0/28) |
-| onnx context_ner | 0.149 (17/114) | 0.429 (9/21) | 0.159 (7/44) | 0.528 (75/142) | 0.000 (0/28) |
-| onnx torch/text sweep | 0.35–0.47 | 0.24–0.62 | **0.66–1.00** | 0.00–0.16 | 0.000 |
+| backend | mis-route | resolved | adult-leak | false-hijack | false-miss | control |
+|---|---|---|---|---|---|---|
+| **keyword** (default) | **0.050** (7/139) | 0.318 | **0.000** (0/23) | 0.208 (10/48) | 0.103 (18/174) | 0.516 (16/31) |
+| **hybrid+gazetteer** | **0.050** (7/139) | **0.534** | **0.000** | 0.208 | 0.103 | 0.516 |
+| **hybrid+inject** (user library) | **0.029** (4/139) | **0.625** | **0.000** | 0.208 | 0.103 | 0.516 |
+| onnx context (trained) | 0.101 (14/139) | 0.375 | 0.043 | 0.167 | 0.397 | 0.000 |
+| onnx context_ner | 0.166 (23/139) | 0.250 | 0.000 | 0.146 | 0.466 | 0.000 |
+| onnx torch/text sweep | 0.28–0.40 | 0.49–0.59 | 0.00–0.65 | **0.85–1.00** | 0.00–0.16 | 0.000 |
+
+**Conversational slice (36 cases) — the spoken/ASR-register read:**
+
+| backend | mis-route | resolved | adult-leak |
+|---|---|---|---|
+| keyword | 0.120 (3/25) | 0.400 (6/15) | 0.000 |
+| hybrid+gazetteer | 0.120 | 0.600 (9/15) | 0.000 |
+| hybrid+inject | **0.040** (1/25) | **0.667** (10/15) | 0.000 |
+| onnx context | 0.240 | 0.467 | 0.000 |
+| onnx context_ner | 0.320 | 0.333 | 0.000 |
 
 ### Honest read
 
 **The keyword backend is the strongest router**, and for the right reason: it is
 **high-precision and abstains by default.** Its mis-route rate is the lowest
-(0.070) and it abstains on 47% of play-intent cases (GENERIC = safe — providers
+(0.050) and it abstains on most play-intent cases (GENERIC = safe — providers
 still search). It is the only backend that recognises control intents at all
-(0.500 recall; the misses are volume/mute, which it does not model). This is the
+(0.516 recall; the misses are volume/mute, which it does not model). This is the
 number to beat — and beating it means **lowering mis-route or adult-leak without
-trading them for false-hijack**, not raising raw accuracy.
+trading them for false-hijack**, not raising raw accuracy. The hybrid layers do
+exactly that: same mis-route / adult-leak / gate as keyword, but higher
+`resolved` (open-vocab wins from the gazetteer / injected library), and
+`hybrid+inject` even *lowers* mis-route to 0.029.
+
+**ASR-noise training did not move the categorical heads on the conversational
+slice** (see [model.md §5a](model.md)): the trained `context*` bundles score the
+same on the slice with or without the augmentation, because the categorical
+feature extractor is orthography-invariant — a clean row and its ASR variant fire
+the same flags. The slice is where the **hybrid+inject** path shines (0.040
+mis-route, 0.667 resolved) — entity injection, not orthography, is what reads a
+bare title out of disfluent speech.
 
 **The trained bundles confirm the prediction: they look strong in-distribution
-and mis-route out-of-distribution.** The `context` bundle reports
-`val_macro_f1 ≈ 0.94` on its own held-out split, yet here it has a **0.479
-false-miss rate** — it routes nearly half of real media requests (bare titles
-like "play interstellar", "throw on breaking bad") to `not_ocp`, because its
-synthetic training distribution under-covers keyword-less phrasings. It also has
-**no control head**, so every control utterance is mis-gated.
+and mis-route out-of-distribution.** The `context` bundle reports a high
+`val_macro_f1` on its own held-out split, yet here it has a **0.397 false-miss
+rate** — it routes many real media requests (bare titles like "play
+interstellar", "throw on breaking bad") to `not_ocp`, because its synthetic
+training distribution under-covers keyword-less phrasings. It also has **no
+control head**, so every control utterance is mis-gated.
 
 **The torch/text training-sweep bundles are a cautionary tale**: most route
-**100% of non-media into OCP** (false-hijack 1.000) — they learned "almost
+**85–100% of non-media into OCP** (false-hijack ≥ 0.85) — they learned "almost
 everything is a play request" on a synthetic, play-heavy distribution. Their
 in-distribution scores were fine; OOD they are unusable as routers. This is the
 exact failure this eval exists to catch.

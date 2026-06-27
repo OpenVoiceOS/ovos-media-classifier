@@ -89,25 +89,31 @@ The gate (`classify_domain` / `is_ocp_query`) and the content-policy axis
 (`classify_content_form_genres` → the adult lexicon) stay on keyword, so
 adult-leak and false-hijack are exactly the keyword floor.
 
-## Routing-eval verdict (186-case OOD harm-weighted eval)
+## Routing-eval verdict (222-case OOD harm-weighted eval)
 
-| backend | mis-route | adult-leak | false-hijack | false-miss | control |
-|---|---|---|---|---|---|
-| keyword (floor) | 0.035 (4/114) | 0.000 | 0.227 | 0.113 | 0.500 |
-| embedding-router (alone) | 0.000 | 1.000 | 0.000 | 1.000 | 0.000 |
-| hybrid (no inject) | 0.035 | 0.000 | 0.227 | 0.113 | 0.500 |
-| **hybrid + user library** | **0.026 (3/114)** | **0.000** | **0.227** | 0.113 | 0.500 |
+| backend | mis-route | resolved | adult-leak | false-hijack | false-miss | control |
+|---|---|---|---|---|---|---|
+| keyword (floor) | 0.050 (7/139) | 0.318 | 0.000 | 0.208 | 0.103 | 0.516 |
+| embedding-router (alone) | 0.000 | 0.000 | 1.000 | 0.000 | 1.000 | 0.000 |
+| hybrid (no inject) | 0.050 | 0.318 | 0.000 | 0.208 | 0.103 | 0.516 |
+| hybrid + gazetteer | 0.050 | **0.534** | 0.000 | 0.208 | 0.103 | 0.516 |
+| **hybrid + user library** | **0.029 (4/139)** | **0.625** | **0.000** | **0.208** | 0.103 | 0.516 |
+
+(222-case set incl. the 36-case `conversational` slice; the older 186-case run
+read keyword 0.035 / hybrid+gazetteer 0.520 — the slightly higher floor here is
+the 36 harder spoken cases, not a regression.)
 
 **Verdict — promote as a recommended optional backend, default stays keyword.**
 The hybrid **with the user's library injected** lowers mis-route below the
-keyword floor (0.026 < 0.035) while holding adult-leak at 0.0, false-hijack at
-the keyword floor (0.227) and false-miss at the keyword floor (0.113) — it
-recovers keyword abstains as correct media routes and closes 3 of the 4 keyword
-entity-gap mis-routes (`watch attack on titan` → EPISODIC_SERIES, `listen to
-harry potter` → AUDIOBOOK, `the daily` → podcast). The remaining mis-route
-(`stream the lakers game` → live sports / TV) is not a library entity. The router
-never moves the gate (keyword owns it), so a common short title cannot hijack
-ordinary speech.
+keyword floor (0.029 < 0.050) while holding adult-leak at 0.0, false-hijack at
+the keyword floor (0.208) and false-miss at the keyword floor (0.103) — it
+recovers keyword abstains as correct media routes (resolved 0.318 → 0.625) and
+closes keyword entity-gap mis-routes (`watch attack on titan` → EPISODIC_SERIES,
+`listen to harry potter` → AUDIOBOOK, `the daily` → podcast). On the
+`conversational` slice it is the strongest router (0.040 mis-route, 0.667
+resolved) — entity injection reads bare titles out of disfluent speech that the
+orthography-invariant categorical features cannot. The router never moves the
+gate (keyword owns it), so a common short title cannot hijack ordinary speech.
 
 The honest caveat: the win is delivered through **runtime entity injection**.
 Without an injected library the hybrid only *matches* keyword (the router
