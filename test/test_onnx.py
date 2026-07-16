@@ -273,5 +273,68 @@ class TestFromPath(unittest.TestCase):
                     OnnxMediaClassifier.from_path(d)
 
 
+class TestAxisEnumCoercion(unittest.TestCase):
+    """The shared head→enum coercion helpers, exercised without a real bundle.
+
+    A bare instance (no onnx sessions) has its primitive head accessors stubbed
+    so only the coercion contract is under test: valid labels become enums,
+    invalid labels are dropped, and a missing/abstaining head yields ``None``
+    so the caller falls back to the inherited default.
+    """
+
+    def setUp(self):
+        from mediavocab.taxonomy import ContentForm, AccessibilityKind
+        self.ContentForm = ContentForm
+        self.AccessibilityKind = AccessibilityKind
+        # object.__new__ skips __init__ (no onnx sessions needed); we drive the
+        # helpers purely through the _has_head/_single_head/_multi_head primitives.
+        self.clf = object.__new__(OnnxMediaClassifier)
+
+    def test_single_head_valid_label_coerces_to_enum(self):
+        self.clf._single_head = lambda head, q, lang: ("trailer", 0.9)
+        self.assertEqual(
+            self.clf._enum_from_single_head("content_form", self.ContentForm, "q", "en-us"),
+            self.ContentForm.TRAILER)
+
+    def test_single_head_invalid_label_returns_none(self):
+        # An out-of-vocabulary label must not raise — the caller falls back.
+        self.clf._single_head = lambda head, q, lang: ("not_a_form", 0.9)
+        self.assertIsNone(
+            self.clf._enum_from_single_head("content_form", self.ContentForm, "q", "en-us"))
+
+    def test_single_head_abstain_returns_none(self):
+        for res in (None, ("", 0.0)):
+            self.clf._single_head = lambda head, q, lang, _r=res: _r
+            self.assertIsNone(
+                self.clf._enum_from_single_head("content_form", self.ContentForm, "q", "en-us"))
+
+    def test_multi_head_skips_invalid_keeps_valid(self):
+        self.clf._has_head = lambda head: True
+        self.clf._multi_head = lambda head, q, lang: ["subtitles", "bogus", "sign_language"]
+        self.assertEqual(
+            self.clf._enums_from_multi_head("accessibility", self.AccessibilityKind, "q", "en-us"),
+            [self.AccessibilityKind.SUBTITLES, self.AccessibilityKind.SIGN_LANGUAGE])
+
+    def test_multi_head_missing_head_returns_none(self):
+        self.clf._has_head = lambda head: False
+        self.assertIsNone(
+            self.clf._enums_from_multi_head("accessibility", self.AccessibilityKind, "q", "en-us"))
+
+    def test_multi_head_abstain_returns_none(self):
+        self.clf._has_head = lambda head: True
+        self.clf._multi_head = lambda head, q, lang: None
+        self.assertIsNone(
+            self.clf._enums_from_multi_head("accessibility", self.AccessibilityKind, "q", "en-us"))
+
+    def test_multi_head_all_invalid_returns_empty_list(self):
+        # A present head whose labels are all OOV coerces to [] (not None): the
+        # head fired, it just yielded nothing valid — distinct from "no head".
+        self.clf._has_head = lambda head: True
+        self.clf._multi_head = lambda head, q, lang: ["bogus", "nope"]
+        self.assertEqual(
+            self.clf._enums_from_multi_head("accessibility", self.AccessibilityKind, "q", "en-us"),
+            [])
+
+
 if __name__ == "__main__":
     unittest.main()
