@@ -347,7 +347,6 @@ class TestOnnxParity(unittest.TestCase):
 if __name__ == "__main__":
     unittest.main()
 
-
 class TestKeywordEntryPointRegistration(unittest.TestCase):
     """The keyword backend self-registers as the reference plugin under the
     ``opm.media.classifier`` group the package defines."""
@@ -369,3 +368,29 @@ class TestKeywordEntryPointRegistration(unittest.TestCase):
         with self.assertRaises(TypeError):
             KeywordMediaClassifier(config={})
         self.assertIsInstance(KeywordMediaClassifier(), AbstractMediaClassifier)
+
+class TestLazyBackendExports(unittest.TestCase):
+    """Every backend is importable from the top level; the optional ones
+    resolve lazily (PEP 562) so their extras never load on plain import."""
+
+    def test_all_backends_in_all(self):
+        import ovos_media_classifier as omc
+        for name in ("KeywordMediaClassifier", "EmbeddingMediaClassifier",
+                     "HybridMediaClassifier", "OnnxMediaClassifier",
+                     "AhocorasickMediaClassifier", "MetadatarrMediaClassifier"):
+            self.assertIn(name, omc.__all__)
+            self.assertIn(name, dir(omc))
+
+    def test_lazy_backends_resolve(self):
+        from ovos_media_classifier import (
+            OnnxMediaClassifier, MetadatarrMediaClassifier,
+        )
+        from ovos_media_classifier.base import AbstractMediaClassifier
+        self.assertTrue(issubclass(OnnxMediaClassifier, AbstractMediaClassifier))
+        self.assertTrue(issubclass(MetadatarrMediaClassifier,
+                                   AbstractMediaClassifier))
+
+    def test_unknown_attribute_still_raises(self):
+        import ovos_media_classifier as omc
+        with self.assertRaises(AttributeError):
+            omc.NoSuchClassifier

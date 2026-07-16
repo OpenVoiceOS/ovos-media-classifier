@@ -95,6 +95,9 @@ __all__ = [
     "KeywordMediaClassifier",
     "EmbeddingMediaClassifier",
     "HybridMediaClassifier",
+    "OnnxMediaClassifier",
+    "AhocorasickMediaClassifier",
+    "MetadatarrMediaClassifier",
     "build_gazetteer",
     "load_default_gazetteer",
     "KeywordFeatureSlot",
@@ -301,3 +304,30 @@ def load_media_classifier(
 
     LOG.debug("OCP media classifier: keyword (bundled locale)")
     return KeywordMediaClassifier()
+
+
+# ---------------------------------------------------------------------------
+# Lazy backend exports (PEP 562)
+#
+# Every backend is importable from the top-level package, but the optional
+# ones resolve lazily so their extras (`ner` pulls ahocorasick-ner at module
+# import; `onnx` / `online` deps load at first use) are never touched on the
+# default import path.
+# ---------------------------------------------------------------------------
+_LAZY_BACKENDS = {
+    "OnnxMediaClassifier": "ovos_media_classifier.onnx",
+    "AhocorasickMediaClassifier": "ovos_media_classifier.ahocorasick",
+    "MetadatarrMediaClassifier": "ovos_media_classifier.metadatarr_backend",
+}
+
+
+def __getattr__(name: str):
+    module = _LAZY_BACKENDS.get(name)
+    if module is None:
+        raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    import importlib
+    return getattr(importlib.import_module(module), name)
+
+
+def __dir__():
+    return sorted(list(globals()) + list(_LAZY_BACKENDS))
