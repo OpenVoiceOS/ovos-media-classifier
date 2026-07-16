@@ -52,6 +52,15 @@ class TestPlayerStatusRelative(unittest.TestCase):
                                    player_status=_playing(MediaType.MOVIE))
         self.assertEqual(r.media_type, MediaType.MOVIE)
 
+    def test_relative_cue_matches_via_bundled_voc(self):
+        # "one more" is only in the bundled RelativeFollowup.voc, not in the
+        # built-in fallback phrase set — this asserts the voc path fires.
+        self.assertTrue(
+            self.clf._has_relative_followup_cue(self.clf, "one more", "en-us"))
+        r = self.clf.classify_full("one more", "en-us",
+                                   player_status=_playing(MediaType.MUSIC))
+        self.assertEqual(r.media_type, MediaType.MUSIC)
+
 
 class TestPlayerStatusConservative(unittest.TestCase):
     def setUp(self):
