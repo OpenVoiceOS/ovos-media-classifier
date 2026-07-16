@@ -38,13 +38,6 @@ from typing import Dict, List, Optional
 # genre tags at the boundary (see ``LABEL_TO_MEDIA_TYPE`` / ``LABEL_TO_GENRES``).
 from mediavocab import MediaType
 from mediavocab.taxonomy.genre import KNOWN_GENRES
-from mediavocab.taxonomy import (
-    ContentForm,
-    ProgrammeFormat,
-    AccessibilityKind,
-    VariantKind,
-    PictureFormat,
-)
 
 
 class OCPDomain(str, Enum):
@@ -275,7 +268,9 @@ LABEL_TO_MEDIA_TYPE: Dict[str, MediaType] = {
     "music_video":        MediaType.MUSIC_VIDEO,
     # Supplementary / promotional video content — the parent media_type stays
     # MOVIE; the "I want the trailer / BTS, not the full title" distinction is
-    # carried on the orthogonal ContentForm axis (see ``LABEL_TO_CONTENT_FORM``).
+    # carried on the orthogonal ContentForm axis (each backend matches it
+    # directly — the keyword backend from its ``.voc`` evidence, the trained
+    # backends from their ``content_form`` head).
     "trailer":            MediaType.MOVIE,
     "teaser":             MediaType.MOVIE,
     "behind_the_scenes":  MediaType.MOVIE,
@@ -311,127 +306,6 @@ LABEL_TO_GENRES: Dict[str, List[str]] = {
 def genres_for_label(label: str) -> List[str]:
     """Return the mediavocab genre tags implied by a raw detection label."""
     return list(LABEL_TO_GENRES.get(label, []))
-
-
-# ---------------------------------------------------------------------------
-# Raw detection label → mediavocab ContentForm  (the experiential-kind axis)
-#
-# Some labels are not a media *type* but a **supplementary / promotional form**
-# of a parent title — a trailer, a teaser, behind-the-scenes, the making-of,
-# bloopers, deleted scenes, a featurette, a cast interview, a clip.  Their
-# ``MediaType`` stays the parent (MOVIE / EPISODIC — see ``LABEL_TO_MEDIA_TYPE``);
-# the "I want the trailer / BTS, NOT the full title" signal rides the orthogonal
-# ``mediavocab.ContentForm`` axis.  The finer classifier labels collapse onto
-# mediavocab's set (making_of / bloopers / deleted_scenes / featurette →
-# ``behind_scenes``; clip → ``excerpt``; interview → ``supplement``).
-# ---------------------------------------------------------------------------
-LABEL_TO_CONTENT_FORM: Dict[str, ContentForm] = {
-    "trailer":           ContentForm.TRAILER,
-    "teaser":            ContentForm.TEASER,
-    "behind_the_scenes": ContentForm.BEHIND_SCENES,
-    "making_of":         ContentForm.BEHIND_SCENES,
-    "bloopers":          ContentForm.BEHIND_SCENES,
-    "deleted_scenes":    ContentForm.BEHIND_SCENES,
-    "featurette":        ContentForm.BEHIND_SCENES,
-    "interview":         ContentForm.SUPPLEMENT,
-    "clip":              ContentForm.EXCERPT,
-}
-
-
-def content_form_for_label(label: str) -> Optional[ContentForm]:
-    """Return the :class:`mediavocab.ContentForm` implied by a raw label, or None.
-
-    Supplementary-content labels (``trailer`` / ``behind_the_scenes`` /
-    ``bloopers`` / …) keep their parent ``MediaType`` but surface the
-    distinguishing experiential kind here so the signal is never lost.
-    """
-    return LABEL_TO_CONTENT_FORM.get(label)
-
-
-# ---------------------------------------------------------------------------
-# Raw detection label → mediavocab ProgrammeFormat  (structural-format axis)
-#
-# A documentary / news / concert / stand-up / talk-show / sports broadcast is a
-# *structural programme format*, not a media type — un-collapsed from the old
-# leaf squashing (documentary→MOVIE, news→RADIO).  The ``media_type`` stays the
-# carrier (video / episodic / movie); the format rides this orthogonal axis.
-# ``documentary`` is also a genre (T1), so it is *additionally* emitted in
-# ``LABEL_TO_GENRES`` where natural.
-# ---------------------------------------------------------------------------
-LABEL_TO_PROGRAMME_FORMAT: Dict[str, ProgrammeFormat] = {
-    "documentary": ProgrammeFormat.DOCUMENTARY,
-    "news":        ProgrammeFormat.NEWS,
-    "concert":     ProgrammeFormat.CONCERT,
-    "stand_up":    ProgrammeFormat.STAND_UP,
-    "talk_show":   ProgrammeFormat.TALK_SHOW,
-    "sports":      ProgrammeFormat.SPORTS,
-}
-
-
-def programme_format_for_label(label: str) -> Optional[ProgrammeFormat]:
-    """Return the :class:`mediavocab.ProgrammeFormat` implied by a raw label."""
-    return LABEL_TO_PROGRAMME_FORMAT.get(label)
-
-
-# ---------------------------------------------------------------------------
-# Raw detection label → mediavocab AccessibilityKind  (per-release a11y axis)
-#
-# ``subtitled`` / ``audio_described`` / ``sign_language`` / ``dubbed`` cues
-# request an accessibility asset on the release, not a different work.
-# ---------------------------------------------------------------------------
-LABEL_TO_ACCESSIBILITY: Dict[str, AccessibilityKind] = {
-    "subtitled":        AccessibilityKind.SUBTITLES,
-    "audio_described":  AccessibilityKind.AUDIO_DESCRIPTION,
-    "audio_description": AccessibilityKind.AUDIO_DESCRIPTION,
-    "sign_language":    AccessibilityKind.SIGN_LANGUAGE,
-    "dubbed":           AccessibilityKind.DUBBED,
-}
-
-
-def accessibility_for_label(label: str) -> Optional[AccessibilityKind]:
-    """Return the :class:`mediavocab.AccessibilityKind` implied by a raw label."""
-    return LABEL_TO_ACCESSIBILITY.get(label)
-
-
-# ---------------------------------------------------------------------------
-# Raw detection label → mediavocab VariantKind  (work-level restructuring axis)
-#
-# A colorized / director's-cut / extended / remastered / fan-edit is a distinct
-# *cut* of the canonical work.
-# ---------------------------------------------------------------------------
-LABEL_TO_VARIANT: Dict[str, VariantKind] = {
-    "colorized":     VariantKind.COLORIZED,
-    "directors_cut": VariantKind.DIRECTORS,
-    "extended":      VariantKind.EXTENDED,
-    "remastered":    VariantKind.REMASTERED,
-    "fanedit":       VariantKind.FANEDIT,
-}
-
-
-def variant_for_label(label: str) -> Optional[VariantKind]:
-    """Return the :class:`mediavocab.VariantKind` implied by a raw label."""
-    return LABEL_TO_VARIANT.get(label)
-
-
-# ---------------------------------------------------------------------------
-# Raw detection label → mediavocab PictureFormat  (per-release presentation axis)
-#
-# ``black_and_white`` / ``silent`` / ``3d`` are picture/presentation technical
-# attributes (T6) — a Release-level attribute, routing-family (A6).  They map to
-# the mediavocab ``PictureFormat`` enum.  ``colorized`` is NOT a PictureFormat:
-# a colorized cut is a distinct *work variant* → ``LABEL_TO_VARIANT`` /
-# ``VariantKind.COLORIZED``.
-# ---------------------------------------------------------------------------
-LABEL_TO_PICTURE_FORMAT: Dict[str, PictureFormat] = {
-    "bw_movie":      PictureFormat.BLACK_AND_WHITE,
-    "silent_movie":  PictureFormat.SILENT,
-    "3d":            PictureFormat.THREE_D,
-}
-
-
-def picture_format_for_label(label: str) -> Optional[PictureFormat]:
-    """Return the :class:`mediavocab.PictureFormat` implied by a raw label."""
-    return LABEL_TO_PICTURE_FORMAT.get(label)
 
 
 # ---------------------------------------------------------------------------

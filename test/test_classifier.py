@@ -620,18 +620,5 @@ class TestSupplementaryContentForm(unittest.TestCase):
                       self.clf.classify_picture_format("a black and white movie",
                                                        "en-us"))
 
-    def test_label_to_content_form_map(self):
-        from ovos_media_classifier.intents import (
-            LABEL_TO_CONTENT_FORM, content_form_for_label,
-        )
-        self.assertEqual(LABEL_TO_CONTENT_FORM["trailer"],
-                         self.ContentForm.TRAILER)
-        self.assertEqual(LABEL_TO_CONTENT_FORM["behind_the_scenes"],
-                         self.ContentForm.BEHIND_SCENES)
-        self.assertEqual(content_form_for_label("bloopers"),
-                         self.ContentForm.BEHIND_SCENES)
-        self.assertIsNone(content_form_for_label("music"))
-
-
 if __name__ == "__main__":
     unittest.main()
