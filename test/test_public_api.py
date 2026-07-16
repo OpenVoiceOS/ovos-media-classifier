@@ -346,3 +346,26 @@ class TestOnnxParity(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestKeywordEntryPointRegistration(unittest.TestCase):
+    """The keyword backend self-registers as the reference plugin under the
+    ``opm.media.classifier`` group the package defines."""
+
+    def test_pyproject_declares_the_entry_point(self):
+        import pathlib
+        pyproject = pathlib.Path(__file__).resolve().parents[1] / "pyproject.toml"
+        text = pyproject.read_text()
+        self.assertIn('[project.entry-points."opm.media.classifier"]', text)
+        self.assertIn(
+            'ovos-media-classifier-keyword = '
+            '"ovos_media_classifier.keyword:KeywordMediaClassifier"', text)
+
+    def test_declared_target_follows_the_loader_contract(self):
+        # load_media_classifier_plugin tries clazz(config=...) and falls back
+        # to clazz() on TypeError — the keyword backend takes the second path.
+        from ovos_media_classifier.base import AbstractMediaClassifier
+        from ovos_media_classifier.keyword import KeywordMediaClassifier
+        with self.assertRaises(TypeError):
+            KeywordMediaClassifier(config={})
+        self.assertIsInstance(KeywordMediaClassifier(), AbstractMediaClassifier)

@@ -79,6 +79,12 @@ test = [
 # NOTE: dataset-build/training tooling lives in the top-level ``training/`` dir
 # (NOT shipped in the wheel); run it from a checkout. See training/README.md.
 
+# Self-registration under the plugin group this repo defines: the keyword
+# backend is the reference opm.media.classifier plugin, so OPM discovery and
+# the external-plugin path are exercised by the package itself.
+[project.entry-points."opm.media.classifier"]
+ovos-media-classifier-keyword = "ovos_media_classifier.keyword:KeywordMediaClassifier"
+
 [tool.setuptools.dynamic]
 version = { attr = "ovos_media_classifier.version.__version__" }
 
