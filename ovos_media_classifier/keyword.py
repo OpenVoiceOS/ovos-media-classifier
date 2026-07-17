@@ -881,7 +881,7 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
         # Supplementary / promotional content — all collapse onto the parent
         # MOVIE type; the distinguishing form (trailer / teaser / BTS / making_of
         # / bloopers / …) rides the orthogonal mediavocab.ContentForm axis
-        # (see ``classify_content_form`` / ``LABEL_TO_CONTENT_FORM``), so even a
+        # (see ``classify_content_form``), so even a
         # title-less "show me bloopers" resolves to MOVIE + ContentForm.BEHIND_SCENES.
         for _supp_voc in ("TrailerKeyword", "TeaserKeyword",
                           "BehindTheScenesKeyword", "MakingOfKeyword",
