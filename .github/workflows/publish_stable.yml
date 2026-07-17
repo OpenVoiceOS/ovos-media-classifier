@@ -16,7 +16,7 @@ jobs:
       PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
       MATRIX_TOKEN: ${{ secrets.MATRIX_TOKEN }}
     with:
-      version_file: 'ocp_pipeline/version.py'
+      version_file: 'ovos_media_classifier/version.py'
       publish_pypi: true
       publish_release: true
       sync_dev: true
