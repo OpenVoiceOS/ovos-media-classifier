@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.0.3a1](https://github.com/OpenVoiceOS/ovos-media-classifier/tree/0.0.3a1) (2026-07-17)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-media-classifier/compare/0.0.2a2...0.0.3a1)
+
+**Merged pull requests:**
+
+- fix: ship the RelativeFollowup voc and stop swallowing matcher errors [\#40](https://github.com/OpenVoiceOS/ovos-media-classifier/pull/40) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [0.0.2a2](https://github.com/OpenVoiceOS/ovos-media-classifier/tree/0.0.2a2) (2026-07-17)
 
 [Full Changelog](https://github.com/OpenVoiceOS/ovos-media-classifier/compare/0.0.2a1...0.0.2a2)
