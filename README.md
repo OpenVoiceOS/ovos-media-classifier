@@ -3,6 +3,10 @@
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/)
 
+> ⚠️ **Work in progress — pre-release software.** Under active development, not
+> yet deployed in OpenVoiceOS, and APIs may change without notice. Published in
+> the open for transparency; do not depend on it in production yet.
+
 **A self-describing, pluggable media-intent classifier for voice assistants.**
 Given a spoken request — *"play some music"*, *"watch an anime"*, *"read me a
 chapter of Dune"* — it answers, fast and offline, **what kind of media is wanted**
