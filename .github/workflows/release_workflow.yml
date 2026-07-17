@@ -19,7 +19,7 @@ jobs:
       MATRIX_TOKEN: ${{ secrets.MATRIX_TOKEN }}
     with:
       branch: 'dev'
-      version_file: 'ocp_pipeline/version.py'
+      version_file: 'ovos_media_classifier/version.py'
       update_changelog: true
       publish_prerelease: true
       propose_release: true
