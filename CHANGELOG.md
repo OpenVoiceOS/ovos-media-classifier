@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.0.2a1](https://github.com/OpenVoiceOS/ovos-media-classifier/tree/0.0.2a1) (2026-07-17)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-media-classifier/compare/0.0.1a1...0.0.2a1)
+
+**Merged pull requests:**
+
+- fix: make the version readable without importing the package [\#49](https://github.com/OpenVoiceOS/ovos-media-classifier/pull/49) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [0.0.1a1](https://github.com/OpenVoiceOS/ovos-media-classifier/tree/0.0.1a1) (2026-07-17)
 
 [Full Changelog](https://github.com/OpenVoiceOS/ovos-media-classifier/compare/30cdc86a580c5bfbbe199e501861ed75ffe6649d...0.0.1a1)
