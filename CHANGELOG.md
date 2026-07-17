@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.0.3a2](https://github.com/OpenVoiceOS/ovos-media-classifier/tree/0.0.3a2) (2026-07-17)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-media-classifier/compare/0.0.3a1...0.0.3a2)
+
+**Merged pull requests:**
+
+- refactor: shared head→enum coercion for the onnx per-axis outputs [\#42](https://github.com/OpenVoiceOS/ovos-media-classifier/pull/42) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [0.0.3a1](https://github.com/OpenVoiceOS/ovos-media-classifier/tree/0.0.3a1) (2026-07-17)
 
 [Full Changelog](https://github.com/OpenVoiceOS/ovos-media-classifier/compare/0.0.2a2...0.0.3a1)
