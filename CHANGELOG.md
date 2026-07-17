@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.0.3a3](https://github.com/OpenVoiceOS/ovos-media-classifier/tree/0.0.3a3) (2026-07-17)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-media-classifier/compare/0.0.3a2...0.0.3a3)
+
+**Merged pull requests:**
+
+- refactor: table-driven backend factory [\#41](https://github.com/OpenVoiceOS/ovos-media-classifier/pull/41) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [0.0.3a2](https://github.com/OpenVoiceOS/ovos-media-classifier/tree/0.0.3a2) (2026-07-17)
 
 [Full Changelog](https://github.com/OpenVoiceOS/ovos-media-classifier/compare/0.0.3a1...0.0.3a2)
