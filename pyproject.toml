@@ -14,7 +14,7 @@ license = { text = "Apache-2.0" }
 requires-python = ">=3.10"
 dependencies = [
     "ovos-utils>=0.0.38",
-    "mediavocab>=1.0.0,<2.0.0",
+    "mediavocab>=1.3.0a2,<2.0.0",
     # OVOS-INTENT-2 .voc loader + word-boundary matcher for the bundled locale
     "ovos-spec-tools>=0.6.0a1",
 ]
@@ -68,10 +68,12 @@ train = [
     "gensim",
 ]
 
-# test deps — optional-backend deps are mocked in the suite, so [test] runs green
+# test deps — the online metadatarr backend is patched (never hits the network)
+# but must be importable for the patch target to exist
 test = [
     "pytest",
     "pytest-cov",
+    "metadatarr>=0.5.0a1",
 ]
 
 # NOTE: dataset-build/training tooling lives in the top-level ``training/`` dir

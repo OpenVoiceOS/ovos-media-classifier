@@ -33,7 +33,7 @@ def _fake_result(medium, *, confidence=0.9, year=None,
 
 
 def _patch_resolve(fn):
-    """Patch metadatarr.resolve.resolve with *fn*."""
+    """Patch metadatarr.resolve.resolve with *fn* (network never hit)."""
     import metadatarr.resolve as mr
     return patch.object(mr, "resolve", fn)
 
