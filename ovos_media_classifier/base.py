@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import Dict, Tuple, List, Optional
 
+from ovos_utils.log import LOG
+
 from mediavocab.taxonomy import (
     ContentForm,
     ProgrammeFormat,
@@ -362,17 +364,19 @@ class AbstractMediaClassifier(ABC):
 
         A relative follow-up steers the *current* session without naming a new
         title — "something else", "another one", "more like this", "a different
-        one".  The default looks for the ``RelativeFollowup`` voc when the backend
-        can match vocs, else a small built-in phrase set, so a non-voc backend
-        still gets the behaviour.
+        one".  The default looks for the bundled ``RelativeFollowup`` voc when
+        the backend can match vocs, else a small built-in English phrase set,
+        so a non-voc backend still gets the behaviour (en-us only — vocab-less
+        backends have no locale resources to draw on).
         """
         match = getattr(clf, "_match", None)
         if callable(match):
             try:
                 if match(query, "RelativeFollowup", lang):
                     return True
-            except Exception:
-                pass
+            except Exception as e:
+                LOG.debug(f"RelativeFollowup voc match failed for lang "
+                          f"'{lang}': {e}")
         q = (query or "").lower()
         return any(p in q for p in (
             "something else", "another one", "different one", "more like this",
