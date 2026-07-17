@@ -580,31 +580,53 @@ class OnnxMediaClassifier(AbstractMediaClassifier):
         label, _, _ = self._play_label(query, lang)
         return list(LABEL_TO_GENRES.get(label, []))
 
-    def classify_content_form(self, query: str, lang: str):
-        """The :class:`mediavocab.ContentForm` from the ``content_form`` head.
+    def _enum_from_single_head(self, head: str, enum_cls, query: str, lang: str):
+        """Coerce a single-label head's top prediction to *enum_cls*.
 
-        Falls back to the inherited ``None`` default when the bundle carries no
-        ``content_form`` head.
+        Returns ``None`` when the bundle has no such head, the head abstains,
+        or the predicted label is not a valid enum value — the caller then
+        falls back to the inherited default.
         """
-        from mediavocab.taxonomy import ContentForm
-        res = self._single_head("content_form", query, lang)
+        res = self._single_head(head, query, lang)
         if res is not None and res[0]:
             try:
-                return ContentForm(res[0])
+                return enum_cls(res[0])
             except ValueError:
                 pass
-        return super().classify_content_form(query, lang)
+        return None
+
+    def _enums_from_multi_head(self, head: str, enum_cls, query: str, lang: str):
+        """Coerce a multi-label head's predictions to a list of *enum_cls*.
+
+        Invalid labels are skipped (the coerced list may be empty). Returns
+        ``None`` when the bundle has no such head or the head abstains — the
+        caller then falls back to the inherited default.
+        """
+        if self._has_head(head):
+            out = self._multi_head(head, query, lang)
+            if out is not None:
+                values = []
+                for v in out:
+                    try:
+                        values.append(enum_cls(v))
+                    except ValueError:
+                        continue
+                return values
+        return None
+
+    def classify_content_form(self, query: str, lang: str):
+        """The :class:`mediavocab.ContentForm` from the ``content_form`` head,
+        else the inherited default."""
+        from mediavocab.taxonomy import ContentForm
+        out = self._enum_from_single_head("content_form", ContentForm, query, lang)
+        return out if out is not None else super().classify_content_form(query, lang)
 
     def classify_programme_format(self, query: str, lang: str):
         """The :class:`mediavocab.ProgrammeFormat` from the head, else ``None``."""
         from mediavocab.taxonomy import ProgrammeFormat
-        res = self._single_head("programme_format", query, lang)
-        if res is not None and res[0]:
-            try:
-                return ProgrammeFormat(res[0])
-            except ValueError:
-                pass
-        return super().classify_programme_format(query, lang)
+        out = self._enum_from_single_head(
+            "programme_format", ProgrammeFormat, query, lang)
+        return out if out is not None else super().classify_programme_format(query, lang)
 
     def classify_accessibility(self, query: str, lang: str) -> List:
         """The :class:`mediavocab.AccessibilityKind` assets from the head.
@@ -612,28 +634,15 @@ class OnnxMediaClassifier(AbstractMediaClassifier):
         Multi-label; falls back to the inherited empty default.
         """
         from mediavocab.taxonomy import AccessibilityKind
-        if self._has_head("accessibility"):
-            out = self._multi_head("accessibility", query, lang)
-            if out is not None:
-                kinds = []
-                for v in out:
-                    try:
-                        kinds.append(AccessibilityKind(v))
-                    except ValueError:
-                        continue
-                return kinds
-        return super().classify_accessibility(query, lang)
+        out = self._enums_from_multi_head(
+            "accessibility", AccessibilityKind, query, lang)
+        return out if out is not None else super().classify_accessibility(query, lang)
 
     def classify_variant(self, query: str, lang: str):
         """The :class:`mediavocab.VariantKind` from the ``variant`` head, else ``None``."""
         from mediavocab.taxonomy import VariantKind
-        res = self._single_head("variant", query, lang)
-        if res is not None and res[0]:
-            try:
-                return VariantKind(res[0])
-            except ValueError:
-                pass
-        return super().classify_variant(query, lang)
+        out = self._enum_from_single_head("variant", VariantKind, query, lang)
+        return out if out is not None else super().classify_variant(query, lang)
 
     def classify_picture_format(self, query: str, lang: str) -> List:
         """The :class:`mediavocab.PictureFormat` attributes from the head.
@@ -641,39 +650,21 @@ class OnnxMediaClassifier(AbstractMediaClassifier):
         Multi-label; falls back to the inherited empty default.
         """
         from mediavocab.taxonomy import PictureFormat
-        if self._has_head("picture_format"):
-            out = self._multi_head("picture_format", query, lang)
-            if out is not None:
-                formats = []
-                for v in out:
-                    try:
-                        formats.append(PictureFormat(v))
-                    except ValueError:
-                        continue
-                return formats
-        return super().classify_picture_format(query, lang)
+        out = self._enums_from_multi_head(
+            "picture_format", PictureFormat, query, lang)
+        return out if out is not None else super().classify_picture_format(query, lang)
 
     def classify_playback_type(self, query: str, lang: str):
         """PlaybackType from the head when present, else derived from the leaf."""
         from mediavocab import PlaybackType
-        res = self._single_head("playback_type", query, lang)
-        if res is not None and res[0]:
-            try:
-                return PlaybackType(res[0])
-            except ValueError:
-                pass
-        return super().classify_playback_type(query, lang)
+        out = self._enum_from_single_head("playback_type", PlaybackType, query, lang)
+        return out if out is not None else super().classify_playback_type(query, lang)
 
     def classify_structure(self, query: str, lang: str):
         """Structure from the head when present, else derived from the leaf."""
         from mediavocab import Structure
-        res = self._single_head("structure", query, lang)
-        if res is not None and res[0]:
-            try:
-                return Structure(res[0])
-            except ValueError:
-                pass
-        return super().classify_structure(query, lang)
+        out = self._enum_from_single_head("structure", Structure, query, lang)
+        return out if out is not None else super().classify_structure(query, lang)
 
     def classify_explicitness(self, query: str, lang: str) -> str:
         """Explicitness from the head when present, else derived from the form genres."""
