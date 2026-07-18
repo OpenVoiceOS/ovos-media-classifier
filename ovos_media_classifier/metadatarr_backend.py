@@ -48,20 +48,27 @@ def _run_with_timeout(fn, timeout_s: float):
 
     Uses a daemon thread so a hung network call can never block the pipeline:
     the worker is abandoned (it cannot be force-killed in CPython) but the
-    caller returns promptly with ``None``.
+    caller returns promptly with ``None``. A ThreadPoolExecutor is deliberately
+    avoided — its context-manager exit joins the pending future, which would
+    block the caller until the hung call finished, defeating the timeout.
     """
-    import concurrent.futures as cf
+    import threading
 
-    with cf.ThreadPoolExecutor(max_workers=1) as ex:
-        fut = ex.submit(fn)
+    box: List = []
+
+    def _worker():
         try:
-            return fut.result(timeout=timeout_s)
-        except cf.TimeoutError:
-            LOG.debug("metadatarr resolve timed out → abstain")
-            return None
-        except Exception as e:  # noqa: BLE001 - never raise out of classify
+            box.append(fn())
+        except Exception as e:  # never raise out of classify
             LOG.debug(f"metadatarr resolve failed → abstain: {e}")
-            return None
+
+    worker = threading.Thread(target=_worker, daemon=True)
+    worker.start()
+    worker.join(timeout_s)
+    if worker.is_alive():
+        LOG.debug("metadatarr resolve timed out → abstain")
+        return None
+    return box[0] if box else None
 
 
 class MetadatarrMediaClassifier(AbstractMediaClassifier):
