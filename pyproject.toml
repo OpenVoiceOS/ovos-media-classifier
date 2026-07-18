@@ -98,3 +98,15 @@ ovos_media_classifier = [
     "data/gazetteer.json",
     "py.typed",
 ]
+
+[tool.pytest.ini_options]
+testpaths = ["test"]
+addopts = "-q"
+
+[tool.coverage.run]
+source = ["ovos_media_classifier"]
+branch = true
+
+[tool.coverage.report]
+skip_covered = false
+show_missing = true
