@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.0.3a4](https://github.com/OpenVoiceOS/ovos-media-classifier/tree/0.0.3a4) (2026-07-18)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-media-classifier/compare/0.0.3a3...0.0.3a4)
+
+**Merged pull requests:**
+
+- chore: commit the pytest and coverage configuration [\#43](https://github.com/OpenVoiceOS/ovos-media-classifier/pull/43) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [0.0.3a3](https://github.com/OpenVoiceOS/ovos-media-classifier/tree/0.0.3a3) (2026-07-17)
 
 [Full Changelog](https://github.com/OpenVoiceOS/ovos-media-classifier/compare/0.0.3a2...0.0.3a3)
