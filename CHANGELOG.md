@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.0.4a1](https://github.com/OpenVoiceOS/ovos-media-classifier/tree/0.0.4a1) (2026-07-18)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-media-classifier/compare/0.0.3a4...0.0.4a1)
+
+**Merged pull requests:**
+
+- fix: make \_run\_with\_timeout actually time out [\#56](https://github.com/OpenVoiceOS/ovos-media-classifier/pull/56) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [0.0.3a4](https://github.com/OpenVoiceOS/ovos-media-classifier/tree/0.0.3a4) (2026-07-18)
 
 [Full Changelog](https://github.com/OpenVoiceOS/ovos-media-classifier/compare/0.0.3a3...0.0.3a4)
