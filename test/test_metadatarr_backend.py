@@ -7,6 +7,7 @@ lazy-import-when-disabled, and the hybrid's layered fall-through order
 (keyword → offline router → online, later layers only fill abstentions).
 """
 import sys
+import threading
 import time
 import unittest
 from unittest.mock import MagicMock, patch
@@ -93,6 +94,24 @@ class TestRobustness(unittest.TestCase):
 
         with _patch_resolve(slow):
             self.assertEqual(clf.classify("x", "en-us"), (MediaType.GENERIC, 0.0))
+
+    def test_timeout_returns_before_hung_call_finishes(self):
+        # adversarial: the resolve hangs far longer than the budget; classify
+        # must return within roughly the timeout, not block until the hang ends.
+        clf = MetadatarrMediaClassifier(timeout_s=0.2)
+        hang = threading.Event()
+
+        def never_returns(s, max_workers=8):
+            hang.wait(30)  # abandoned daemon thread; released on teardown
+            return _fake_result(MV.MOVIE)
+
+        with _patch_resolve(never_returns):
+            start = time.monotonic()
+            result = clf.classify("x", "en-us")
+            elapsed = time.monotonic() - start
+        hang.set()
+        self.assertEqual(result, (MediaType.GENERIC, 0.0))
+        self.assertLess(elapsed, 2.0)  # would be ~30s with the join bug
 
     def test_empty_result_abstains(self):
         clf = MetadatarrMediaClassifier(timeout_s=2.0)
