@@ -9,6 +9,7 @@ lazy-import-when-disabled, and the hybrid's layered fall-through order
 import sys
 import threading
 import time
+import types
 import unittest
 from unittest.mock import MagicMock, patch
 
@@ -34,9 +35,21 @@ def _fake_result(medium, *, confidence=0.9, year=None,
 
 
 def _patch_resolve(fn):
-    """Patch metadatarr.resolve.resolve with *fn* (network never hit)."""
-    import metadatarr.resolve as mr
-    return patch.object(mr, "resolve", fn)
+    """Patch metadatarr.resolve.resolve with *fn* (network never hit).
+
+    metadatarr is an optional (``[online]``-extra) dependency the ``[test]``
+    extra deliberately excludes — the suite mocks it rather than requiring the
+    real package.  We inject fake ``metadatarr`` / ``metadatarr.resolve``
+    modules into ``sys.modules`` so the backend's lazy
+    ``from metadatarr.resolve import resolve`` resolves to *fn* whether or not
+    the real package is installed.
+    """
+    resolve_mod = types.ModuleType("metadatarr.resolve")
+    resolve_mod.resolve = fn
+    metadatarr_mod = types.ModuleType("metadatarr")
+    metadatarr_mod.resolve = resolve_mod
+    return patch.dict(sys.modules, {"metadatarr": metadatarr_mod,
+                                    "metadatarr.resolve": resolve_mod})
 
 
 class TestResolveMapping(unittest.TestCase):
