@@ -24,7 +24,7 @@ their constituent sources, so they are ingested directly into the `artist_name`
 |---|---|---|
 | `media-metadata-artists` | **canonical UNIFIED artist set** → `artist_name` (+ `aliases`), `style`/`tags`→`music_genre`. Cross-deduplicated across MusicBrainz / TheAudioDB / Jazz / Prog Archives / Metal Archives / classical-composer sources | MusicBrainz + others |
 | `musicbrainz-releases` | `album_name`, `artist_name` (albums + the album↔artist relation; not in the artist set above) | MusicBrainz (CC0) |
-| `media-metadata-imdb-titles` | **primary title source** — split by `titleType`: `movie`/`tvMovie`→`movie_title`, `tvSeries`/`tvMiniSeries`→`tv_show_title`, `short`/`tvShort`→`short_film_title`, `videoGame`→`game_title`; `genres`→`content_genre` (+ `movie_genre`/`tv_genre`/`game_genre`), `startYear`→`release_year`/`release_decade`; `isAdult==1` routes to `adult_title` (never the clean pools). Also the **join key** (`imdb_id`) for the relational IMDb sources below | IMDb |
+| `media-metadata-imdb-titles` | **primary title source**, split by `titleType`: `movie`/`tvMovie`→`movie_title`, `tvSeries`/`tvMiniSeries`→`tv_show_title`, `short`/`tvShort`→`short_film_title`, `videoGame`→`game_title`; `genres`→`content_genre` (+ `movie_genre`/`tv_genre`/`game_genre`), `startYear`→`release_year`/`release_decade`; `isAdult==1` routes to `adult_title` (never the clean pools). Also the **join key** (`imdb_id`) for the relational IMDb sources below | IMDb |
 | `media-metadata-imdb-episodes` | joined (`series_id`→series title, episode `imdb_id`→episode title) into the `episodes` relation + `season_number`/`episode_number`/`episode_title` pools | IMDb |
 | `media-metadata-imdb-technical-specs` + `media-metadata-imdb-bw-silent` | joined to the real title → the `bw_movie_title` / `silent_movie_title` pools tagged `black_and_white` / `silent` (the `bw_silent` relation) | IMDb |
 | `media-metadata-imdb-ratings` | `num_votes` → **popularity-weighted** `movie_title` sampling (`_imdb_votes.csv`) | IMDb |
@@ -55,7 +55,7 @@ Wikidata fallback. The `titleType`→slot map is `_IMDB_TYPE_TO_SLOT` in
 `training/ingest_entities.py`.
 
 The Wikidata `entity_type` split is the fallback for `movie_title` **real film
-titles** (rather than fabricated strings) — see `WIKIDATA_TYPE_TO_LABEL` in
+titles** (rather than fabricated strings), see `WIKIDATA_TYPE_TO_LABEL` in
 `training/ingest_entities.py` for the full type→label map.
 
 ### book vs audiobook vs comic (read vs play)
@@ -79,7 +79,7 @@ templates can phrase requests by attribute:
 | `release_year` | TVmaze `premiered`, AniList `season_year`, Steam `release_date` | `1999`, `2014` |
 | `release_decade` | derived from the above | `1990s`, `2010s` |
 | `music_genre` / `tv_genre` / `game_genre` / `video_genre` | per-source genre columns | `jazz`, `drama`, `rpg` |
-| `record_label` / `tv_network` / `anime_studio` | label / network / studio columns | — |
+| `record_label` / `tv_network` / `anime_studio` | label / network / studio columns |, |
 | `media_country` | curated seed (clean adjectives) | `French`, `Japanese` |
 
 ### Local `metadatarr` scraper cache
@@ -121,7 +121,7 @@ provide adult content.
 | `adult-metadata-mal-hentai` | `hentai_title`, `hentai_studio` | MyAnimeList hentai |
 | `adult-metadata-hentaisea` | `hentai_title` | hentaisea hentai catalogue |
 
-These are **private** datasets — ingestion uses the HuggingFace token from the
+These are **private** datasets, ingestion uses the HuggingFace token from the
 environment. The unified performer set is already **cross-deduplicated** across
 its constituent rosters (stashdb / iafd / freeones / boobpedia / thenude …), so
 the `pornstar` pool is one deduplicated set rather than the sum of overlapping
@@ -136,13 +136,13 @@ manga" template never fills an adult title. A hentai row is labelled `hentai` �
 The physical-attribute pools (`adult_eye_color`, `adult_hair_color`,
 `adult_ethnicity`, `adult_body_type`, `adult_country`) exist so detection fires
 on a **description** (*"porn with red hair"*, *"some asian porn"*) and not only
-on a named performer — otherwise the filter would be trivially evaded. They are
+on a named performer, otherwise the filter would be trivially evaded. They are
 detect-to-block training signals only.
 
 Every adult template is labelled `adult` / `adult_audio` / `hentai`, which map to
 a real `mediavocab.MediaType` plus the `adult` **genre** via `LABEL_TO_GENRES`.
 That genre is the signal the content filter blocks on. The slice is a **deliberate
-minority** (`--adult-cap`, default 7 000 rows) — enough for the model to learn
+minority** (`--adult-cap`, default 7 000 rows), enough for the model to learn
 detection, far below a normal class so it never dominates training.
 
 ## How the training set is assembled
@@ -168,3 +168,6 @@ how to add `.intent` templates (via ovos-localize) are in [dataset.md](dataset.m
 
 See also [entity-lists.md](entity-lists.md) (the same labelled entity lists the
 NER backend consumes at runtime) and [content-filtering.md](content-filtering.md).
+
+---
+[← Dataset](dataset.md) · [Home](index.md) · [Contextual classification →](contextual-classification.md)

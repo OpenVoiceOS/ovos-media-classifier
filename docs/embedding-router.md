@@ -5,7 +5,7 @@ classifier. It uses [guided-categorical-embeddings](https://github.com/TigreGoti
 (GCE) with a **routing-aware** objective: independent per-axis heads route
 `media_type` / `playback_type`, **abstaining to `GENERIC` when unsure** so a
 wrong route never prunes the provider that actually had the content. It is wired
-as a **hybrid** by default — keyword stays the high-precision first pass and the
+as a **hybrid** by default, keyword stays the high-precision first pass and the
 router fills the keyword-less cases.
 
 Inference uses **numpy + onnxruntime only** (the `[onnx]` extra). No torch / GCE
@@ -16,17 +16,17 @@ row + abstain decision are pure numpy.
 
 The model input is `[static | entity]` concatenated:
 
-- **static** — the categorical `kw_* / verb_* / mod_* / fmt_* / kw_genre_*`
+- **static**, the categorical `kw_* / verb_* / mod_* / fmt_* / kw_genre_*`
   columns the runtime `CategoricalFeatureExtractor` produces from `.voc`
   matching, one-hot via GCE's `CategoricalVectorizer`.
-- **entity** — one slot per train-time NER label (`artist_name`, `movie_title`,
+- **entity**, one slot per train-time NER label (`artist_name`, `movie_title`,
   `anime_title`, `audiobook_title`, …). At train time the slots come from the
   dataset's `ner_*` columns; at inference the slots fire from the **user's own
-  media library**, injected at runtime via `register_user_entities` — **no
+  media library**, injected at runtime via `register_user_entities`, **no
   retraining**. This is what closes the keyword backend's entity-gap mis-routes.
 
 > **Bounded for live use.** Entity matching cost scales with the injected title
-> count, so live routing runs on a bounded set — the user's library plus a capped
+> count, so live routing runs on a bounded set, the user's library plus a capped
 > popular gazetteer (default ~1000/type). A 1M-entity set is for offline tagging
 > only. Full latency curve and the cap: [metadatarr-routing.md](metadatarr-routing.md#live-size-must-be-bounded-latency).
 
@@ -35,7 +35,7 @@ The model input is `[static | entity]` concatenated:
 Each axis is a GCE `LabelGuidedTrainer` (via `PerAxisRouter`) with a learned
 `GENERIC` abstain class and:
 
-- **`cost_matrix`** — a confident WRONG route costs `10`; routing to the cheap
+- **`cost_matrix`**, a confident WRONG route costs `10`; routing to the cheap
   `GENERIC` column costs `1` (encodes "mis-route ≫ abstain" directly in the
   loss).
 - **`abstain_label="GENERIC"`** + **`focal_gamma`** for calibration +
@@ -57,7 +57,7 @@ python -m benchmarks.routing_eval                   # keyword + router + hybrid(
 ```
 
 The bundle is `data/models/embedding_router/` (`router_meta.json` + per-axis
-`media_type/` and `playback_type/` GCE exports). `data/` is gitignored — the
+`media_type/` and `playback_type/` GCE exports). `data/` is gitignored, the
 bundle is not committed.
 
 ## Use it
@@ -84,10 +84,9 @@ clf.classify("watch attack on titan", "en-us")   # -> (EPISODIC_SERIES, …)
 
 The hybrid composes the two backends so the learned router can only help:
 
-1. A fired **injected user-library entity** wins (highest-precision evidence —
-   "Attack on Titan" in the user's anime library beats the generic `watch` →
+1. A fired **injected user-library entity** wins (highest-precision evidence, "Attack on Titan" in the user's anime library beats the generic `watch` →
    MOVIE cue). Empty by default, so with no injected library this is inert.
-2. **Keyword's confident leaf** (explicit cue) — its high-precision route.
+2. **Keyword's confident leaf** (explicit cue), its high-precision route.
 3. The **router**, for keyword-less cases, abstaining when unsure.
 
 The gate (`classify_domain` / `is_ocp_query`) and the content-policy axis
@@ -106,15 +105,15 @@ adult-leak and false-hijack are exactly the keyword floor.
 
 (222-case set, including the 36-case `conversational` spoken-register slice.)
 
-**Verdict — promote as a recommended optional backend, default stays keyword.**
+**Verdict, promote as a recommended optional backend, default stays keyword.**
 The hybrid **with the user's library injected** lowers mis-route below the
 keyword floor (0.029 < 0.050) while holding adult-leak at 0.0, false-hijack at
-the keyword floor (0.208) and false-miss at the keyword floor (0.103) — it
+the keyword floor (0.208) and false-miss at the keyword floor (0.103), it
 recovers keyword abstains as correct media routes (resolved 0.318 → 0.625) and
 closes keyword entity-gap mis-routes (`watch attack on titan` → EPISODIC_SERIES,
 `listen to harry potter` → AUDIOBOOK, `the daily` → podcast). On the
 `conversational` slice (36 messy-spoken cases) it is the strongest router (0.040
-mis-route, 0.667 resolved) — entity injection reads bare titles out of disfluent
+mis-route, 0.667 resolved), entity injection reads bare titles out of disfluent
 speech that the orthography-invariant categorical features cannot. The router
 never moves the gate (keyword owns it), so a common short title cannot hijack
 ordinary speech.
@@ -123,5 +122,8 @@ The honest caveat: the win is delivered through **runtime entity injection**.
 Without an injected library the hybrid only *matches* keyword (the router
 abstains on the deliberately keyword-less OOD eval, since its static features
 rarely fire and it has no negative-gate training data). The router alone is not a
-gate — it has no negative training data — which is exactly why it is shipped as a
+gate, it has no negative training data, which is exactly why it is shipped as a
 keyword-gated hybrid, never as the default.
+
+---
+[← Backends](backends.md) · [Home](index.md) · [Open-vocab routing →](metadatarr-routing.md)

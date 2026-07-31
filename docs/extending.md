@@ -2,17 +2,17 @@
 
 There are two ways to extend `ovos-media-classifier`, covered in turn:
 
-* **Part A** — ship a *new backend* (a different model or strategy) behind the
+* **Part A**, ship a *new backend* (a different model or strategy) behind the
   same contract, discovered as an OPM plugin.
-* **Part B** — *retrain* the bundled ONNX backend, and add a *new axis/head*
+* **Part B**, *retrain* the bundled ONNX backend, and add a *new axis/head*
   end-to-end through the training pipeline.
 
-For the model itself — features, heads, soft-gating, limitations — read
+For the model itself, features, heads, soft-gating, limitations, read
 [model.md](model.md) first.
 
 ---
 
-## Part A — Add a backend
+## Part A, Add a backend
 
 Every classifier, bundled or third-party, implements
 [`AbstractMediaClassifier`](../ovos_media_classifier/base.py). The host relies on
@@ -57,12 +57,12 @@ axis method only when your backend has real signal for it:
 | `classify_structure` | derives from the leaf | you have a structure head |
 | `classify_picture_format` | `[]` | you predict `mediavocab.PictureFormat` (bw / silent / 3d) |
 | `classify_explicitness` | derives from the form genres | you have an explicitness head |
-| `classify_control_intent` | delegates to `classify_control()` | — |
+| `classify_control_intent` | delegates to `classify_control()` |, |
 | `classify_full` | combines the above (derive-from-leaf) | you predict the axes directly and want to soft-gate the leaf |
 | `to_signals` | builds `mediavocab.Signals` from `classify_full` + genres + content_form + variant | you extract entities (artist / year / season / episode) to enrich the `Signals` |
 
 A trained backend SHOULD override the coarse-axis methods so it predicts each axis
-with its own head and soft-gates the leaf — that is the whole point of the
+with its own head and soft-gates the leaf, that is the whole point of the
 multi-axis model (see [model.md](model.md#2-multi-task-per-axis-heads--the-key-design)).
 
 ### Register and load it
@@ -85,13 +85,13 @@ clf = load_media_classifier({"media_classifier_plugin": "my-classifier"})
 ```
 
 If the plugin fails to load the factory logs a warning and falls through to the
-built-in backends — an external plugin never hard-fails the pipeline. See
+built-in backends, an external plugin never hard-fails the pipeline. See
 [external-plugins.md](external-plugins.md) for discovery details and
 [stable-api.md](stable-api.md) for the full contract and return types.
 
 ---
 
-## Part B — Train and export an ONNX bundle
+## Part B, Train and export an ONNX bundle
 
 The reference "train your own backend" pipeline is
 [`training/train_sklearn.py`](../training/train_sklearn.py). It turns the canonical
@@ -145,17 +145,17 @@ clf = OnnxMediaClassifier.from_path("data/models/context_ner")
 
 ---
 
-## Part C — Neural backend + custom architectures (PyTorch → ONNX)
+## Part C, Neural backend + custom architectures (PyTorch → ONNX)
 
 [`training/train_torch.py`](../training/train_torch.py) is the **neural** trainer.
-It produces the *same* self-describing bundle format as `train_sklearn.py` — one
-ONNX graph per axis + `meta.json` — so `OnnxMediaClassifier.from_path` loads a
+It produces the *same* self-describing bundle format as `train_sklearn.py`, one
+ONNX graph per axis + `meta.json`, so `OnnxMediaClassifier.from_path` loads a
 torch bundle **unchanged**. The difference is the model (a shared-trunk multi-task
 net) and the *features* (it can add char-hash text + trained word vectors that the
 sklearn ladder's binary flags can't express). The why/what + the full head-to-head
 comparison live in [model.md §7](model.md#7-neural-backend--richer-text-features-does-seeing-the-value-text-help);
 this is the how-to. `torch` + `gensim` ship in the `[train]` extra and are
-**train-only** — runtime stays `onnxruntime` + `numpy`.
+**train-only**, runtime stays `onnxruntime` + `numpy`.
 
 ### 1. (optional) train the domain word vectors
 
@@ -194,12 +194,12 @@ VARIANTS["my_arch"] = {
 `blocks` selects the feature families (`cat` = categorical, `text` = char-hash,
 `wordvec` = pooled word vectors); `build_features` assembles
 `[cat ⊕ text ⊕ wordvec]` and records the exact column order in `feature_names`.
-The trunk (`Trunk` in `_build_modules`) is a plain LayerNorm-MLP — change its body
+The trunk (`Trunk` in `_build_modules`) is a plain LayerNorm-MLP, change its body
 to try a different architecture (e.g. a learned char-embedding + attention pool):
 keep the `forward(x) -> z` shape so each axis head reads a fixed-width trunk
 output, and keep the per-axis `HeadExport` (trunk → head → softmax|sigmoid) so the
-export still emits the bundle's expected tensors. Everything else — multi-task
-loss, class weighting, early stop, ONNX export, the round-trip parity check — is
+export still emits the bundle's expected tensors. Everything else, multi-task
+loss, class weighting, early stop, ONNX export, the round-trip parity check, is
 architecture-agnostic and reused.
 
 The featurizer spec is written into `meta.json` (`text_hash` / `wordvec`) by
@@ -218,7 +218,7 @@ its spec in `meta.json`.
 Adding a new classification axis is a four-step change. Use the real function and
 symbol names below; the existing axes are worked examples of each step.
 
-**1. Emit a ground-truth column** — add the derived label to
+**1. Emit a ground-truth column**, add the derived label to
 [`_derive_axes`](../training/build_dataset.py) in `training/build_dataset.py`. It
 computes each axis from the template `intent` plus the `slot_values` that filled
 the row (e.g. `content_form` / `programme_format` / `variant` from the intent
@@ -227,7 +227,7 @@ Return your new key from this function and add
 it to the `_AXES` column-order list so it lands in the written CSV/parquet. The
 label must be ground-truth-by-construction, exactly like the existing columns.
 
-**2. Declare the head** — add an entry to `HEAD_SPECS` in
+**2. Declare the head**, add an entry to `HEAD_SPECS` in
 [`training/train_sklearn.py`](../training/train_sklearn.py):
 `(axis_name, column, kind)` where `kind` is `"single"` (argmax) or `"multi"`
 (per-label sigmoid). `train_single_head` / `train_multi_head` then train it
@@ -236,30 +236,33 @@ automatically; a degenerate column is skipped, and `export_bundle` writes
 per-label `threshold` (default `DEFAULT_MULTILABEL_THRESHOLD = 0.5`); cap an
 open-vocabulary head with a `top_k` like `content_genres` does.
 
-**3. Add the contract method** — add `classify_<axis>` to
+**3. Add the contract method**, add `classify_<axis>` to
 [`AbstractMediaClassifier`](../ovos_media_classifier/base.py) with a sensible
 default (derive from a cheaper axis, or return empty/`None`) so every existing
 backend keeps working without change.
 
-**4. Read the head in the runtime** — override `classify_<axis>` in
+**4. Read the head in the runtime**, override `classify_<axis>` in
 [`OnnxMediaClassifier`](../ovos_media_classifier/onnx.py) to use the head when the
 bundle carries it and fall back to the inherited default otherwise. Use
 `self._single_head(axis, query, lang)` for a single-label head or
-`self._multi_head(axis, query, lang)` for a multi-label one — both already handle
+`self._multi_head(axis, query, lang)` for a multi-label one, both already handle
 the ONNX graph shapes the bundle contract allows. If the axis belongs in the full
 result, also surface it in `classify_full`.
 
 Because the head is recorded in `meta.json` and `from_path` loads whatever heads
 are present, old bundles without your new head still load and simply derive the
-axis — so the change is backward-compatible by construction.
+axis, so the change is backward-compatible by construction.
 
 ---
 
 ## See also
 
-* [model.md](model.md) — the feature representation, the heads, soft-gating, the
+* [model.md](model.md), the feature representation, the heads, soft-gating, the
   ladder, and the honest limitations.
-* [dataset.md](dataset.md) — the columns your heads are supervised on.
-* [external-plugins.md](external-plugins.md) — OPM discovery for a registered
+* [dataset.md](dataset.md), the columns your heads are supervised on.
+* [external-plugins.md](external-plugins.md), OPM discovery for a registered
   backend.
-* [stable-api.md](stable-api.md) — the full `AbstractMediaClassifier` contract.
+* [stable-api.md](stable-api.md), the full `AbstractMediaClassifier` contract.
+
+---
+[← The trained model](model.md) · [Home](index.md) · [Taxonomy →](taxonomy.md)

@@ -1,8 +1,8 @@
-# Hierarchical coarse-to-fine `media_type` — experiment
+# Hierarchical coarse-to-fine `media_type`, experiment
 
 Does predicting the **coarse axes first** (`playback_type` × `structure`) and
 then constraining the fine `media_type` leaf to the compatible subset beat the
-flat multi-task `media_type` head — especially on the documented near-tie
+flat multi-task `media_type` head, especially on the documented near-tie
 failures where two leaves differ only on a coarse axis?
 
 This is a **structure** experiment, not a features experiment. Every variant is
@@ -14,7 +14,7 @@ Built and benchmarked by **`training/train_hierarchical.py`** (self-contained:
 trains all three variants and scores them on the same held-out test split, then
 optionally exports the leaf-masking ONNX bundle). Artefacts land under gitignored
 `data/hierarchical/`. The runtime (`ovos_media_classifier/onnx.py`) and the
-shared ladder benchmark are **not** touched — the integration path is documented
+shared ladder benchmark are **not** touched, the integration path is documented
 below for wiring later.
 
 ```
@@ -26,7 +26,7 @@ python -m training.train_hierarchical --export-onnx # also export the masking bu
 
 The forward map `media_type → (playback_type, structure)` is near-deterministic
 (`mediavocab.infer_playback_type` + `ovos_media_classifier.axes.infer_structure`).
-Inverting it gives, for each coarse **group**, the set of compatible leaves — the
+Inverting it gives, for each coarse **group**, the set of compatible leaves, the
 constraint mask. Over the dataset leaves there are 9 groups:
 
 | group (playback_type \| structure) | compatible leaves |
@@ -43,18 +43,18 @@ constraint mask. Over the dataset leaves there are 9 groups:
 
 The hypothesised near-tie wins live across group boundaries:
 `music`[audio] vs `music_video`[video], `book`[paged] vs
-`interactive_fiction`[interactive] — leaves a flat head could confuse but a mask
+`interactive_fiction`[interactive], leaves a flat head could confuse but a mask
 would forbid.
 
 ## Three variants
 
-1. **flat** — one plain `media_type` logistic-regression head (the control;
+1. **flat**, one plain `media_type` logistic-regression head (the control;
    reproduces the sklearn-ladder flat number).
-2. **leaf_masking** — predict `playback_type` + `structure`, then restrict the
+2. **leaf_masking**, predict `playback_type` + `structure`, then restrict the
    flat head's argmax to the predicted group's compatible leaves. Cheapest
    variant: it reuses the **same** flat head and only post-processes its logits.
    Falls back to the unmasked argmax when the predicted group has no leaves.
-3. **cascade** — a coarse `(playback_type, structure)` group head, then a
+3. **cascade**, a coarse `(playback_type, structure)` group head, then a
    **separate** fine `media_type` head trained per group and applied only within
    that group's leaves (single-leaf groups skip the fine head).
 
@@ -77,7 +77,7 @@ size/latency are comparable.
 The three variants are **within noise** of each other on both rungs (≤ 0.0006
 spread). Hierarchy neither helps nor hurts the headline number.
 
-### Near-tie confusion — cross-leak (count of true-a→pred-b + true-b→pred-a; lower is better)
+### Near-tie confusion, cross-leak (count of true-a→pred-b + true-b→pred-a; lower is better)
 
 | pair | flat (ctx) | mask (ctx) | cascade (ctx) | flat (+NER) | mask (+NER) |
 |---|---|---|---|---|---|
@@ -93,10 +93,10 @@ The **premise does not survive contact with the data**: the flat head already
 resolves the cross-coarse near-ties (music↔music_video = 2, book↔IF = 0). The
 only non-trivial residual confusions are:
 
-* `movie ↔ short_film` (48) — both `video|single`, the **same coarse group**.
+* `movie ↔ short_film` (48), both `video|single`, the **same coarse group**.
   No coarse axis distinguishes them, so masking and cascade are *structurally
   unable* to help. This is a within-group leaf ambiguity.
-* `comic ↔ interactive_fiction` (60 → 59) — these *are* in different groups
+* `comic ↔ interactive_fiction` (60 → 59), these *are* in different groups
   (`paged|single` vs `interactive|single`), so masking should help. It barely
   moves (−1). The reason is propagation: the errors are the **coarse head**
   itself miscalling `paged` vs `interactive` on those rows, and when the coarse
@@ -118,7 +118,7 @@ strictly **worse** than flat, because it forbids the correct leaf by constructio
 The flat head occasionally **recovers** a row whose coarse axis it would have got
 wrong (it scores 0.7–2.2 % on the coarse-wrong subset); the hierarchy scores a
 hard **0** there. The tiny gain on the coarse-right subset (+0.04 %) and the
-small loss on the coarse-wrong subset cancel almost exactly — which is why the
+small loss on the coarse-wrong subset cancel almost exactly, which is why the
 overall numbers are a wash.
 
 ## Verdict
@@ -129,31 +129,31 @@ overall numbers are a wash.
   *already* learns the coarse distinctions implicitly. The cross-coarse near-ties
   the hypothesis targeted (music↔music_video, book↔interactive_fiction) are
   effectively already solved by the flat head (cross-leak ≤ 2).
-* The residual confusions are either **within-group** (movie↔short_film — no
+* The residual confusions are either **within-group** (movie↔short_film, no
   coarse axis separates them, so hierarchy is structurally powerless) or
-  **coarse-head errors** (comic↔interactive_fiction — masking inherits the
+  **coarse-head errors** (comic↔interactive_fiction, masking inherits the
   mistake instead of fixing it).
 * The constraint has an asymmetric cost: it never adds more than +0.0004 on
   coarse-right rows but forces 0 % accuracy on coarse-wrong rows, removing the
   flat head's small self-recovery. Net effect across the split is ≈ 0.
 * Cascade adds per-group models (more artefacts, more inference branches) for the
-  same null result — strictly worse on a cost/benefit basis than leaf-masking,
+  same null result, strictly worse on a cost/benefit basis than leaf-masking,
   which is already a no-op.
 
 The taxonomy is a good *fallback* (deriving a coarse axis from the leaf when a
-head is missing — what `onnx.py` already does), but as a *forward constraint* on
+head is missing, what `onnx.py` already does), but as a *forward constraint* on
 a head that already has the signal it is redundant. **Recommendation: keep the
 flat multi-task design; do not adopt masking or cascade in the runtime.** If a
 future model regresses on the cross-coarse near-ties (e.g. a much smaller head
 that loses the implicit coarse signal), leaf-masking is the cheap lever to
-revisit — the bundle format already supports it (below).
+revisit, the bundle format already supports it (below).
 
 ## Runtime integration path (if ever needed)
 
 `--export-onnx` writes a self-describing bundle to
 `data/hierarchical/leaf_masking_context/` in the **same multi-head format the
-runtime already loads** — a `media_type` head plus `playback_type` + `structure`
-heads — with one extra `masking` block in `meta.json`:
+runtime already loads**, a `media_type` head plus `playback_type` + `structure`
+heads, with one extra `masking` block in `meta.json`:
 
 ```json
 "masking": {
@@ -167,15 +167,17 @@ heads — with one extra `masking` block in `meta.json`:
 To apply masking at runtime **without** changing the leaf head, an
 `OnnxMediaClassifier` subclass (or a flag) would, in `classify()`:
 
-1. run the existing `playback_type` + `structure` heads (already present —
-   `classify_playback_type` / `classify_structure`),
+1. run the existing `playback_type` + `structure` heads (already present, `classify_playback_type` / `classify_structure`),
 2. look up the compatible leaves with the **same** forward maps that already
    power the derive-fallback (`mediavocab.MEDIA_TYPE_TO_PLAYBACK_TYPE` +
-   `ovos_media_classifier.axes.MEDIA_TYPE_TO_STRUCTURE`) — build the inverse map
+   `ovos_media_classifier.axes.MEDIA_TYPE_TO_STRUCTURE`), build the inverse map
    once at load, no new data needed,
 3. restrict the `media_type` head's probability argmax to that leaf set (falling
    back to the unmasked argmax when the predicted group is empty).
 
-This needs **no change to `onnx.py`'s file format** — the `masking` block is
+This needs **no change to `onnx.py`'s file format**, the `masking` block is
 additive metadata an older loader ignores. Given the verdict above it is left
 unwired; this document records how to wire it should a future head need it.
+
+---
+[← Routing eval](routing-eval.md) · [Home](index.md) · [Entity lists →](entity-lists.md)

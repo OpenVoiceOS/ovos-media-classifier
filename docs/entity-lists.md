@@ -8,18 +8,17 @@ movie_title  → ["Inception", "The Dark Knight", …]
 radio_station → ["BBC Radio 1", "KEXP", …]
 ```
 
-It is the user's *real* media — the artists, titles and stations they actually
-own or stream — captured as plain strings under an
+It is the user's *real* media, the artists, titles and stations they actually
+own or stream, captured as plain strings under an
 [`OCPEntityLabel`](taxonomy.md). The store that holds them is
 [`EntitiesContainer`](#api).
 
-Entity lists feed the **NER backend** —
-[`AhocorasickMediaClassifier`](backends.md), which loads the lists into an
+Entity lists feed the **NER backend**, [`AhocorasickMediaClassifier`](backends.md), which loads the lists into an
 Aho-Corasick automaton for fast exact substring matching ("play *Inception*" →
 `MOVIE`). They are also the natural input for any classifier that uses the user's
 known entities as features (a known `movie_title` token in the utterance is a
 strong signal for the `MOVIE` axis), so the same lists serve more than one
-strategy — build them once.
+strategy, build them once.
 
 ## Where entity lists come from
 
@@ -32,7 +31,7 @@ There are two channels.
 
 ### 1. Provided at runtime
 
-The OCP pipeline registers the user's media as it discovers it — a skill
+The OCP pipeline registers the user's media as it discovers it, a skill
 announcing its content, a background media-server sync. This is the `add` /
 `add_many` path, and updates are reflected in classification **immediately**,
 with no rebuild step (the automaton is shared by reference):
@@ -85,13 +84,13 @@ container = EntitiesContainer.from_sources([
 ])
 ```
 
-A bad spec (missing file, dead media server) is logged and skipped — one
+A bad spec (missing file, dead media server) is logged and skipped, one
 failure does not abort the rest of the list.
 
 > Loading lists from **files and inline dicts needs no optional dependencies**.
 > The HuggingFace spec needs the `huggingface` extra (`datasets`), and
 > media-server specs need the `media_servers` extra (`requests`). The
-> Aho-Corasick matcher itself needs the `ner` extra — but list *loading* is
+> Aho-Corasick matcher itself needs the `ner` extra, but list *loading* is
 > independent of the matcher.
 
 #### File formats
@@ -106,7 +105,7 @@ Inception,movie_title,radarr
 Radiohead,artist_name,manual
 ```
 
-**JSONL** — one JSON object per line, two shapes (mixable in one file):
+**JSONL**, one JSON object per line, two shapes (mixable in one file):
 
 ```jsonl
 {"label": "movie_title", "entity": "Inception"}
@@ -144,7 +143,7 @@ The structured keys (`csv`, `wordlists`, `huggingface`, and the per-server
 `radarr`/`sonarr`/`lidarr`/`jellyfin`/`music_assistant` keys) are also accepted and
 merged in addition to `entity_lists`.
 
-## Performance / memory tradeoff — live routing uses a bounded set
+## Performance / memory tradeoff, live routing uses a bounded set
 
 Entity lists are a **deliberate, bounded choice**. The matcher holds every entity
 string in memory, and every entity added widens it:
@@ -160,8 +159,8 @@ two uses:
   [gazetteer](metadatarr-routing.md) (default ~1000/type). The knee is around
   ~1 ms; a bloated vocabulary both slows the path and dilutes the signal.
 - **Offline tagging → large sets are fine.** A 1M-entity set (e.g. the full
-  MusicBrainz artist list) is productive for *offline* entity tagging — annotating
-  text to build datasets — but is **not for live classification**, where its
+  MusicBrainz artist list) is productive for *offline* entity tagging, annotating
+  text to build datasets, but is **not for live classification**, where its
   per-query cost is far above any interactive budget.
 
 So prefer a handful of focused lists over one giant dump for live routing; reserve
@@ -185,3 +184,6 @@ See also: [backends.md](backends.md) (the NER backend that consumes these
 lists), [classification-model.md](classification-model.md) (how entity hits feed
 the multi-axis result), and [taxonomy.md](taxonomy.md) (the `OCPEntityLabel`
 label space).
+
+---
+[← Hierarchical experiment](hierarchical.md) · [Home](index.md) · [Dataset →](dataset.md)
