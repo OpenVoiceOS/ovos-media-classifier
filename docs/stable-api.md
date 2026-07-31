@@ -6,13 +6,13 @@ methods on the returned object (the per-axis methods plus `classify_full`),
 classifier and external plugins implement.
 
 For *why* the output is split into orthogonal axes, see
-[classification-model.md](classification-model.md); this page is the method
+[classification-model.md](classification-model.md), this page is the method
 reference.
 
 ## The classifier object
 
 `load_media_classifier(config=None, voc_match_func=None)` returns an
-`AbstractMediaClassifier` — the bundled keyword classifier by default, or the
+`AbstractMediaClassifier`, the bundled keyword classifier by default, or the
 [NER / ONNX / external backend](backends.md) the config selects. Every classifier
 exposes the same methods below.
 
@@ -21,9 +21,9 @@ exposes the same methods below.
 Returns the most likely `mediavocab.MediaType` for an `ocp_play` request and a
 confidence in `[0, 1]`. Returns `(MediaType.GENERIC, 0.0)` when nothing matches.
 
-- `query` — the user utterance.
-- `lang` — a BCP-47 language tag (e.g. `"en-us"`), assumed already standardised.
-- `valid_labels` — optional list of `MediaType`; when given, only one of these is
+- `query`, the user utterance.
+- `lang`, a BCP-47 language tag (e.g. `"en-us"`), assumed already standardised.
+- `valid_labels`, optional list of `MediaType`, when given, only one of these is
   returned (otherwise `GENERIC`).
 
 ```python
@@ -66,7 +66,7 @@ clf.is_ocp_query("what is the weather", "en-us")  # (False, 0.0)
 
 These return the coarse axes of the [multi-axis
 model](classification-model.md). On the bundled keyword classifier they are
-**derived** from the leaf `MediaType`; a trained backend MAY override each to
+**derived** from the leaf `MediaType`, a trained backend MAY override each to
 predict it with its own head.
 
 ### `classify_playback_type(query, lang) -> PlaybackType`
@@ -94,18 +94,18 @@ clf.classify_structure("put on the radio", "en-us")     # <Structure.CONTINUOUS:
 The classifier emits its descriptive signals in **mediavocab's own taxonomy**, so
 `to_signals` is lossless and providers consume one shared vocabulary.
 
-- `classify_content_form(query, lang) -> ContentForm | None` — the experiential
+- `classify_content_form(query, lang) -> ContentForm | None`, the experiential
   kind: `trailer` / `teaser` / `behind_scenes` / `excerpt` / `supplement` / …
-  (the parent `MediaType` stays the feature; `None` ⇒ a primary work).
-- `classify_programme_format(query, lang) -> ProgrammeFormat | None` — the
+  (the parent `MediaType` stays the feature, `None` ⇒ a primary work).
+- `classify_programme_format(query, lang) -> ProgrammeFormat | None`, the
   structural format: `documentary` / `news` / `concert` / `stand_up` / `sports` / …
-- `classify_accessibility(query, lang) -> list[AccessibilityKind]` — requested
+- `classify_accessibility(query, lang) -> list[AccessibilityKind]`, requested
   accessibility assets: `subtitles` / `audio_description` / `sign_language` / …
-- `classify_variant(query, lang) -> VariantKind | None` — the work-level cut:
+- `classify_variant(query, lang) -> VariantKind | None`, the work-level cut:
   `directors` / `extended` / `remastered` / `colorized` / `fanedit` / …
-- `classify_genres(query, lang) -> list[str]` — genre tags constrained to
+- `classify_genres(query, lang) -> list[str]`, genre tags constrained to
   `mediavocab.KNOWN_GENRES` (the content filter reads `adult` / `anime` / … here).
-- `classify_picture_format(query, lang) -> list[PictureFormat]` — the
+- `classify_picture_format(query, lang) -> list[PictureFormat]`, the
   `mediavocab.PictureFormat` presentation attributes (`black_and_white` /
   `silent` / `3d`), multi-label.
 
@@ -125,12 +125,12 @@ axes directly and soft-gate the leaf.
 The two minimal inputs are `query` and `lang`. Both context arguments are
 **optional** (default `None` = context-free behaviour):
 
-- `player_status` — a `PlayerStatus` (now-playing `media_type` + play/pause/stop).
+- `player_status`, a `PlayerStatus` (now-playing `media_type` + play/pause/stop).
   Enables relative / control follow-ups (*"next"* / *"pause"* → `OCP_CONTROL`
-  even with no media keyword; *"play something else"* → a re-query biased to the
-  current type) and a light type bias on ambiguous follow-ups — applied
+  even with no media keyword, *"play something else"* → a re-query biased to the
+  current type) and a light type bias on ambiguous follow-ups, applied
   conservatively, never overriding a confident explicit route.
-- `ner_list` — `{ner_label: [entity, …]}` of the entities the user actually has
+- `ner_list`, `{ner_label: [entity, …]}` of the entities the user actually has
   (skill-registered keywords + library). The entity context for NER matching and
   the embedding router's runtime injection, threaded per query so a caller passes
   the live list with no retraining.
@@ -156,7 +156,7 @@ This ABC is both the interface the bundled keyword classifier implements and the
 
 | Method | Required? | Default behaviour |
 |---|---|---|
-| `classify` | **abstract** — must implement | — |
+| `classify` | **abstract**, must implement |, |
 | `classify_domain` | optional override | derives from `classify()` |
 | `is_ocp_query` | optional override | derives from `classify_domain()` |
 | `classify_genres` | optional override | returns `[]` |
@@ -169,7 +169,7 @@ This ABC is both the interface the bundled keyword classifier implements and the
 | `classify_picture_format` | optional override | returns `[]` (`mediavocab.PictureFormat`) |
 | `classify_full` | optional override | combines the above (derive-from-leaf) |
 
-Override guidance (for plugin authors — the bundled keyword classifier only
+Override guidance (for plugin authors, the bundled keyword classifier only
 overrides `classify_genres()` and derives every coarse axis from the leaf):
 
 - Override `classify_domain()` when you have a cheap domain head.
@@ -178,7 +178,7 @@ overrides `classify_genres()` and derives every coarse axis from the leaf):
 - Override `classify_genres()` when you can surface genre signal so the
   [content filter](content-filtering.md) can block on it.
 - Override `classify_playback_type()` / `classify_structure()` (and `classify_full()`)
-  when you have dedicated coarse-axis heads — predict each axis directly and
+  when you have dedicated coarse-axis heads, predict each axis directly and
   soft-gate the leaf instead of deriving the axes from it (see
   [classification-model.md](classification-model.md)).
 
@@ -186,21 +186,20 @@ overrides `classify_genres()` and derives every coarse axis from the leaf):
 
 | Type | Source | Notes |
 |---|---|---|
-| `MediaType` | re-exported from `mediavocab` | string-Enum; the enforced public taxonomy (the leaf axis) |
-| `PlaybackType` | `mediavocab` | string-Enum; the modality axis (`audio`/`video`/`paged`/`interactive`/`unknown`) |
-| `Structure` | `ovos_media_classifier` | string-Enum; the structure axis (`single`/`episodic`/`continuous`/`collection`/`unknown`) |
+| `MediaType` | re-exported from `mediavocab` | string-Enum, the enforced public taxonomy (the leaf axis) |
+| `PlaybackType` | `mediavocab` | string-Enum, the modality axis (`audio`/`video`/`paged`/`interactive`/`unknown`) |
+| `Structure` | `ovos_media_classifier` | string-Enum, the structure axis (`single`/`episodic`/`continuous`/`collection`/`unknown`) |
 | `OCPDomain` | `ovos_media_classifier` | `ocp_play` / `ocp_control` / `not_ocp` |
-| `MediaClassification` | `ovos_media_classifier` | dataclass holding all axes + genres + confidence; `.as_dict()` for a plain dict |
-| `ContentForm` | `mediavocab` | string-Enum; experiential kind (`trailer`/`behind_scenes`/`excerpt`/…) |
-| `ProgrammeFormat` | `mediavocab` | string-Enum; structural format (`documentary`/`news`/`concert`/…) |
-| `AccessibilityKind` | `mediavocab` | string-Enum; a11y asset (`subtitles`/`audio_description`/…) |
-| `VariantKind` | `mediavocab` | string-Enum; work-level cut (`directors`/`extended`/`remastered`/…) |
+| `MediaClassification` | `ovos_media_classifier` | dataclass holding all axes + genres + confidence, `.as_dict()` for a plain dict |
+| `ContentForm` | `mediavocab` | string-Enum, experiential kind (`trailer`/`behind_scenes`/`excerpt`/…) |
+| `ProgrammeFormat` | `mediavocab` | string-Enum, structural format (`documentary`/`news`/`concert`/…) |
+| `AccessibilityKind` | `mediavocab` | string-Enum, a11y asset (`subtitles`/`audio_description`/…) |
+| `VariantKind` | `mediavocab` | string-Enum, work-level cut (`directors`/`extended`/`remastered`/…) |
 | genre tags | `list[str]` | members of `mediavocab` `KNOWN_GENRES` |
 | confidence | `float` | in `[0, 1]` |
 
 `OCPControlIntent` and `OCPEntityLabel` are exported for backends and tooling but
-are **internal** label spaces, not part of the public classification output —
-that output is always `mediavocab.MediaType` + genres. The raw-label →
+are **internal** label spaces, not part of the public classification output, that output is always `mediavocab.MediaType` + genres. The raw-label →
 `(MediaType, genres)` maps (`LABEL_TO_MEDIA_TYPE`, `LABEL_TO_GENRES`,
 `NER_LABEL_TO_MEDIA_TYPE`, `NER_LABEL_TO_GENRES`) are exported for the same use.
 See [taxonomy.md](taxonomy.md).
@@ -209,9 +208,12 @@ See [taxonomy.md](taxonomy.md).
 
 `ContentFilter(config=None)` exposes:
 
-- `check(classifier, query, lang="en-us") -> (bool, str)` — classify and apply the
+- `check(classifier, query, lang="en-us") -> (bool, str)`, classify and apply the
   policy in one call.
-- `is_blocked(media_type, genres=None) -> (bool, str)` — apply the policy to an
+- `is_blocked(media_type, genres=None) -> (bool, str)`, apply the policy to an
   already-computed result.
 
 See [content-filtering.md](content-filtering.md).
+
+---
+[← External plugins](external-plugins.md) · [Home](index.md)

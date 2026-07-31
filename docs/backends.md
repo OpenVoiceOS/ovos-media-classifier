@@ -2,7 +2,7 @@
 
 `load_media_classifier(config=None, voc_match_func=None)` returns one classifier.
 Every backend implements [`AbstractMediaClassifier`](stable-api.md), so callers
-treat them identically — the choice only affects accuracy, dependencies and what
+treat them identically, the choice only affects accuracy, dependencies and what
 signal is available.
 
 The package ships several backends. The **keyword** backend is the default and
@@ -82,12 +82,12 @@ clf = AhocorasickMediaClassifier.from_container(container)
 clf.classify("play inception", "en-us")     # -> (<MediaType.MOVIE: 'movie'>, ...)
 ```
 
-The NER backend matches the user's *real* media — their artists, titles and
-stations, captured as **entity lists** (`label → list of strings`) — with an
+The NER backend matches the user's *real* media, their artists, titles and
+stations, captured as **entity lists** (`label → list of strings`), with an
 Aho-Corasick automaton for fast exact substring matching. Each entity label maps
 to a media type via `NER_LABEL_TO_MEDIA_TYPE` (and to genres via
 `NER_LABEL_TO_GENRES`), so *"play Inception"* resolves to `MOVIE` because
-*Inception* is in the library — high confidence, language-agnostic, zero
+*Inception* is in the library, high confidence, language-agnostic, zero
 linguistic guessing.
 
 It is selected by config (`media_classifier_entities` /
@@ -111,20 +111,20 @@ pip install ovos-media-classifier[onnx]
 load_media_classifier({"media_classifier_onnx_model": "/models/ocp-bundle"})
 ```
 
-A trained classifier with **one ONNX head per axis** — `domain`, `media_type`,
+A trained classifier with **one ONNX head per axis**, `domain`, `media_type`,
 `playback_type`, `structure`, `explicitness`, `content_form`, `programme_format`,
 `variant` (single-label) and `content_form_genres`, `content_genres`,
-`accessibility` (multi-label) — plus `numpy`. It
+`accessibility` (multi-label), plus `numpy`. It
 depends on raw `onnxruntime` + `numpy` only. The factory loads it from a
 self-describing **model-bundle directory** of `<axis>.onnx` files plus a
 `meta.json` manifest (which carries the ordered feature names, the per-head
 index→label maps and the multi-label thresholds, so the runtime makes no
-hard-coded assumptions and loads whichever heads the bundle ships — a missing head
+hard-coded assumptions and loads whichever heads the bundle ships, a missing head
 simply derives its axis). Set `media_classifier_onnx_model` to that directory. The
 full bundle layout and retrain contract are in [model.md](model.md#4-self-describing-bundle--retrain-contract).
 
 A trained model predicts each axis with its own head and can capture
-per-utterance nuance the keyword backend cannot — see
+per-utterance nuance the keyword backend cannot, see
 [classification-model.md](classification-model.md#42-predict-each-axis-with-its-own-head-trained-plugins).
 The bundle format is documented in `ovos_media_classifier/onnx.py`.
 
@@ -137,5 +137,8 @@ Any subclass of [`AbstractMediaClassifier`](stable-api.md) registered under the
 `opm.media.classifier` entry-point group is loadable by name via
 `config["media_classifier_plugin"]`. `load_media_classifier()` falls back to the
 keyword classifier if it fails to load, so an external plugin never hard-fails the
-pipeline. The full recipe — registering, loading by name, and which methods to
-override — is in [external-plugins.md](external-plugins.md).
+pipeline. The full recipe, registering, loading by name, and which methods to
+override, is in [external-plugins.md](external-plugins.md).
+
+---
+[← Taxonomy](taxonomy.md) · [Home](index.md) · [Embedding router →](embedding-router.md)

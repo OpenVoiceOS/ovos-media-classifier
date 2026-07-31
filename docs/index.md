@@ -2,10 +2,10 @@
 
 `ovos-media-classifier` provides media-type **command/intent** classification for
 OCP (OVOS Common Play). It is **multi-task**: it maps a spoken command onto a set
-of **orthogonal axes** at once — domain (play / control / not-OCP), modality
+of **orthogonal axes** at once, domain (play / control / not-OCP), modality
 (`playback_type`: audio / video / paged / interactive), structure
 (single / episodic / continuous / collection), explicitness (clean / adult), and
-the concrete `mediavocab.MediaType` leaf — plus the mediavocab descriptive axes:
+the concrete `mediavocab.MediaType` leaf, plus the mediavocab descriptive axes:
 **`content_form`** (trailer / behind_scenes / …), **`programme_format`**
 (documentary / news / …), **`accessibility`** (subtitles / audio_description),
 **`variant`** (directors / remastered / …), the **`content_genres`** (⊆
@@ -16,11 +16,11 @@ It is a **router, not a resolver**. Its job is to gate (*is this a media request
 at all?*), route (`media_type` / `playback_type` decide which `MediaProvider`s to
 call), apply content policy (`explicitness` / `adult`), and hand the providers a
 `mediavocab.Signals` as **search context**. It does **not** resolve a title to a
-stream — the providers do — so `Signals.title` carries the raw query by design.
+stream, the providers do, so `Signals.title` carries the raw query by design.
 See [routing-eval.md](routing-eval.md) for the router framing and its honest eval.
 
 This classifies *voice commands*. It is distinct from `mediavocab.text.classify`,
-which classifies *catalog content* — see
+which classifies *catalog content*, see
 [taxonomy.md](taxonomy.md#query-vs-content-classification).
 
 ## Quickstart
@@ -49,7 +49,7 @@ clf.classify_full("play a podcast", "en-us").as_dict()
 | **A plugin author** writing an external classifier | [external-plugins.md](external-plugins.md), then [stable-api.md](stable-api.md) for the contract |
 | **A contributor** training a model | [model.md](model.md) (the multi-task model + the ladder + limitations), [dataset.md](dataset.md) (the data + its generator), and [benchmarks](../benchmarks/README.md) |
 | **An ML engineer** extending it | [extending.md](extending.md) (add a backend, retrain, add a new axis/head), then [model.md](model.md) and [hierarchical.md](hierarchical.md) |
-| **Judging routing quality** | [routing-eval.md](routing-eval.md) — the harm-weighted, out-of-distribution eval that is the source of truth for how a backend routes real speech |
+| **Judging routing quality** | [routing-eval.md](routing-eval.md), the harm-weighted, out-of-distribution eval that is the source of truth for how a backend routes real speech |
 
 New to the vocabulary (OCP, OPM, domain, axis, NER, …)? Read
 [glossary.md](glossary.md) first.
@@ -65,13 +65,13 @@ New to the vocabulary (OCP, OPM, domain, axis, NER, …)? Read
 | [taxonomy.md](taxonomy.md) | `mediavocab.MediaType` enforcement, the raw label→type/genre mapping, and the query-vs-content distinction |
 | [backends.md](backends.md) | The keyword, NER, ONNX and embedding-router backends, how `load_media_classifier` selects between them, and adding an external classifier |
 | [embedding-router.md](embedding-router.md) | The learned guided-categorical-embeddings router: two-stream `[categorical | entity]` features, the routing-aware cost-matrix/abstain/calibration objective, the keyword+router hybrid gating, runtime entity injection (no retraining), and the routing-eval promote/hold verdict |
-| [metadatarr-routing.md](metadatarr-routing.md) | The open-vocab routing layers that fill keyword's abstains: the offline popularity gazetteer (default, bounded, ~1k/type) and the optional online `metadatarr.resolve` layer — with the live-vs-offline latency rule (small bounded set for live routing; large/online sets for offline tagging only) |
-| [routing-eval.md](routing-eval.md) | The harm-weighted, out-of-distribution routing eval — the source of truth: mis-route rate, GENERIC-is-safe, adult detect-to-block, and why the in-distribution benchmark is a false green |
+| [metadatarr-routing.md](metadatarr-routing.md) | The open-vocab routing layers that fill keyword's abstains: the offline popularity gazetteer (default, bounded, ~1k/type) and the optional online `metadatarr.resolve` layer, with the live-vs-offline latency rule (small bounded set for live routing; large/online sets for offline tagging only) |
+| [routing-eval.md](routing-eval.md) | The harm-weighted, out-of-distribution routing eval, the source of truth: mis-route rate, GENERIC-is-safe, adult detect-to-block, and why the in-distribution benchmark is a false green |
 | [hierarchical.md](hierarchical.md) | The coarse-to-fine `media_type` masking/cascade experiment and why the flat multi-task head is kept (the taxonomy is a fallback, not a forward constraint) |
 | [entity-lists.md](entity-lists.md) | Entity lists (`label → list of strings`): the source-agnostic store (runtime / `.csv` / `.tsv` / `.jsonl` / HuggingFace / media-server / inline) the NER backend consumes |
 | [dataset.md](dataset.md) | The canonical `ocp-media-intents` dataset and its on-demand generator: every column, the rebuild command, the `.intent`/`.voc` templates, confusables, and the content-filter slice |
 | [data-sources.md](data-sources.md) | Every HF dataset + local scraper feeding the entity pools, the slot label each feeds, licenses, and how the training set is assembled |
-| [plots/dataset/](plots/dataset/) | Dataset characterization plots — rows per media type, the slot×media-type heatmap, axis distributions, entity-pool sizes (regenerate with `python -m training.dataset_plots`) |
+| [plots/dataset/](plots/dataset/) | Dataset characterization plots, rows per media type, the slot×media-type heatmap, axis distributions, entity-pool sizes (regenerate with `python -m training.dataset_plots`) |
 | [contextual-classification.md](contextual-classification.md) | How the media you actually have biases prediction, via keyword feature slots |
 | [content-filtering.md](content-filtering.md) | `ContentFilter`: detect-to-block content moderation / parental control |
 | [external-plugins.md](external-plugins.md) | Registering a third-party classifier via the `opm.media.classifier` entry-point group |

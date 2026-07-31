@@ -8,8 +8,8 @@ output is a set of orthogonal axes) and [stable-api.md](stable-api.md) (the meth
 reference).
 
 The runtime that loads a trained bundle is
-[`OnnxMediaClassifier`](../ovos_media_classifier/onnx.py); the trainer is
-[`training/train_sklearn.py`](../training/train_sklearn.py); the dataset that
+[`OnnxMediaClassifier`](../ovos_media_classifier/onnx.py), the trainer is
+[`training/train_sklearn.py`](../training/train_sklearn.py), the dataset that
 supervises it is documented in [dataset.md](dataset.md).
 
 ---
@@ -22,10 +22,10 @@ categorical feature dict** by
 is present (value `"1"`) when its cue fired, absent otherwise. Two families of
 columns make up the vector.
 
-**Keyword / context columns** — one per bundled `.voc` file, word-boundary matched
+**Keyword / context columns**, one per bundled `.voc` file, word-boundary matched
 through `ovos-spec-tools` (so `art` does not fire inside `start`). The stable
 column menu is `_KEYWORD_VOCABS` in
-[`features.py`](../ovos_media_classifier/features.py); the prefixes encode the cue
+[`features.py`](../ovos_media_classifier/features.py), the prefixes encode the cue
 family:
 
 | prefix | what fired | examples |
@@ -36,31 +36,31 @@ family:
 | `attr_*` | an attribute cue | `attr_topic` (*about …*), `attr_starring` |
 | `fmt_*` | an explicit format hint | `fmt_audio_only`, `fmt_video_only` |
 
-**NER-by-construction columns** — one `ner_<label>` per
+**NER-by-construction columns**, one `ner_<label>` per
 [`OCPEntityLabel`](../ovos_media_classifier/intents.py). In the training data the
 flag is set when a `{label}` slot filled that row (ground truth, see
-[dataset.md](dataset.md)); at runtime a NER backend would set it when it tags an
+[dataset.md](dataset.md)), at runtime a NER backend would set it when it tags an
 entity of that label.
 
 **Be honest about what these encode.** The `ner_*` columns record the entity
-*label* that fired — that an `artist_name` was present — **not the entity *value
-text*** (*which* artist). The model knows "a music artist appears here"; it cannot
+*label* that fired, that an `artist_name` was present, **not the entity *value
+text*** (*which* artist). The model knows "a music artist appears here", it cannot
 read "Adele" vs "Metallica". This is the load-bearing limitation of the whole
 representation and it recurs in §3 and §6.
 
 `meta.json` in every bundle records the exact ordered `feature_names` the model
 was trained on. At inference `OnnxMediaClassifier._vectorize` walks that list and
 emits a dense `float32` row in precisely that order, so the runtime never assumes
-a column layout — it reads it from the bundle.
+a column layout, it reads it from the bundle.
 
 ---
 
-## 2. Multi-task per-axis heads — the key design
+## 2. Multi-task per-axis heads, the key design
 
 A naive classifier predicts the leaf `MediaType` and *derives* every other axis
 from it. The trained backend instead predicts **each axis with its own head**, so
 an axis can be right even when the leaf is wrong. The trainer declares the heads
-in `HEAD_SPECS` ([`train_sklearn.py`](../training/train_sklearn.py)); the runtime
+in `HEAD_SPECS` ([`train_sklearn.py`](../training/train_sklearn.py)), the runtime
 runs whichever heads the bundle carries.
 
 **Single-label heads** (argmax over their `labels`):
@@ -72,10 +72,10 @@ runs whichever heads the bundle carries.
 | `playback_type` | modality | `audio` / `video` / `paged` / `interactive` |
 | `structure` | temporal shape | `single` / `episodic` / `continuous` / `collection` |
 | `explicitness` | clean vs adult | `clean` / `adult` |
-| `control_intent` | transport control | `play` / `pause` / `next` / … (degenerate in a play-only bundle — skipped) |
+| `control_intent` | transport control | `play` / `pause` / `next` / … (degenerate in a play-only bundle, skipped) |
 
-**Multi-label heads** — a `OneVsRestClassifier` of logistic regressions emitting
-per-label probabilities; the runtime keeps every label whose probability is
+**Multi-label heads**, a `OneVsRestClassifier` of logistic regressions emitting
+per-label probabilities, the runtime keeps every label whose probability is
 ≥ a per-label `threshold` (default `0.5`, recorded in `meta.json`):
 
 | head | axis | kind | label space |
@@ -91,17 +91,17 @@ per-label probabilities; the runtime keeps every label whose probability is
 **mediavocab axes.** Every descriptive head emits **mediavocab's own vocabulary**
 so the classifier and the resolver / providers share one taxonomy. The finer
 classifier cues collapse onto mediavocab's set (making_of / bloopers /
-deleted_scenes / featurette → `behind_scenes`; clip → `excerpt`; interview →
+deleted_scenes / featurette → `behind_scenes`, clip → `excerpt`, interview →
 `supplement`). `black_and_white` / `silent` / `3d` are picture-presentation
 attributes (T6) that map to the `mediavocab.PictureFormat` axis
-(`classify_picture_format`); `dubbed` maps to `mediavocab.AccessibilityKind`.
-`mood` / `era` are dropped from the taxonomy (not axiom-admissible; a release
+(`classify_picture_format`), `dubbed` maps to `mediavocab.AccessibilityKind`.
+`mood` / `era` are dropped from the taxonomy (not axiom-admissible, a release
 year feeds `Signals.year`).
 
 The `content_form_genres` head is the one the **content filter reads**. Because it
-is its own head, it can flag `adult` **independently of the leaf** — a request can
+is its own head, it can flag `adult` **independently of the leaf**, a request can
 be blocked even when the model is unsure whether it is a `movie` or an
-`episodic_series`. That is what makes detect-to-block robust (a single leaf
+`episodic_series`. That is what keeps detect-to-block reliable (a single leaf
 mistake never unblocks adult content).
 
 ### Soft-gating and the derive fallback
@@ -116,33 +116,31 @@ Every per-axis method follows the same pattern: **use the head when the bundle
 carries it, else fall back to the inherited derive/empty default**. A head whose
 column was degenerate on the training data is simply skipped at train time
 (`train_single_head` returns `skipped`), its `.onnx` file is absent, and
-`from_path` derives that axis instead. This is what lets **partial bundles** —
-a bundle that ships only some of the heads — load and run unchanged, deriving the
+`from_path` derives that axis instead. This is what lets **partial bundles**, a bundle that ships only some of the heads, load and run unchanged, deriving the
 rest.
 
 ---
 
 ## 3. The ladder
 
-Each head is trained and reported on a rising sequence of feature sets — the lift
+Each head is trained and reported on a rising sequence of feature sets, the lift
 from one rung to the next *is* the headline result.
 
-1. **rules** — the deterministic bundled keyword classifier (no learning). The
+1. **rules**, the deterministic bundled keyword classifier (no learning). The
    floor.
-2. **context-only** — the keyword columns only (`kw_*` / `verb_*` / `mod_*` /
-   `attr_*` / `fmt_*`); `ner_*` **excluded**. This is the "works with no
+2. **context-only**, the keyword columns only (`kw_*` / `verb_*` / `mod_*` /
+   `attr_*` / `fmt_*`), `ner_*` **excluded**. This is the "works with no
    registered entities" baseline a fresh install sees, before any skill has
    populated a NER store.
-3. **context+NER** — the keyword columns **plus** the `ner_*` columns: the
+3. **context+NER**, the keyword columns **plus** the `ner_*` columns: the
    features a populated NER would surface.
-4. **semantic** — *the documented next step, not yet implemented.* Sentence
+4. **semantic**, *the documented next step, not yet implemented.* Sentence
    embeddings as features.
 
 The two implemented learned rungs are the `FEATURE_SETS = ("context",
-"context_ner")` in [`train_sklearn.py`](../training/train_sklearn.py);
+"context_ner")` in [`train_sklearn.py`](../training/train_sklearn.py),
 `feature_columns` builds each column set. **Semantic embeddings are the next
-lift** because a bag of cue-presence flags cannot read entity *value text* (§1) —
-the only way to recover the signal that lives inside the slot value (which genre,
+lift** because a bag of cue-presence flags cannot read entity *value text* (§1), the only way to recover the signal that lives inside the slot value (which genre,
 which mood, which decade) is to embed the surface string. §6 quantifies exactly
 which axes are starved by this.
 
@@ -171,7 +169,7 @@ out-of-band knowledge of what it trained on:
 ```
 
 `meta.json` carries the ordered `feature_names`, the `input_name`, and a `heads`
-manifest — one entry per axis naming its `.onnx` file, `kind` (`single`/`multi`),
+manifest, one entry per axis naming its `.onnx` file, `kind` (`single`/`multi`),
 index→label map, and (for multi-label heads) the `threshold`. It also carries
 flat `domain_labels` / `play_labels` keys, so a loader that reads only the
 `domain` and leaf heads can consume the bundle without parsing the full manifest.
@@ -182,13 +180,13 @@ heads exist: it iterates `meta["heads"]`, opens an `InferenceSession` per presen
 retrain contract is therefore: produce a bundle in this layout and any version of
 the runtime consumes it. The reference producer is
 [`training/train_sklearn.py`](../training/train_sklearn.py) (`export_bundle`),
-installable via the `[train]` extra. End-to-end retraining — including adding a
-*new* axis — is covered in [extending.md](extending.md).
+installable via the `[train]` extra. End-to-end retraining, including adding a
+*new* axis, is covered in [extending.md](extending.md).
 
 ### Building it locally + the (manual) publish step
 
-The whole bundle is reproduced from source with three local commands; **all
-artifacts stay local under the gitignored `data/`** — nothing is published
+The whole bundle is reproduced from source with three local commands, **all
+artifacts stay local under the gitignored `data/`**, nothing is published
 automatically:
 
 ```bash
@@ -200,9 +198,9 @@ python -m benchmarks.ladder                        # → benchmarks/ladder_resul
 ```
 
 Publishing the dataset / model bundle to the Hub is a **separate, manual,
-explicitly-authorised step** — it is never run by the build. When authorised, the
+explicitly-authorised step**, it is never run by the build. When authorised, the
 dataset is pushed with `python -m training.build_dataset --push --repo
-TigreGotico/ocp-media-intents [--private]`; a model bundle is uploaded by hand
+TigreGotico/ocp-media-intents [--private]`, a model bundle is uploaded by hand
 from `data/models/`. Until then the bundle lives only in the local gitignored
 `data/` tree.
 
@@ -216,7 +214,7 @@ The trained bundles are published as a private Hugging Face collection,
 
 | repo | approach | pick it for |
 |---|---|---|
-| `OpenVoiceOS/ovos-media-classifier-onnx-default` | sklearn, keyword + NER | **recommended default** — lean (289 KiB, 0.25 ms), best content-filter precision |
+| `OpenVoiceOS/ovos-media-classifier-onnx-default` | sklearn, keyword + NER | **recommended default**, lean (289 KiB, 0.25 ms), best content-filter precision |
 | `OpenVoiceOS/ovos-media-classifier-onnx-keyword` | sklearn, keyword-only | works with zero registered entities |
 | `OpenVoiceOS/ovos-media-classifier-onnx-tfidf-char` | TF-IDF char n-grams → linear | best `media_type` (0.978), no entities needed |
 | `OpenVoiceOS/ovos-media-classifier-onnx-tfidf-word` | TF-IDF word n-grams → linear | best `tags` / genre·mood·era (0.93 F1) |
@@ -246,7 +244,7 @@ Held-out **test split: 34,700 utterances**. Per axis, the lift across the three
 implemented rungs (**rules → learned context-only → learned context+NER**) is the
 result. (Source: [benchmarks/ladder_results.md](../benchmarks/ladder_results.md).)
 
-### Single-label axes — accuracy
+### Single-label axes, accuracy
 
 | axis | rules | learned-context | learned-context+NER |
 |---|---|---|---|
@@ -258,7 +256,7 @@ result. (Source: [benchmarks/ladder_results.md](../benchmarks/ladder_results.md)
 | content_form | 0.751 | 0.984 | 0.997 |
 | programme_format | 0.896 | 0.993 | 0.998 |
 
-### Multi-label axes — macro-F1
+### Multi-label axes, macro-F1
 
 | axis | rules | learned-context | learned-context+NER |
 |---|---|---|---|
@@ -267,7 +265,7 @@ result. (Source: [benchmarks/ladder_results.md](../benchmarks/ladder_results.md)
 | picture_format | 0.878 | 0.878 | 0.965 |
 
 The `content_genres` macro-F1 is scored over the head's **modelled label space**
-(its top-`CONTENT_GENRE_TOP_K` ⊆ `KNOWN_GENRES` labels) — the honest in-scope
+(its top-`CONTENT_GENRE_TOP_K` ⊆ `KNOWN_GENRES` labels), the honest in-scope
 task, not over the thousands of distinct raw genre values it cannot model (§6b).
 The `accessibility` and `variant` heads are **skipped** in this bundle: the
 current template set exercises a single accessibility value (`audio_description`)
@@ -279,28 +277,28 @@ derive-fallback contract).
 
 | rung | adult recall | hentai recall | false-block | median ms | p95 ms | size |
 |---|---|---|---|---|---|---|
-| rules | 0.581 (436/751) | 0.510 | 0.002 | 0.59 | 0.97 | — |
+| rules | 0.581 (436/751) | 0.510 | 0.002 | 0.59 | 0.97 |, |
 | learned-context | 0.578 (434/751) | 0.503 | 0.001 | 0.17 | 0.20 | 97 KiB |
 | learned-context+NER | 0.904 (679/751) | 0.903 | 0.000 | 0.25 | 0.39 | 2.1 MiB |
 
 The headline lifts (rules → context → context+NER): `media_type` accuracy
-0.68 → 0.79 → 0.96; `playback_type` 0.72 → 0.90 → 0.99; `structure`
-0.75 → 0.90 → 0.99; `content_form` accuracy 0.75 → 0.98 → 1.00;
-`programme_format` 0.90 → 0.99 → 1.00; `content_form_genres` macro-F1
-0.73 → 0.75 → 0.97; `picture_format` 0.88 → 0.88 → 0.97; adult-block recall
-0.58 → 0.58 → 0.90; hentai recall 0.51 → 0.50 → 0.90 — at a near-zero false-block
+0.68 → 0.79 → 0.96, `playback_type` 0.72 → 0.90 → 0.99, `structure`
+0.75 → 0.90 → 0.99, `content_form` accuracy 0.75 → 0.98 → 1.00,
+`programme_format` 0.90 → 0.99 → 1.00, `content_form_genres` macro-F1
+0.73 → 0.75 → 0.97, `picture_format` 0.88 → 0.88 → 0.97, adult-block recall
+0.58 → 0.58 → 0.90, hentai recall 0.51 → 0.50 → 0.90, at a near-zero false-block
 rate and sub-millisecond latency. The context+NER bundle's `ner_*` columns are
-ground-truth by construction (§7.4 caveat), so it is the near-oracle ceiling; the
+ground-truth by construction (§7.4 caveat), so it is the near-oracle ceiling, the
 context bundle is the realistic no-NER floor a fresh install sees.
 
-### 5a. The ASR-noise realism layer — does it help?
+### 5a. The ASR-noise realism layer, does it help?
 
 The dataset includes a **spoken/ASR-style augmentation**
 ([`training/build_dataset.py`](../training/build_dataset.py) `--asr-noise-fraction`):
 a configurable fraction of rows is *also* emitted as a lowercased,
 punctuation-stripped, run-on variant with casual elisions (`wanna` / `gimme` /
 `lemme` / `gonna`), dropped courtesy lead-ins, occasional disfluency prepends
-(`um` / `uh` / `like`), and a light function-word mishear — the clean rows are
+(`um` / `uh` / `like`), and a light function-word mishear, the clean rows are
 kept. At the shipped fraction (`0.20`, ≈ 11 % of the balanced set) the layer adds
 ≈ 37 k spoken variants. A dedicated **`conversational` slice** (36 messy-spoken
 cases) in the routing eval measures the effect
@@ -310,8 +308,8 @@ cases) in the routing eval measures the effect
 (the shipped sklearn / embedding heads), and it does not regress anything.** The
 reason is structural: the runtime
 [`CategoricalFeatureExtractor`](../ovos_media_classifier/features.py) is
-**orthography-invariant by construction** — it lowercases and matches `.voc`
-keywords on word boundaries — so a clean row and its ASR variant fire almost the
+**orthography-invariant by construction**, it lowercases and matches `.voc`
+keywords on word boundaries, so a clean row and its ASR variant fire almost the
 same feature flags (measured: 1.69 vs 1.72 mean keyword flags, 0.97 vs 1.04 mean
 NER flags). The conversational-slice mis-route / resolved figures are therefore
 unchanged by the augmentation for these backends. The layer is retained because
@@ -319,20 +317,20 @@ it is **harmless and adds genuine realism for the value-text backends** (the
 char-hash / word-vector neural variants of §7, which read the surface string and
 *can* be helped by it) and because the published dataset should carry the
 spoken register. The default `--asr-noise-fraction` is `0` so a plain
-`build_dataset` is unchanged; the shipped bundles' dataset was built at `0.20`.
+`build_dataset` is unchanged, the shipped bundles' dataset was built at `0.20`.
 
 ---
 
 ## 6. Limitations
 
-The benchmark above is honest about where the model is strong; it is just as
+The benchmark above is honest about where the model is strong, it is just as
 important to read where it is weak and *why*.
 
 **(a) The bag-of-cue-presence ceiling.** The feature vector encodes *which cues
 and which entity labels fired*, never the entity *value text* (§1). Any axis whose
-ground truth lives in the slot value — not in a cue word — is fundamentally
+ground truth lives in the slot value, not in a cue word, is fundamentally
 under-determined by these features. This is a property of the representation, not
-of the chosen estimator; a bigger model on the same features hits the same wall.
+of the chosen estimator, a bigger model on the same features hits the same wall.
 
 **(b) the `content_genres` axis is starved.** The genre head scores low and
 barely moves from context to context+NER, because its signal is exactly the value
@@ -340,40 +338,40 @@ text the features drop: the real genre is *in* the genre slot value, not in a cu
 word. This is the direct motivation for the **semantic** rung (§3): embedding the
 surface string is the only way to read which genre was named. The head is shipped
 so the rung is ready to train, not because the current features predict it well.
-(`mood` / `era` are not modelled axes; a release year feeds `Signals.year`
+(`mood` / `era` are not modelled axes, a release year feeds `Signals.year`
 directly.)
 
 **(c) Synthetic / degenerate label regions.** The `domain` head's negative class
-is **synthetic** — the all-zero feature vector (no keyword or NER evidence)
-labelled `not_ocp`; see `train_domain_head`. It learns "any media evidence ⇒ OCP",
+is **synthetic**, the all-zero feature vector (no keyword or NER evidence)
+labelled `not_ocp`, see `train_domain_head`. It learns "any media evidence ⇒ OCP",
 which is the right prior but is not trained against real non-media utterances. And
 because every dataset row is `ocp_play`, the `control_intent` column is constant,
 so its head is skipped at train time and the `ocp_control` domain is **untrained /
 degenerate** in this bundle.
 
 **(d) The runtime feature path is keyword-only.** The shipped
-`CategoricalFeatureExtractor` produces only the keyword columns — the NER
+`CategoricalFeatureExtractor` produces only the keyword columns, the NER
 value-extraction path is not part of this release (`features.py` documents this).
 So even a `context+NER` bundle only ever sees keyword features at runtime **unless
 a NER backend is wired in to populate the `ner_*` columns**. The context+NER
-numbers above are the model's *capability* given populated entities; the
+numbers above are the model's *capability* given populated entities, the
 out-of-the-box runtime sees the context-only behaviour until a NER store is
 attached.
 
 **(e) Near-tie leaves where the keyword default is already right.** A handful of
 leaves share almost all of their cue features and differ only in a token the bag
-under-weights — `music` vs `music_video` is the canonical case (both fire the
-music keywords; only the *video* modality cue separates them); `book` vs
+under-weights, `music` vs `music_video` is the canonical case (both fire the
+music keywords, only the *video* modality cue separates them), `book` vs
 `interactive_fiction` is another (both fire `verb_read`). The trained
 `media_type` head can confuse such pairs where the deterministic keyword
 classifier, matching leaf-first on the more specific `music_video` voc chain, gets
 them right. The aggregate `media_type` accuracy is high, but on these specific
-near-ties the rules floor is not strictly dominated — which is exactly why the
+near-ties the rules floor is not strictly dominated, which is exactly why the
 backends are interchangeable behind one contract and the keyword default stays the
 zero-config baseline rather than being retired.
 
 **(f) The dataset is English-dominated.** Templates are built across the seven core
-languages, but the `en-us` `.intent` / `.voc` set is by far the richest — its
+languages, but the `en-us` `.intent` / `.voc` set is by far the richest, its
 alternations and lead-ins expand to the large majority of the rows, so the trained
 bundle is strongest on `en-us` and thinner on the other locales (and on the many
 languages with no templates at all). The fix is **more translated templates**, not
@@ -388,50 +386,46 @@ matching), so a missing language is under-served, not broken.
 
 ## 7. Neural backend + richer text features (does seeing the value text help?)
 
-§6(a–b) names the load-bearing limitation: the categorical features encode *which
+§6(a, b) names the load-bearing limitation: the categorical features encode *which
 cue/entity-label fired*, never the *value text*, so any axis whose ground truth
 lives in the slot value is under-determined. This section is the experiment that
-attacks that wall directly — two new feature families that **can** read the
+attacks that wall directly, two new feature families that **can** read the
 surface string, a neural (PyTorch → ONNX) trainer that consumes them, and a
 head-to-head benchmark against the sklearn ladder on the same held-out test split.
 
 ### 7.1 Two text feature families (numpy-only at runtime)
 
 Both run at train time *and* inference from the same code, so a bundle stays
-self-describing — the spec goes in `meta.json` and the runtime rebuilds the exact
+self-describing, the spec goes in `meta.json` and the runtime rebuilds the exact
 vector in numpy (no torch, no gensim, no transformers):
 
-* **Hashed character n-grams** —
-  [`features_text.py`](../ovos_media_classifier/features_text.py). Char 3–5 grams
+* **Hashed character n-grams**, [`features_text.py`](../ovos_media_classifier/features_text.py). Char 3, 5 grams
   of the utterance → a fixed `dim` (default 4096) via the signed hashing trick,
-  L2-normalized. This *sees subwords*: `jazz`, `horror`, title fragments — the
+  L2-normalized. This *sees subwords*: `jazz`, `horror`, title fragments, the
   exact tokens the binary flags drop. Spec (`dim` / ngram range / analyzer) is
   recorded in `meta.json["text_hash"]`.
-* **Trained domain word vectors** —
-  [`features_wordvec.py`](../ovos_media_classifier/features_wordvec.py) +
+* **Trained domain word vectors**, [`features_wordvec.py`](../ovos_media_classifier/features_wordvec.py) +
   [`training/build_corpus.py`](../training/build_corpus.py). A `gensim` Word2Vec
   (skip-gram, dim 100) trained on the **full domain corpus**: every entity pool
   (~4.35 M artist / track / album / movie / tv / anime / book / podcast / game
-  strings), the relational co-occurrence records (~1.17 M — each record's fields
+  strings), the relational co-occurrence records (~1.17 M, each record's fields
   joined so an artist, its album and its genre share a window), and the 347 k
-  utterances. The learned matrix captures media semantics the flags can't —
-  `jazz ≈ swing, reggae`; `horror ≈ thriller, mystery`; `rock ≈ punk, pop`. An
-  utterance is mean-pooled over its in-vocab token rows; the matrix is saved as a
+  utterances. The learned matrix captures media semantics the flags can't, `jazz ≈ swing, reggae`, `horror ≈ thriller, mystery`, `rock ≈ punk, pop`. An
+  utterance is mean-pooled over its in-vocab token rows, the matrix is saved as a
   pruned `.npy` (only tokens reachable from the dataset utterances) + a token→row
   vocab in the bundle, and `meta.json["wordvec"]` records the pooling config.
 
 The model input becomes `[categorical ⊕ char-hash ⊕ word-vectors]`, any subset
 selectable per variant.
 
-### 7.2 The neural net —
-[`training/train_torch.py`](../training/train_torch.py)
+### 7.2 The neural net, [`training/train_torch.py`](../training/train_torch.py)
 
 A **shared-trunk multi-task** net: featurizer → shared MLP trunk (LayerNorm +
 ReLU + dropout, optional residual skips) → one linear head per axis (softmax for
 single-label, sigmoid for multi-label). AdamW, class-weighting / `pos_weight` for
 the imbalanced axes, early-stop on mean val macro-F1, fixed seed. Each head exports
 as its **own** ONNX graph into the *existing* bundle format, so
-[`OnnxMediaClassifier`](../ovos_media_classifier/onnx.py) loads it unchanged — the
+[`OnnxMediaClassifier`](../ovos_media_classifier/onnx.py) loads it unchanged, the
 only addition is reading the featurizer spec from `meta.json` to build the
 `txt_*` / `wv_*` blocks at runtime (a categorical-only sklearn bundle simply has
 no such spec and loads as-is). torch→onnxruntime round-trip parity is verified at export
@@ -440,7 +434,7 @@ no such spec and loads as-is). torch→onnxruntime round-trip parity is verified
 ### 7.3 The comparison (held-out test split, 34 700 utterances)
 
 Single-label **accuracy** / multi-label **macro-F1**, scored identically across
-rungs. `cat` is categorical-only (the neural counterpart of `sklearn context`);
+rungs. `cat` is categorical-only (the neural counterpart of `sklearn context`),
 `+text` adds char-hash, `+wordvec` adds the trained word vectors, `+all` both,
 `(deep)` / `(wide)` are arch sweeps on `+all`. Full table + content-filter +
 latency + size in
@@ -456,16 +450,16 @@ latency + size in
 | qualifiers (F1) | 0.000 | 0.780 | 0.945 | 0.561 | 0.964 | 0.730 | 0.952 | 0.956 |
 | adult recall | 0.479 | 0.479 | 0.932 | 0.867 | 0.921 | **0.977** | 0.919 | 0.943 |
 | median ms | 0.43 | 0.23 | 0.22 | 0.16 | 6.29 | 0.62 | 6.10 | 16.1 |
-| bundle size | — | 380 KiB | 289 KiB | 1.3 MiB | 79 MiB | 42 MiB | 114 MiB | 204 MiB |
+| bundle size |, | 380 KiB | 289 KiB | 1.3 MiB | 79 MiB | 42 MiB | 114 MiB | 204 MiB |
 
-### 7.4 Findings — honest
+### 7.4 Findings, honest
 
 **Does the char-hash text help? Emphatically yes, and it is the headline.** On the
 realistic *no-NER* inputs, adding char-hash to the categorical block lifts exactly
 the value-text-dependent axes §6(b) said were starved: `tags` 0.511 → **0.800**,
 `media_type` 0.787 → 0.972, `content_form_genres` 0.510 → 0.858, `qualifiers`
 0.561 → 0.964. Seeing subwords is what reads the genre / title / qualifier out of
-the surface string. This is the direct answer to §6(a–b): the wall was the
+the surface string. This is the direct answer to §6(a, b): the wall was the
 representation, and a text-aware representation climbs it.
 
 **Do the trained domain word-vectors help?** On the *value-text* axes that depend
@@ -473,31 +467,31 @@ on **semantics over an open vocabulary** they help most for the **content filter
 `+wordvec` gives the best adult recall of any rung (**0.977**, beating even the
 NER-oracle), because the embedding pulls unseen adult-domain titles/terms toward
 the blocked region. They lift `media_type` to 0.965 on raw text alone. But on
-`tags` (0.528) mean-pooling *underperforms* char-hash — pooling averages away the
+`tags` (0.528) mean-pooling *underperforms* char-hash, pooling averages away the
 specific token that names the decade/mood, which the order-preserving char-hash
 keeps. So word-vectors buy **semantic generalization** (content safety, coarse
 type) more than fine descriptive precision.
 
-**Does neural beat sklearn?** *Not on the same features* — `neural cat` ≈
+**Does neural beat sklearn?** *Not on the same features*, `neural cat` ≈
 `sklearn context` on `media_type` (0.787 vs 0.786) and is **worse** on the
 multi-label axes (content_form_genres 0.510 vs 0.729). A plain MLP buys nothing
 over a calibrated linear model on the binary flags. Neural wins **only because it
 unlocks the richer features**: a linear model cannot consume a 4096-dim hashed
 block as usefully, and the trunk lets all axes share that representation. The
-lift is the *features*, delivered through the net — not the net itself.
+lift is the *features*, delivered through the net, not the net itself.
 
 **The honest caveat about `sklearn context+NER`.** It tops `media_type` (0.967)
-and `content_form_genres` (0.979) — but its `ner_*` columns are **ground-truth by
-construction** (set from the slot that filled the row, §1); it is a near-oracle
+and `content_form_genres` (0.979), but its `ner_*` columns are **ground-truth by
+construction** (set from the slot that filled the row, §1), it is a near-oracle
 that the runtime only realizes once a NER store is wired in. The neural text/wv
 rungs reach comparable accuracy reading **only the raw utterance**, which is what a
-fresh install actually sees — so for the out-of-the-box, no-NER deployment the
+fresh install actually sees, so for the out-of-the-box, no-NER deployment the
 char-hash neural bundle is the strongest realistic option.
 
 **Is it worth the size / latency?** That is the real tradeoff. Char-hash costs
-~6 ms/utterance (vs 0.2 ms sklearn) and a 79–204 MiB bundle — fine for a server,
+~6 ms/utterance (vs 0.2 ms sklearn) and a 79, 204 MiB bundle, fine for a server,
 heavy for a Pi. Word-vectors are the **sweet spot for content safety**: 0.6 ms,
-42 MiB, best adult recall. The artifacts stay **local** (gitignored `data/`); the
+42 MiB, best adult recall. The artifacts stay **local** (gitignored `data/`), the
 shipped default remains the lean zero-config keyword classifier, with these bundles
 an opt-in for deployments that can pay for the accuracy.
 
@@ -505,10 +499,13 @@ an opt-in for deployments that can pay for the accuracy.
 
 ## See also
 
-* [classification-model.md](classification-model.md) — why the output is
+* [classification-model.md](classification-model.md), why the output is
   orthogonal axes rather than a strict tree.
-* [extending.md](extending.md) — add a backend, retrain a bundle, add a new axis
+* [extending.md](extending.md), add a backend, retrain a bundle, add a new axis
   end-to-end.
-* [dataset.md](dataset.md) — the columns these heads are supervised on.
-* [stable-api.md](stable-api.md) — the per-axis method reference.
-* [benchmarks](../benchmarks/README.md) — the reproducible harness behind §5.
+* [dataset.md](dataset.md), the columns these heads are supervised on.
+* [stable-api.md](stable-api.md), the per-axis method reference.
+* [benchmarks](../benchmarks/README.md), the reproducible harness behind §5.
+
+---
+[← Classification model](classification-model.md) · [Home](index.md) · [Extending →](extending.md)

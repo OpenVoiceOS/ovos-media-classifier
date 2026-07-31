@@ -43,7 +43,7 @@ clf = load_media_classifier(config={"media_classifier_plugin": "my-classifier"})
 
 The whole config dict is forwarded to the plugin constructor as `config=…`. If the
 plugin fails to load, the factory logs a warning and falls through to the built-in
-backends — an external plugin never hard-fails the pipeline.
+backends, an external plugin never hard-fails the pipeline.
 
 Or load one directly:
 
@@ -59,14 +59,12 @@ clf = load_media_classifier_plugin("my-classifier", config={})
 
 `load_media_classifier_plugin` raises `ValueError` if no plugin with that name is
 installed (the message lists the available names). It tolerates classifiers whose
-`__init__` takes no `config` kwarg. `find_media_classifier_plugins()` never raises —
-it returns `{}` when the plugin manager is unavailable.
+`__init__` takes no `config` kwarg. `find_media_classifier_plugins()` never raises, it returns `{}` when the plugin manager is unavailable.
 
 ## Implementing the contract
 
 A plugin must implement `classify()`. It may override `classify_domain()`,
-`is_ocp_query()`, and `classify_genres()` when it has cheaper or richer signal —
-e.g. a dedicated domain head, control-intent support, or genre detection so the
+`is_ocp_query()`, and `classify_genres()` when it has cheaper or richer signal, e.g. a dedicated domain head, control-intent support, or genre detection so the
 [content filter](content-filtering.md) can block on it. See
 [stable-api.md](stable-api.md) for the full contract and the default
 implementations.
@@ -74,6 +72,9 @@ implementations.
 A trained plugin SHOULD also override the coarse-axis methods
 (`classify_playback_type()`, `classify_structure()`, `classify_full()`) to predict
 each axis with its own head and soft-gate the leaf, rather than relying on the
-derive-from-leaf defaults — that is the whole point of the multi-axis model and is
+derive-from-leaf defaults, that is the whole point of the multi-axis model and is
 what the `TigreGotico/ocp-media-intents` dataset's per-axis columns are for. See
 [classification-model.md](classification-model.md#42-predict-each-axis-with-its-own-head-trained-plugins).
+
+---
+[← Content filtering](content-filtering.md) · [Home](index.md) · [Stable API →](stable-api.md)
