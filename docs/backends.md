@@ -69,6 +69,13 @@ Languages bundled: `ca-es`, `da-dk`, `de-de`, `en-us`, `es-es`, `eu-es`, `fr-fr`
 
 ## NER classifier (`[ner]` extra)
 
+"NER" here is the user-facing name for **exact entity-list matching**, not
+statistical named-entity recognition: the backend is
+`AhocorasickMediaClassifier`, which compiles the configured entity lists into
+an Aho-Corasick automaton and matches the user's *actual* library (artists,
+titles, stations) verbatim. No model guesses spans — an entity either is in
+a registered list or it does not match.
+
 ```python
 pip install ovos-media-classifier[ner]
 ```
