@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.0a1](https://github.com/OpenVoiceOS/ovos-media-classifier/tree/0.1.0a1) (2026-09-02)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-media-classifier/compare/0.0.4a2...0.1.0a1)
+
+**Merged pull requests:**
+
+- feat: self-register the keyword backend under opm.media.classifier [\#45](https://github.com/OpenVoiceOS/ovos-media-classifier/pull/45) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [0.0.4a2](https://github.com/OpenVoiceOS/ovos-media-classifier/tree/0.0.4a2) (2026-07-31)
 
 [Full Changelog](https://github.com/OpenVoiceOS/ovos-media-classifier/compare/0.0.4a1...0.0.4a2)
