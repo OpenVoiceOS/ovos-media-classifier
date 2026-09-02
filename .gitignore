@@ -47,3 +47,5 @@ venv/
 /fr_*.json
 .kilo/
 .tmp/
+
+uv.lock
