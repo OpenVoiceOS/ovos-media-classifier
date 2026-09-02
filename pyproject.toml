@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
+requires = ["setuptools>=77.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -10,7 +10,8 @@ readme = "README.md"
 authors = [
     { name = "JarbasAI", email = "jarbasai@mailfence.com" }
 ]
-license = { text = "Apache-2.0" }
+license = "Apache-2.0"
+license-files = ["LICENSE"]
 requires-python = ">=3.10"
 dependencies = [
     "ovos-utils>=0.0.38",
@@ -20,7 +21,6 @@ dependencies = [
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: Apache Software License",
     "Operating System :: OS Independent",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
@@ -74,6 +74,10 @@ test = [
     "pytest",
     "pytest-cov",
     "metadatarr>=0.5.0a1",
+    # test_embedding.py / test_gazetteer.py build the embedding-router axis
+    # heads by hand with plain numpy arrays (no onnxruntime, no model file) —
+    # numpy alone is enough for these to collect and run.
+    "numpy",
 ]
 
 # NOTE: dataset-build/training tooling lives in the top-level ``training/`` dir
