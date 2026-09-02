@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.0a2](https://github.com/OpenVoiceOS/ovos-media-classifier/tree/0.2.0a2) (2026-09-02)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-media-classifier/compare/0.2.0a1...0.2.0a2)
+
+**Merged pull requests:**
+
+- chore: hygiene pass — lockfile, test extra, SPDX license, AGENTS.md [\#61](https://github.com/OpenVoiceOS/ovos-media-classifier/pull/61) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [0.2.0a1](https://github.com/OpenVoiceOS/ovos-media-classifier/tree/0.2.0a1) (2026-09-02)
 
 [Full Changelog](https://github.com/OpenVoiceOS/ovos-media-classifier/compare/0.1.0a1...0.2.0a1)
