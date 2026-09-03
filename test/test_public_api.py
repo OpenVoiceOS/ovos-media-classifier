@@ -362,11 +362,12 @@ class TestKeywordEntryPointRegistration(unittest.TestCase):
 
     def test_declared_target_follows_the_loader_contract(self):
         # load_media_classifier_plugin tries clazz(config=...) and falls back
-        # to clazz() on TypeError — the keyword backend takes the second path.
+        # to clazz() on TypeError — the keyword backend accepts config, so it
+        # takes the first path, and must still construct with no arguments.
         from ovos_media_classifier.base import AbstractMediaClassifier
         from ovos_media_classifier.keyword import KeywordMediaClassifier
-        with self.assertRaises(TypeError):
-            KeywordMediaClassifier(config={})
+        self.assertIsInstance(KeywordMediaClassifier(config={}),
+                              AbstractMediaClassifier)
         self.assertIsInstance(KeywordMediaClassifier(), AbstractMediaClassifier)
 
 class TestLazyBackendExports(unittest.TestCase):
