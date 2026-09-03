@@ -33,8 +33,10 @@ clf.classify("play a movie", "en-us")        # (<MediaType.MOVIE: 'movie'>, 0.6)
 ### `classify_genres(query, lang) -> list[str]`
 
 Returns the `mediavocab` genre tags implied by the query (default `[]`). Genres are
-orthogonal to `MediaType` and are what the content filter blocks on. The keyword
-classifier overrides this to surface genre from the matched `.voc` files.
+orthogonal to `MediaType`; `classify_content_form_genres` (the dedicated
+sensitive-genre axis the content filter actually reads) defaults to delegating
+here. The keyword classifier overrides this to surface genre from the matched
+`.voc` files.
 
 ```python
 clf.classify_genres("play some anime", "en-us")   # ['anime']
@@ -104,7 +106,15 @@ The classifier emits its descriptive signals in **mediavocab's own taxonomy**, s
 - `classify_variant(query, lang) -> VariantKind | None`, the work-level cut:
   `directors` / `extended` / `remastered` / `colorized` / `fanedit` / …
 - `classify_genres(query, lang) -> list[str]`, genre tags constrained to
-  `mediavocab.KNOWN_GENRES` (the content filter reads `adult` / `anime` / … here).
+  `mediavocab.KNOWN_GENRES`.
+- `classify_content_form_genres(query, lang) -> list[str]`, the dedicated
+  sensitive/content-form genre axis (`adult` / `anime` / `animation` / `asmr`)
+  that the [content filter](content-filtering.md) actually reads. Default:
+  delegates to `classify_genres`; a trained backend SHOULD override it with its
+  own multi-label head so it can flag `adult` even when it is unsure of the
+  exact `MediaType`.
+- `classify_explicitness(query, lang) -> str`, `"adult"` or `"clean"`. Default:
+  derived from `classify_content_form_genres`.
 - `classify_picture_format(query, lang) -> list[PictureFormat]`, the
   `mediavocab.PictureFormat` presentation attributes (`black_and_white` /
   `silent` / `3d`), multi-label.
@@ -157,12 +167,16 @@ This ABC is both the interface the bundled keyword classifier implements and the
 | Method | Required? | Default behaviour |
 |---|---|---|
 | `classify` | **abstract**, must implement |, |
-| `classify_domain` | optional override | derives from `classify()` |
+| `classify_domain` | optional override | derives from `classify()`, consulting `classify_control()` first |
 | `is_ocp_query` | optional override | derives from `classify_domain()` |
+| `classify_control` | optional override | returns `None` (no control-intent head) |
+| `classify_control_intent` | optional override | delegates to `classify_control()` |
 | `classify_genres` | optional override | returns `[]` |
 | `classify_playback_type` | optional override | derives from `classify()` |
 | `classify_structure` | optional override | derives from `classify()` |
 | `classify_content_form` | optional override | returns `None` |
+| `classify_content_form_genres` | optional override | delegates to `classify_genres()` |
+| `classify_explicitness` | optional override | derives `"adult"`/`"clean"` from `classify_content_form_genres()` |
 | `classify_programme_format` | optional override | returns `None` |
 | `classify_accessibility` | optional override | returns `[]` |
 | `classify_variant` | optional override | returns `None` |

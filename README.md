@@ -3,10 +3,9 @@
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/)
 
-> **Work in progress: pre-release software.** The project is under active
-> development. It is not yet deployed in OpenVoiceOS, and its APIs may change
-> without notice. It is published in the open for transparency. Do not depend
-> on it in production yet.
+> **Pre-1.0 software.** APIs may still change without notice. It is the
+> classification engine `ovos-ocp-pipeline-plugin` uses for media classification;
+> pin a version and expect breaking changes between releases.
 
 **A self-describing, pluggable media-intent classifier for voice assistants.**
 Given a spoken request, such as *"play some music"*, *"watch an anime"*, or
