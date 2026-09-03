@@ -45,10 +45,12 @@ Usage::
 """
 import os
 import re
+import unicodedata
 from functools import lru_cache
 from typing import Callable, Dict, List, Optional, Tuple
 
-from ovos_spec_tools import LocaleResources
+from ovos_spec_tools import LocaleResources, normalize_for_match
+from ovos_utils.log import LOG
 
 from mediavocab import (
     MediaType,
@@ -79,6 +81,54 @@ from ovos_media_classifier.intents import (
 _LOCALE_DIR = os.path.join(os.path.dirname(__file__), "locale")
 
 
+def _fold(text: str) -> str:
+    """Normalize *text* for keyword matching, punctuation and all.
+
+    ``ovos_spec_tools.normalize_for_match`` lowercases, folds diacritics and
+    drops ASCII punctuation; on top of that this drops *every* Unicode
+    punctuation mark (category ``P*``) and every invisible formatting character
+    (category ``Cf``, e.g. a zero-width space).  Both sides of a match are
+    folded, so a word cannot be disguised by splitting it: "por-n", "por–n" and
+    a zero-width-space-infixed spelling all read as "porn" and reach the adult
+    content filter.  Folding removes characters rather than replacing them with
+    a space, so word boundaries are unaffected — "sexfilm" stays one word.
+
+    Widening this fold into ``normalize_for_match`` upstream would let every
+    ``.voc`` consumer benefit; until then it is layered here, where the content
+    filter depends on it.
+    """
+    return "".join(
+        c for c in normalize_for_match(text)
+        if not (unicodedata.category(c).startswith("P") or
+                unicodedata.category(c) == "Cf")
+    )
+
+
+def _normalized_ner_list(
+    ner_list: Optional[Dict[str, List[str]]]
+) -> Dict[str, List[str]]:
+    """Coerce a caller-supplied entity context into ``{label: [entity, ...]}``.
+
+    ``ner_list`` is a public keyword argument, so it arrives in whatever shape
+    the caller has: a single entity is often passed as a bare string rather
+    than a one-item list, and a wrong type should degrade to "no context"
+    rather than raise from inside the classifier.
+    """
+    if not isinstance(ner_list, dict):
+        if ner_list is not None:
+            LOG.debug(f"ignoring non-dict ner_list: {type(ner_list).__name__}")
+        return {}
+    out: Dict[str, List[str]] = {}
+    for label, entities in ner_list.items():
+        if isinstance(entities, str):
+            entities = [entities]
+        elif not isinstance(entities, (list, tuple, set, frozenset)):
+            LOG.debug(f"ignoring ner_list[{label!r}]: not a string or sequence")
+            continue
+        out[str(label)] = [e for e in entities if isinstance(e, str) and e]
+    return out
+
+
 class _VocMatcher:
     """Vocabulary matcher backed by ``.voc`` files via ``ovos-spec-tools``.
 
@@ -92,6 +142,13 @@ class _VocMatcher:
     the spec §2.2 smart fallback (exact tag → language family → ``en-us``), so
     the prior hand-rolled case folding + ``lang``→language-only fallback are
     preserved. Compiled per-``(vocab, lang)`` regexes are cached.
+
+    Both the query and the ``.voc`` phrases go through :func:`_fold`, the
+    spec-tools punctuation- and diacritic-folding widened to all Unicode
+    punctuation, so intra-word punctuation cannot be used to slip a keyword past
+    the match ("por-n", "por–n" all read as "porn").  Word-boundary semantics
+    survive the folding: "sexfilm" is still one word and still does not match
+    "film".
     """
 
     def __init__(self, locale_dir: str) -> None:
@@ -117,14 +174,18 @@ class _VocMatcher:
         phrases = self._voc_phrases(vocab_name, lang)
         if not phrases:
             return None
+        normalized = {_fold(p) for p in phrases}
+        normalized.discard("")
+        if not normalized:
+            return None
         # Longest-first so the alternation prefers the most specific phrase.
-        sorted_phrases = sorted(phrases, key=len, reverse=True)
+        sorted_phrases = sorted(normalized, key=len, reverse=True)
         alternation = "|".join(re.escape(p) for p in sorted_phrases)
         return re.compile(rf"\b(?:{alternation})\b", re.IGNORECASE)
 
     def match(self, phrase: str, vocab_name: str, lang: str) -> bool:
         rx = self._voc_regex(vocab_name, lang.lower())
-        return bool(rx and rx.search(phrase))
+        return bool(rx and rx.search(_fold(phrase)))
 
 
 # ---------------------------------------------------------------------------
@@ -170,6 +231,9 @@ _MODALITY_DEFAULT_LEAF: Dict[PlaybackType, MediaType] = {
 #     duration/number is the disambiguator (see ``_DURATION_RE``).
 #   * Shuffle / Repeat are unambiguous keywords and come early.
 #   * Pause/Stop/Resume are high-signal and ordered before the directional ones.
+#   * ``Ctrl*Weak`` companions hold the *ambiguous* phrasings of an action
+#     ("turn off", "quiet") which are only a media command when they govern
+#     nothing but fillers or a media object — see ``_weak_control_ok``.
 #   * Open / SaveGame / LoadGame / Like are domain-specific.
 # Each entry: (voc_name, OCPControlIntent).
 # ---------------------------------------------------------------------------
@@ -178,6 +242,7 @@ _CONTROL_VOC_ORDER: List[Tuple[str, "OCPControlIntent"]] = [
     ("CtrlRepeat", OCPControlIntent.REPEAT),
     ("CtrlPause", OCPControlIntent.PAUSE),
     ("CtrlStop", OCPControlIntent.STOP),
+    ("CtrlStopWeak", OCPControlIntent.STOP),
     ("CtrlResume", OCPControlIntent.RESUME),
     ("CtrlSeekBackward", OCPControlIntent.SEEK_BACKWARD),
     ("CtrlSeekForward", OCPControlIntent.SEEK_FORWARD),
@@ -243,6 +308,22 @@ _DURATION_RE = re.compile(
 )
 
 
+# A weak control phrase ("turn off") only commands media when it governs nothing
+# but these fillers, or a media object. Fillers are matched per-word, lowercase.
+_FILLERS = frozenset((
+    "the", "a", "an", "please", "just", "now", "it", "that", "this", "all",
+    "be", "my", "your",
+    "everything", "right", "ok", "okay", "up", "down", "again",
+))
+
+# Confidence multiplier applied to the *leaf* when a query carries BOTH an IoT
+# object word and real media evidence: media still wins, but the collision is
+# reported.  It only reaches the caller when a concrete leaf resolved — a
+# request that routes on the play verb alone ("play doorbell sounds") has a
+# GENERIC leaf, and the domain head reports its own undamped confidence for it.
+_IOT_COLLISION_DAMPING = 0.5
+
+
 class KeywordMediaClassifier(AbstractMediaClassifier):
     """Classifies media type using hierarchical voc keyword matching.
 
@@ -256,13 +337,22 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
             When omitted the bundled locale files are used directly.
         locale_dir: Override the locale directory used in standalone mode.
             Defaults to the bundled ``ovos_media_classifier/locale/``.
+        config: OCP config block. ``media_classifier_blacklist`` is a list of
+            extra non-media object words (deployments name their smart-home
+            entities freely) honoured exactly like ``IoTKeyword.voc``: an
+            utterance whose object is one of them is not a media request.
     """
 
     def __init__(
         self,
         voc_match_func: Optional[Callable] = None,
         locale_dir: Optional[str] = None,
+        config: Optional[dict] = None,
     ) -> None:
+        blacklist = (config or {}).get("media_classifier_blacklist") or []
+        self._blacklist = tuple(
+            sorted((_fold(w) for w in blacklist if w),
+                   key=len, reverse=True))
         if voc_match_func is not None:
             self._voc_match = voc_match_func
         else:
@@ -281,6 +371,137 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
 
     def _match(self, phrase: str, vocab: str, lang: str) -> bool:
         return bool(self._voc_match(phrase, vocab, lang=lang))
+
+    # ------------------------------------------------------------------
+    # Negative evidence: smart-home objects a voice assistant controls but
+    # never plays.  The object word alone is never enough to refuse a request
+    # — the *verb* decides.  Precedence, in order:
+    #
+    #   1. no IoT object word ⇒ the ordinary media path, unchanged.
+    #   2. an IoT object word alongside media evidence — a media keyword, or an
+    #      ``ner_list`` entity occurring in the query and spelled like the IoT
+    #      object (the song "Lights") ⇒ media, never blocked.
+    #   3. an IoT object word under an explicit play request ("play doorbell
+    #      sounds") or a strong control phrase ("stop light show") ⇒ media: an
+    #      unambiguous media verb outranks the object word.
+    #   4. only then, an IoT object word under a *weak* control phrase or no
+    #      verb at all ("turn off the lights") ⇒ hard NOT_OCP: no control
+    #      action, no leaf, zero confidence.
+    #
+    # Whenever an IoT object survives into the media path (2 and 3) the leaf
+    # confidence is damped by ``_IOT_COLLISION_DAMPING`` to report the
+    # collision — the request is answered, just less certainly.
+    # ------------------------------------------------------------------
+
+    def _has_iot_object(self, query: str, lang: str) -> bool:
+        """True when the query names a smart-home object (voc or config list)."""
+        if self._match(query, "IoTKeyword", lang):
+            return True
+        if not self._blacklist:
+            return False
+        q = _fold(query)
+        return any(re.search(rf"\b{re.escape(w)}\b", q) for w in self._blacklist)
+
+    def _has_media_object(self, query: str, lang: str) -> bool:
+        """True when the query names media — a leaf/modality cue or a player noun."""
+        modality, _ = self._predict_modality(query, lang)
+        return (modality is not PlaybackType.UNKNOWN or
+                self._match(query, "MediaObject", lang))
+
+    def _ner_hit(
+        self, text: str, ner_list: Optional[Dict[str, List[str]]]
+    ) -> bool:
+        """True when a known entity occurs in *text* on word boundaries."""
+        t = _fold(text)
+        for entities in (ner_list or {}).values():
+            for entity in entities:
+                ent = _fold(entity)
+                if ent and re.search(rf"\b{re.escape(ent)}\b", t):
+                    return True
+        return False
+
+    def _has_media_evidence(
+        self, query: str, lang: str,
+        ner_list: Optional[Dict[str, List[str]]] = None,
+    ) -> bool:
+        """True when the query carries media evidence (keyword or known entity).
+
+        An ``ner_list`` holds the media entities the user actually has, so an
+        entity occurring in the query is media evidence even when it is spelled
+        like a smart-home object ("play lights" with a song named *lights*).
+
+        ``AmbientAudio.voc`` (sound / noise / soundscape) counts only under an
+        explicit play request.  "play doorbell sounds" asks for a soundscape,
+        but "silence the alarm sounds" asks to mute an alert — the same noun
+        under a control verb is the appliance, not media.
+        """
+        if self._has_media_object(query, lang):
+            return True
+        if (self._match(query, "AmbientAudio", lang) and
+                self._is_play_request(query, lang)):
+            return True
+        return self._ner_hit(query, ner_list)
+
+    def _has_strong_control(self, query: str, lang: str) -> bool:
+        """True when an unambiguous transport-control phrase fired.
+
+        The ``Ctrl*Weak`` vocs hold the ambiguous phrasings and are excluded:
+        "stop" is a media verb wherever it appears, "turn off" is not.
+        """
+        return any(self._match(query, voc_name, lang)
+                   for voc_name, _ in _CONTROL_VOC_ORDER
+                   if not voc_name.endswith("Weak"))
+
+    def _is_iot_request(
+        self, query: str, lang: str,
+        ner_list: Optional[Dict[str, List[str]]] = None,
+    ) -> bool:
+        """True when the query commands a smart-home object, not media."""
+        if not self._has_iot_object(query, lang):
+            return False
+        if self._has_media_evidence(query, lang, ner_list):
+            return False
+        return not (self._is_play_request(query, lang) or
+                    self._has_strong_control(query, lang))
+
+    def _weak_control_ok(
+        self, query: str, voc_name: str, lang: str,
+        ner_list: Optional[Dict[str, List[str]]] = None,
+    ) -> bool:
+        """True when an ambiguous control phrase really commands media.
+
+        A weak phrase ("turn off", "quiet") is a media command only when it
+        governs nothing at all — the utterance is the phrase plus fillers
+        ("shut up", "be quiet please") — or when what it governs is a media
+        object ("turn off the music").  "turn off the heater" governs neither
+        and is not a media command.
+        """
+        words = [w for w in re.split(r"\s+", query.strip()) if w]
+        # Isolate the phrase itself: voc matching is containment, so the
+        # *shortest* matching span is the phrase and everything outside it is
+        # what the phrase governs.  Testing longer spans first would find the
+        # whole utterance (which trivially contains the phrase) and leave
+        # nothing governed, which is no test at all.  Working span-wise rather
+        # than off a regex match object keeps this working in pipeline mode,
+        # where the injected ``voc_match_func`` only answers yes or no.
+        span = next(
+            ((start, start + size)
+             for size in range(1, len(words) + 1)
+             for start in range(0, len(words) - size + 1)
+             if self._match(" ".join(words[start:start + size]),
+                            voc_name, lang)),
+            None,
+        )
+        if span is None:
+            return False
+        rest = [w for i, w in enumerate(words)
+                if not span[0] <= i < span[1]
+                and _fold(w) not in _FILLERS]
+        if not rest:
+            return True
+        governed = " ".join(rest)
+        return (self._has_media_object(governed, lang) or
+                self._ner_hit(governed, ner_list))
 
     def _game_evidence(self, query: str, lang: str) -> bool:
         """True when there is genuine GAME evidence, not a play-verb collision.
@@ -343,9 +564,24 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
 
         The control vocs deliberately exclude bare "play", so "play <media>"
         never trips a control match.
+
+        A smart-home object under a weak control phrasing and with no media
+        evidence ("turn off the lights") is hard negative evidence and
+        short-circuits to ``NOT_OCP``.  An explicit play request or a strong
+        control phrase over the same object stays media.
         """
-        control = self.classify_control(query, lang)
-        media_type, conf = self.classify(query, lang)
+        return self._classify_domain(query, lang, None)
+
+    def _classify_domain(
+        self, query: str, lang: str,
+        ner_list: Optional[Dict[str, List[str]]],
+    ) -> Tuple[OCPDomain, float]:
+        """:meth:`classify_domain` with the per-query entity context."""
+        if self._is_iot_request(query, lang, ner_list):
+            return OCPDomain.NOT_OCP, 0.0
+        control = self.classify_control(query, lang, ner_list)
+        media_type, _genres, conf = self._classify_leaf(
+            query, lang, None, ner_list)
         has_leaf = media_type != MediaType.GENERIC
         play_verb = self._is_play_request(query, lang)
 
@@ -380,7 +616,8 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
         return len(words) > 1
 
     def classify_control(
-        self, query: str, lang: str
+        self, query: str, lang: str,
+        ner_list: Optional[Dict[str, List[str]]] = None,
     ) -> Optional[OCPControlIntent]:
         """Match a transport-control action from the ``Ctrl*.voc`` files.
 
@@ -397,13 +634,30 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
         * "play" is never a control cue here; a *bare* play/resume verb with no
           media falls through to ``OCPControlIntent.PLAY`` / ``RESUME`` so
           "play"/"resume"/"continue" (resume-current) are still control.
+        * A smart-home object under a weak phrasing and with no media evidence
+          ("turn off the lights") is not a media command and returns ``None``;
+          a strong control phrase over the same object ("stop light show")
+          still fires.
+        * *ner_list* is the caller's entity context.  When the object of a weak
+          phrase is a title the user actually has, the request is a control on
+          that title ("turn off the lights" with a song named *Lights* stops
+          it): stopping something is the conservative reading of an ambiguous
+          utterance, where starting playback is not.
+        * An ambiguous phrasing of an action (the ``Ctrl*Weak`` vocs) only
+          counts when it governs fillers or a media object — see
+          ``_weak_control_ok``.
         """
         m = self._match
         q = query
+        if self._is_iot_request(q, lang, ner_list):
+            return None
         has_duration = bool(_DURATION_RE.search(q))
 
         for voc_name, action in _CONTROL_VOC_ORDER:
             if not m(q, voc_name, lang):
+                continue
+            if voc_name.endswith("Weak") and not self._weak_control_ok(
+                    q, voc_name, lang, ner_list):
                 continue
             if action is OCPControlIntent.SEEK_BACKWARD and not has_duration:
                 if not self._explicit_seek_back(q, lang):
@@ -515,12 +769,8 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
 
     def classify_playback_type(self, query: str, lang: str) -> PlaybackType:
         """Return the PREDICTED ``mediavocab.PlaybackType`` (the modality axis)."""
-        modality, _ = self._predict_modality(query, lang)
-        if modality is not PlaybackType.UNKNOWN:
-            return modality
-        # No coarse evidence — fall back to the leaf's intrinsic modality.
         media_type, _ = self.classify(query, lang)
-        return infer_playback_type(media_type)
+        return self._reconcile_modality(query, lang, media_type)
 
     def classify_structure(self, query: str, lang: str) -> Structure:
         """Return the PREDICTED :class:`Structure`.
@@ -554,24 +804,29 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
         on conservatively by the shared base helper after the context-free axes
         are predicted.
         """
-        result = self._classify_full_nocontext(query, lang)
+        result = self._classify_full_nocontext(
+            query, lang, _normalized_ner_list(ner_list))
         return self._apply_player_status(self, query, lang, result, player_status)
 
-    def _classify_full_nocontext(self, query: str, lang: str) -> MediaClassification:
+    def _classify_full_nocontext(
+        self, query: str, lang: str,
+        ner_list: Optional[Dict[str, List[str]]] = None,
+    ) -> MediaClassification:
         """The context-free multi-axis result (see :meth:`classify_full`)."""
         modality, _ = self._predict_modality(query, lang)
         structure = self._predict_structure(query, lang, modality)
-        media_type, leaf_genres, conf = self._classify_leaf(query, lang, None)
+        media_type, leaf_genres, conf = self._classify_leaf(
+            query, lang, None, ner_list)
         genres = list(leaf_genres)
 
         # The domain head owns the play-vs-control precedence (see
         # ``classify_domain``); keep ``classify_full`` consistent with it.
-        domain, dconf = self.classify_domain(query, lang)
+        domain, dconf = self._classify_domain(query, lang, ner_list)
         control_intent: Optional[OCPControlIntent] = None
 
         if domain is OCPDomain.OCP_CONTROL:
             # Pure transport control — media axes are unknown.
-            control_intent = self.classify_control(query, lang)
+            control_intent = self.classify_control(query, lang, ner_list)
             media_type = MediaType.GENERIC
             playback = PlaybackType.UNKNOWN
             structure = Structure.UNKNOWN
@@ -587,9 +842,11 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
                     structure = Structure.SINGLE
             else:
                 # Prefer the predicted coarse axes; degrade to the leaf's
-                # intrinsic axis where no coarse evidence was found.
-                playback = (modality if modality is not PlaybackType.UNKNOWN
-                            else infer_playback_type(media_type))
+                # intrinsic axis where no coarse evidence was found, and let the
+                # leaf break a coarse tie so the two axes never contradict
+                # ("a video game" scores video and interactive equally; the GAME
+                # leaf settles it as INTERACTIVE).
+                playback = self._reconcile_modality(query, lang, media_type)
                 if structure is Structure.UNKNOWN:
                     structure = infer_structure(media_type)
         else:
@@ -612,6 +869,29 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
     # Coarse axis prediction (each axis from its own voc evidence)
     # ------------------------------------------------------------------
 
+    def _reconcile_modality(
+        self, query: str, lang: str, media_type: MediaType
+    ) -> PlaybackType:
+        """The modality to report alongside *media_type*, never contradicting it.
+
+        The coarse prediction wins while it is strictly better supported than
+        the leaf's intrinsic modality.  When the two are tied — "play a video
+        game" gives video and interactive one cue each, and the fixed tie-break
+        order would pick video against a GAME leaf — the leaf wins, because a
+        resolved leaf is the more specific evidence.  With no coarse evidence at
+        all the leaf's intrinsic modality is used.
+        """
+        scores = self._modality_scores(query, lang)
+        modality, _ = self._predict_modality(query, lang)
+        leaf_modality = infer_playback_type(media_type)
+        if modality is PlaybackType.UNKNOWN:
+            return leaf_modality
+        if (leaf_modality is not PlaybackType.UNKNOWN and
+                leaf_modality is not modality and
+                scores.get(leaf_modality, 0) >= scores[modality]):
+            return leaf_modality
+        return modality
+
     def _predict_modality(
         self, query: str, lang: str
     ) -> Tuple[PlaybackType, int]:
@@ -624,6 +904,22 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
         evidence for their modality).  The strongest score wins; ties break by a
         fixed modality preference.  Returns ``(UNKNOWN, 0)`` with no evidence.
         """
+        scores = self._modality_scores(query, lang)
+        best = max(scores, key=lambda k: scores[k])
+        if scores[best] == 0:
+            return PlaybackType.UNKNOWN, 0
+        # tie-break by a stable preference (audio < video < interactive < paged)
+        top = scores[best]
+        for pb in (PlaybackType.AUDIO, PlaybackType.VIDEO,
+                   PlaybackType.INTERACTIVE, PlaybackType.PAGED):
+            if scores[pb] == top:
+                return pb, top
+        return best, top
+
+    def _modality_scores(
+        self, query: str, lang: str
+    ) -> Dict[PlaybackType, int]:
+        """Per-modality cue counts backing :meth:`_predict_modality`."""
         m = self._match
         q = query
         scores: Dict[PlaybackType, int] = {
@@ -674,18 +970,7 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
             scores[PlaybackType.PAGED] += 1
         if m(q, "BookKeyword", lang):
             scores[PlaybackType.PAGED] += 1
-
-        best = max(scores, key=lambda k: scores[k])
-        if scores[best] == 0:
-            return PlaybackType.UNKNOWN, 0
-        # tie-break by a stable preference (audio < video < interactive < paged)
-        top = scores[best]
-        order = [PlaybackType.AUDIO, PlaybackType.VIDEO,
-                 PlaybackType.INTERACTIVE, PlaybackType.PAGED]
-        for pb in order:
-            if scores[pb] == top:
-                return pb, top
-        return best, top
+        return scores
 
     def _predict_structure(
         self, query: str, lang: str, modality: PlaybackType
@@ -740,6 +1025,7 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
         query: str,
         lang: str,
         valid_labels: Optional[List[MediaType]],
+        ner_list: Optional[Dict[str, List[str]]] = None,
     ) -> Tuple[MediaType, List[str], float]:
         """Resolve the leaf ``(MediaType, genres, confidence)`` coarse-to-fine.
 
@@ -756,7 +1042,26 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
            the DEFAULT leaf for that (modality, structure) cell.
 
         ``valid_labels`` (mediavocab types) gate every branch by MediaType.
+
+        A smart-home object word abstains to GENERIC when nothing else in the
+        utterance asks for media, and damps the confidence when it survives
+        into the media path.
         """
+        if self._has_iot_object(query, lang):
+            if self._is_iot_request(query, lang, ner_list):
+                return MediaType.GENERIC, [], 0.0
+            media_type, genres, conf = self._resolve_leaf(
+                query, lang, valid_labels)
+            return media_type, genres, round(conf * _IOT_COLLISION_DAMPING, 3)
+        return self._resolve_leaf(query, lang, valid_labels)
+
+    def _resolve_leaf(
+        self,
+        query: str,
+        lang: str,
+        valid_labels: Optional[List[MediaType]],
+    ) -> Tuple[MediaType, List[str], float]:
+        """The coarse-to-fine leaf chain itself (see :meth:`_classify_leaf`)."""
         valid = set(valid_labels) if valid_labels is not None else None
         m = self._match
         q = query
