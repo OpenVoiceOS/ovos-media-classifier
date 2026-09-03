@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.0a3](https://github.com/OpenVoiceOS/ovos-media-classifier/tree/0.2.0a3) (2026-09-03)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-media-classifier/compare/0.2.0a2...0.2.0a3)
+
+**Merged pull requests:**
+
+- docs: correct the stable-api contract table, content-filter axis attribution, semantic-rung status and deployment banner [\#64](https://github.com/OpenVoiceOS/ovos-media-classifier/pull/64) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [0.2.0a2](https://github.com/OpenVoiceOS/ovos-media-classifier/tree/0.2.0a2) (2026-09-02)
 
 [Full Changelog](https://github.com/OpenVoiceOS/ovos-media-classifier/compare/0.2.0a1...0.2.0a2)
