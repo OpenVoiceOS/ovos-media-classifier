@@ -1,0 +1,99 @@
+<lead_play_audio> {ambient_sound}
+[hey|ok|please] <lead_play_audio> {ambient_sound} [please|for me|right now|thanks]
+<lead_play_audio> some {ambient_sound}
+<lead_play_audio> {ambient_sound} sounds
+[hey|ok|please] <lead_play_audio> {ambient_sound} sounds [please|for me|right now|thanks]
+<lead_play_audio> white noise
+[hey|ok|please] <lead_play_audio> white noise [please|for me|right now|thanks]
+<lead_play_audio> brown noise
+[hey|ok|please] <lead_play_audio> brown noise [please|for me|right now|thanks]
+<lead_play_audio> pink noise
+<lead_play_audio> rain sounds
+[hey|ok|please] <lead_play_audio> rain sounds [please|for me|right now|thanks]
+<lead_play_audio> ocean waves
+[hey|ok|please] <lead_play_audio> ocean waves [please|for me|right now|thanks]
+<lead_play_audio> nature sounds
+[hey|ok|please] <lead_play_audio> nature sounds [please|for me|right now|thanks]
+<lead_play_audio> forest sounds
+<lead_play_audio> thunderstorm sounds
+[hey|ok|please] <lead_play_audio> thunderstorm sounds [please|for me|right now|thanks]
+<lead_play_audio> focus music
+[hey|ok|please] <lead_play_audio> focus music [please|for me|right now|thanks]
+<lead_play_audio> sleep sounds
+[hey|ok|please] <lead_play_audio> sleep sounds [please|for me|right now|thanks]
+<lead_play_audio> some ambient music
+<lead_play_audio> some ambient noise
+[hey|ok|please] <lead_play_audio> some ambient noise [please|for me|right now|thanks]
+<lead_play_audio> the sound of {ambient_sound}
+[hey|ok|please] <lead_play_audio> the sound of {ambient_sound} [please|for me|right now|thanks]
+<lead_play_audio> a {ambient_sound} soundscape
+[hey|ok|please] <lead_play_audio> a {ambient_sound} soundscape [please|for me|right now|thanks]
+<lead_play_audio> a loop of {ambient_sound}
+<lead_play_audio> gentle {ambient_sound}
+[hey|ok|please] <lead_play_audio> gentle {ambient_sound} [please|for me|right now|thanks]
+<lead_play_audio> some {ambient_sound} for sleep
+[hey|ok|please] <lead_play_audio> some {ambient_sound} for sleep [please|for me|right now|thanks]
+<lead_play_audio> calming {ambient_sound}
+[hey|ok|please] <lead_play_audio> calming {ambient_sound} [please|for me|right now|thanks]
+<lead_play_audio> do you have any {ambient_sound}
+<lead_play_audio> got some {ambient_sound} sounds
+[hey|ok|please] <lead_play_audio> got some {ambient_sound} sounds [please|for me|right now|thanks]
+<lead_play_audio> some {ambient_sound} to help me sleep
+[hey|ok|please] <lead_play_audio> some {ambient_sound} to help me sleep [please|for me|right now|thanks]
+<lead_play_audio> {ambient_sound} while i work
+[hey|ok|please] <lead_play_audio> {ambient_sound} while i work [please|for me|right now|thanks]
+{ambient_sound}, please
+some {ambient_sound}, thanks
+{ambient_sound} — put it on
+some white noise — i need to focus
+put on some {ambient_sound}, would you?
+i could go for some {ambient_sound}
+i'm after some {ambient_sound}
+i need some {ambient_sound} to sleep
+what about some {ambient_sound}
+maybe some rain sounds
+we should put on some {ambient_sound}
+some {ambient_sound} because it's too quiet
+{ambient_sound} for the background while i read
+a loop of {ambient_sound} to help me concentrate
+gentle {ambient_sound} for winding down
+um can you put on some ambient sounds
+play {ambient_sound}, actually no some white noise
+hey so put on {ambient_sound}
+you know what throw on some {ambient_sound}
+wanna have some {ambient_sound} on
+lemme have {ambient_sound} in the background
+i can't focus put on some {ambient_sound}
+i could really go for some {ambient_sound}
+i'm trying to sleep put on {ambient_sound}
+got any {ambient_sound} sounds?
+i wanna listen to {ambient_sound}
+<lead_play_audio> um got any {ambient_sound} to chill out to
+just put on some {ambient_sound} would ya
+how about some ocean waves to fall asleep to
+<lead_play_audio> i'm in the mood for {ambient_sound} right now
+let's hear some brown noise
+so i was thinking maybe {ambient_sound} in the background all night
+gimme some fan noise please
+<lead_play_audio> can you play {ambient_sound} for a bit
+i really need some rain sounds to focus
+<lead_play_audio> um so {ambient_sound} would be nice
+throw on some nature sounds will ya
+i kinda want to hear {ambient_sound} right about now
+<lead_play_audio> how's about {ambient_sound} for a change
+put some forest sounds on in the background
+i'm trying to sleep so gimme some {ambient_sound}
+<lead_play_audio> whatcha got for {ambient_sound}
+let me get some white noise going
+<lead_play_audio> maybe some focus music or something
+[hey|um] can we get some {ambient_sound} going
+let's put on {ambient_sound} [in the background|for the night]
+feels like a {ambient_sound} kind of [day|night|afternoon]
+we should play some {ambient_sound} [in here]
+<lead_play_audio> a little {ambient_sound} [for ambiance|for me]
+so i was thinking maybe some {ambient_sound} [would be nice]
+lemme get some {ambient_sound} going [please]
+actually just put on {ambient_sound} [instead]
+white noise would be [great|perfect] [right now]
+i'm trying to find some {ambient_sound} [to play]
+[hey|ok] crank up some {ambient_sound} [please]

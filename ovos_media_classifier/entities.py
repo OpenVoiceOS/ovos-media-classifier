@@ -1,19 +1,43 @@
-"""OCP EntitiesContainer — unified entity registry for AhocorasickMediaClassifier.
+"""Entity lists — the source-agnostic store that powers OCP entity matching.
 
-Aggregates entity strings (artist names, movie titles, TV show titles, …) from
-multiple sources and keeps them in sync with an underlying AhocorasickNER so
-that any entity added at runtime is immediately reflected in classification
-results without rebuilding the automaton.
+An :class:`EntitiesContainer` is, fundamentally, a set of **entity lists**: a
+mapping of ``label → list of strings`` (``artist_name → ["Radiohead", …]``,
+``movie_title → ["Inception", …]``, …).  It is shared infrastructure, not tied
+to any one classifier:
 
-Supported sources
------------------
-- In-memory word lists / dicts
-- CSV files (the format produced by ``generate_dataset_from_media.py``)
-- Jellyfin  (movies, TV, music, audiobooks, podcasts)
-- Radarr    (movies + cast/crew)
-- Sonarr    (TV shows, anime, documentaries)
-- Lidarr    (artists, albums, tracks, genres)
-- HuggingFace ``datasets`` (any dataset with entity/label columns)
+- the **NER backend** (:class:`~ovos_media_classifier.ahocorasick.AhocorasickMediaClassifier`)
+  feeds the lists into an Aho-Corasick automaton for fast exact substring
+  matching;
+- the (future) **guided-embeddings** classifier consumes the *same* lists as
+  categorical NER features.
+
+Build the same lists once, use them with either strategy.
+
+Where entity lists come from
+----------------------------
+1. **Provided at runtime** — the ``add`` / ``add_many`` path.  The OCP pipeline
+   registers the user's media as it discovers it (a skill announcing its
+   content, a background media-server sync); each call is reflected in
+   classification results immediately, with no rebuild step.
+2. **Provided via config as source specs** — dispatched by :meth:`load_source`:
+
+   - a **file path** ending in ``.csv`` / ``.tsv`` / ``.jsonl``
+     (:meth:`load_csv` / :meth:`load_tsv` / :meth:`load_jsonl`);
+   - a **HuggingFace dataset** reference — a dict with a ``"dataset"`` key
+     (:meth:`load_huggingface`);
+   - an **inline** ``{label: [values]}`` dict (added directly);
+   - a **media-server** dict (``jellyfin`` / ``radarr`` / ``sonarr`` /
+     ``lidarr`` / ``music_assistant``), keyed by a ``"type"`` hint.
+
+Performance / memory tradeoff
+-----------------------------
+Entity lists are a **deliberate, bounded choice**.  The Aho-Corasick automaton
+holds every entity string in memory and every added entity widens the matcher:
+the more entities loaded, the slower the per-utterance tagging and the larger
+the memory footprint.  Load the user's *actual* library (a few thousand titles),
+not an open-ended public catalogue.  The same caution applies to the
+guided-embeddings features — a bloated categorical vocabulary dilutes the
+signal.  Prefer a handful of focused lists over one giant dump.
 
 Dependencies
 ------------
@@ -21,40 +45,46 @@ Dependencies
 - ``requests``         — required for media-server loaders  (``pip install ovos-media-classifier[media_servers]``)
 - ``datasets``         — required for HuggingFace loader   (``pip install ovos-media-classifier[huggingface]``)
 
-All three are optional — the container works as a pure data store without them.
+All three are optional.  Loading entity lists from files / inline dicts needs
+**none** of them — list loading is independent of the matcher.  The container is
+a pure data store until its :attr:`ner` is materialised (lazily, on first
+access).
 
 Runtime awareness
 -----------------
 The same ``AhocorasickNER`` instance is shared between the container and
 ``AhocorasickMediaClassifier``.  Every call to :meth:`add` propagates to the
-NER via ``ner.add_word()`` immediately, so newly registered entities
-(skills announcing their content, media-server libraries updated mid-session)
-are reflected in classification results with no rebuild step.
+NER via ``ner.add_word()`` immediately, so newly registered entities are
+reflected in classification results with no rebuild step.
 
 Example::
 
-    container = EntitiesContainer()
-    container.load_radarr("http://localhost:7878", api_key="...")
-    container.load_sonarr("http://localhost:8989", api_key="...")
-    container.load_lidarr("http://localhost:8686", api_key="...")
-    container.load_jellyfin("http://localhost:8096", api_key="...")
+    # Build entity lists from mixed sources (no optional deps needed for files):
+    container = EntitiesContainer.from_sources([
+        "/data/my_library.csv",                 # .csv path
+        "/data/extra.tsv",                       # .tsv path
+        "/data/aliases.jsonl",                   # .jsonl path
+        {"artist_name": ["Radiohead", "Bjork"]}, # inline {label: [values]}
+        {"dataset": "TigreGotico/ocp-entities"}, # HuggingFace dataset
+    ])
 
     clf = AhocorasickMediaClassifier.from_container(container)
     clf.classify("play the dark knight", "en-us")
     # → (MediaType.MOVIE, 0.6)
 
     # New entity registered at runtime (e.g. from a skill announcement):
-    container.add("artist_name", "Radiohead")
-    clf.classify("play radiohead", "en-us")
+    container.add("artist_name", "Aphex Twin")
+    clf.classify("play aphex twin", "en-us")
     # → (MediaType.MUSIC, 0.6)  — no rebuild needed
 """
 
 from __future__ import annotations
 
 import csv
-import logging
+import json
+import os
 from collections import defaultdict
-from typing import Any, Dict, Iterable, Iterator, List, Optional, Set, Tuple
+from typing import Any, Dict, Iterable, List, Optional, Set, Tuple, Union
 
 from ovos_utils.log import LOG
 
@@ -118,11 +148,29 @@ def _http_get(session: Any, url: str, **kwargs: Any) -> Optional[Any]:
 
 
 class EntitiesContainer:
-    """Unified entity store for ``AhocorasickMediaClassifier``.
+    """A set of **entity lists** (``label → list of strings``).
 
-    Holds entity strings grouped by :class:`~ovos_media_classifier.intents.OCPEntityLabel`
-    value strings and optionally backs an ``AhocorasickNER`` instance for
-    fast substring matching.
+    This is the source-agnostic store behind OCP entity matching.  It holds
+    entity strings grouped by :class:`~ovos_media_classifier.intents.OCPEntityLabel`
+    value strings and optionally backs an ``AhocorasickNER`` instance for fast
+    substring matching.  The *same* lists are shared by the NER backend
+    (Aho-Corasick exact match) and the future guided-embeddings classifier (as
+    categorical NER features) — the entity-list machinery is shared
+    infrastructure, not NER-specific.
+
+    Entity lists arrive two ways:
+
+    - **at runtime**, via :meth:`add` / :meth:`add_many` (the OCP pipeline
+      registering the user's media as it discovers it);
+    - **from config**, via source specs dispatched by :meth:`load_source` —
+      ``.csv`` / ``.tsv`` / ``.jsonl`` file paths, HuggingFace dataset dicts,
+      inline ``{label: [values]}`` dicts, or media-server dicts.  See
+      :meth:`from_sources` / :meth:`load_lists` / :meth:`from_config`.
+
+    Performance note: every entity widens the Aho-Corasick automaton and grows
+    the memory footprint, so larger lists mean slower, hungrier matching.
+    Entity lists are a deliberate, bounded choice — load the user's real
+    library, not an open-ended catalogue.
 
     Args:
         ner: An existing ``AhocorasickNER`` to attach.  When provided the
@@ -218,25 +266,20 @@ class EntitiesContainer:
         return f"EntitiesContainer({total} entities across {labels} labels)"
 
     # ------------------------------------------------------------------
-    # CSV loader (format from generate_dataset_from_media.py)
+    # Delimited-file loaders (CSV / TSV) — one entity list per file
     # ------------------------------------------------------------------
 
-    def load_csv(
+    def _load_delimited(
         self,
         path: str,
-        entity_col: str = "entity",
-        label_col: str = "label",
+        delimiter: str,
+        entity_col: str,
+        label_col: str,
+        fmt: str,
     ) -> int:
-        """Load entities from a CSV file.
-
-        Accepts both named-column CSVs (``entity``, ``label``, optional
-        ``source``) and plain two-column CSVs (``label``, ``value``).
-
-        Returns the number of new entities added.
-        """
         before = len(self)
         with open(path, newline="", encoding="utf-8") as fh:
-            reader = csv.DictReader(fh)
+            reader = csv.DictReader(fh, delimiter=delimiter)
             fieldnames = reader.fieldnames or []
             # Handle the older (label, value) format used by from_csv()
             if "value" in fieldnames and "entity" not in fieldnames:
@@ -247,8 +290,233 @@ class EntitiesContainer:
                 if entity and label:
                     self.add(label, entity)
         added = len(self) - before
-        LOG.info("[entities] Loaded %d new entities from CSV: %s", added, path)
+        LOG.info("[entities] Loaded %d new entities from %s: %s", added, fmt, path)
         return added
+
+    def load_csv(
+        self,
+        path: str,
+        entity_col: str = "entity",
+        label_col: str = "label",
+    ) -> int:
+        """Load an entity list from a CSV file (one ``label,entity`` per row).
+
+        Accepts both named-column CSVs (``entity``, ``label``, optional
+        ``source``) and plain two-column CSVs (``label``, ``value``).
+
+        Returns the number of new entities added.
+        """
+        return self._load_delimited(path, ",", entity_col, label_col, "CSV")
+
+    def load_tsv(
+        self,
+        path: str,
+        entity_col: str = "entity",
+        label_col: str = "label",
+    ) -> int:
+        """Load an entity list from a tab-separated (``.tsv``) file.
+
+        Identical to :meth:`load_csv` but tab-delimited — useful when entity
+        strings themselves contain commas.  Accepts the named-column
+        (``entity``/``label``) and the two-column (``label``/``value``) shapes.
+
+        Returns the number of new entities added.
+        """
+        return self._load_delimited(path, "\t", entity_col, label_col, "TSV")
+
+    # ------------------------------------------------------------------
+    # JSON Lines loader — one entity list per file
+    # ------------------------------------------------------------------
+
+    def load_jsonl(
+        self,
+        path: str,
+        entity_col: str = "entity",
+        label_col: str = "label",
+    ) -> int:
+        """Load an entity list from a JSON Lines (``.jsonl``) file.
+
+        One JSON object per line.  Two object shapes are accepted (and may be
+        mixed within the same file):
+
+        - **per-entity rows** — ``{"label": "movie_title", "entity": "Inception"}``
+          (the column names are configurable via *entity_col* / *label_col*;
+          ``"value"`` is also accepted as an entity key for convenience);
+        - **list rows** — ``{"artist_name": ["Radiohead", "Bjork"]}`` — a dict
+          mapping one or more labels to a list (or single string) of values.
+          Rows carrying the reserved ``label`` / ``entity`` keys are treated as
+          per-entity rows, never as list rows.
+
+        Blank lines are ignored.  Returns the number of new entities added.
+        """
+        before = len(self)
+        with open(path, encoding="utf-8") as fh:
+            for line in fh:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    obj = json.loads(line)
+                except json.JSONDecodeError as exc:
+                    LOG.warning("[entities] skipping malformed JSONL line in %s: %s", path, exc)
+                    continue
+                if not isinstance(obj, dict):
+                    LOG.warning("[entities] skipping non-object JSONL line in %s", path)
+                    continue
+                if label_col in obj or entity_col in obj or "value" in obj:
+                    # per-entity row
+                    entity = obj.get(entity_col)
+                    if entity is None:
+                        entity = obj.get("value")
+                    label = obj.get(label_col)
+                    if entity and label:
+                        self.add(str(label).strip(), str(entity).strip())
+                else:
+                    # list row: {label: [values]} (or {label: "value"})
+                    self._add_inline(obj)
+        added = len(self) - before
+        LOG.info("[entities] Loaded %d new entities from JSONL: %s", added, path)
+        return added
+
+    # ------------------------------------------------------------------
+    # Inline entity lists + source dispatch
+    # ------------------------------------------------------------------
+
+    def _add_inline(self, mapping: Dict[str, Any]) -> int:
+        """Add an inline ``{label: [values]}`` (or ``{label: "value"}``) dict."""
+        before = len(self)
+        for label, values in mapping.items():
+            if isinstance(values, str):
+                values = [values]
+            for value in values or []:
+                if value:
+                    self.add(str(label).strip(), str(value).strip())
+        return len(self) - before
+
+    # Keys that mark a dict source spec as a media-server loader.
+    _MEDIA_SERVER_LOADERS = (
+        "radarr",
+        "sonarr",
+        "lidarr",
+        "jellyfin",
+        "music_assistant",
+    )
+
+    def load_source(self, spec: Union[str, Dict[str, Any]]) -> int:
+        """Load a single **entity-list source spec**, dispatching by shape.
+
+        Dispatch rules:
+
+        - ``str`` path → by file extension: ``.csv`` → :meth:`load_csv`,
+          ``.tsv`` → :meth:`load_tsv`, ``.jsonl`` → :meth:`load_jsonl`;
+        - ``dict`` with a ``"dataset"`` key → :meth:`load_huggingface`;
+        - ``dict`` with a media-server ``"type"`` hint (or a single known
+          media-server key, e.g. ``{"radarr": {...}}``) → the matching
+          ``load_<server>`` loader;
+        - any other ``dict`` → treated as an inline ``{label: [values]}`` list.
+
+        Returns the number of new entities added.  Unknown extensions / specs
+        raise ``ValueError``.
+        """
+        if isinstance(spec, str):
+            ext = os.path.splitext(spec)[1].lower()
+            if ext == ".csv":
+                return self.load_csv(spec)
+            if ext == ".tsv":
+                return self.load_tsv(spec)
+            if ext == ".jsonl":
+                return self.load_jsonl(spec)
+            raise ValueError(
+                f"Unsupported entity-list file extension {ext!r} for {spec!r}; "
+                "expected .csv, .tsv or .jsonl"
+            )
+
+        if isinstance(spec, dict):
+            # HuggingFace dataset reference
+            if "dataset" in spec:
+                return self.load_huggingface(
+                    dataset_name=spec["dataset"],
+                    config=spec.get("config"),
+                    split=spec.get("split", "train"),
+                    entity_col=spec.get("entity_col", "entity"),
+                    label_col=spec.get("label_col", "label"),
+                    trust_remote_code=spec.get("trust_remote_code", False),
+                )
+
+            # Media-server spec via explicit {"type": "radarr", ...}
+            srv_type = (spec.get("type") or "").lower()
+            if srv_type in self._MEDIA_SERVER_LOADERS:
+                return self._load_media_server(srv_type, spec)
+
+            # Media-server spec via single known key: {"radarr": {...}}
+            if len(spec) == 1:
+                (only_key,) = spec.keys()
+                if only_key in self._MEDIA_SERVER_LOADERS:
+                    cfg = spec[only_key]
+                    if isinstance(cfg, dict):
+                        return self._load_media_server(only_key, cfg)
+
+            # Otherwise: inline {label: [values]}
+            return self._add_inline(spec)
+
+        raise ValueError(f"Unsupported entity-list source spec: {spec!r}")
+
+    def _load_media_server(self, server: str, cfg: Dict[str, Any]) -> int:
+        """Invoke a media-server loader from a ``{"url": …, "api_key": …}`` cfg."""
+        before = len(self)
+        if server == "radarr":
+            self.load_radarr(cfg["url"], cfg["api_key"])
+        elif server == "sonarr":
+            self.load_sonarr(cfg["url"], cfg["api_key"])
+        elif server == "lidarr":
+            self.load_lidarr(cfg["url"], cfg["api_key"])
+        elif server == "jellyfin":
+            self.load_jellyfin(cfg["url"], cfg["api_key"], user_id=cfg.get("user_id"))
+        elif server == "music_assistant":
+            self.load_music_assistant(cfg["url"])
+        else:  # pragma: no cover - guarded by caller
+            raise ValueError(f"Unknown media server: {server!r}")
+        return len(self) - before
+
+    def load_lists(self, specs: Iterable[Union[str, Dict[str, Any]]]) -> int:
+        """Load a list of entity-list source specs (each via :meth:`load_source`).
+
+        Individual spec failures are logged and skipped so one bad path / dead
+        media server doesn't abort the rest.  Returns the total number of new
+        entities added across all specs.
+        """
+        before = len(self)
+        for spec in specs or []:
+            try:
+                self.load_source(spec)
+            except Exception as exc:
+                LOG.warning("[entities] entity-list source failed (%r): %s", spec, exc)
+        return len(self) - before
+
+    @classmethod
+    def from_sources(
+        cls,
+        specs: Iterable[Union[str, Dict[str, Any]]],
+        ner=None,
+    ) -> "EntitiesContainer":
+        """Build a container from a list of entity-list source specs.
+
+        Each spec is dispatched by :meth:`load_source` — file paths
+        (``.csv`` / ``.tsv`` / ``.jsonl``), HuggingFace dataset dicts, inline
+        ``{label: [values]}`` dicts, or media-server dicts.  See
+        :meth:`load_source` for the dispatch rules.
+
+        Example::
+
+            container = EntitiesContainer.from_sources([
+                "/data/library.csv",
+                {"artist_name": ["Radiohead"]},
+                {"dataset": "TigreGotico/ocp-entities"},
+            ])
+        """
+        container = cls(ner=ner)
+        container.load_lists(specs)
+        return container
 
     # ------------------------------------------------------------------
     # Radarr loader
@@ -546,194 +814,6 @@ class EntitiesContainer:
         return added
 
     # ------------------------------------------------------------------
-    # Whisparr loader (Radarr fork for adult content)
-    # ------------------------------------------------------------------
-
-    def load_whisparr(self, url: str, api_key: str) -> int:
-        """Load adult movie titles and performers from a Whisparr instance.
-
-        Whisparr uses the same API shape as Radarr v3.  Titles are stored
-        under ``"adult"`` and performer names under ``"movie_actor"``.
-        """
-        try:
-            import requests
-        except ImportError:
-            raise ImportError(
-                "requests is required for media-server loaders. "
-                "Install it with: pip install ovos-media-classifier[media_servers]"
-            )
-        session = requests.Session()
-        session.headers["X-Api-Key"] = api_key
-        base = url.rstrip("/")
-
-        before = len(self)
-        LOG.info("[entities/whisparr] Fetching movie library from %s …", base)
-        movies = _http_get(session, f"{base}/api/v3/movie") or []
-        LOG.info("[entities/whisparr] Found %d titles", len(movies))
-
-        for movie in movies:
-            title = movie.get("title", "")
-            if title:
-                self.add("adult", title)
-            for alt in movie.get("alternateTitles") or []:
-                alt_title = alt.get("title", "")
-                if alt_title and alt_title != title:
-                    self.add("adult", alt_title)
-            credits = movie.get("credits") or {}
-            for person in credits.get("castMembers") or []:
-                name = person.get("name", "")
-                if name:
-                    self.add("movie_actor", name)
-            studio = movie.get("studio", "")
-            if studio:
-                self.add("adult_streaming_service", studio)
-
-        added = len(self) - before
-        LOG.info("[entities/whisparr] Added %d new entities", added)
-        return added
-
-    # ------------------------------------------------------------------
-    # Stash loader (GraphQL — adult content manager)
-    # ------------------------------------------------------------------
-
-    def load_stash(
-        self,
-        url: str,
-        api_key: Optional[str] = None,
-        page_size: int = 500,
-    ) -> int:
-        """Load scenes, performers, studios and tags from a Stash instance.
-
-        Stash exposes a GraphQL API at ``<url>/graphql``.  Performer names
-        are stored as ``"movie_actor"``, studio names as
-        ``"adult_streaming_service"``, scene titles as ``"adult"``, and tags
-        as ``"adult"``.
-
-        Args:
-            url:       Base URL of the Stash server (e.g. ``http://localhost:9999``).
-            api_key:   Optional API key (set in Stash → Settings → Security).
-            page_size: Number of records to fetch per request.
-        """
-        try:
-            import requests
-        except ImportError:
-            raise ImportError(
-                "requests is required for media-server loaders. "
-                "Install it with: pip install ovos-media-classifier[media_servers]"
-            )
-        session = requests.Session()
-        if api_key:
-            session.headers["ApiKey"] = api_key
-        gql_url = url.rstrip("/") + "/graphql"
-
-        def _gql(query: str, variables: dict) -> dict:
-            try:
-                resp = session.post(
-                    gql_url, json={"query": query, "variables": variables}, timeout=30
-                )
-                resp.raise_for_status()
-                return resp.json().get("data") or {}
-            except Exception as exc:
-                LOG.warning("[entities/stash] GraphQL request failed: %s", exc)
-                return {}
-
-        before = len(self)
-
-        # --- Performers ---
-        LOG.info("[entities/stash] Fetching performers from %s …", url)
-        page = 1
-        while True:
-            data = _gql(
-                """
-                query FindPerformers($filter: FindFilterType) {
-                  findPerformers(filter: $filter) {
-                    count
-                    performers { name aliases }
-                  }
-                }
-            """,
-                {"filter": {"page": page, "per_page": page_size}},
-            )
-            performers = data.get("findPerformers") or {}
-            items = performers.get("performers") or []
-            if not items:
-                break
-            for p in items:
-                name = p.get("name", "")
-                if name:
-                    self.add("movie_actor", name)
-                for alias in p.get("aliases") or []:
-                    if alias and alias != name:
-                        self.add("movie_actor", alias)
-            total = performers.get("count", 0)
-            if page * page_size >= total:
-                break
-            page += 1
-
-        # --- Studios ---
-        LOG.info("[entities/stash] Fetching studios …")
-        page = 1
-        while True:
-            data = _gql(
-                """
-                query FindStudios($filter: FindFilterType) {
-                  findStudios(filter: $filter) {
-                    count
-                    studios { name aliases }
-                  }
-                }
-            """,
-                {"filter": {"page": page, "per_page": page_size}},
-            )
-            studios_data = data.get("findStudios") or {}
-            items = studios_data.get("studios") or []
-            if not items:
-                break
-            for s in items:
-                name = s.get("name", "")
-                if name:
-                    self.add("adult_streaming_service", name)
-                for alias in s.get("aliases") or []:
-                    if alias and alias != name:
-                        self.add("adult_streaming_service", alias)
-            total = studios_data.get("count", 0)
-            if page * page_size >= total:
-                break
-            page += 1
-
-        # --- Scenes (titles only — skip stream URLs) ---
-        LOG.info("[entities/stash] Fetching scene titles …")
-        page = 1
-        while True:
-            data = _gql(
-                """
-                query FindScenes($filter: FindFilterType) {
-                  findScenes(filter: $filter) {
-                    count
-                    scenes { title }
-                  }
-                }
-            """,
-                {"filter": {"page": page, "per_page": page_size}},
-            )
-            scenes_data = data.get("findScenes") or {}
-            items = scenes_data.get("scenes") or []
-            if not items:
-                break
-            for s in items:
-                title = s.get("title", "")
-                if title:
-                    self.add("adult", title)
-            total = scenes_data.get("count", 0)
-            if page * page_size >= total:
-                break
-            page += 1
-
-        added = len(self) - before
-        LOG.info("[entities/stash] Added %d new entities", added)
-        return added
-
-    # ------------------------------------------------------------------
     # Music Assistant loader
     # ------------------------------------------------------------------
 
@@ -892,7 +972,24 @@ class EntitiesContainer:
     def from_config(cls, config: dict) -> "EntitiesContainer":
         """Build an ``EntitiesContainer`` from a config sub-dict.
 
-        Expected keys (all optional)::
+        The preferred, source-agnostic form is a single ``entity_lists`` key
+        holding a **list of source specs** dispatched via :meth:`load_source`
+        (file paths, HuggingFace dicts, inline ``{label: [values]}`` dicts,
+        media-server dicts)::
+
+            {
+                "entity_lists": [
+                    "/path/to/entities.csv",
+                    "/path/to/extra.tsv",
+                    "/path/to/aliases.jsonl",
+                    {"artist_name": ["Radiohead", "Pink Floyd"]},
+                    {"dataset": "TigreGotico/ocp-entities"},
+                    {"radarr": {"url": "http://localhost:7878", "api_key": "…"}}
+                ]
+            }
+
+        The original structured keys remain supported (and are processed *after*
+        ``entity_lists``) for back-compatibility::
 
             {
                 "csv": ["/path/to/entities.csv"],
@@ -901,6 +998,7 @@ class EntitiesContainer:
                 "radarr":   {"url": "http://localhost:7878", "api_key": "…"},
                 "sonarr":   {"url": "http://localhost:8989", "api_key": "…"},
                 "lidarr":   {"url": "http://localhost:8686", "api_key": "…"},
+                "music_assistant": {"url": "http://localhost:8095"},
 
                 "huggingface": [
                     {
@@ -917,8 +1015,14 @@ class EntitiesContainer:
                     "movie_title": ["The Matrix"]
                 }
             }
+
+        All keys are optional and additive — entities from every source are
+        merged (and de-duplicated) into one set of entity lists.
         """
         container = cls()
+
+        # Source-agnostic entity lists (preferred form)
+        container.load_lists(config.get("entity_lists") or [])
 
         # Inline word lists
         for label, words in (config.get("wordlists") or {}).items():
@@ -955,7 +1059,6 @@ class EntitiesContainer:
             ("radarr", container.load_radarr),
             ("sonarr", container.load_sonarr),
             ("lidarr", container.load_lidarr),
-            ("whisparr", container.load_whisparr),
         ):
             srv_cfg = config.get(server) or {}
             if srv_cfg.get("url") and srv_cfg.get("api_key"):
@@ -974,18 +1077,6 @@ class EntitiesContainer:
                 )
             except Exception as exc:
                 LOG.warning("[entities] jellyfin load failed: %s", exc)
-
-        # Stash (GraphQL, api_key optional)
-        stash_cfg = config.get("stash") or {}
-        if stash_cfg.get("url"):
-            try:
-                container.load_stash(
-                    stash_cfg["url"],
-                    api_key=stash_cfg.get("api_key"),
-                    page_size=stash_cfg.get("page_size", 500),
-                )
-            except Exception as exc:
-                LOG.warning("[entities] stash load failed: %s", exc)
 
         # Music Assistant (no api_key required)
         ma_cfg = config.get("music_assistant") or {}

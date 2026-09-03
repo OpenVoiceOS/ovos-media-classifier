@@ -32,10 +32,13 @@ classifier's `classify()` and `classify_genres()` and applies the policy, return
 - Filtering is enabled by default; set `media_content_filter.enabled` to `false` to
   disable it entirely.
 
-The genre signal comes from the taxonomy map `PLAY_INTENT_TO_GENRES` — adult,
-hentai and adult-audio intents all carry the `adult` tag even though their public
-`MediaType` is a generic `MOVIE` / `MUSIC` / `EPISODIC_SERIES`. The type alone never
-carries the adult signal; the genre does. See [taxonomy.md](taxonomy.md).
+The genre signal comes from the taxonomy map `LABEL_TO_GENRES`, the `adult`,
+`hentai` and `adult_audio` labels all carry the `adult` tag even though their
+public `MediaType` is a generic `MOVIE` / `MUSIC` / `EPISODIC_SERIES`. The type
+alone never carries the adult signal; the genre does. Genres are an
+**orthogonal tag**, not a
+classification axis, see [taxonomy.md](taxonomy.md) and
+[classification-model.md](classification-model.md#2-the-axes).
 
 ## Configuration
 
@@ -61,7 +64,7 @@ Under `mycroft.conf` (the OCP config block):
 | `media_content_filter.blocked_media_types` | `[]` | `mediavocab.MediaType` values to block (string values or members) |
 
 `blocked_genres` and `blocked_media_types` accept any `mediavocab` genre or
-`MediaType` — an operator can, for instance, block the `game` media type or add
+`MediaType`, an operator can, for instance, block the `game` media type or add
 extra genres beyond `adult`. A request is blocked if any of its genres is in
 `blocked_genres` **or** its media type is in `blocked_media_types`; the returned
 reason names the matching genre or type.
@@ -70,3 +73,6 @@ reason names the matching genre or type.
 # block the whole "game" media type in addition to adult genres
 cf = ContentFilter({"media_content_filter": {"blocked_media_types": ["game"]}})
 ```
+
+---
+[← Contextual classification](contextual-classification.md) · [Home](index.md) · [External plugins →](external-plugins.md)

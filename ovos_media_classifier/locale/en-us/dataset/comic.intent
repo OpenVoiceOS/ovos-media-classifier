@@ -1,0 +1,165 @@
+<lead_read> the manga {comic_title}
+[hey|ok|please] <lead_read> the manga {comic_title} [please|for me|right now|thanks]
+<lead_read> the comic {comic_title}
+[hey|ok|please] <lead_read> the comic {comic_title} [please|for me|right now|thanks]
+<lead_read> {comic_title}
+[hey|ok|please] <lead_read> {comic_title} [please|for me|right now|thanks]
+<lead_read> a {comic_genre} manga
+[hey|ok|please] <lead_read> a {comic_genre} manga [please|for me|right now|thanks]
+<lead_read> a {comic_genre} comic
+[hey|ok|please] <lead_read> a {comic_genre} comic [please|for me|right now|thanks]
+<lead_read> the comic book {comic_title}
+[hey|ok|please] <lead_read> the comic book {comic_title} [please|for me|right now|thanks]
+<lead_read> a graphic novel
+[hey|ok|please] <lead_read> a graphic novel [please|for me|right now|thanks]
+<lead_read> some manga
+[hey|ok|please] <lead_read> some manga [please|for me|right now|thanks]
+<lead_read> a {comic_genre} graphic novel
+[hey|ok|please] <lead_read> a {comic_genre} graphic novel [please|for me|right now|thanks]
+<lead_read> a webcomic
+[hey|ok|please] <lead_read> a webcomic [please|for me|right now|thanks]
+<lead_read> the next chapter of {comic_title}
+[hey|ok|please] <lead_read> the next chapter of {comic_title} [please|for me|right now|thanks]
+<lead_read> the latest {comic_title} chapter
+[hey|ok|please] <lead_read> the latest {comic_title} chapter [please|for me|right now|thanks]
+<lead_read> a comic book
+[hey|ok|please] <lead_read> a comic book [please|for me|right now|thanks]
+<lead_read> the manga series {comic_title}
+[hey|ok|please] <lead_read> the manga series {comic_title} [please|for me|right now|thanks]
+<lead_read> a {comic_genre} webcomic
+[hey|ok|please] <lead_read> a {comic_genre} webcomic [please|for me|right now|thanks]
+<lead_read> the graphic novel {comic_title}
+[hey|ok|please] <lead_read> the graphic novel {comic_title} [please|for me|right now|thanks]
+<lead_read> a chapter of {comic_title}
+[hey|ok|please] <lead_read> a chapter of {comic_title} [please|for me|right now|thanks]
+<lead_read> some {comic_genre} manga
+[hey|ok|please] <lead_read> some {comic_genre} manga [please|for me|right now|thanks]
+<lead_read> a digital comic
+[hey|ok|please] <lead_read> a digital comic [please|for me|right now|thanks]
+<lead_read> the webcomic {comic_title}
+[hey|ok|please] <lead_read> the webcomic {comic_title} [please|for me|right now|thanks]
+<lead_read> a {comic_genre} manga series
+[hey|ok|please] <lead_read> a {comic_genre} manga series [please|for me|right now|thanks]
+<lead_read> more of {comic_title}
+[hey|ok|please] <lead_read> more of {comic_title} [please|for me|right now|thanks]
+<lead_read> an issue of {comic_title}
+[hey|ok|please] <lead_read> an issue of {comic_title} [please|for me|right now|thanks]
+<lead_read> a superhero comic
+[hey|ok|please] <lead_read> a superhero comic [please|for me|right now|thanks]
+<lead_read> the {comic_genre} manga {comic_title}
+[hey|ok|please] <lead_read> the {comic_genre} manga {comic_title} [please|for me|right now|thanks]
+<lead_read> the {comic_genre} comic {comic_title}
+[hey|ok|please] <lead_read> the {comic_genre} comic {comic_title} [please|for me|right now|thanks]
+<lead_read> a {comic_genre} comic called {comic_title}
+[hey|ok|please] <lead_read> a {comic_genre} comic called {comic_title} [please|for me|right now|thanks]
+<lead_read> the {comic_genre} graphic novel {comic_title}
+[hey|ok|please] <lead_read> the {comic_genre} graphic novel {comic_title} [please|for me|right now|thanks]
+<lead_read> do you have any {comic_genre} manga
+[hey|ok|please] <lead_read> do you have any {comic_genre} manga [please|for me|right now|thanks]
+<lead_read> got a good {comic_genre} comic
+[hey|ok|please] <lead_read> got a good {comic_genre} comic [please|for me|right now|thanks]
+<lead_read> a {comic_genre} comic to read tonight
+[hey|ok|please] <lead_read> a {comic_genre} comic to read tonight [please|for me|right now|thanks]
+<lead_read> some manga to read
+[hey|ok|please] <lead_read> some manga to read [please|for me|right now|thanks]
+<lead_read> do you have the manga {comic_title}
+[hey|ok|please] <lead_read> do you have the manga {comic_title} [please|for me|right now|thanks]
+<lead_read> got any {comic_genre} graphic novels
+[hey|ok|please] <lead_read> got any {comic_genre} graphic novels [please|for me|right now|thanks]
+<lead_read> a {comic_genre} comic for the weekend
+[hey|ok|please] <lead_read> a {comic_genre} comic for the weekend [please|for me|right now|thanks]
+{comic_title}, please
+the manga {comic_title}, please
+a {comic_genre} comic, thanks
+{comic_title} — pull it up
+{comic_title} — let's read it
+that manga {comic_title} — open it
+read {comic_title}, would you?
+open up {comic_title}, can you?
+i'm in a {comic_genre} comic mood
+in the mood for some manga
+i could go for a {comic_genre} manga
+i'm after a good graphic novel
+i need a {comic_genre} comic
+maybe a {comic_genre} manga
+maybe the next chapter of {comic_title}
+what about {comic_title}
+we should read {comic_title}
+something like {comic_title}
+another comic like {comic_title}
+any {comic_genre} manga around?
+what {comic_genre} comics do you have
+is there a manga called {comic_title}
+the latest {comic_title} issue
+the newest chapter of {comic_title}
+a {comic_genre} comic for the weekend
+some manga because i'm bored
+a graphic novel to relax with
+<lead_read> the {movie_title} comic
+<lead_read> a comic based on {movie_title}
+<lead_read> the graphic novel adaptation of {movie_title}
+<lead_read> the {tv_show_title} comic
+<lead_read> a comic based on the show {tv_show_title}
+<lead_read> the {game_title} comic
+<lead_read> a comic based on the game {game_title}
+<lead_read> the {anime_title} manga
+<lead_read> the manga the anime {anime_title} is based on
+<lead_read> the graphic novel adaptation of {book_title}
+<lead_read> the {book_title} comic
+<lead_read> the {anime_title} comic
+<lead_read> a comic based on {tv_show_title}
+<lead_read> a comic based on {game_title}
+<lead_read> a comic based on {book_title}
+<lead_read> a comic based on {anime_title}
+<lead_read> the graphic novel adaptation of {tv_show_title}
+<lead_read> the graphic novel adaptation of {game_title}
+<lead_read> the graphic novel adaptation of {anime_title}
+<lead_read> the graphic novel based on {movie_title}
+<lead_read> the graphic novel based on {tv_show_title}
+<lead_read> the graphic novel based on {game_title}
+<lead_read> the graphic novel based on {book_title}
+<lead_read> the graphic novel based on {anime_title}
+<lead_read> a manga based on {movie_title}
+<lead_read> a manga based on {tv_show_title}
+<lead_read> a manga based on {game_title}
+<lead_read> a manga based on {book_title}
+<lead_read> a manga based on {anime_title}
+<lead_read> a comic based on the movie {movie_title}
+<lead_read> the official comic of {game_title}
+<lead_read> the tie-in comic for {movie_title}
+<lead_read> a comic adaptation of the novel {book_title}
+<lead_read> a comic about {artist_name}
+<lead_read> a graphic novel biography of {artist_name}
+<lead_read> a comic written by {movie_writer}
+um can you read me {comic_title}
+read {comic_title}, actually no a {comic_genre} one
+hey so pull up {comic_title}
+you know what throw on {comic_title}
+wanna read {comic_title}
+lemme read some {comic_title}
+gimme a {comic_genre} comic
+i could really go for a {comic_genre} comic
+i never finished {comic_title}
+is there a new issue of {comic_title}
+got any {comic_genre} comics?
+how about {comic_title}
+<lead_read> a manga by {artist_name}
+i wanna read a {comic_genre} comic book
+<lead_read> that {comic_title} graphic novel i've been meaning to check out
+hey, got any {comic_genre} manga recommendations
+<lead_read> the {tv_show_title} comic adaptation
+so i'm in the mood for a {comic_genre} manga or something
+<lead_read> an animated comic version of {movie_title}
+lemme see some {comic_genre} comics
+<lead_read> a visual story by {artist_name}
+how about a {comic_genre} graphic novel for tonight
+<lead_read> the latest {comic_title} comic book issue
+i'm looking for a good {comic_genre} manga to get into
+<lead_read> um, got any {comic_genre} comics
+can you find me a {comic_genre} animated comic
+<lead_read> that {book_title} graphic novel adaptation
+let's check out some {comic_genre} manga
+<lead_read> the {game_title} comic series
+i wanna read some comics, maybe {comic_genre} or something
+<lead_read> a manga like {anime_title}
+gimme a {comic_genre} comic book to read

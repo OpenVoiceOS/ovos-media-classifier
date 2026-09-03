@@ -1,0 +1,217 @@
+<lead_read> {book_title}
+[hey|ok|please] <lead_read> {book_title} [please|for me|right now|thanks]
+<lead_read> the book {book_title}
+[hey|ok|please] <lead_read> the book {book_title} [please|for me|right now|thanks]
+<lead_read> the novel {book_title}
+[hey|ok|please] <lead_read> the novel {book_title} [please|for me|right now|thanks]
+<lead_read> a book by {book_author}
+[hey|ok|please] <lead_read> a book by {book_author} [please|for me|right now|thanks]
+<lead_read> anything by {book_author}
+[hey|ok|please] <lead_read> anything by {book_author} [please|for me|right now|thanks]
+<lead_read> a {book_genre} book
+[hey|ok|please] <lead_read> a {book_genre} book [please|for me|right now|thanks]
+<lead_read> a {book_genre} novel
+[hey|ok|please] <lead_read> a {book_genre} novel [please|for me|right now|thanks]
+<lead_read> a book about {book_genre}
+[hey|ok|please] <lead_read> a book about {book_genre} [please|for me|right now|thanks]
+<lead_read> a good {book_genre} book
+[hey|ok|please] <lead_read> a good {book_genre} book [please|for me|right now|thanks]
+<lead_read> some {book_genre}
+[hey|ok|please] <lead_read> some {book_genre} [please|for me|right now|thanks]
+<lead_read> {book_title} by {book_author}
+[hey|ok|please] <lead_read> {book_title} by {book_author} [please|for me|right now|thanks]
+<lead_read> the novel {book_title} by {book_author}
+[hey|ok|please] <lead_read> the novel {book_title} by {book_author} [please|for me|right now|thanks]
+<lead_read> the book {book_title} by {book_author}
+[hey|ok|please] <lead_read> the book {book_title} by {book_author} [please|for me|right now|thanks]
+<lead_read> the {book_genre} book {book_title}
+[hey|ok|please] <lead_read> the {book_genre} book {book_title} [please|for me|right now|thanks]
+<lead_read> a {book_genre} book by {book_author}
+[hey|ok|please] <lead_read> a {book_genre} book by {book_author} [please|for me|right now|thanks]
+<lead_read> a {book_genre} novel by {book_author}
+[hey|ok|please] <lead_read> a {book_genre} novel by {book_author} [please|for me|right now|thanks]
+<lead_read> the latest book by {book_author}
+[hey|ok|please] <lead_read> the latest book by {book_author} [please|for me|right now|thanks]
+<lead_read> another {book_genre} book
+[hey|ok|please] <lead_read> another {book_genre} book [please|for me|right now|thanks]
+<lead_read> a chapter of {book_title}
+[hey|ok|please] <lead_read> a chapter of {book_title} [please|for me|right now|thanks]
+<lead_read> the next chapter of {book_title}
+[hey|ok|please] <lead_read> the next chapter of {book_title} [please|for me|right now|thanks]
+<lead_read> more of {book_title}
+[hey|ok|please] <lead_read> more of {book_title} [please|for me|right now|thanks]
+<lead_read> a short story by {book_author}
+[hey|ok|please] <lead_read> a short story by {book_author} [please|for me|right now|thanks]
+<lead_read> the {book_genre} book {book_title} by {book_author}
+[hey|ok|please] <lead_read> the {book_genre} book {book_title} by {book_author} [please|for me|right now|thanks]
+<lead_read> the {book_genre} novel {book_title} by {book_author}
+[hey|ok|please] <lead_read> the {book_genre} novel {book_title} by {book_author} [please|for me|right now|thanks]
+<lead_read> do you have any {book_genre} books
+[hey|ok|please] <lead_read> do you have any {book_genre} books [please|for me|right now|thanks]
+<lead_read> got a good {book_genre} novel
+[hey|ok|please] <lead_read> got a good {book_genre} novel [please|for me|right now|thanks]
+<lead_read> a {book_genre} book to read at bedtime
+[hey|ok|please] <lead_read> a {book_genre} book to read at bedtime [please|for me|right now|thanks]
+<lead_read> do you have anything by {book_author}
+[hey|ok|please] <lead_read> do you have anything by {book_author} [please|for me|right now|thanks]
+<lead_read> got a {book_genre} book
+[hey|ok|please] <lead_read> got a {book_genre} book [please|for me|right now|thanks]
+<lead_read> a {book_genre} novel for the weekend
+[hey|ok|please] <lead_read> a {book_genre} novel for the weekend [please|for me|right now|thanks]
+<lead_read> something by {book_author} to relax
+[hey|ok|please] <lead_read> something by {book_author} to relax [please|for me|right now|thanks]
+<lead_read> the {movie_title} novel
+[hey|ok|please] <lead_read> the {movie_title} novel [please|for me|right now|thanks]
+<lead_read> the novel {movie_title}
+[hey|ok|please] <lead_read> the novel {movie_title} [please|for me|right now|thanks]
+<lead_read> the book {movie_title}
+[hey|ok|please] <lead_read> the book {movie_title} [please|for me|right now|thanks]
+<lead_read> {movie_title} the novel
+[hey|ok|please] <lead_read> {movie_title} the novel [please|for me|right now|thanks]
+{book_title}, please
+{book_title} by {book_author}, please
+a {book_genre} book, thanks
+{book_title} — read it to me
+{book_title} — let's get into it
+that book {book_title} — start it
+read {book_title}, would you?
+read me something by {book_author}, can you?
+i'm in a {book_genre} mood
+in the mood for some {book_genre}
+i could go for a {book_genre} novel
+i feel like a {book_genre} book
+i'm after a {book_genre} read
+i need a good {book_genre} novel
+how about a {book_genre} book
+how about something by {book_author}
+maybe a {book_genre} novel
+maybe something by {book_author}
+something like {book_title}
+something in the style of {book_author}
+another book like {book_title}
+do you have any {book_genre} novels
+got anything by {book_author}
+any {book_genre} books on hand?
+what {book_genre} books do you have
+is there a book by {book_author}
+{book_author}'s latest novel
+{book_author}'s most famous book
+that famous {book_genre} novel
+a {book_genre} book to unwind with
+something by {book_author} for the night
+a {book_genre} novel because i can't sleep
+<lead_read> a biography of {movie_actor}
+<lead_read> the memoir of {movie_actor}
+<lead_read> {movie_actor}'s memoir
+<lead_read> the autobiography of {movie_actor}
+<lead_read> a biography of {artist_name}
+<lead_read> {artist_name}'s autobiography
+<lead_read> a biography of the director {movie_director}
+<lead_read> the memoir of {podcast_host}
+<lead_read> the novelization of {movie_title}
+<lead_read> the novel based on the film {movie_title}
+<lead_read> the book version of {movie_title}
+<lead_read> the tie-in novel for {game_title}
+<lead_read> the novel based on the game {game_title}
+<lead_read> the companion book to {tv_show_title}
+<lead_read> a book written by {movie_writer}
+<lead_read> the biography of {movie_actor}
+<lead_read> {movie_actor}'s autobiography
+<lead_read> a book about {movie_actor}
+<lead_read> a biography of {movie_director}
+<lead_read> the biography of {movie_director}
+<lead_read> the memoir of {movie_director}
+<lead_read> {movie_director}'s memoir
+<lead_read> the autobiography of {movie_director}
+<lead_read> {movie_director}'s autobiography
+<lead_read> a book about {movie_director}
+<lead_read> the biography of {artist_name}
+<lead_read> the memoir of {artist_name}
+<lead_read> {artist_name}'s memoir
+<lead_read> the autobiography of {artist_name}
+<lead_read> a book about {artist_name}
+<lead_read> the biography of {podcast_host}
+<lead_read> {podcast_host}'s memoir
+<lead_read> the autobiography of {podcast_host}
+<lead_read> {podcast_host}'s autobiography
+<lead_read> a book about {podcast_host}
+<lead_read> a biography of {movie_writer}
+<lead_read> the biography of {movie_writer}
+<lead_read> the memoir of {movie_writer}
+<lead_read> {movie_writer}'s memoir
+<lead_read> the autobiography of {movie_writer}
+<lead_read> {movie_writer}'s autobiography
+<lead_read> a book about {movie_writer}
+<lead_read> a biography of {movie_composer}
+<lead_read> the biography of {movie_composer}
+<lead_read> the memoir of {movie_composer}
+<lead_read> {movie_composer}'s memoir
+<lead_read> the autobiography of {movie_composer}
+<lead_read> {movie_composer}'s autobiography
+<lead_read> a book about {movie_composer}
+<lead_read> the novelization of the film {movie_title}
+<lead_read> the novelization of the game {game_title}
+<lead_read> the {game_title} novel
+<lead_read> the novel based on the show {tv_show_title}
+<lead_read> the book that inspired {movie_title}
+<lead_read> the book {movie_title} is based on
+<lead_read> a book about the making of {movie_title}
+<lead_read> a book about the band {artist_name}
+<lead_read> a book about {music_genre}
+<lead_read> the official book of the show {tv_show_title}
+<lead_read> the art book for {game_title}
+<lead_read> a book about the director {movie_director}
+<lead_read> the biography of the band {artist_name}
+um can you read me {book_title}
+read {book_title}, actually no the one by {book_author}
+uh maybe something by {book_author}
+hey so read me {book_title}
+you know what read me some {book_genre}
+wanna read {book_title}
+lemme pick up {book_title}
+gimme something by {book_author}
+i can't sleep read me {book_title}
+i could really go for a {book_genre} book
+i never finished {book_title}
+i'm in the mood for something by {book_author}
+is there anything by {book_author}
+got {book_title}?
+how about we read {book_title}
+i wanna read {book_title} or something like that
+so um got any {book_genre} novels i could check out
+hey <lead_read> a new ebook for me please
+lemme get that {book_title} e-book i heard about
+what ebooks by {book_author} you got
+how about we <lead_read> a novel together
+so i need a good book like {book_title} you know
+gimme something by {book_author}, a novel or whatever
+<lead_read> that {book_genre} ebook i downloaded
+got any books written by {movie_writer} or directed by {movie_director}
+i wanna check out a {book_genre} novella or something
+hey um can you <lead_read> {book_title} for me
+let's <lead_read> a book, maybe something by {book_author}
+so i been meaning to read that novel {book_title}
+any e-books in {book_genre} genre you can recommend
+ok so <lead_read> a book about {movie_actor} or something
+wanna find me a {book_genre} ebook i haven't read yet
+hey got that book by {book_author} ready for me
+i'm tryna read a novel, anything good in {book_genre}
+i'm in the mood for a {book_genre} novel, got any
+hey <lead_read> that {book_title} book i was looking at
+lemme check out some {book_genre} ebooks
+how about we read a {book_genre} book tonight
+so i'm looking for books by {book_author}
+<lead_read> um that {book_title} novel
+i wanna read a good {book_genre} ebook
+feels like a {book_genre} novel kind of night
+got any {book_genre} books by {book_author}
+let's find a new ebook [for me]
+i need a new book [to read] something {book_genre} maybe
+what ebooks do you have in {book_genre}
+so i was thinking about that book {book_title} [by {book_author}]
+can you find me a {book_genre} novella
+<lead_read> something like {book_title}
+i'm looking for e-books by {book_author}
+how about a {book_genre} book i haven't read yet
+<lead_read> any good {book_genre} novels
+show me some {book_genre} ebooks [please|thanks]

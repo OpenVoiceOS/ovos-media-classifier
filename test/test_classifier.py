@@ -1,40 +1,30 @@
-"""Unit tests for ovos-media-classifier.
+"""Unit tests for ovos-media-classifier (.voc keyword-only release).
 
 Tests cover:
+  - AbstractMediaClassifier — the ABC contract and default is_ocp_query
   - KeywordMediaClassifier.classify() — each branch of the if/elif chain
   - KeywordMediaClassifier.is_ocp_query() — inherited default implementation
-  - Model2VecMediaClassifier.classify() — with a mocked model
-  - Model2VecMediaClassifier.is_ocp_query() — fast domain-head path
-  - AhocorasickMediaClassifier — NER-based classification with runtime updates
-  - SklearnMediaClassifier — sklearn pipeline-based classification
-  - PadatiousMediaClassifier — padatious/padacioso-based classification
-  - EntitiesContainer loaders — Radarr, Sonarr, Lidarr, Jellyfin, etc.
-  - load_media_classifier() factory — fallback behaviour
+  - intents.py taxonomy — MediaType / OCPControlIntent / OCPEntityLabel and the
+    raw label → mediavocab.MediaType + genres mapping
+  - load_media_classifier() factory — keyword default + external plugin selection
 """
-import csv
-import tempfile
 import unittest
-from typing import Dict, List, Optional
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 import enum
 
 import mediavocab
-import numpy as np
 
 from ovos_media_classifier.base import AbstractMediaClassifier
 from ovos_media_classifier.intents import (
     MediaType,
     OCPControlIntent,
     OCPEntityLabel,
-    OCPPlayIntent,
-    PLAY_INTENT_TO_MEDIA_TYPE,
+    LABEL_TO_MEDIA_TYPE,
+    LABEL_TO_GENRES,
+    genres_for_label,
 )
 from ovos_media_classifier.keyword import KeywordMediaClassifier
-from ovos_media_classifier.m2v import (
-    LABEL_TO_MEDIA_TYPE as INTENT_TO_MEDIA_TYPE,
-    Model2VecMediaClassifier,
-)
 
 
 # ---------------------------------------------------------------------------
@@ -49,36 +39,6 @@ def _kw_clf(*match_vocabs: str) -> KeywordMediaClassifier:
         return vocab in match_vocabs
 
     return KeywordMediaClassifier(_voc_match)
-
-
-def _mock_m2v_model(
-    domain: str = "ocp_play",
-    intent: str = "music",
-    domain_prob: float = 0.9,
-    intent_prob: float = 0.8,
-    domain_classes: Optional[List[str]] = None,
-):
-    """Build a MagicMock mimicking StaticModelForHierarchicalClassification."""
-    model = MagicMock()
-    model.predict.return_value = (
-        np.array([domain]),
-        np.array([intent]),
-    )
-    d_probs = np.zeros(3)
-    d_idx = {"ocp_play": 0, "ocp_control": 1, "other": 2}.get(domain, 2)
-    d_probs[d_idx] = domain_prob
-
-    i_probs = np.zeros(5)
-    i_probs[0] = intent_prob
-
-    model.predict_proba.return_value = (
-        np.array([d_probs]),
-        np.array([i_probs]),
-    )
-    model.domain_classes_ = np.array(
-        domain_classes or ["ocp_play", "ocp_control", "other"]
-    )
-    return model
 
 
 # ---------------------------------------------------------------------------
@@ -307,161 +267,20 @@ class TestKeywordMediaClassifierIsOcpQuery(unittest.TestCase):
 
 
 # ---------------------------------------------------------------------------
-# Model2VecMediaClassifier
-# ---------------------------------------------------------------------------
-
-class TestModel2VecClassify(unittest.TestCase):
-    def test_music_classification(self):
-        model = _mock_m2v_model(domain="ocp_play", intent="music",
-                                domain_prob=0.9, intent_prob=0.8)
-        clf = Model2VecMediaClassifier(model)
-        mt, conf = clf.classify("play jazz", "en-us")
-        self.assertEqual(mt, MediaType.MUSIC)
-        self.assertAlmostEqual(conf, 0.8)
-
-    def test_domain_not_ocp_play_returns_generic(self):
-        model = _mock_m2v_model(domain="other", intent="music",
-                                domain_prob=0.9, intent_prob=0.8)
-        clf = Model2VecMediaClassifier(model)
-        mt, conf = clf.classify("set an alarm", "en-us")
-        self.assertEqual(mt, MediaType.GENERIC)
-        self.assertEqual(conf, 0.0)
-
-    def test_domain_below_threshold_returns_generic(self):
-        model = _mock_m2v_model(domain="ocp_play", intent="music",
-                                domain_prob=0.3, intent_prob=0.8)
-        clf = Model2VecMediaClassifier(model, domain_threshold=0.5)
-        mt, conf = clf.classify("play jazz", "en-us")
-        self.assertEqual(mt, MediaType.GENERIC)
-        self.assertEqual(conf, 0.0)
-
-    def test_intent_below_threshold_returns_generic(self):
-        model = _mock_m2v_model(domain="ocp_play", intent="music",
-                                domain_prob=0.9, intent_prob=0.1)
-        clf = Model2VecMediaClassifier(model, intent_threshold=0.3)
-        mt, conf = clf.classify("play jazz", "en-us")
-        self.assertEqual(mt, MediaType.GENERIC)
-        self.assertEqual(conf, 0.0)
-
-    def test_unknown_intent_label_returns_generic(self):
-        model = _mock_m2v_model(domain="ocp_play", intent="unknown_future_label",
-                                domain_prob=0.9, intent_prob=0.8)
-        clf = Model2VecMediaClassifier(model)
-        mt, conf = clf.classify("play something", "en-us")
-        self.assertEqual(mt, MediaType.GENERIC)
-        # Unknown intent still returns the model's confidence
-        self.assertAlmostEqual(conf, 0.8)
-
-    def test_valid_labels_filter(self):
-        model = _mock_m2v_model(domain="ocp_play", intent="music",
-                                domain_prob=0.9, intent_prob=0.8)
-        clf = Model2VecMediaClassifier(model)
-        mt, conf = clf.classify("play jazz", "en-us",
-                                valid_labels=[MediaType.MOVIE])
-        self.assertEqual(mt, MediaType.GENERIC)
-        self.assertEqual(conf, 0.0)
-
-    def test_valid_labels_passes_when_included(self):
-        model = _mock_m2v_model(domain="ocp_play", intent="music",
-                                domain_prob=0.9, intent_prob=0.8)
-        clf = Model2VecMediaClassifier(model)
-        mt, conf = clf.classify("play jazz", "en-us",
-                                valid_labels=[MediaType.MUSIC])
-        self.assertEqual(mt, MediaType.MUSIC)
-
-    def test_model_exception_returns_generic(self):
-        model = MagicMock()
-        model.predict.side_effect = RuntimeError("model broken")
-        clf = Model2VecMediaClassifier(model)
-        mt, conf = clf.classify("play something", "en-us")
-        self.assertEqual(mt, MediaType.GENERIC)
-        self.assertEqual(conf, 0.0)
-
-    def test_all_intent_labels_have_mapping(self):
-        """Every label the model may produce should map to a MediaType."""
-        for label, mt in INTENT_TO_MEDIA_TYPE.items():
-            with self.subTest(label=label):
-                self.assertIsInstance(mt, MediaType)
-
-    def test_all_known_media_types_covered(self):
-        """Spot-check that the most common mediavocab types appear in the map."""
-        mapped = set(INTENT_TO_MEDIA_TYPE.values())
-        for mt in (MediaType.MUSIC, MediaType.MOVIE, MediaType.PODCAST,
-                   MediaType.RADIO, MediaType.AUDIOBOOK,
-                   MediaType.TV, MediaType.EPISODIC_SERIES):
-            self.assertIn(mt, mapped)
-
-
-class TestModel2VecIsOcpQuery(unittest.TestCase):
-    def test_ocp_play_domain_is_ocp(self):
-        model = _mock_m2v_model(domain="ocp_play", domain_prob=0.9)
-        clf = Model2VecMediaClassifier(model)
-        is_ocp, conf = clf.is_ocp_query("play jazz", "en-us")
-        self.assertTrue(is_ocp)
-        self.assertAlmostEqual(conf, 0.9)
-
-    def test_ocp_control_domain_is_ocp(self):
-        model = _mock_m2v_model(domain="ocp_control", domain_prob=0.85)
-        clf = Model2VecMediaClassifier(model)
-        is_ocp, conf = clf.is_ocp_query("pause the music", "en-us")
-        self.assertTrue(is_ocp)
-
-    def test_other_domain_not_ocp(self):
-        model = _mock_m2v_model(domain="other", domain_prob=0.95)
-        clf = Model2VecMediaClassifier(model)
-        is_ocp, conf = clf.is_ocp_query("what is the weather", "en-us")
-        self.assertFalse(is_ocp)
-
-    def test_low_confidence_ocp_play_not_ocp(self):
-        model = _mock_m2v_model(domain="ocp_play", domain_prob=0.2)
-        clf = Model2VecMediaClassifier(model, domain_threshold=0.5)
-        is_ocp, conf = clf.is_ocp_query("play", "en-us")
-        self.assertFalse(is_ocp)
-
-    def test_exception_returns_false(self):
-        model = MagicMock()
-        model.predict_proba.side_effect = RuntimeError("broken")
-        clf = Model2VecMediaClassifier(model)
-        is_ocp, conf = clf.is_ocp_query("play jazz", "en-us")
-        self.assertFalse(is_ocp)
-        self.assertEqual(conf, 0.0)
-
-    def test_only_uses_domain_head(self):
-        """is_ocp_query must call predict_proba but NOT predict (no intent)."""
-        model = _mock_m2v_model(domain="ocp_play", domain_prob=0.9)
-        clf = Model2VecMediaClassifier(model)
-        clf.is_ocp_query("play jazz", "en-us")
-        model.predict_proba.assert_called_once()
-        model.predict.assert_not_called()
-
-
-class TestModel2VecFromPath(unittest.TestCase):
-    def test_missing_torch_raises_runtime_error(self):
-        with patch.dict("sys.modules", {"torch": None}):
-            with self.assertRaises(RuntimeError):
-                Model2VecMediaClassifier.from_path("/nonexistent/path")
-
-    def test_bad_path_raises_runtime_error(self):
-        try:
-            import torch  # noqa: F401
-        except ImportError:
-            self.skipTest("torch not installed")
-
-        mock_cls = MagicMock(side_effect=FileNotFoundError("no such file"))
-        with patch(
-            "ovos_media_classifier.m2v.Model2VecMediaClassifier.from_path",
-            side_effect=RuntimeError("Failed to load"),
-        ):
-            with self.assertRaises(RuntimeError):
-                Model2VecMediaClassifier.from_path("/nonexistent/path")
-
-
-# ---------------------------------------------------------------------------
 # load_media_classifier factory
 # ---------------------------------------------------------------------------
 
+class _DummyClassifier(AbstractMediaClassifier):
+    """A trivial external classifier used to exercise plugin selection."""
+
+    def classify(self, query, lang, valid_labels=None):
+        return MediaType.MOVIE, 1.0
+
+
 class TestLoadMediaClassifierFactory(unittest.TestCase):
-    def test_no_config_returns_keyword(self):
+    """The .voc-only factory: keyword default + external-plugin selection."""
+
+    def test_no_args_returns_keyword(self):
         from ovos_media_classifier import load_media_classifier
 
         clf = load_media_classifier()
@@ -473,85 +292,53 @@ class TestLoadMediaClassifierFactory(unittest.TestCase):
         clf = load_media_classifier(config={})
         self.assertIsInstance(clf, KeywordMediaClassifier)
 
-    def test_voc_match_func_injected(self):
+    def test_voc_match_func_is_used(self):
         from ovos_media_classifier import load_media_classifier
 
-        sentinel = object()
         called_with = []
 
         def _voc(phrase, vocab, **kw):
             called_with.append((phrase, vocab))
-            return False
+            return vocab == "MusicKeyword"
 
         clf = load_media_classifier(voc_match_func=_voc)
-        clf.classify("play jazz", "en-us")
-        # At least one voc_match call was made
-        self.assertTrue(len(called_with) > 0)
-
-    def test_model_path_loads_m2v(self):
-        from ovos_media_classifier import load_media_classifier
-
-        mock_clf = MagicMock(spec=Model2VecMediaClassifier)
-        with patch(
-            "ovos_media_classifier.m2v.Model2VecMediaClassifier.from_path",
-            return_value=mock_clf,
-        ):
-            clf = load_media_classifier(
-                config={"media_classifier_model": "/some/path"}
-            )
-        self.assertIs(clf, mock_clf)
-
-    def test_m2v_load_failure_falls_back_to_keyword(self):
-        from ovos_media_classifier import load_media_classifier
-
-        with patch(
-            "ovos_media_classifier.m2v.Model2VecMediaClassifier.from_path",
-            side_effect=RuntimeError("load failed"),
-        ):
-            clf = load_media_classifier(
-                config={"media_classifier_model": "/some/path"}
-            )
         self.assertIsInstance(clf, KeywordMediaClassifier)
-
-    def test_m2v_import_error_falls_back_to_keyword(self):
-        from ovos_media_classifier import load_media_classifier
-
-        with patch.dict(
-            "sys.modules",
-            {"ovos_media_classifier.m2v": None},
-        ):
-            clf = load_media_classifier(
-                config={"media_classifier_model": "/some/path"}
-            )
-        self.assertIsInstance(clf, KeywordMediaClassifier)
-
-    def test_custom_thresholds_passed_to_m2v(self):
-        from ovos_media_classifier import load_media_classifier
-
-        with patch(
-            "ovos_media_classifier.m2v.Model2VecMediaClassifier.from_path"
-        ) as mock_from_path:
-            mock_from_path.return_value = MagicMock(spec=Model2VecMediaClassifier)
-            load_media_classifier(
-                config={
-                    "media_classifier_model": "/some/path",
-                    "media_classifier_domain_threshold": 0.7,
-                    "media_classifier_intent_threshold": 0.4,
-                }
-            )
-        mock_from_path.assert_called_once_with(
-            "/some/path",
-            domain_threshold=0.7,
-            intent_threshold=0.4,
-        )
-
-    def test_no_voc_match_func_classify_returns_generic(self):
-        from ovos_media_classifier import load_media_classifier
-
-        clf = load_media_classifier(voc_match_func=None)
         mt, conf = clf.classify("play jazz", "en-us")
-        self.assertEqual(mt, MediaType.GENERIC)
-        self.assertEqual(conf, 0.0)
+        # the injected matcher drove the classification
+        self.assertTrue(len(called_with) > 0)
+        self.assertEqual(mt, MediaType.MUSIC)
+        self.assertGreater(conf, 0.0)
+
+    def test_missing_plugin_falls_back_to_keyword(self):
+        """A configured plugin name that is not installed must log a warning
+        and fall back to the bundled keyword classifier (never raise)."""
+        from ovos_media_classifier import load_media_classifier
+
+        with patch(
+            "ovos_media_classifier.plugins.find_media_classifier_plugins",
+            return_value={},
+        ):
+            with patch("ovos_media_classifier.LOG.warning") as warn:
+                clf = load_media_classifier(
+                    config={"media_classifier_plugin": "does-not-exist"}
+                )
+        self.assertIsInstance(clf, KeywordMediaClassifier)
+        warn.assert_called_once()
+        self.assertIn("does-not-exist", warn.call_args.args[0])
+
+    def test_registered_external_plugin_is_returned(self):
+        """When the named plugin IS registered it is instantiated and returned."""
+        from ovos_media_classifier import load_media_classifier
+
+        with patch(
+            "ovos_media_classifier.plugins.find_media_classifier_plugins",
+            return_value={"x": _DummyClassifier},
+        ):
+            clf = load_media_classifier(
+                config={"media_classifier_plugin": "x"}
+            )
+        self.assertIsInstance(clf, _DummyClassifier)
+        self.assertEqual(clf.classify("anything", "en-us")[0], MediaType.MOVIE)
 
 
 # ---------------------------------------------------------------------------
@@ -614,74 +401,102 @@ class TestOCPEntityLabelStrings(unittest.TestCase):
         self.assertEqual(OCPEntityLabel.BTS_TITLE.value, "bts_title")
 
 
-class TestPlayIntentToMediaTypeMapping(unittest.TestCase):
-    """Verify the intent → mediavocab.MediaType mapping is correct/complete."""
+class TestLabelToMediaTypeMapping(unittest.TestCase):
+    """Verify raw detection label → mediavocab.MediaType + genres is correct.
 
-    # Expected collapse of the fine-grained intent space onto mediavocab types.
+    There is no per-media-type intent layer: each raw label resolves directly
+    to a ``mediavocab.MediaType`` (and any genre tags), with several labels
+    deliberately collapsing onto one type (the lost nuance survives as genres).
+    """
+
+    # Expected collapse of the raw label space onto mediavocab types.
     _EXPECTED = {
-        OCPPlayIntent.MUSIC:             MediaType.MUSIC,
-        OCPPlayIntent.PODCAST:           MediaType.PODCAST,
-        OCPPlayIntent.RADIO:             MediaType.RADIO,
-        OCPPlayIntent.AUDIOBOOK:         MediaType.AUDIOBOOK,
-        OCPPlayIntent.NEWS:              MediaType.RADIO,
-        OCPPlayIntent.MOVIE:             MediaType.MOVIE,
-        OCPPlayIntent.TV:                MediaType.TV,
-        OCPPlayIntent.TV_SHOW:           MediaType.EPISODIC_SERIES,
-        OCPPlayIntent.VIDEO:             MediaType.MOVIE,
-        OCPPlayIntent.VIDEO_EPISODES:    MediaType.EPISODIC_SERIES,
-        OCPPlayIntent.AUDIO:             MediaType.MUSIC,
-        OCPPlayIntent.GAME:              MediaType.GAME,
-        OCPPlayIntent.ANIME:             MediaType.EPISODIC_SERIES,
-        OCPPlayIntent.CARTOON:           MediaType.EPISODIC_SERIES,
-        OCPPlayIntent.DOCUMENTARY:       MediaType.MOVIE,
-        OCPPlayIntent.SHORT_FILM:        MediaType.SHORT_FILM,
-        OCPPlayIntent.SILENT_MOVIE:      MediaType.MOVIE,
-        OCPPlayIntent.BW_MOVIE:          MediaType.MOVIE,
-        OCPPlayIntent.RADIO_THEATRE:     MediaType.AUDIO_DRAMA,
-        OCPPlayIntent.VISUAL_STORY:      MediaType.COMIC,
-        OCPPlayIntent.ASMR:              MediaType.PROCEDURAL_AMBIENT,
-        OCPPlayIntent.AUDIO_DESCRIPTION: MediaType.MOVIE,
-        OCPPlayIntent.MUSIC_VIDEO:       MediaType.MUSIC_VIDEO,
-        OCPPlayIntent.TRAILER:           MediaType.MOVIE,
-        OCPPlayIntent.BEHIND_THE_SCENES: MediaType.MOVIE,
-        OCPPlayIntent.ADULT:             MediaType.MOVIE,
-        OCPPlayIntent.ADULT_AUDIO:       MediaType.MUSIC,
-        OCPPlayIntent.HENTAI:            MediaType.EPISODIC_SERIES,
-        OCPPlayIntent.GENERIC:           MediaType.GENERIC,
+        "music":             MediaType.MUSIC,
+        "podcast":           MediaType.PODCAST,
+        "radio":             MediaType.RADIO,
+        "audiobook":         MediaType.AUDIOBOOK,
+        "news":              MediaType.RADIO,
+        "movie":             MediaType.MOVIE,
+        "tv":                MediaType.TV,
+        "tv_show":           MediaType.EPISODIC_SERIES,
+        "video":             MediaType.MOVIE,
+        "video_episodes":    MediaType.EPISODIC_SERIES,
+        "audio":             MediaType.MUSIC,
+        "game":              MediaType.GAME,
+        "anime":             MediaType.EPISODIC_SERIES,
+        "cartoon":           MediaType.EPISODIC_SERIES,
+        "documentary":       MediaType.MOVIE,
+        "short_film":        MediaType.SHORT_FILM,
+        "silent_movie":      MediaType.MOVIE,
+        "bw_movie":          MediaType.MOVIE,
+        "radio_theatre":     MediaType.AUDIO_DRAMA,
+        "visual_story":      MediaType.COMIC,
+        "asmr":              MediaType.PROCEDURAL_AMBIENT,
+        "audio_description": MediaType.MOVIE,
+        "music_video":       MediaType.MUSIC_VIDEO,
+        "trailer":           MediaType.MOVIE,
+        "teaser":            MediaType.MOVIE,
+        "behind_the_scenes": MediaType.MOVIE,
+        "making_of":         MediaType.MOVIE,
+        "bloopers":          MediaType.MOVIE,
+        "deleted_scenes":    MediaType.MOVIE,
+        "featurette":        MediaType.MOVIE,
+        "interview":         MediaType.MOVIE,
+        "clip":              MediaType.MOVIE,
+        "adult":             MediaType.MOVIE,
+        "adult_audio":       MediaType.MUSIC,
+        "hentai":            MediaType.EPISODIC_SERIES,
+        "book":              MediaType.BOOK,
+        "playlist":          MediaType.PLAYLIST,
+        "sound_effect":      MediaType.SOUND_EFFECT,
+        "interactive_fiction": MediaType.INTERACTIVE_FICTION,
+        "ambient":           MediaType.PROCEDURAL_AMBIENT,
+        "comic":             MediaType.COMIC,
+        "generic":           MediaType.GENERIC,
     }
 
     def test_tv_show_maps_to_episodic_series_not_tv(self):
-        self.assertEqual(PLAY_INTENT_TO_MEDIA_TYPE[OCPPlayIntent.TV_SHOW],
+        self.assertEqual(LABEL_TO_MEDIA_TYPE["tv_show"],
                          MediaType.EPISODIC_SERIES)
-        self.assertNotEqual(PLAY_INTENT_TO_MEDIA_TYPE[OCPPlayIntent.TV_SHOW],
-                            MediaType.TV)
+        self.assertNotEqual(LABEL_TO_MEDIA_TYPE["tv_show"], MediaType.TV)
 
-    def test_tv_intent_maps_to_tv(self):
-        self.assertEqual(PLAY_INTENT_TO_MEDIA_TYPE[OCPPlayIntent.TV],
-                         MediaType.TV)
+    def test_tv_label_maps_to_tv(self):
+        self.assertEqual(LABEL_TO_MEDIA_TYPE["tv"], MediaType.TV)
 
-    def test_trailer_intent_collapses_to_movie(self):
-        self.assertEqual(PLAY_INTENT_TO_MEDIA_TYPE[OCPPlayIntent.TRAILER],
-                         MediaType.MOVIE)
+    def test_trailer_label_collapses_to_movie(self):
+        self.assertEqual(LABEL_TO_MEDIA_TYPE["trailer"], MediaType.MOVIE)
 
-    def test_behind_the_scenes_intent_collapses_to_movie(self):
-        self.assertEqual(
-            PLAY_INTENT_TO_MEDIA_TYPE[OCPPlayIntent.BEHIND_THE_SCENES],
-            MediaType.MOVIE,
-        )
+    def test_behind_the_scenes_label_collapses_to_movie(self):
+        self.assertEqual(LABEL_TO_MEDIA_TYPE["behind_the_scenes"], MediaType.MOVIE)
 
     def test_full_mapping_matches_expected(self):
-        self.assertEqual(dict(PLAY_INTENT_TO_MEDIA_TYPE), self._EXPECTED)
-
-    def test_all_play_intents_have_mapping(self):
-        for intent in OCPPlayIntent:
-            with self.subTest(intent=intent):
-                self.assertIn(intent, PLAY_INTENT_TO_MEDIA_TYPE)
+        self.assertEqual(dict(LABEL_TO_MEDIA_TYPE), self._EXPECTED)
 
     def test_every_value_is_a_mediavocab_type(self):
-        for intent, mt in PLAY_INTENT_TO_MEDIA_TYPE.items():
-            with self.subTest(intent=intent):
+        for label, mt in LABEL_TO_MEDIA_TYPE.items():
+            with self.subTest(label=label):
                 self.assertIsInstance(mt, mediavocab.MediaType)
+
+    def test_genre_labels_carry_genres(self):
+        self.assertEqual(LABEL_TO_GENRES["anime"], ["anime"])
+        self.assertEqual(LABEL_TO_GENRES["cartoon"], ["animation"])
+        self.assertEqual(LABEL_TO_GENRES["asmr"], ["asmr"])
+        self.assertEqual(LABEL_TO_GENRES["adult"], ["adult"])
+        # hentai collapses to EPISODIC_SERIES but carries BOTH anime + adult
+        self.assertIn("anime", LABEL_TO_GENRES["hentai"])
+        self.assertIn("adult", LABEL_TO_GENRES["hentai"])
+
+    def test_neutral_labels_have_no_genres(self):
+        for label in ("music", "movie", "podcast", "game", "tv_show"):
+            with self.subTest(label=label):
+                self.assertEqual(genres_for_label(label), [])
+
+    def test_every_genre_is_a_known_mediavocab_genre(self):
+        from mediavocab.taxonomy.genre import KNOWN_GENRES
+        for label, genres in LABEL_TO_GENRES.items():
+            for g in genres:
+                with self.subTest(label=label, genre=g):
+                    self.assertIn(g, KNOWN_GENRES)
 
 
 class TestOCPControlIntentExtensions(unittest.TestCase):
@@ -745,839 +560,65 @@ class TestKeywordMediaClassifierNewTypes(unittest.TestCase):
         self.assertEqual(mt, MediaType.TV)
 
 
-class TestIntentPriorityList(unittest.TestCase):
-    """Verify _INTENT_PRIORITY in ahocorasick covers all OCPPlayIntent values."""
-
-    def test_all_intents_in_priority_list(self):
-        from ovos_media_classifier.ahocorasick import _INTENT_PRIORITY
-        priority_set = set(_INTENT_PRIORITY)
-        for intent in OCPPlayIntent:
-            with self.subTest(intent=intent):
-                self.assertIn(intent, priority_set)
-
-    def test_no_duplicate_intents_in_priority(self):
-        from ovos_media_classifier.ahocorasick import _INTENT_PRIORITY
-        self.assertEqual(len(_INTENT_PRIORITY), len(set(_INTENT_PRIORITY)))
-
-    def test_tv_before_tv_show_in_priority(self):
-        from ovos_media_classifier.ahocorasick import _INTENT_PRIORITY
-        tv_idx = _INTENT_PRIORITY.index(OCPPlayIntent.TV)
-        tv_show_idx = _INTENT_PRIORITY.index(OCPPlayIntent.TV_SHOW)
-        self.assertLess(tv_idx, tv_show_idx)
-
-    def test_generic_is_last(self):
-        from ovos_media_classifier.ahocorasick import _INTENT_PRIORITY
-        self.assertEqual(_INTENT_PRIORITY[-1], OCPPlayIntent.GENERIC)
-
-
-# ---------------------------------------------------------------------------
-# AhocorasickMediaClassifier
-# ---------------------------------------------------------------------------
-
-
-class TestAhocorasickMediaClassifierImportError(unittest.TestCase):
-    """Verify ahocorasick-ner dependency is enforced."""
-
-    def test_missing_ahocorasick_ner_raises_import_error(self):
-        from ovos_media_classifier.ahocorasick import AhocorasickMediaClassifier
-
-        with patch.dict("sys.modules", {"ahocorasick_ner": None}):
-            with self.assertRaises(ImportError) as ctx:
-                AhocorasickMediaClassifier(MagicMock())
-            self.assertIn("ahocorasick-ner", str(ctx.exception))
-
-
-class TestAhocorasickMediaClassifierBasic(unittest.TestCase):
-    """Test AhocorasickMediaClassifier with mocked NER."""
-
-    def _make_ner(self, entities: Optional[Dict[str, str]] = None):
-        """Return a mock AhocorasickNER that returns given entities."""
-        ner = MagicMock()
-        if entities is None:
-            entities = {}
-
-        def _tag(query):
-            return [{"label": label, "word": word} for label, word in entities.items()]
-
-        ner.tag.return_value = _tag("")
-        return ner
-
-    def test_classify_with_entity_hit(self):
-        try:
-            from ovos_media_classifier.ahocorasick import AhocorasickMediaClassifier
-        except ImportError:
-            self.skipTest("ahocorasick-ner not installed")
-
-        ner = self._make_ner({"music_streaming_service": "Spotify"})
-        ner.tag.return_value = [{"label": "music_streaming_service", "word": "Spotify"}]
-
-        clf = AhocorasickMediaClassifier(ner)
-        mt, conf = clf.classify("play on Spotify", "en-us")
-
-        self.assertEqual(mt, MediaType.MUSIC)
-        self.assertEqual(conf, 0.6)
-
-    def test_classify_no_hit_returns_generic(self):
-        try:
-            from ovos_media_classifier.ahocorasick import AhocorasickMediaClassifier
-        except ImportError:
-            self.skipTest("ahocorasick-ner not installed")
-
-        ner = self._make_ner()
-        ner.tag.return_value = []
-
-        clf = AhocorasickMediaClassifier(ner)
-        mt, conf = clf.classify("random query", "en-us")
-
-        self.assertEqual(mt, MediaType.GENERIC)
-        self.assertEqual(conf, 0.0)
-
-    def test_classify_with_valid_labels_filter(self):
-        try:
-            from ovos_media_classifier.ahocorasick import AhocorasickMediaClassifier
-        except ImportError:
-            self.skipTest("ahocorasick-ner not installed")
-
-        ner = self._make_ner()
-        ner.tag.return_value = [{"label": "music_streaming_service", "word": "Spotify"}]
-
-        clf = AhocorasickMediaClassifier(ner)
-        mt, conf = clf.classify("play on Spotify", "en-us",
-                               valid_labels=[MediaType.MOVIE])
-
-        self.assertEqual(mt, MediaType.GENERIC)
-        self.assertEqual(conf, 0.0)
-
-    def test_classify_domain_with_hit(self):
-        try:
-            from ovos_media_classifier.ahocorasick import AhocorasickMediaClassifier
-            from ovos_media_classifier.intents import OCPDomain
-        except ImportError:
-            self.skipTest("ahocorasick-ner not installed")
-
-        ner = self._make_ner()
-        ner.tag.return_value = [{"label": "music_streaming_service", "word": "Spotify"}]
-
-        clf = AhocorasickMediaClassifier(ner)
-        domain, conf = clf.classify_domain("play on Spotify", "en-us")
-
-        self.assertEqual(domain, OCPDomain.OCP_PLAY)
-        self.assertEqual(conf, 0.6)
-
-    def test_classify_domain_no_hit(self):
-        try:
-            from ovos_media_classifier.ahocorasick import AhocorasickMediaClassifier
-            from ovos_media_classifier.intents import OCPDomain
-        except ImportError:
-            self.skipTest("ahocorasick-ner not installed")
-
-        ner = self._make_ner()
-        ner.tag.return_value = []
-
-        clf = AhocorasickMediaClassifier(ner)
-        domain, conf = clf.classify_domain("random query", "en-us")
-
-        self.assertEqual(domain, OCPDomain.NOT_OCP)
-        self.assertEqual(conf, 0.0)
-
-    def test_ner_exception_returns_generic(self):
-        try:
-            from ovos_media_classifier.ahocorasick import AhocorasickMediaClassifier
-        except ImportError:
-            self.skipTest("ahocorasick-ner not installed")
-
-        ner = MagicMock()
-        ner.tag.side_effect = RuntimeError("NER error")
-
-        clf = AhocorasickMediaClassifier(ner)
-        mt, conf = clf.classify("query", "en-us")
-
-        self.assertEqual(mt, MediaType.GENERIC)
-        self.assertEqual(conf, 0.0)
-
-    def test_add_word_to_container(self):
-        try:
-            from ovos_media_classifier.ahocorasick import AhocorasickMediaClassifier
-            from ovos_media_classifier.entities import EntitiesContainer
-        except ImportError:
-            self.skipTest("ahocorasick-ner not installed")
-
-        container = EntitiesContainer()
-        container.add("music_streaming_service", "Spotify")
-
-        clf = AhocorasickMediaClassifier.from_container(container)
-        self.assertIsNotNone(clf.container)
-
-        # Add a new word and verify it's reflected
-        clf.add_word("music_streaming_service", "Tidal")
-        # The container's NER should have been updated
-        self.assertIsNotNone(clf._ner)
-
-    def test_label_map_override(self):
-        try:
-            from ovos_media_classifier.ahocorasick import AhocorasickMediaClassifier
-        except ImportError:
-            self.skipTest("ahocorasick-ner not installed")
-
-        ner = MagicMock()
-        ner.tag.return_value = [{"label": "custom_label", "word": "value"}]
-
-        # Map custom_label to TV instead of default
-        custom_map = {"custom_label": OCPPlayIntent.TV}
-        clf = AhocorasickMediaClassifier(ner, label_map=custom_map)
-
-        mt, conf = clf.classify("query", "en-us")
-        self.assertEqual(mt, MediaType.TV)
-
-    def test_priority_resolution_multiple_hits(self):
-        try:
-            from ovos_media_classifier.ahocorasick import AhocorasickMediaClassifier
-        except ImportError:
-            self.skipTest("ahocorasick-ner not installed")
-
-        ner = MagicMock()
-        # Two hits: movie and music; music comes earlier in _INTENT_PRIORITY
-        ner.tag.return_value = [
-            {"label": "music_streaming_service", "word": "Spotify"},
-            {"label": "movie_streaming_service", "word": "Netflix"},
-        ]
-
-        clf = AhocorasickMediaClassifier(ner)
-        mt, conf = clf.classify("query", "en-us")
-
-        # Music should win (comes earlier in _INTENT_PRIORITY at index 10 vs MOVIE at 21)
-        self.assertEqual(mt, MediaType.MUSIC)
-
-
-class TestAhocorasickMediaClassifierFactories(unittest.TestCase):
-    """Test AhocorasickMediaClassifier factory methods."""
-
-    def test_from_wordlists(self):
-        try:
-            from ovos_media_classifier.ahocorasick import AhocorasickMediaClassifier
-        except ImportError:
-            self.skipTest("ahocorasick-ner not installed")
-
-        clf = AhocorasickMediaClassifier.from_wordlists({
-            "music": ["jazz", "blues", "rock"],
-            "movie": ["cinema", "film"],
-        })
-        self.assertIsNotNone(clf._ner)
-        self.assertIsNotNone(clf.container)
-
-    def test_from_csv(self):
-        try:
-            from ovos_media_classifier.ahocorasick import AhocorasickMediaClassifier
-        except ImportError:
-            self.skipTest("ahocorasick-ner not installed")
-
-        import tempfile
-        import os
-
-        with tempfile.TemporaryDirectory() as tmpdir:
-            csv_path = os.path.join(tmpdir, "test.csv")
-            with open(csv_path, "w", newline="") as f:
-                writer = csv.writer(f)
-                writer.writerow(["label", "value"])
-                writer.writerow(["music", "jazz"])
-                writer.writerow(["movie", "cinema"])
-
-            clf = AhocorasickMediaClassifier.from_csv(csv_path)
-            self.assertIsNotNone(clf._ner)
-            self.assertIsNotNone(clf.container)
-
-    def test_from_container(self):
-        try:
-            from ovos_media_classifier.ahocorasick import AhocorasickMediaClassifier
-            from ovos_media_classifier.entities import EntitiesContainer
-        except ImportError:
-            self.skipTest("ahocorasick-ner not installed")
-
-        container = EntitiesContainer()
-        container.add("music", "jazz")
-        container.add("movie", "cinema")
-
-        clf = AhocorasickMediaClassifier.from_container(container)
-        self.assertEqual(clf.container, container)
-
-
-# ---------------------------------------------------------------------------
-# SklearnMediaClassifier
-# ---------------------------------------------------------------------------
-
-
-class TestSklearnMediaClassifierBasic(unittest.TestCase):
-    """Test SklearnMediaClassifier with mocked pipelines."""
-
-    def _make_play_pipeline(self, label: str = "music", proba: float = 0.8):
-        """Return a mock sklearn pipeline for play classification."""
-        pipe = MagicMock()
-        pipe.predict.return_value = np.array([label])
-        pipe.predict_proba.return_value = np.array([[proba]])
-        return pipe
-
-    def _make_domain_pipeline(self, label: str = "ocp_play", proba: float = 0.8):
-        """Return a mock sklearn pipeline for domain classification."""
-        pipe = MagicMock()
-        pipe.predict.return_value = np.array([label])
-        pipe.predict_proba.return_value = np.array([[proba]])
-        return pipe
-
-    def test_classify_basic(self):
-        try:
-            from ovos_media_classifier.sklearn import SklearnMediaClassifier
-        except ImportError:
-            self.skipTest("sklearn not installed")
-
-        play_pipe = self._make_play_pipeline("music", 0.85)
-        clf = SklearnMediaClassifier(play_pipe)
-        mt, conf = clf.classify("play jazz", "en-us")
-
-        self.assertEqual(mt, MediaType.MUSIC)
-        self.assertAlmostEqual(conf, 0.85)
-
-    def test_classify_below_threshold(self):
-        try:
-            from ovos_media_classifier.sklearn import SklearnMediaClassifier
-        except ImportError:
-            self.skipTest("sklearn not installed")
-
-        play_pipe = self._make_play_pipeline("music", 0.2)
-        clf = SklearnMediaClassifier(play_pipe, play_threshold=0.5)
-        mt, conf = clf.classify("play jazz", "en-us")
-
-        self.assertEqual(mt, MediaType.GENERIC)
-        self.assertEqual(conf, 0.0)
-
-    def test_classify_unknown_label(self):
-        try:
-            from ovos_media_classifier.sklearn import SklearnMediaClassifier
-        except ImportError:
-            self.skipTest("sklearn not installed")
-
-        play_pipe = self._make_play_pipeline("unknown_intent", 0.8)
-        clf = SklearnMediaClassifier(play_pipe)
-        mt, conf = clf.classify("query", "en-us")
-
-        self.assertEqual(mt, MediaType.GENERIC)
-        # Unknown intent still returns the model's confidence
-        self.assertAlmostEqual(conf, 0.8)
-
-    def test_classify_with_valid_labels(self):
-        try:
-            from ovos_media_classifier.sklearn import SklearnMediaClassifier
-        except ImportError:
-            self.skipTest("sklearn not installed")
-
-        play_pipe = self._make_play_pipeline("music", 0.8)
-        clf = SklearnMediaClassifier(play_pipe)
-        mt, conf = clf.classify("play jazz", "en-us",
-                               valid_labels=[MediaType.MOVIE])
-
-        self.assertEqual(mt, MediaType.GENERIC)
-        self.assertEqual(conf, 0.0)
-
-    def test_classify_exception_returns_generic(self):
-        try:
-            from ovos_media_classifier.sklearn import SklearnMediaClassifier
-        except ImportError:
-            self.skipTest("sklearn not installed")
-
-        play_pipe = MagicMock()
-        play_pipe.predict.side_effect = RuntimeError("predict failed")
-
-        clf = SklearnMediaClassifier(play_pipe)
-        mt, conf = clf.classify("query", "en-us")
-
-        self.assertEqual(mt, MediaType.GENERIC)
-        self.assertEqual(conf, 0.0)
-
-    def test_classify_domain_with_domain_pipeline(self):
-        try:
-            from ovos_media_classifier.sklearn import SklearnMediaClassifier
-            from ovos_media_classifier.intents import OCPDomain
-        except ImportError:
-            self.skipTest("sklearn not installed")
-
-        play_pipe = self._make_play_pipeline("music", 0.8)
-        domain_pipe = self._make_domain_pipeline("ocp_play", 0.9)
-
-        clf = SklearnMediaClassifier(play_pipe, domain_pipeline=domain_pipe)
-        domain, conf = clf.classify_domain("play jazz", "en-us")
-
-        self.assertEqual(domain, OCPDomain.OCP_PLAY)
-        self.assertAlmostEqual(conf, 0.9)
-
-    def test_classify_domain_below_threshold(self):
-        try:
-            from ovos_media_classifier.sklearn import SklearnMediaClassifier
-            from ovos_media_classifier.intents import OCPDomain
-        except ImportError:
-            self.skipTest("sklearn not installed")
-
-        domain_pipe = self._make_domain_pipeline("ocp_play", 0.2)
-        clf = SklearnMediaClassifier(MagicMock(), domain_pipeline=domain_pipe,
-                                     domain_threshold=0.5)
-        domain, conf = clf.classify_domain("query", "en-us")
-
-        self.assertEqual(domain, OCPDomain.NOT_OCP)
-
-    def test_predict_with_conf_no_proba(self):
-        try:
-            from ovos_media_classifier.sklearn import SklearnMediaClassifier
-        except ImportError:
-            self.skipTest("sklearn not installed")
-
-        # Mock a classifier that doesn't have predict_proba (e.g., SVM)
-        pipe = MagicMock()
-        pipe.predict.return_value = np.array(["music"])
-        del pipe.predict_proba  # Remove predict_proba
-        pipe.decision_function.return_value = np.array([[0.5]])
-
-        label, conf = SklearnMediaClassifier._predict_with_conf(pipe, "query")
-
-        self.assertEqual(label, "music")
-        self.assertGreater(conf, 0.0)
-        self.assertLessEqual(conf, 1.0)
-
-
-class TestSklearnMediaClassifierPersistence(unittest.TestCase):
-    """Test SklearnMediaClassifier save/load."""
-
-    def test_from_path_missing_joblib(self):
-        try:
-            from ovos_media_classifier.sklearn import SklearnMediaClassifier
-        except ImportError:
-            self.skipTest("sklearn not installed")
-
-        with patch.dict("sys.modules", {"joblib": None}):
-            with self.assertRaises(ImportError):
-                SklearnMediaClassifier.from_path("/nonexistent/path")
-
-    def test_save_requires_joblib(self):
-        try:
-            from ovos_media_classifier.sklearn import SklearnMediaClassifier
-        except ImportError:
-            self.skipTest("sklearn not installed")
-
-        play_pipe = MagicMock()
-        clf = SklearnMediaClassifier(play_pipe)
-
-        with patch.dict("sys.modules", {"joblib": None}):
-            with self.assertRaises(ImportError):
-                clf.save("/tmp/model.joblib")
-
-
-# ---------------------------------------------------------------------------
-# PadatiousMediaClassifier
-# ---------------------------------------------------------------------------
-
-
-class TestPadatiousMediaClassifierBasic(unittest.TestCase):
-    """Test PadatiousMediaClassifier with mocked containers."""
-
-    def _make_intent_container(self, intent_name: str = "music",
-                              intent_conf: float = 0.8):
-        """Return a mock IntentContainer."""
-        container = MagicMock()
-
-        match = MagicMock()
-        match.name = intent_name
-        match.conf = intent_conf
-
-        container.calc_intent.return_value = match
-        return container
-
-    def test_classify_basic(self):
-        try:
-            from ovos_media_classifier.padatious import PadatiousMediaClassifier
-        except ImportError:
-            self.skipTest("padatious not installed")
-
-        play_c = self._make_intent_container("music", 0.85)
-        clf = PadatiousMediaClassifier(play_c)
-
-        mt, conf = clf.classify("play some jazz", "en-us")
-
-        self.assertEqual(mt, MediaType.MUSIC)
-        self.assertAlmostEqual(conf, 0.85)
-
-    def test_classify_below_threshold(self):
-        try:
-            from ovos_media_classifier.padatious import PadatiousMediaClassifier
-        except ImportError:
-            self.skipTest("padatious not installed")
-
-        play_c = self._make_intent_container("music", 0.3)
-        clf = PadatiousMediaClassifier(play_c, play_threshold=0.5)
-
-        mt, conf = clf.classify("query", "en-us")
-
-        self.assertEqual(mt, MediaType.GENERIC)
-        self.assertEqual(conf, 0.0)
-
-    def test_classify_no_match(self):
-        try:
-            from ovos_media_classifier.padatious import PadatiousMediaClassifier
-        except ImportError:
-            self.skipTest("padatious not installed")
-
-        play_c = MagicMock()
-        play_c.calc_intent.return_value = None
-
-        clf = PadatiousMediaClassifier(play_c)
-        mt, conf = clf.classify("query", "en-us")
-
-        self.assertEqual(mt, MediaType.GENERIC)
-        self.assertEqual(conf, 0.0)
-
-    def test_classify_with_valid_labels(self):
-        try:
-            from ovos_media_classifier.padatious import PadatiousMediaClassifier
-        except ImportError:
-            self.skipTest("padatious not installed")
-
-        play_c = self._make_intent_container("music", 0.8)
-        clf = PadatiousMediaClassifier(play_c)
-
-        mt, conf = clf.classify("query", "en-us",
-                               valid_labels=[MediaType.MOVIE])
-
-        self.assertEqual(mt, MediaType.GENERIC)
-        self.assertEqual(conf, 0.0)
-
-    def test_classify_domain_with_domain_container(self):
-        try:
-            from ovos_media_classifier.padatious import PadatiousMediaClassifier
-            from ovos_media_classifier.intents import OCPDomain
-        except ImportError:
-            self.skipTest("padatious not installed")
-
-        play_c = self._make_intent_container("music", 0.8)
-        domain_c = self._make_intent_container("ocp_play", 0.9)
-
-        clf = PadatiousMediaClassifier(play_c, domain_container=domain_c)
-        domain, conf = clf.classify_domain("play jazz", "en-us")
-
-        self.assertEqual(domain, OCPDomain.OCP_PLAY)
-        self.assertAlmostEqual(conf, 0.9)
-
-    def test_calc_intent_exception(self):
-        try:
-            from ovos_media_classifier.padatious import PadatiousMediaClassifier
-        except ImportError:
-            self.skipTest("padatious not installed")
-
-        play_c = MagicMock()
-        play_c.calc_intent.side_effect = RuntimeError("calc failed")
-
-        clf = PadatiousMediaClassifier(play_c)
-        name, conf = clf._calc_intent(play_c, "query")
-
-        self.assertIsNone(name)
-        self.assertEqual(conf, 0.0)
-
-    def test_calc_intent_padacioso_dict_result(self):
-        try:
-            from ovos_media_classifier.padatious import PadatiousMediaClassifier
-        except ImportError:
-            self.skipTest("padatious not installed")
-
-        play_c = MagicMock()
-        # padacioso returns a dict
-        play_c.calc_intent.return_value = {
-            "name": "music",
-            "conf": 0.75,
-        }
-
-        clf = PadatiousMediaClassifier(play_c)
-        name, conf = clf._calc_intent(play_c, "query")
-
-        self.assertEqual(name, "music")
-        self.assertAlmostEqual(conf, 0.75)
-
-
-class TestPadatiousMediaClassifierFactories(unittest.TestCase):
-    """Test PadatiousMediaClassifier factory methods."""
-
-    def test_from_samples(self):
-        try:
-            from ovos_media_classifier.padatious import PadatiousMediaClassifier
-        except ImportError:
-            self.skipTest("padatious not installed")
-
-        clf = PadatiousMediaClassifier.from_samples({
-            "music": ["play {genre}", "put on some {artist}"],
-            "movie": ["watch {title}", "play the movie {name}"],
-        })
-        self.assertIsNotNone(clf._play)
-
-    def test_from_samples_with_domain(self):
-        try:
-            from ovos_media_classifier.padatious import PadatiousMediaClassifier
-        except ImportError:
-            self.skipTest("padatious not installed")
-
-        clf = PadatiousMediaClassifier.from_samples(
-            play_samples={
-                "music": ["play {genre}"],
-                "movie": ["watch {title}"],
-            },
-            domain_samples={
-                "ocp_play": ["play {query}"],
-                "ocp_control": ["pause", "resume"],
-                "not_ocp": ["set an alarm"],
-            }
-        )
-        self.assertIsNotNone(clf._play)
-        self.assertIsNotNone(clf._domain)
-
-    def test_from_locale_dir(self):
-        try:
-            from ovos_media_classifier.padatious import PadatiousMediaClassifier
-        except ImportError:
-            self.skipTest("padatious not installed")
-
-        import tempfile
-        import os
-
-        with tempfile.TemporaryDirectory() as tmpdir:
-            lang_dir = os.path.join(tmpdir, "en-us")
-            os.makedirs(lang_dir)
-
-            # Create intent files
-            with open(os.path.join(lang_dir, "music.intent"), "w") as f:
-                f.write("play {genre}\nput on some {artist}\n")
-
-            with open(os.path.join(lang_dir, "movie.intent"), "w") as f:
-                f.write("watch {title}\nplay the movie {name}\n")
-
-            clf = PadatiousMediaClassifier.from_locale_dir(tmpdir, "en-us")
-            self.assertIsNotNone(clf._play)
-
-    def test_from_locale_dir_missing_lang(self):
-        try:
-            from ovos_media_classifier.padatious import PadatiousMediaClassifier
-        except ImportError:
-            self.skipTest("padatious not installed")
-
-        with tempfile.TemporaryDirectory() as tmpdir:
-            with self.assertRaises(FileNotFoundError):
-                PadatiousMediaClassifier.from_locale_dir(tmpdir, "en-us")
-
-
-# ---------------------------------------------------------------------------
-# EntitiesContainer loaders
-# ---------------------------------------------------------------------------
-
-
-class TestEntitiesContainerBasic(unittest.TestCase):
-    """Test EntitiesContainer basic operations."""
-
-    def test_add_and_get_words(self):
-        from ovos_media_classifier.entities import EntitiesContainer
-
-        container = EntitiesContainer()
-        container.add("music", "jazz")
-        container.add("music", "blues")
-        container.add("movie", "cinema")
-
-        # Verify words are stored
-        words = container.wordlists
-        self.assertIn("music", words)
-        self.assertIn("movie", words)
-
-    def test_deduplication(self):
-        from ovos_media_classifier.entities import EntitiesContainer
-
-        container = EntitiesContainer()
-        container.add("music", "jazz")
-        container.add("music", "jazz")  # duplicate
-
-        words = container.wordlists
-        music_words = list(words.get("music", []))
-        # Count occurrences of 'jazz'
-        jazz_count = sum(1 for w in music_words if w == "jazz")
-        self.assertEqual(jazz_count, 1)
-
-    def test_load_csv(self):
-        import os
-        from ovos_media_classifier.entities import EntitiesContainer
-
-        with tempfile.TemporaryDirectory() as tmpdir:
-            csv_path = os.path.join(tmpdir, "test.csv")
-            with open(csv_path, "w", newline="") as f:
-                writer = csv.writer(f)
-                writer.writerow(["entity", "label", "source"])
-                writer.writerow(["jazz", "music", "manual"])
-                writer.writerow(["Netflix", "movie_streaming_service", "api"])
-
-            container = EntitiesContainer()
-            count = container.load_csv(csv_path)
-
-            self.assertGreater(count, 0)
-            words = container.wordlists
-            self.assertIn("music", words)
-
-
-class TestEntitiesContainerRadarr(unittest.TestCase):
-    """Test Radarr loader."""
-
-    @patch("ovos_media_classifier.entities._http_get")
-    def test_load_radarr_success(self, mock_http_get):
-        from ovos_media_classifier.entities import EntitiesContainer
-
-        # Mock the HTTP response to return a list of movies
-        mock_http_get.return_value = [
-            {
-                "title": "The Dark Knight",
-                "genres": ["action", "crime"],
-                "alternateTitles": [],
-                "credits": {
-                    "castMembers": [
-                        {"name": "Christian Bale"},
-                    ],
-                    "crewMembers": [
-                        {"name": "Christopher Nolan", "job": "Director"},
-                    ],
-                },
-                "studio": "Warner Bros",
-            },
-            {
-                "title": "Inception",
-                "genres": ["sci-fi", "thriller"],
-                "alternateTitles": [],
-                "credits": {"castMembers": [], "crewMembers": []},
-                "studio": "",
-            },
-        ]
-
-        container = EntitiesContainer()
-        count = container.load_radarr("http://localhost:7878", api_key="test")
-
-        self.assertGreater(count, 0)
-
-    @patch("ovos_media_classifier.entities._http_get")
-    def test_load_radarr_http_error(self, mock_http_get):
-        from ovos_media_classifier.entities import EntitiesContainer
-
-        mock_http_get.return_value = None
-
-        container = EntitiesContainer()
-        count = container.load_radarr("http://localhost:7878", api_key="test")
-
-        self.assertEqual(count, 0)
-
-
-class TestEntitiesContainerSonarr(unittest.TestCase):
-    """Test Sonarr loader."""
-
-    @patch("ovos_media_classifier.entities._http_get")
-    def test_load_sonarr_success(self, mock_http_get):
-        from ovos_media_classifier.entities import EntitiesContainer
-
-        mock_http_get.return_value = [
-            {
-                "title": "Breaking Bad",
-                "genres": [],
-                "alternateTitles": [],
-                "year": 2008,
-            },
-            {
-                "title": "Game of Thrones",
-                "genres": ["drama"],
-                "alternateTitles": [],
-                "year": 2011,
-            },
-        ]
-
-        container = EntitiesContainer()
-        count = container.load_sonarr("http://localhost:8989", api_key="test")
-
-        self.assertGreater(count, 0)
-
-
-class TestEntitiesContainerLidarr(unittest.TestCase):
-    """Test Lidarr loader."""
-
-    @patch("ovos_media_classifier.entities._http_get")
-    def test_load_lidarr_success(self, mock_http_get):
-        from ovos_media_classifier.entities import EntitiesContainer
-
-        def http_get_side_effect(session, url, **kwargs):
-            if "/artist" in url:
-                return [
-                    {
-                        "artistName": "Radiohead",
-                        "genres": ["rock", "alternative"],
-                    },
-                    {
-                        "artistName": "The Beatles",
-                        "genres": ["rock", "pop"],
-                    },
-                ]
-            elif "/album" in url:
-                return [
-                    {
-                        "title": "OK Computer",
-                        "artist": {"artistName": "Radiohead"},
-                        "media": [
-                            {
-                                "tracks": [
-                                    {"title": "Paranoid Android"},
-                                    {"title": "Karma Police"},
-                                ]
-                            }
-                        ],
-                    },
-                ]
-            return []
-
-        mock_http_get.side_effect = http_get_side_effect
-
-        container = EntitiesContainer()
-        count = container.load_lidarr("http://localhost:8686", api_key="test")
-
-        self.assertGreater(count, 0)
-
-
-class TestEntitiesContainerJellyfin(unittest.TestCase):
-    """Test Jellyfin loader."""
-
-    @patch("ovos_media_classifier.entities._http_get")
-    def test_load_jellyfin_success(self, mock_http_get):
-        from ovos_media_classifier.entities import EntitiesContainer
-
-        def http_get_side_effect(session, url, **kwargs):
-            if "/Users" in url and "Items" not in url:
-                # Users endpoint
-                return [
-                    {"Id": "user123"}
-                ]
-            else:
-                # Items endpoint - return paginated results
-                return {
-                    "Items": [
-                        {
-                            "Name": "The Dark Knight",
-                            "Type": "Movie",
-                            "Genres": ["Action", "Crime"],
-                            "People": [
-                                {"Name": "Christian Bale", "Type": "Actor"},
-                            ],
-                        },
-                    ],
-                    "TotalRecordCount": 1,
-                }
-
-        mock_http_get.side_effect = http_get_side_effect
-
-        container = EntitiesContainer()
-        count = container.load_jellyfin("http://localhost:8096", api_key="test")
-
-        # Even with only one movie, we should have added at least some entities
-        self.assertGreater(count, 0)
-
+class TestSupplementaryContentForm(unittest.TestCase):
+    """Supplementary content (trailer / BTS / bloopers / …) is MOVIE + a
+    mediavocab ``ContentForm``, never a bare MOVIE with the signal lost.
+
+    The finer classifier labels collapse onto mediavocab's set (making_of /
+    bloopers / deleted_scenes / featurette → ``behind_scenes``; clip →
+    ``excerpt``; interview → ``supplement``)."""
+
+    def setUp(self):
+        from mediavocab.taxonomy import ContentForm
+        self.ContentForm = ContentForm
+        # bundled-locale standalone classifier (real .voc word-boundary match)
+        self.clf = KeywordMediaClassifier()
+
+    def _check(self, query, expected_form):
+        mt, _conf = self.clf.classify(query, "en-us")
+        form = self.clf.classify_content_form(query, "en-us")
+        self.assertEqual(mt, MediaType.MOVIE, f"{query!r} should be MOVIE")
+        self.assertEqual(form, expected_form,
+                         f"{query!r} → {form}, expected {expected_form!r}")
+
+    def test_trailer_with_title(self):
+        self._check("the Top Gun trailer", self.ContentForm.TRAILER)
+
+    def test_teaser(self):
+        self._check("the Dune teaser", self.ContentForm.TEASER)
+
+    def test_behind_the_scenes(self):
+        self._check("behind the scenes of Dune", self.ContentForm.BEHIND_SCENES)
+
+    def test_making_of(self):
+        self._check("the making of Inception", self.ContentForm.BEHIND_SCENES)
+
+    def test_bloopers_no_title(self):
+        # the regression case: "show me bloopers" must still fire the axis
+        self._check("show me bloopers", self.ContentForm.BEHIND_SCENES)
+
+    def test_deleted_scenes(self):
+        self._check("the deleted scenes from Avatar",
+                    self.ContentForm.BEHIND_SCENES)
+
+    def test_featurette(self):
+        self._check("the Dune featurette", self.ContentForm.BEHIND_SCENES)
+
+    def test_interview(self):
+        self._check("cast interview for Barbie", self.ContentForm.SUPPLEMENT)
+
+    def test_clip(self):
+        self._check("a movie clip", self.ContentForm.EXCERPT)
+
+    def test_silent_and_bw_are_picture_format(self):
+        # bw/silent are mediavocab PictureFormat presentation attributes (T6),
+        # NOT content_form.
+        from mediavocab import PictureFormat
+        self.assertIn(PictureFormat.SILENT,
+                      self.clf.classify_picture_format("a silent film", "en-us"))
+        self.assertIn(PictureFormat.BLACK_AND_WHITE,
+                      self.clf.classify_picture_format("a black and white movie",
+                                                       "en-us"))
 
 if __name__ == "__main__":
     unittest.main()

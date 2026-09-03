@@ -1,0 +1,144 @@
+<lead_tune> {radio_station}
+[hey|ok|please] <lead_tune> {radio_station} [please|for me|right now|thanks]
+<lead_tune> the radio station {radio_station}
+[hey|ok|please] <lead_tune> the radio station {radio_station} [please|for me|right now|thanks]
+<lead_tune> {radio_station} radio
+[hey|ok|please] <lead_tune> {radio_station} radio [please|for me|right now|thanks]
+<lead_tune> some {radio_genre} radio
+[hey|ok|please] <lead_tune> some {radio_genre} radio [please|for me|right now|thanks]
+<lead_tune> a {radio_genre} station
+[hey|ok|please] <lead_tune> a {radio_genre} station [please|for me|right now|thanks]
+<lead_tune> live radio
+[hey|ok|please] <lead_tune> live radio [please|for me|right now|thanks]
+<lead_tune> the {radio_genre} station
+[hey|ok|please] <lead_tune> the {radio_genre} station [please|for me|right now|thanks]
+<lead_tune> the {radio_station} stream
+[hey|ok|please] <lead_tune> the {radio_station} stream [please|for me|right now|thanks]
+<lead_tune> another {radio_genre} station
+[hey|ok|please] <lead_tune> another {radio_genre} station [please|for me|right now|thanks]
+<lead_tune> some live radio
+[hey|ok|please] <lead_tune> some live radio [please|for me|right now|thanks]
+<lead_tune> a local radio station
+[hey|ok|please] <lead_tune> a local radio station [please|for me|right now|thanks]
+<lead_tune> {radio_station} fm
+[hey|ok|please] <lead_tune> {radio_station} fm [please|for me|right now|thanks]
+<lead_tune> the fm station {radio_station}
+[hey|ok|please] <lead_tune> the fm station {radio_station} [please|for me|right now|thanks]
+<lead_tune> an internet radio station
+[hey|ok|please] <lead_tune> an internet radio station [please|for me|right now|thanks]
+<lead_tune> a {radio_genre} internet station
+[hey|ok|please] <lead_tune> a {radio_genre} internet station [please|for me|right now|thanks]
+<lead_tune> a {radio_genre} fm station
+[hey|ok|please] <lead_tune> a {radio_genre} fm station [please|for me|right now|thanks]
+<lead_tune> talk radio
+[hey|ok|please] <lead_tune> talk radio [please|for me|right now|thanks]
+<lead_tune> the {radio_genre} talk station
+[hey|ok|please] <lead_tune> the {radio_genre} talk station [please|for me|right now|thanks]
+<lead_tune> news radio
+[hey|ok|please] <lead_tune> news radio [please|for me|right now|thanks]
+<lead_tune> a music station
+[hey|ok|please] <lead_tune> a music station [please|for me|right now|thanks]
+<lead_tune> a {radio_genre} music station
+[hey|ok|please] <lead_tune> a {radio_genre} music station [please|for me|right now|thanks]
+<lead_tune> my favorite radio station
+[hey|ok|please] <lead_tune> my favorite radio station [please|for me|right now|thanks]
+<lead_tune> the morning show on {radio_station}
+[hey|ok|please] <lead_tune> the morning show on {radio_station} [please|for me|right now|thanks]
+<lead_tune> the {radio_genre} station {radio_station}
+[hey|ok|please] <lead_tune> the {radio_genre} station {radio_station} [please|for me|right now|thanks]
+<lead_tune> {radio_station}, a {radio_genre} station
+[hey|ok|please] <lead_tune> {radio_station}, a {radio_genre} station [please|for me|right now|thanks]
+<lead_tune> {radio_station} the {radio_genre} station
+[hey|ok|please] <lead_tune> {radio_station} the {radio_genre} station [please|for me|right now|thanks]
+<lead_tune> do you have any {radio_genre} radio
+[hey|ok|please] <lead_tune> do you have any {radio_genre} radio [please|for me|right now|thanks]
+<lead_tune> got any {radio_genre} stations
+[hey|ok|please] <lead_tune> got any {radio_genre} stations [please|for me|right now|thanks]
+<lead_tune> some {radio_genre} radio for the drive
+[hey|ok|please] <lead_tune> some {radio_genre} radio for the drive [please|for me|right now|thanks]
+<lead_tune> a {radio_genre} station to wake up to
+[hey|ok|please] <lead_tune> a {radio_genre} station to wake up to [please|for me|right now|thanks]
+<lead_tune> what {radio_genre} stations are there
+[hey|ok|please] <lead_tune> what {radio_genre} stations are there [please|for me|right now|thanks]
+<lead_tune> a {radio_genre} station for the background
+[hey|ok|please] <lead_tune> a {radio_genre} station for the background [please|for me|right now|thanks]
+<lead_tune> some live radio while i work
+[hey|ok|please] <lead_tune> some live radio while i work [please|for me|right now|thanks]
+<lead_tune> a {radio_genre} station for my commute
+[hey|ok|please] <lead_tune> a {radio_genre} station for my commute [please|for me|right now|thanks]
+{radio_station}, please
+the station {radio_station}, please
+some {radio_genre} radio, thanks
+{radio_station} — put it on
+that station {radio_station} — tune in
+put on {radio_station}, would you?
+switch to {radio_station}, can you?
+i'm in the mood for some {radio_genre} radio
+in the mood for a {radio_genre} station
+i could go for some {radio_genre} radio
+i'm after a {radio_genre} station
+i need a {radio_genre} station for the drive
+what about {radio_station}
+maybe a {radio_genre} station
+we should put on {radio_station}
+something like {radio_station}
+another {radio_genre} station
+any {radio_genre} stations around?
+what {radio_genre} stations do you have
+is there a station called {radio_station}
+my usual {radio_genre} station
+the {radio_genre} station i always listen to
+some {radio_genre} radio for the commute
+a {radio_genre} station because it's quiet in here
+{radio_station} on in the background
+um can you put on {radio_station}
+tune in to {radio_station}, actually no a {radio_genre} station
+hey so put on {radio_station}
+you know what throw on some {radio_genre} radio
+wanna listen to {radio_station}
+lemme have {radio_station} on
+gimme a {radio_genre} station
+i could really go for some {radio_genre} radio
+i'm in the mood for a {radio_genre} station
+is there a {radio_genre} station on
+got a good {radio_genre} station?
+hey let's find some {radio_genre} online radio
+<lead_tune> {radio_station} am radio
+i'm in the mood for {radio_genre} on the radio
+so <lead_tune> an internet radio station
+lemme hear {radio_station} on the radio
+can we get {radio_genre} fm radio going
+how about that radio station {radio_station}
+um just put on some {radio_genre} radio please
+<lead_tune> a station playing {radio_genre}
+got any good {radio_genre} radio stations
+i wanna listen to internet radio — maybe {radio_genre}
+<lead_tune> that am station {radio_station}
+find me a {radio_genre} radio show
+let's tune into {radio_station} online radio
+hey play some {radio_genre} on internet radio
+gimme {radio_station} am radio
+so like a {radio_genre} fm station maybe
+i'm looking for {radio_station} radio station
+<lead_tune> something with {radio_genre}
+put on a {radio_genre} internet radio station for me
+<lead_tune> i am in the mood for some {radio_genre} radio
+how about we listen to {radio_station} on the radio [for a little while]
+[hey|so] let us find a {radio_genre} radio station [online]
+i wanna hear {radio_station} on the radio [please]
+feels like a {radio_genre} radio kind of day
+[ok|hey] <lead_tune> tune in to {radio_station} [for me]
+got any live radio playing {radio_genre} [right now]
+lemme listen to {radio_station} on the radio [for a change]
+i could really go for some {radio_genre} on fm radio
+<lead_tune> how is the reception on {radio_station}
+[hey] can we put on {radio_station} radio [maybe]
+[so|um] i am looking for a {radio_genre} internet radio station
+<lead_tune> let us check out what is on {radio_station} [today]
+hey <lead_tune> play some {radio_genre} radio [thanks]
+i am in the mood for {radio_station} on the radio [actually]
+how about some {radio_genre} on the radio [right now]
+<lead_tune> gimme {radio_station} [please]
+we should listen to {radio_genre} radio [for a bit]
+[um] can you tune in to {radio_station} on the radio [please]
+let us hear some {radio_genre} on am radio [or fm]

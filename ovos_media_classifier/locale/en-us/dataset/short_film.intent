@@ -1,0 +1,117 @@
+<lead_watch> {short_film_title}
+[hey|ok|please] <lead_watch> {short_film_title} [please|for me|right now|thanks]
+<lead_watch> the short film {short_film_title}
+[hey|ok|please] <lead_watch> the short film {short_film_title} [please|for me|right now|thanks]
+<lead_watch> a short film
+[hey|ok|please] <lead_watch> a short film [please|for me|right now|thanks]
+<lead_watch> some short films
+[hey|ok|please] <lead_watch> some short films [please|for me|right now|thanks]
+<lead_watch> the short {short_film_title}
+[hey|ok|please] <lead_watch> the short {short_film_title} [please|for me|right now|thanks]
+<lead_watch> an award-winning short film
+[hey|ok|please] <lead_watch> an award-winning short film [please|for me|right now|thanks]
+<lead_watch> an animated short
+[hey|ok|please] <lead_watch> an animated short [please|for me|right now|thanks]
+<lead_watch> a {movie_genre} short film
+[hey|ok|please] <lead_watch> a {movie_genre} short film [please|for me|right now|thanks]
+<lead_watch> a short {movie_genre} film
+[hey|ok|please] <lead_watch> a short {movie_genre} film [please|for me|right now|thanks]
+<lead_watch> a quick short film
+[hey|ok|please] <lead_watch> a quick short film [please|for me|right now|thanks]
+<lead_watch> a short movie
+[hey|ok|please] <lead_watch> a short movie [please|for me|right now|thanks]
+<lead_watch> an oscar-nominated short film
+[hey|ok|please] <lead_watch> an oscar-nominated short film [please|for me|right now|thanks]
+<lead_watch> a live action short
+[hey|ok|please] <lead_watch> a live action short [please|for me|right now|thanks]
+<lead_watch> the short film called {short_film_title}
+[hey|ok|please] <lead_watch> the short film called {short_film_title} [please|for me|right now|thanks]
+<lead_watch> a festival short film
+[hey|ok|please] <lead_watch> a festival short film [please|for me|right now|thanks]
+<lead_watch> an indie short film
+[hey|ok|please] <lead_watch> an indie short film [please|for me|right now|thanks]
+<lead_watch> a student short film
+[hey|ok|please] <lead_watch> a student short film [please|for me|right now|thanks]
+<lead_watch> a {movie_genre} short
+[hey|ok|please] <lead_watch> a {movie_genre} short [please|for me|right now|thanks]
+<lead_watch> another short film
+[hey|ok|please] <lead_watch> another short film [please|for me|right now|thanks]
+<lead_watch> a short film by an indie director
+[hey|ok|please] <lead_watch> a short film by an indie director [please|for me|right now|thanks]
+<lead_watch> the short {movie_genre} film {short_film_title}
+[hey|ok|please] <lead_watch> the short {movie_genre} film {short_film_title} [please|for me|right now|thanks]
+<lead_watch> do you have any short films
+[hey|ok|please] <lead_watch> do you have any short films [please|for me|right now|thanks]
+<lead_watch> got a good short film
+[hey|ok|please] <lead_watch> got a good short film [please|for me|right now|thanks]
+<lead_watch> a short film for a quick break
+[hey|ok|please] <lead_watch> a short film for a quick break [please|for me|right now|thanks]
+<lead_watch> something short to watch
+[hey|ok|please] <lead_watch> something short to watch [please|for me|right now|thanks]
+<lead_watch> a short film while i wait
+[hey|ok|please] <lead_watch> a short film while i wait [please|for me|right now|thanks]
+<lead_watch> got any {movie_genre} short films
+[hey|ok|please] <lead_watch> got any {movie_genre} short films [please|for me|right now|thanks]
+{short_film_title}, please
+the short film {short_film_title}, please
+a short film, thanks
+{short_film_title} — put it on
+put on the short film {short_film_title}, would you?
+i could go for a short film
+i'm after a quick short film
+i need something short to watch
+what about {short_film_title}
+maybe a {movie_genre} short film
+we should watch {short_film_title}
+something like {short_film_title}
+any good short films around?
+the award-winning short {short_film_title}
+a short film while i wait
+an animated short because i only have a minute
+<lead_watch> a short film based on {book_title}
+<lead_watch> a short film adaptation of {book_title}
+<lead_watch> a short film based on the story {book_title}
+<lead_watch> a short film prequel to {movie_title}
+<lead_watch> a short film set in the world of {movie_title}
+<lead_watch> a short film about {artist_name}
+<lead_watch> a short film by the director {movie_director}
+<lead_watch> an animated short based on the comic {comic_title}
+um can you put on a short film by {movie_director}
+play {short_film_title}, actually no a {movie_genre} short
+hey so put on {short_film_title}
+you know what throw on a short film
+wanna watch a quick short film
+lemme watch {short_film_title}
+gimme a {movie_genre} short film
+i only have a few minutes put on a short film
+i could really go for a short film
+is there a good short film by {movie_director}
+got any {movie_genre} short films?
+hey so <lead_watch> a short film maybe about {movie_genre}
+i wanna watch a short film called {short_film_title}
+got any short films by {movie_director}
+lemme watch a short film starring {artist_name}
+how about we watch a short film, um, {short_film_title} maybe
+so there's this short film i heard about called {short_film_title}
+gimme some short films in the {movie_genre} genre
+i'm in the mood for a short film, y'know, something like {movie_title}
+hey <lead_watch> a short film directed by {movie_director}
+wanna watch {short_film_title} it's a short film
+let's check out a short film, how about {short_film_title}
+could you play that short film {short_film_title} for me
+what short films do you have based on {book_title}
+i'd like to watch a short film, maybe like that {movie_title} vibe
+please <lead_watch> any short films by {artist_name}
+how about we watch a short film like {short_film_title} [tonight|right now]
+let's check out some short films [maybe] by {movie_director}
+<lead_watch> a short film spin-off of {movie_title}
+got any short films based on {comic_title}
+i wanna see a short film [please|maybe] directed by {movie_director}
+hey so i'm looking for short films starring {artist_name}
+we should watch a {movie_genre} short movie [tonight]
+feels like a shorts kind of [day|night] [so] <lead_watch> something
+can you find me a short film version of {comic_title}
+um let's check out {short_film_title} [it's a short film i hear]
+<lead_watch> a short film [i guess|maybe] by {movie_director}
+i'm in the mood for shorts <lead_watch> a {movie_genre} one
+so like lemme see some short films [please|i mean] {movie_genre} maybe

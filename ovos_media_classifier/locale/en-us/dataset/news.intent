@@ -1,0 +1,85 @@
+<lead_play_audio> the news
+[hey|ok|please] <lead_play_audio> the news [please|for me|right now|thanks]
+<lead_play_audio> today's news
+[hey|ok|please] <lead_play_audio> today's news [please|for me|right now|thanks]
+<lead_play_audio> the latest news
+[hey|ok|please] <lead_play_audio> the latest news [please|for me|right now|thanks]
+<lead_play_audio> the morning news
+[hey|ok|please] <lead_play_audio> the morning news [please|for me|right now|thanks]
+<lead_play_audio> a news briefing
+[hey|ok|please] <lead_play_audio> a news briefing [please|for me|right now|thanks]
+<lead_play_audio> the headlines
+[hey|ok|please] <lead_play_audio> the headlines [please|for me|right now|thanks]
+<lead_play_audio> the news from {news_provider}
+[hey|ok|please] <lead_play_audio> the news from {news_provider} [please|for me|right now|thanks]
+<lead_play_audio> {news_provider} news
+[hey|ok|please] <lead_play_audio> {news_provider} news [please|for me|right now|thanks]
+<lead_play_audio> the {news_category} news
+[hey|ok|please] <lead_play_audio> the {news_category} news [please|for me|right now|thanks]
+<lead_play_audio> {news_category} headlines
+[hey|ok|please] <lead_play_audio> {news_category} headlines [please|for me|right now|thanks]
+<lead_play_audio> the latest {news_category} news
+[hey|ok|please] <lead_play_audio> the latest {news_category} news [please|for me|right now|thanks]
+<lead_play_audio> an update on {news_category}
+[hey|ok|please] <lead_play_audio> an update on {news_category} [please|for me|right now|thanks]
+<lead_play_audio> some {news_category} news
+[hey|ok|please] <lead_play_audio> some {news_category} news [please|for me|right now|thanks]
+<lead_play_audio> the {news_category} headlines from {news_provider}
+[hey|ok|please] <lead_play_audio> the {news_category} headlines from {news_provider} [please|for me|right now|thanks]
+<lead_play_audio> the {news_category} news from {news_provider}
+[hey|ok|please] <lead_play_audio> the {news_category} news from {news_provider} [please|for me|right now|thanks]
+<lead_play_audio> what's the latest {news_category} news
+[hey|ok|please] <lead_play_audio> what's the latest {news_category} news [please|for me|right now|thanks]
+<lead_play_audio> any {news_category} news
+[hey|ok|please] <lead_play_audio> any {news_category} news [please|for me|right now|thanks]
+<lead_play_audio> the {news_category} headlines for my morning
+[hey|ok|please] <lead_play_audio> the {news_category} headlines for my morning [please|for me|right now|thanks]
+the news, please
+today's headlines, please
+the {news_category} news, thanks
+the news — let's hear it
+catch me up on the news, would you?
+put on {news_provider}, can you?
+i could go for the headlines
+i'm after the latest news
+i need the {news_category} news now
+what about the news from {news_provider}
+maybe the {news_category} headlines
+we should catch the news
+what's happening in {news_category}
+anything new in {news_category}?
+the {news_category} news because i'm out of the loop
+the headlines while i make coffee
+my morning news from {news_provider}
+the {news_category} update for the commute
+<lead_tune> the news about {movie_title}
+<lead_tune> news coverage of the {game_title} launch
+<lead_tune> a news segment about {artist_name}
+<lead_tune> the latest news on {tv_show_title}
+<lead_tune> news about the new {movie_title} release
+um can you put on the news
+play the news, actually no just {news_category}
+hey so put the news on
+you know what throw on the {news_category} news
+wanna catch the news
+lemme hear the {news_category} headlines
+gimme the news from {news_provider}
+i just woke up put on the news
+i'm out of the loop put on the {news_category} news
+i could really go for the headlines
+is there any news on {tv_show_title}
+got the latest from {news_provider}?
+<lead_tune> gimme the {news_category} news
+[hey] <lead_tune> latest {news_category} report
+so <lead_play_audio> what's the latest news [on {news_category}]
+got any {news_category} news [for me]
+[um] <lead_tune> the {news_category} news bulletin
+lemme get the headlines from {news_provider}
+[ok] <lead_play_audio> breaking news [on {news_category}]
+<lead_tune> top stories [from {news_provider}]
+[hey] can i get the {news_category} news [please]
+<lead_play_audio> the latest newscast from {news_provider}
+so um <lead_tune> any breaking news
+let's hear the {news_category} headlines
+<lead_tune> gimme the top stories [from {news_provider}]
+[hey] so <lead_play_audio> what's the news [on {news_category}]

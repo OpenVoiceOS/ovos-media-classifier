@@ -1,98 +1,73 @@
-"""ovos-media-classifier — pluggable media-type classification for OCP.
+"""ovos-media-classifier — media-type classification for OCP.
+
+The initial release ships a single, zero-ML-dependency strategy: **keyword
+(``.voc``) matching** — the minimum required for OCP to be functional.  Richer
+strategies (ONNX, NER, …) are opt-in plugins discovered through the
+``opm.media.classifier`` entry-point group and land as independent additions.
 
 Public API::
 
     from ovos_media_classifier import load_media_classifier
 
-    # Keyword-based (default, no ML deps needed):
-    clf = load_media_classifier(config={}, voc_match_func=self.voc_match)
+    clf = load_media_classifier()                       # bundled .voc keyword classifier
+    media_type, conf = clf.classify("play some jazz", "en-us")   # -> (mediavocab.MediaType, conf)
+    is_ocp, conf     = clf.is_ocp_query("play something", "en-us")
+    domain, conf     = clf.classify_domain("pause the music", "en-us")
+    genres           = clf.classify_genres("play hentai", "en-us")   # -> ["anime", "adult"]
 
-    # AhocorasickNER from media servers + HuggingFace (runtime-aware):
-    clf = load_media_classifier(
-        config={"media_classifier_entities": {
-            "radarr":   {"url": "http://localhost:7878", "api_key": "…"},
-            "sonarr":   {"url": "http://localhost:8989", "api_key": "…"},
-            "lidarr":   {"url": "http://localhost:8686", "api_key": "…"},
-            "jellyfin": {"url": "http://localhost:8096", "api_key": "…"},
-            "huggingface": [{"dataset": "TigreGotico/ocp-entities"}],
-        }},
-    )
-    # Or from a static word list:
-    clf = load_media_classifier(
-        config={"media_classifier_wordlists": {"music": ["jazz", "blues"]}},
-    )
+    # content filtering (adult blocked by default)
+    from ovos_media_classifier import ContentFilter
+    blocked, reason = ContentFilter().check(clf, "play porn", "en-us")
 
-    # scikit-learn (TF-IDF + LogisticRegression):
-    clf = load_media_classifier(
-        config={"media_classifier_sklearn_model": "/path/to/model.joblib"},
-    )
+    # use an external classifier plugin (opm.media.classifier)
+    clf = load_media_classifier({"media_classifier_plugin": "ovos-media-classifier-onnx"})
 
-    # Padatious (pattern + ML intent matching):
-    clf = load_media_classifier(
-        config={"media_classifier_padatious_dir": "/path/to/locale"},
-    )
-
-    # Model2Vec (hierarchical neural model):
-    clf = load_media_classifier(
-        config={"media_classifier_model": "/path/to/m2v_model"},
-    )
-
-    media_type, conf = clf.classify("play some jazz", "en-us")
-    is_ocp, conf    = clf.is_ocp_query("play something", "en-us")
-    domain, conf    = clf.classify_domain("pause the music", "en-us")
-
-Backends (selection priority when config keys are set)
-------------------------------------------------------
-1. Model2Vec          — ``media_classifier_model``            (ML, best accuracy)
-2. GuidedEmbeddings   — ``media_classifier_guided_model``     (ONNX categorical, no torch at runtime)
-3. scikit-learn       — ``media_classifier_sklearn_model``    (ML, fast)
-4. Padatious          — ``media_classifier_padatious_dir``    (pattern + ML)
-5. AhocorasickNER     — ``media_classifier_entities``         (media servers + HF datasets, runtime-aware)
-                      — ``media_classifier_wordlists`` or
-                         ``media_classifier_ner_csv``         (static exact match)
-6. Keyword            — ``voc_match_func`` supplied           (pipeline voc files)
-7. Keyword            — fallback, uses bundled locale files
-
-All backends are optional — missing deps cause a warning and fallback to the
-next backend in the priority list.
-
-``media_classifier_entities`` config example::
-
-    "media_classifier_entities": {
-        "jellyfin":        {"url": "http://localhost:8096", "api_key": "…"},
-        "radarr":          {"url": "http://localhost:7878", "api_key": "…"},
-        "sonarr":          {"url": "http://localhost:8989", "api_key": "…"},
-        "lidarr":          {"url": "http://localhost:8686", "api_key": "…"},
-        "whisparr":        {"url": "http://localhost:6969", "api_key": "…"},
-        "stash":           {"url": "http://localhost:9999", "api_key": "…"},
-        "music_assistant": {"url": "http://localhost:8095"},
-        "huggingface":     [{"dataset": "TigreGotico/ocp-entities"}],
-        "csv":             ["/path/to/extra_entities.csv"],
-        "wordlists":       {"artist_name": ["Radiohead"]}
-    }
+The classifier models media on the real axes only: the ``OCPDomain`` (play /
+control / not-ocp) × the canonical ``mediavocab.MediaType`` + ``mediavocab``
+genre tags.  Raw detection labels resolve straight to ``(MediaType, genres)``.
 """
-from typing import Callable, Dict, List, Optional
+from typing import Callable, Optional
 
 from ovos_utils.log import LOG
 
+from ovos_media_classifier.axes import (
+    Structure,
+    MediaClassification,
+    MEDIA_TYPE_TO_STRUCTURE,
+    infer_structure,
+)
 from ovos_media_classifier.base import AbstractMediaClassifier
 from ovos_media_classifier.content_filter import ContentFilter
-from ovos_media_classifier.entities import EntitiesContainer
+from ovos_media_classifier.context import (
+    PlayerStatus,
+    PlayerState,
+)
 from ovos_media_classifier.intents import (
     MediaType,
     OCPDomain,
-    OCPPlayIntent,
     OCPControlIntent,
     OCPEntityLabel,
-    PLAY_INTENT_TO_MEDIA_TYPE,
-    PLAY_INTENT_TO_GENRES,
-    MEDIA_TYPE_TO_PLAY_INTENT,
     LABEL_TO_MEDIA_TYPE,
     LABEL_TO_GENRES,
-    NER_LABEL_TO_PLAY_INTENT,
+    NER_LABEL_TO_MEDIA_TYPE,
+    NER_LABEL_TO_GENRES,
     genres_for_label,
 )
 from ovos_media_classifier.keyword import KeywordMediaClassifier
+from ovos_media_classifier.embedding import (
+    EmbeddingMediaClassifier,
+    HybridMediaClassifier,
+)
+from ovos_media_classifier.gazetteer import (
+    build_gazetteer,
+    load_default_gazetteer,
+)
+from ovos_media_classifier.slots import (
+    KeywordFeatureSlot,
+    KEYWORD_FEATURE_SLOTS,
+    slot_for_label,
+    slots_for_media_type,
+)
 from ovos_media_classifier.plugins import (
     find_media_classifier_plugins,
     load_media_classifier_plugin,
@@ -100,212 +75,259 @@ from ovos_media_classifier.plugins import (
 from ovos_media_classifier.version import __version__
 
 __all__ = [
-    # base / taxonomy
     "AbstractMediaClassifier",
     "MediaType",
-    # content filtering
     "ContentFilter",
-    # entity container
-    "EntitiesContainer",
-    # enums
+    "PlayerStatus",
+    "PlayerState",
+    "Structure",
+    "MediaClassification",
+    "MEDIA_TYPE_TO_STRUCTURE",
+    "infer_structure",
     "OCPDomain",
-    "OCPPlayIntent",
     "OCPControlIntent",
     "OCPEntityLabel",
-    # mappings
-    "PLAY_INTENT_TO_MEDIA_TYPE",
-    "PLAY_INTENT_TO_GENRES",
-    "MEDIA_TYPE_TO_PLAY_INTENT",
     "LABEL_TO_MEDIA_TYPE",
     "LABEL_TO_GENRES",
-    "NER_LABEL_TO_PLAY_INTENT",
+    "NER_LABEL_TO_MEDIA_TYPE",
+    "NER_LABEL_TO_GENRES",
     "genres_for_label",
-    # classifiers
     "KeywordMediaClassifier",
-    "GuidedEmbeddingsMediaClassifier",
-    # external plugin discovery
+    "EmbeddingMediaClassifier",
+    "HybridMediaClassifier",
+    "OnnxMediaClassifier",
+    "AhocorasickMediaClassifier",
+    "MetadatarrMediaClassifier",
+    "build_gazetteer",
+    "load_default_gazetteer",
+    "KeywordFeatureSlot",
+    "KEYWORD_FEATURE_SLOTS",
+    "slot_for_label",
+    "slots_for_media_type",
     "find_media_classifier_plugins",
     "load_media_classifier_plugin",
-    # factory
     "load_media_classifier",
     "__version__",
 ]
+
+
+# ---------------------------------------------------------------------------
+# Backend factory
+#
+# Each opt-in backend is one (name, trigger keys, install hint, builder) spec.
+# ``load_media_classifier`` walks the specs in priority order; a backend whose
+# trigger key is present is attempted, and *any* failure (missing extra, bad
+# bundle) logs a warning and falls through so the zero-ML keyword default is
+# always preserved.
+# ---------------------------------------------------------------------------
+
+
+def _build_external_plugin(config: dict) -> AbstractMediaClassifier:
+    """``media_classifier_plugin`` — an external classifier registered under
+    the ``opm.media.classifier`` entry-point group."""
+    plugin_name = config["media_classifier_plugin"]
+    clf = load_media_classifier_plugin(plugin_name, config)
+    LOG.info(f"OCP media classifier: external plugin ({plugin_name})")
+    return clf
+
+
+def _build_onnx(config: dict) -> AbstractMediaClassifier:
+    """``media_classifier_onnx_model`` — the opt-in ONNX trained backend
+    loaded from a bundle directory. Lazy import: onnxruntime/numpy must NOT
+    be touched on the default import path."""
+    onnx_model = config["media_classifier_onnx_model"]
+    from ovos_media_classifier.onnx import OnnxMediaClassifier
+    clf = OnnxMediaClassifier.from_path(onnx_model)
+    LOG.info(f"OCP media classifier: ONNX trained backend ({onnx_model})")
+    return clf
+
+
+def _build_embedding_router(config: dict) -> AbstractMediaClassifier:
+    """``media_classifier_embedding_router`` — the learned guided-categorical
+    -embeddings router loaded from a bundle dir (``router_meta.json`` +
+    per-axis sub-dirs).
+
+    By default it is wired as a *hybrid*: the keyword backend stays the
+    high-precision first pass (gate + adult lexicon) and the router fills the
+    keyword-less cases, abstaining to GENERIC when unsure (never regressing
+    adult-leak / false-hijack).  Set
+    ``media_classifier_embedding_router_hybrid=False`` for the router alone.
+    ``media_classifier_entity_library`` ({label: [titles]}) injects the user's
+    own media library at runtime (no retraining) so bare titles route.
+    Numpy + onnxruntime only (the ``onnx`` extra).
+    """
+    router_bundle = config["media_classifier_embedding_router"]
+    hybrid = config.get("media_classifier_embedding_router_hybrid", True)
+    if hybrid:
+        from ovos_media_classifier.embedding import HybridMediaClassifier
+        # Layer B — online metadatarr last-resort. Opt-in (latency), OFF by
+        # default; lazy-imported only when enabled so the runtime stays lean.
+        # Falls through to offline-only on import failure.
+        online = None
+        if config.get("media_classifier_online_metadatarr", False):
+            try:
+                from ovos_media_classifier.metadatarr_backend import (
+                    MetadatarrMediaClassifier,
+                )
+                online = MetadatarrMediaClassifier(
+                    timeout_s=config.get(
+                        "media_classifier_online_timeout", 4.0),
+                    min_confidence=config.get(
+                        "media_classifier_online_min_confidence", 0.5),
+                )
+                LOG.info("OCP media classifier: online metadatarr layer enabled")
+            except Exception as e:
+                LOG.warning(
+                    f"online metadatarr layer requested but unavailable "
+                    f"({e}); install the 'online' extra. Offline-only.")
+        clf = HybridMediaClassifier.from_path(router_bundle, online=online)
+    else:
+        from ovos_media_classifier.embedding import EmbeddingMediaClassifier
+        clf = EmbeddingMediaClassifier.from_path(router_bundle)
+    # Layer A — default OFFLINE gazetteer of common real titles, injected so
+    # bare titles route without a network call or user setup.  On by default;
+    # ``media_classifier_gazetteer=False`` disables it,
+    # ``media_classifier_gazetteer_size`` caps titles per type.
+    if config.get("media_classifier_gazetteer", True):
+        size = config.get("media_classifier_gazetteer_size")
+        n = clf.register_default_gazetteer(top_n=size)
+        LOG.info(f"OCP media classifier: offline gazetteer ({n} titles)")
+    library = config.get("media_classifier_entity_library")
+    if library:
+        clf.register_user_library(library)
+    LOG.info(f"OCP media classifier: embedding router "
+             f"({'hybrid' if hybrid else 'standalone'}, {router_bundle})")
+    return clf
+
+
+def _build_ner(config: dict) -> AbstractMediaClassifier:
+    """``media_classifier_entities`` / ``media_classifier_wordlists`` /
+    ``media_classifier_ner_csv`` — the entity-matching (Aho-Corasick) backend.
+
+    ``media_classifier_entities`` is an ``EntitiesContainer.from_config``
+    dict; it accepts the source-agnostic ``entity_lists`` list (file paths /
+    HF dicts / inline ``{label: [values]}`` dicts / media-server dicts) as
+    well as the legacy structured keys (csv/wordlists/<server>). See
+    docs/entity-lists.md.
+    """
+    from ovos_media_classifier.ahocorasick import AhocorasickMediaClassifier
+    from ovos_media_classifier.entities import EntitiesContainer
+
+    entities_cfg = config.get("media_classifier_entities")
+    wordlists_cfg = config.get("media_classifier_wordlists")
+    if entities_cfg is not None:
+        container = EntitiesContainer.from_config(entities_cfg)
+        clf = AhocorasickMediaClassifier.from_container(container)
+    elif wordlists_cfg is not None:
+        clf = AhocorasickMediaClassifier.from_wordlists(wordlists_cfg)
+    else:
+        clf = AhocorasickMediaClassifier.from_csv(
+            config["media_classifier_ner_csv"])
+    LOG.info("OCP media classifier: NER (Aho-Corasick entity matching)")
+    return clf
+
+
+def _plugin_requested(config: dict) -> bool:
+    return bool(config.get("media_classifier_plugin"))
+
+
+def _onnx_requested(config: dict) -> bool:
+    return bool(config.get("media_classifier_onnx_model"))
+
+
+def _router_requested(config: dict) -> bool:
+    return bool(config.get("media_classifier_embedding_router"))
+
+
+def _ner_requested(config: dict) -> bool:
+    return any(config.get(k) is not None
+               for k in ("media_classifier_entities",
+                         "media_classifier_wordlists",
+                         "media_classifier_ner_csv"))
+
+
+#: Selection order: external plugin > onnx > embedding router > ner > keyword.
+_BACKEND_SPECS = (
+    ("external plugin", _plugin_requested, _build_external_plugin, None),
+    ("ONNX trained backend", _onnx_requested, _build_onnx, "onnx"),
+    ("embedding router", _router_requested, _build_embedding_router, "onnx"),
+    ("NER classifier", _ner_requested, _build_ner, "ner"),
+)
 
 
 def load_media_classifier(
     config: Optional[dict] = None,
     voc_match_func: Optional[Callable] = None,
 ) -> AbstractMediaClassifier:
-    """Return the best available media classifier for the given config.
+    """Return a media classifier for the given config.
 
-    Selection logic (first matching key wins):
+    Selection (first configured backend wins, each falling through to the
+    next on any failure — see ``_BACKEND_SPECS``):
 
-    1. ``media_classifier_model``         → Model2VecMediaClassifier
-    2. ``media_classifier_guided_model``  → GuidedEmbeddingsMediaClassifier
-    3. ``media_classifier_sklearn_model`` → SklearnMediaClassifier
-    4. ``media_classifier_padatious_dir`` → PadatiousMediaClassifier
-    5. ``media_classifier_wordlists`` or
-       ``media_classifier_ner_csv``       → AhocorasickMediaClassifier
-    6. *voc_match_func* supplied          → KeywordMediaClassifier (pipeline mode)
-    7. Fallback                           → KeywordMediaClassifier (bundled locale)
-
-    On any import or load error the function logs a warning and tries the
-    next backend in the list.
+    1. ``config["media_classifier_plugin"]`` → an external classifier
+       registered under the ``opm.media.classifier`` entry-point group.
+    2. ``config["media_classifier_onnx_model"]`` → the opt-in ONNX trained
+       backend (requires the ``onnx`` extra).
+    3. ``config["media_classifier_embedding_router"]`` → the learned
+       embedding router, hybrid with the keyword backend by default
+       (requires the ``onnx`` extra).
+    4. ``media_classifier_entities`` / ``_wordlists`` / ``_ner_csv`` → the
+       entity-matching backend (requires the ``ner`` extra).
+    5. Otherwise → the built-in keyword (``.voc``) classifier. When
+       *voc_match_func* is given (e.g. a pipeline's ``voc_match``) it is
+       used; otherwise the bundled locale files are read directly.
 
     Args:
-        config: Pipeline config dict (the "OCP" block from mycroft.conf).
-        voc_match_func: ``voc_match`` method bound to the pipeline plugin
-            instance, used by the keyword classifier.
+        config: OCP config block (see the ``_build_*`` builders for the full
+            key reference).
+        voc_match_func: optional ``(phrase, vocab_name, *, lang) -> bool`` matcher.
     """
     config = config or {}
 
-    # 0. External (3rd-party) classifier registered under opm.media.classifier
-    plugin_name = config.get("media_classifier_plugin")
-    if plugin_name:
+    for name, requested, builder, extra in _BACKEND_SPECS:
+        if not requested(config):
+            continue
         try:
-            clf = load_media_classifier_plugin(plugin_name, config)
-            LOG.info(f"OCP media classifier: external plugin ({plugin_name})")
-            return clf
+            return builder(config)
+        except ImportError as e:
+            hint = (f" Install it with: pip install "
+                    f"ovos-media-classifier[{extra}]." if extra else "")
+            LOG.warning(f"{name} requested but unavailable ({e}).{hint} "
+                        "Falling back to the keyword classifier.")
         except Exception as e:
-            LOG.warning(
-                f"Failed to load external media classifier {plugin_name!r}: {e}. "
-                "Trying built-in backends."
-            )
+            LOG.warning(f"Failed to load {name}: {e}. "
+                        "Falling back to the keyword classifier.")
 
-    # 1. Model2Vec
-    model_path = config.get("media_classifier_model")
-    if model_path:
-        try:
-            from ovos_media_classifier.m2v import Model2VecMediaClassifier
-            domain_thresh = config.get("media_classifier_domain_threshold", 0.5)
-            intent_thresh = config.get("media_classifier_intent_threshold", 0.3)
-            clf = Model2VecMediaClassifier.from_path(
-                model_path,
-                domain_threshold=domain_thresh,
-                intent_threshold=intent_thresh,
-            )
-            LOG.info(f"OCP media classifier: Model2Vec ({model_path})")
-            return clf
-        except Exception as e:
-            LOG.warning(
-                f"Failed to load Model2Vec classifier from {model_path!r}: {e}. "
-                "Trying next backend."
-            )
-
-    # 2. GuidedEmbeddings (ONNX categorical embeddings on pre-extracted features)
-    guided_path = config.get("media_classifier_guided_model")
-    if guided_path:
-        try:
-            from ovos_media_classifier.guided import GuidedEmbeddingsMediaClassifier
-            container = None
-            if config.get("media_classifier_entities"):
-                from ovos_media_classifier.entities import EntitiesContainer
-                container = EntitiesContainer.from_config(
-                    config["media_classifier_entities"]
-                )
-            clf = GuidedEmbeddingsMediaClassifier.from_path(
-                guided_path,
-                entities_container=container,
-                domain_threshold=config.get(
-                    "media_classifier_domain_threshold", 0.5
-                ),
-                play_threshold=config.get(
-                    "media_classifier_play_threshold", 0.3
-                ),
-            )
-            LOG.info(f"OCP media classifier: GuidedEmbeddings ({guided_path})")
-            return clf
-        except Exception as e:
-            LOG.warning(
-                f"Failed to load GuidedEmbeddings classifier from "
-                f"{guided_path!r}: {e}. Trying next backend."
-            )
-
-    # 3. scikit-learn
-    sklearn_path = config.get("media_classifier_sklearn_model")
-    if sklearn_path:
-        try:
-            from ovos_media_classifier.sklearn import SklearnMediaClassifier
-            play_thresh = config.get("media_classifier_play_threshold", 0.3)
-            domain_thresh = config.get("media_classifier_domain_threshold", 0.5)
-            clf = SklearnMediaClassifier.from_path(
-                sklearn_path,
-                play_threshold=play_thresh,
-                domain_threshold=domain_thresh,
-            )
-            LOG.info(f"OCP media classifier: sklearn ({sklearn_path})")
-            return clf
-        except Exception as e:
-            LOG.warning(
-                f"Failed to load sklearn classifier from {sklearn_path!r}: {e}. "
-                "Trying next backend."
-            )
-
-    # 4. Padatious
-    padatious_dir = config.get("media_classifier_padatious_dir")
-    if padatious_dir:
-        try:
-            from ovos_media_classifier.padatious import PadatiousMediaClassifier
-            lang = config.get("lang", "en-us")
-            domain_dir = config.get("media_classifier_padatious_domain_dir")
-            play_cache = config.get("media_classifier_padatious_cache")
-            play_thresh = config.get("media_classifier_play_threshold", 0.5)
-            domain_thresh = config.get("media_classifier_domain_threshold", 0.5)
-            clf = PadatiousMediaClassifier.from_locale_dir(
-                padatious_dir,
-                lang=lang,
-                domain_dir=domain_dir,
-                play_cache_dir=play_cache,
-                play_threshold=play_thresh,
-                domain_threshold=domain_thresh,
-            )
-            LOG.info(f"OCP media classifier: padatious ({padatious_dir})")
-            return clf
-        except Exception as e:
-            LOG.warning(
-                f"Failed to load padatious classifier from {padatious_dir!r}: {e}. "
-                "Trying next backend."
-            )
-
-    # 5a. AhocorasickNER backed by EntitiesContainer (media servers / HuggingFace)
-    entities_cfg: Optional[dict] = config.get("media_classifier_entities")
-    if entities_cfg:
-        try:
-            from ovos_media_classifier.ahocorasick import AhocorasickMediaClassifier
-            from ovos_media_classifier.entities import EntitiesContainer
-            container = EntitiesContainer.from_config(entities_cfg)
-            clf = AhocorasickMediaClassifier.from_container(container)
-            LOG.info("OCP media classifier: AhocorasickNER + EntitiesContainer (%d entities)", len(container))
-            return clf
-        except Exception as e:
-            LOG.warning(
-                f"Failed to build EntitiesContainer classifier: {e}. "
-                "Trying next backend."
-            )
-
-    # 5b. AhocorasickNER (static wordlists / CSV)
-    wordlists: Optional[Dict[str, List[str]]] = config.get("media_classifier_wordlists")
-    ner_csv: Optional[str] = config.get("media_classifier_ner_csv")
-    if wordlists or ner_csv:
-        try:
-            from ovos_media_classifier.ahocorasick import AhocorasickMediaClassifier
-            if wordlists:
-                clf = AhocorasickMediaClassifier.from_wordlists(wordlists)
-            else:
-                clf = AhocorasickMediaClassifier.from_csv(ner_csv)
-            LOG.info("OCP media classifier: AhocorasickNER")
-            return clf
-        except Exception as e:
-            LOG.warning(
-                f"Failed to load AhocorasickNER classifier: {e}. "
-                "Trying next backend."
-            )
-
-    # 6. Pipeline keyword (external voc_match_func)
     if voc_match_func is not None:
         LOG.debug("OCP media classifier: keyword (voc_match)")
         return KeywordMediaClassifier(voc_match_func)
 
-    # 7. Standalone keyword (bundled locale files)
     LOG.debug("OCP media classifier: keyword (bundled locale)")
     return KeywordMediaClassifier()
+
+
+# ---------------------------------------------------------------------------
+# Lazy backend exports (PEP 562)
+#
+# Every backend is importable from the top-level package, but the optional
+# ones resolve lazily so their extras (`ner` pulls ahocorasick-ner at module
+# import; `onnx` / `online` deps load at first use) are never touched on the
+# default import path.
+# ---------------------------------------------------------------------------
+_LAZY_BACKENDS = {
+    "OnnxMediaClassifier": "ovos_media_classifier.onnx",
+    "AhocorasickMediaClassifier": "ovos_media_classifier.ahocorasick",
+    "MetadatarrMediaClassifier": "ovos_media_classifier.metadatarr_backend",
+}
+
+
+def __getattr__(name: str):
+    module = _LAZY_BACKENDS.get(name)
+    if module is None:
+        raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    import importlib
+    return getattr(importlib.import_module(module), name)
+
+
+def __dir__():
+    return sorted(list(globals()) + list(_LAZY_BACKENDS))

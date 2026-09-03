@@ -1,0 +1,255 @@
+{
+  "n_test_rows": 34700,
+  "data_dir": "/home/miro/AgentWorkspaces/ovos/plugins/media/ovos-media-classifier/data/release",
+  "models_dir": "/home/miro/AgentWorkspaces/ovos/plugins/media/ovos-media-classifier/data/models",
+  "torch_dir": "/nonexistent",
+  "text_dir": "/nonexistent",
+  "rung_order": [
+    "rules",
+    "sklearn context",
+    "sklearn context+NER"
+  ],
+  "rungs": {
+    "rules": {
+      "axes": {
+        "domain": {
+          "n": 34700,
+          "accuracy": 0.8781,
+          "macro_f1": 0.3117
+        },
+        "media_type": {
+          "n": 34700,
+          "accuracy": 0.6746,
+          "macro_f1": 0.7074
+        },
+        "playback_type": {
+          "n": 34700,
+          "accuracy": 0.7243,
+          "macro_f1": 0.6456
+        },
+        "structure": {
+          "n": 34700,
+          "accuracy": 0.7459,
+          "macro_f1": 0.6739
+        },
+        "explicitness": {
+          "n": 34700,
+          "accuracy": 0.9886,
+          "macro_f1": 0.8415
+        },
+        "content_form": {
+          "n": 726,
+          "accuracy": 0.7507,
+          "macro_f1": 0.4337
+        },
+        "programme_format": {
+          "n": 1148,
+          "accuracy": 0.8963,
+          "macro_f1": 0.6339
+        },
+        "content_form_genres": {
+          "macro_f1": 0.7305,
+          "labelled_rows": 2405
+        },
+        "content_genres": {
+          "macro_f1": 0.0,
+          "labelled_rows": 2021,
+          "label_space_size": 40
+        },
+        "picture_format": {
+          "macro_f1": 0.8778,
+          "labelled_rows": 317
+        }
+      },
+      "content_filter": {
+        "adult_rows": 751,
+        "adult_blocked": 436,
+        "recall": 0.5806,
+        "hentai_rows": 290,
+        "hentai_blocked": 148,
+        "hentai_recall": 0.5103,
+        "non_adult_rows": 33949,
+        "non_adult_blocked": 79,
+        "false_block_rate": 0.0023
+      },
+      "latency_ms_median": 0.58895,
+      "latency_ms_p95": 0.96501,
+      "model_bytes": 0,
+      "status": "available"
+    },
+    "sklearn context": {
+      "axes": {
+        "domain": {
+          "n": 34700,
+          "accuracy": 0.8726,
+          "macro_f1": 0.466
+        },
+        "media_type": {
+          "n": 34700,
+          "accuracy": 0.7891,
+          "macro_f1": 0.8131
+        },
+        "playback_type": {
+          "n": 34700,
+          "accuracy": 0.8991,
+          "macro_f1": 0.9009
+        },
+        "structure": {
+          "n": 34700,
+          "accuracy": 0.9024,
+          "macro_f1": 0.8915
+        },
+        "explicitness": {
+          "n": 34700,
+          "accuracy": 0.9903,
+          "macro_f1": 0.8574
+        },
+        "content_form": {
+          "n": 726,
+          "accuracy": 0.9835,
+          "macro_f1": 0.656
+        },
+        "programme_format": {
+          "n": 1148,
+          "accuracy": 0.993,
+          "macro_f1": 0.9864
+        },
+        "content_form_genres": {
+          "macro_f1": 0.7497,
+          "labelled_rows": 2405
+        },
+        "content_genres": {
+          "macro_f1": 0.5562,
+          "labelled_rows": 2021,
+          "label_space_size": 40
+        },
+        "picture_format": {
+          "macro_f1": 0.8778,
+          "labelled_rows": 317
+        }
+      },
+      "content_filter": {
+        "adult_rows": 751,
+        "adult_blocked": 434,
+        "recall": 0.5779,
+        "hentai_rows": 290,
+        "hentai_blocked": 146,
+        "hentai_recall": 0.5034,
+        "non_adult_rows": 33949,
+        "non_adult_blocked": 21,
+        "false_block_rate": 0.0006
+      },
+      "latency_ms_median": 0.16845,
+      "latency_ms_p95": 0.20167,
+      "model_bytes": 99130,
+      "status": "available"
+    },
+    "sklearn context+NER": {
+      "axes": {
+        "domain": {
+          "n": 34700,
+          "accuracy": 0.989,
+          "macro_f1": 0.4972
+        },
+        "media_type": {
+          "n": 34700,
+          "accuracy": 0.9616,
+          "macro_f1": 0.9621
+        },
+        "playback_type": {
+          "n": 34700,
+          "accuracy": 0.9878,
+          "macro_f1": 0.9877
+        },
+        "structure": {
+          "n": 34700,
+          "accuracy": 0.9882,
+          "macro_f1": 0.985
+        },
+        "explicitness": {
+          "n": 34700,
+          "accuracy": 0.9977,
+          "macro_f1": 0.9719
+        },
+        "content_form": {
+          "n": 726,
+          "accuracy": 0.9972,
+          "macro_f1": 0.9981
+        },
+        "programme_format": {
+          "n": 1148,
+          "accuracy": 0.9983,
+          "macro_f1": 0.9966
+        },
+        "content_form_genres": {
+          "macro_f1": 0.9727,
+          "labelled_rows": 2405
+        },
+        "content_genres": {
+          "macro_f1": 0.5862,
+          "labelled_rows": 2021,
+          "label_space_size": 40
+        },
+        "picture_format": {
+          "macro_f1": 0.9648,
+          "labelled_rows": 317
+        }
+      },
+      "content_filter": {
+        "adult_rows": 751,
+        "adult_blocked": 679,
+        "recall": 0.9041,
+        "hentai_rows": 290,
+        "hentai_blocked": 262,
+        "hentai_recall": 0.9034,
+        "non_adult_rows": 33949,
+        "non_adult_blocked": 7,
+        "false_block_rate": 0.0002
+      },
+      "latency_ms_median": 0.24984,
+      "latency_ms_p95": 0.39475,
+      "model_bytes": 2182576,
+      "status": "available"
+    },
+    "tfidf word(1,2)+linear": {
+      "status": "unavailable",
+      "reason": "no bundle at /nonexistent/tfidf_word12; run the matching trainer"
+    },
+    "tfidf word(1,3)+linear": {
+      "status": "unavailable",
+      "reason": "no bundle at /nonexistent/tfidf_word13; run the matching trainer"
+    },
+    "tfidf char(3,5)+linear": {
+      "status": "unavailable",
+      "reason": "no bundle at /nonexistent/tfidf_char35; run the matching trainer"
+    },
+    "neural cat": {
+      "status": "unavailable",
+      "reason": "no bundle at /nonexistent/cat; run the matching trainer"
+    },
+    "neural cat+text(char-hash)": {
+      "status": "unavailable",
+      "reason": "no bundle at /nonexistent/cat_text; run the matching trainer"
+    },
+    "neural cat+wordvec(skip)": {
+      "status": "unavailable",
+      "reason": "no bundle at /nonexistent/cat_wordvec; run the matching trainer"
+    },
+    "neural cat+wordvec(cbow)": {
+      "status": "unavailable",
+      "reason": "no bundle at /nonexistent/cat_wordvec_cbow; run the matching trainer"
+    },
+    "neural cat+all": {
+      "status": "unavailable",
+      "reason": "no bundle at /nonexistent/cat_all; run the matching trainer"
+    },
+    "neural cat+all (deep)": {
+      "status": "unavailable",
+      "reason": "no bundle at /nonexistent/cat_all_deep; run the matching trainer"
+    },
+    "neural cat+all (wide)": {
+      "status": "unavailable",
+      "reason": "no bundle at /nonexistent/cat_all_wide; run the matching trainer"
+    }
+  }
+}

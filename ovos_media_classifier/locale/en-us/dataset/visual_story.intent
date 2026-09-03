@@ -1,0 +1,128 @@
+<lead_watch> {visual_story_title}
+[hey|ok|please] <lead_watch> {visual_story_title} [please|for me|right now|thanks]
+<lead_watch> the motion comic {visual_story_title}
+<lead_watch> a visual story
+[hey|ok|please] <lead_watch> a visual story [please|for me|right now|thanks]
+<lead_watch> the visual story {visual_story_title}
+[hey|ok|please] <lead_watch> the visual story {visual_story_title} [please|for me|right now|thanks]
+<lead_watch> a motion comic
+[hey|ok|please] <lead_watch> a motion comic [please|for me|right now|thanks]
+<lead_watch> an interactive story
+[hey|ok|please] <lead_watch> an interactive story [please|for me|right now|thanks]
+<lead_watch> an animated story
+[hey|ok|please] <lead_watch> an animated story [please|for me|right now|thanks]
+<lead_watch> the animated comic {visual_story_title}
+[hey|ok|please] <lead_watch> the animated comic {visual_story_title} [please|for me|right now|thanks]
+<lead_watch> a digital comic story
+[hey|ok|please] <lead_watch> a digital comic story [please|for me|right now|thanks]
+<lead_watch> the {visual_story_title} motion comic
+[hey|ok|please] <lead_watch> the {visual_story_title} motion comic [please|for me|right now|thanks]
+<lead_watch> some visual stories
+[hey|ok|please] <lead_watch> some visual stories [please|for me|right now|thanks]
+<lead_watch> an illustrated story
+[hey|ok|please] <lead_watch> an illustrated story [please|for me|right now|thanks]
+<lead_watch> the illustrated story {visual_story_title}
+[hey|ok|please] <lead_watch> the illustrated story {visual_story_title} [please|for me|right now|thanks]
+<lead_watch> a webtoon
+[hey|ok|please] <lead_watch> a webtoon [please|for me|right now|thanks]
+<lead_watch> the webtoon {visual_story_title}
+[hey|ok|please] <lead_watch> the webtoon {visual_story_title} [please|for me|right now|thanks]
+<lead_watch> a story slideshow
+[hey|ok|please] <lead_watch> a story slideshow [please|for me|right now|thanks]
+<lead_watch> an animated comic
+<lead_watch> a narrated picture story
+[hey|ok|please] <lead_watch> a narrated picture story [please|for me|right now|thanks]
+<lead_watch> a picture story
+[hey|ok|please] <lead_watch> a picture story [please|for me|right now|thanks]
+<lead_watch> the digital story {visual_story_title}
+[hey|ok|please] <lead_watch> the digital story {visual_story_title} [please|for me|right now|thanks]
+<lead_watch> another visual story
+[hey|ok|please] <lead_watch> another visual story [please|for me|right now|thanks]
+<lead_watch> a kids visual story
+[hey|ok|please] <lead_watch> a kids visual story [please|for me|right now|thanks]
+<lead_watch> a motion comic episode
+[hey|ok|please] <lead_watch> a motion comic episode [please|for me|right now|thanks]
+<lead_watch> do you have any visual stories
+[hey|ok|please] <lead_watch> do you have any visual stories [please|for me|right now|thanks]
+<lead_watch> got the motion comic {visual_story_title}
+[hey|ok|please] <lead_watch> got the motion comic {visual_story_title} [please|for me|right now|thanks]
+<lead_watch> a visual story for bedtime
+[hey|ok|please] <lead_watch> a visual story for bedtime [please|for me|right now|thanks]
+<lead_watch> an animated story to watch
+[hey|ok|please] <lead_watch> an animated story to watch [please|for me|right now|thanks]
+<lead_watch> do you have the webtoon {visual_story_title}
+[hey|ok|please] <lead_watch> do you have the webtoon {visual_story_title} [please|for me|right now|thanks]
+<lead_watch> got any visual stories
+[hey|ok|please] <lead_watch> got any visual stories [please|for me|right now|thanks]
+<lead_watch> a visual story to wind down with
+[hey|ok|please] <lead_watch> a visual story to wind down with [please|for me|right now|thanks]
+{visual_story_title}, please
+the motion comic {visual_story_title}, please
+a visual story, thanks
+{visual_story_title} — put it on
+the webtoon {visual_story_title} — let's read it
+put on the motion comic {visual_story_title}, would you?
+i could go for a visual story
+i'm after a good motion comic
+i need a visual story for bedtime
+what about the webtoon {visual_story_title}
+maybe an animated story
+we should watch {visual_story_title}
+something like {visual_story_title}
+any visual stories around?
+the {visual_story_title} motion comic, please
+a visual story to wind down with
+an illustrated story because i'm tired of reading
+<lead_read> a webcomic based on {book_title}
+<lead_read> a visual story based on the game {game_title}
+<lead_read> a visual story based on the movie {movie_title}
+<lead_read> a webtoon based on the anime {anime_title}
+<lead_read> a visual novel based on {book_title}
+<lead_read> a motion comic adaptation of {movie_title}
+um can you put on {visual_story_title}
+read {visual_story_title}, actually no the one based on {anime_title}
+hey so pull up {visual_story_title}
+you know what throw on {visual_story_title}
+wanna read {visual_story_title}
+lemme read {visual_story_title}
+gimme a visual novel
+i could really go for a visual novel
+i never finished {visual_story_title}
+is there a visual novel based on {anime_title}
+got any visual novels?
+maybe <lead_watch> a comic book {visual_story_title} or something
+i wanna <lead_watch> a graphic novel {visual_story_title}
+hey <lead_watch> got any comics i haven't seen
+so <lead_watch> that manga {visual_story_title} everyone's talking about
+lemme <lead_watch> a motion comic {visual_story_title}
+i'm in the mood for a comic book {visual_story_title}
+how about we <lead_watch> a visual story {visual_story_title}
+<lead_watch> um the animated graphic novel {visual_story_title}
+hey <lead_read> me a comic {visual_story_title} please
+i wanna <lead_read> a manga {visual_story_title}
+gimme a visual story to watch {visual_story_title}
+let's <lead_watch> the {visual_story_title} comic book adaptation
+so i'm thinking <lead_watch> a motion comic maybe {visual_story_title}
+<lead_read> that comic {visual_story_title} i keep hearing about
+hey got any graphic novels like {visual_story_title}
+um <lead_watch> a comic {visual_story_title} or something similar
+wanna <lead_watch> an animated visual story {visual_story_title}
+so like <lead_watch> the {visual_story_title} graphic novel or whatever
+please <lead_watch> a manga adaptation of {visual_story_title}
+gimme a comic book {visual_story_title} to check out
+[hey|ok] <lead_read> a graphic novel [please|for me]
+how about we check out {visual_story_title} [tonight]
+<lead_read> some manga [for me|tonight]
+[ok|so] we should watch a comic book adaptation [or something]
+feels like a comic book kind of night
+got any animated comic books to watch [with me]
+[um] i'm trying to find a visual story like {visual_story_title}
+<lead_watch> {movie_title} as an animated comic
+[hey] lemme see some graphic novels [please]
+i'm looking for an illustrated story [or] a comic [to read|to watch]
+<lead_watch> a motion comic version of {visual_story_title}
+let's watch something like a graphic novel come to life
+maybe {visual_story_title} is a graphic novel i'd like
+<lead_watch> illustrated stories [or animated comics]
+<lead_read> comics [or] graphic novels [please]
+i want something like a comic but with motion [please]

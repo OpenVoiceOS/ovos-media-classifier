@@ -1,0 +1,106 @@
+<lead_play_audio> the radio drama {radio_drama_title}
+[hey|ok|please] <lead_play_audio> the radio drama {radio_drama_title} [please|for me|right now|thanks]
+<lead_play_audio> {radio_drama_title}
+[hey|ok|please] <lead_play_audio> {radio_drama_title} [please|for me|right now|thanks]
+<lead_play_audio> an audio drama
+[hey|ok|please] <lead_play_audio> an audio drama [please|for me|right now|thanks]
+<lead_play_audio> a radio play
+[hey|ok|please] <lead_play_audio> a radio play [please|for me|right now|thanks]
+<lead_play_audio> some radio theatre
+[hey|ok|please] <lead_play_audio> some radio theatre [please|for me|right now|thanks]
+<lead_play_audio> the audio drama {radio_drama_title}
+[hey|ok|please] <lead_play_audio> the audio drama {radio_drama_title} [please|for me|right now|thanks]
+<lead_play_audio> a radio drama
+[hey|ok|please] <lead_play_audio> a radio drama [please|for me|right now|thanks]
+<lead_play_audio> an old time radio show
+[hey|ok|please] <lead_play_audio> an old time radio show [please|for me|right now|thanks]
+<lead_play_audio> the radio play {radio_drama_title}
+[hey|ok|please] <lead_play_audio> the radio play {radio_drama_title} [please|for me|right now|thanks]
+<lead_play_audio> a {radio_genre} radio drama
+[hey|ok|please] <lead_play_audio> a {radio_genre} radio drama [please|for me|right now|thanks]
+<lead_play_audio> some old time radio
+[hey|ok|please] <lead_play_audio> some old time radio [please|for me|right now|thanks]
+<lead_play_audio> do you have any radio dramas
+[hey|ok|please] <lead_play_audio> do you have any radio dramas [please|for me|right now|thanks]
+<lead_play_audio> got a good audio drama
+[hey|ok|please] <lead_play_audio> got a good audio drama [please|for me|right now|thanks]
+<lead_play_audio> an audio drama for the evening
+[hey|ok|please] <lead_play_audio> an audio drama for the evening [please|for me|right now|thanks]
+<lead_play_audio> a radio play to wind down to
+[hey|ok|please] <lead_play_audio> a radio play to wind down to [please|for me|right now|thanks]
+{radio_drama_title}, please
+the radio drama {radio_drama_title}, please
+{radio_drama_title} — put it on
+that radio play {radio_drama_title} — start it
+put on the audio drama {radio_drama_title}, would you?
+i'm in the mood, something like an audio drama
+in the mood for a radio play
+i could go for an old time radio show
+i'm after a good radio drama
+i need an audio drama for the evening
+what about the radio drama {radio_drama_title}
+maybe a {radio_genre} radio drama
+we should listen to {radio_drama_title}
+something like {radio_drama_title}
+any radio dramas around?
+what radio plays do you have
+is there an audio drama called {radio_drama_title}
+a {radio_genre} radio drama to wind down with
+an old time radio show because i'm nostalgic
+<lead_play_audio> a radio drama based on {book_title}
+<lead_play_audio> a radio play based on the novel {book_title}
+<lead_play_audio> a radio dramatization of {book_title}
+<lead_play_audio> a radio drama adaptation of {movie_title}
+<lead_play_audio> a radio play based on the comic {comic_title}
+<lead_play_audio> a radio drama written by {book_author}
+<lead_play_audio> an audio drama based on the game {game_title}
+<lead_play_audio> a radio play adaptation of {tv_show_title}
+um can you put on a radio drama
+play {radio_drama_title}, actually no a {radio_genre} one
+hey so put on {radio_drama_title}
+you know what throw on a radio play
+wanna listen to {radio_drama_title}
+lemme hear a radio drama
+gimme a {radio_genre} radio play
+i could really go for a radio drama
+is there a radio play of {book_title}
+got any radio dramas?
+<lead_play_audio> a radio drama about {book_title}
+hey, got any {radio_genre} audio dramas
+i'm in the mood for a radio play — surprise me
+so <lead_play_audio> that audio drama {radio_drama_title}
+lemme hear a radio theatre version of {movie_title}
+you know any good radio plays by {book_author}
+how about an audio drama based on {game_title}
+<lead_play_audio> the radio theatre adaptation of {tv_show_title}
+i wanna listen to a radio play, got any {radio_genre} ones
+find me a radio drama like {radio_drama_title}
+is there a radio theatre version of {comic_title}
+gimme a radio play based on {book_title} [or something similar]
+um, i feel like an audio drama right now
+let's hear a radio play — {radio_drama_title} maybe
+actually <lead_play_audio> a radio theatre thing {radio_genre}
+been looking for an audio play of {game_title}
+<lead_play_audio> something from the radio theatre collection
+what radio dramas you got with {book_author}
+sure, <lead_play_audio> a radio play, any {radio_genre}
+<lead_play_audio> an audio drama i haven't heard yet
+i'm in the mood for a radio play actually
+how about we listen to a radio drama [or something]
+<lead_play_audio> that radio theatre piece we started
+lemme hear an audio drama by {book_author}
+got any good radio dramas in {radio_genre}
+feels like an audio play kinda night {radio_genre} maybe
+so i was thinking <lead_play_audio> a radio drama
+what do you have for radio theatre [right now]
+let's put on an audio drama from {radio_drama_title}
+i wanna check out a radio play based on {tv_show_title}
+<lead_play_audio> an audio drama [please] i think
+hey <lead_play_audio> a {radio_genre} audio play [ok]
+how's about some radio theatre {radio_genre} or something
+i'm in the mood for a radio drama like {radio_drama_title}
+we should listen to an audio play [tonight]
+um <lead_play_audio> an audio drama by {book_author} maybe
+been wanting to hear a radio drama of {book_title}
+let's find a radio theatre show [to unwind]
+how about an audio drama in {radio_genre} [for a change]

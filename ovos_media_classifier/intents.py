@@ -1,11 +1,20 @@
-"""OCP domain and intent enumerations.
+"""OCP domain and entity-label enumerations.
 
-These enums capture every label class used across all classifier backends.
+These enums capture the label classes used across all classifier backends.
 
-Hierarchy
----------
+The classifier models media along the **real axes** only:
+
+  domain (``OCPDomain``)  ×  type (``mediavocab.MediaType``)  +  genres
+
+There is *no* separate per-media-type ``play intent`` enum: a play request is a
+single domain (``OCP_PLAY``), the *what* is a ``mediavocab.MediaType``, and the
+distinctions that are not types (anime / cartoon / asmr / adult …) are carried
+as ``mediavocab`` **genre tags**.  Raw detection labels (``.voc`` / model-head
+strings such as ``"music"``, ``"adult"``, ``"asmr"``) resolve straight to
+``(MediaType, genres)`` via the ``LABEL_TO_*`` maps below — no intent layer.
+
 OCPDomain
-  ocp_play    → media playback request  (use OCPPlayIntent to further classify)
+  ocp_play    → media playback request
   ocp_control → player control request  (use OCPControlIntent to further classify)
   not_ocp     → unrelated query
 
@@ -15,24 +24,18 @@ MediaType
   backward-compatible copy for non-OCP OVOS components; integer values for
   shared types are identical, so they interoperate via int comparison.
 
-OCPPlayIntent
-  One value per MediaType that OCP can handle.  The string values match the
-  training labels used in ovos-m2v-pipeline and in the padatious samples.
-
 OCPControlIntent
   One value per control action supported by the OCP pipeline.
   The string values match the padatious intent names (without the ".intent" suffix).
 """
 from enum import Enum
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 # The canonical media taxonomy is owned by ``mediavocab`` (a str-Enum), not by
 # this package.  We re-export it under the historical name ``MediaType`` so the
 # public API stays ``(MediaType, confidence)`` while *enforcing* the shared
-# vocabulary.  The classifier keeps a richer internal *intent* label space
-# (``OCPPlayIntent`` / ``OCPEntityLabel``) used to train models; the public
-# output is mapped onto ``mediavocab.MediaType`` + genre tags at the boundary
-# (see ``PLAY_INTENT_TO_MEDIA_TYPE`` / ``PLAY_INTENT_TO_GENRES``).
+# vocabulary.  Raw detection labels map straight onto ``mediavocab.MediaType`` +
+# genre tags at the boundary (see ``LABEL_TO_MEDIA_TYPE`` / ``LABEL_TO_GENRES``).
 from mediavocab import MediaType
 from mediavocab.taxonomy.genre import KNOWN_GENRES
 
@@ -42,39 +45,6 @@ class OCPDomain(str, Enum):
     OCP_PLAY = "ocp_play"
     OCP_CONTROL = "ocp_control"
     NOT_OCP = "not_ocp"
-
-
-class OCPPlayIntent(str, Enum):
-    """Fine-grained media-type intent labels for the ocp_play domain."""
-    MUSIC            = "music"
-    PODCAST          = "podcast"
-    RADIO            = "radio"
-    AUDIOBOOK        = "audiobook"
-    NEWS             = "news"
-    MOVIE            = "movie"
-    TV               = "tv"           # live IPTV / cable TV stream
-    TV_SHOW          = "tv_show"      # episodic TV series (Breaking Bad, etc.)
-    VIDEO            = "video"
-    VIDEO_EPISODES   = "video_episodes"
-    AUDIO            = "audio"
-    GAME             = "game"
-    ANIME            = "anime"
-    CARTOON          = "cartoon"
-    DOCUMENTARY      = "documentary"
-    SHORT_FILM       = "short_film"
-    SILENT_MOVIE     = "silent_movie"
-    BW_MOVIE         = "bw_movie"
-    RADIO_THEATRE    = "radio_theatre"
-    VISUAL_STORY     = "visual_story"
-    ASMR             = "asmr"
-    AUDIO_DESCRIPTION = "audio_description"
-    MUSIC_VIDEO      = "music_video"      # official music video
-    TRAILER          = "trailer"
-    BEHIND_THE_SCENES = "behind_the_scenes"
-    ADULT            = "adult"
-    ADULT_AUDIO      = "adult_audio"
-    HENTAI           = "hentai"
-    GENERIC          = "generic"
 
 
 class OCPControlIntent(str, Enum):
@@ -105,8 +75,9 @@ class OCPEntityLabel(str, Enum):
          and ``ovos.common_play.announce`` bus messages
       3. The pipeline NER (in ocp_pipeline) uses to tag utterances for entity extraction
 
-    The mapping from entity labels to OCPPlayIntent (and thus MediaType) is
-    defined in ``NER_LABEL_TO_PLAY_INTENT`` below.
+    The mapping from entity labels to ``mediavocab.MediaType`` (and any genre
+    tags) is defined in ``NER_LABEL_TO_MEDIA_TYPE`` / ``NER_LABEL_TO_GENRES``
+    below.
 
     Runtime population model
     ------------------------
@@ -183,6 +154,15 @@ class OCPEntityLabel(str, Enum):
     AUDIOBOOK_TITLE  = "audiobook_title"
     AUDIOBOOK_AUTHOR = "audiobook_author"
     AUDIOBOOK_NARRATOR = "audiobook_narrator"
+    BOOK_TITLE       = "book_title"
+    BOOK_AUTHOR      = "book_author"
+    BOOK_GENRE       = "book_genre"
+    COMIC_TITLE      = "comic_title"
+    COMIC_GENRE      = "comic_genre"
+    SOUND_NAME       = "sound_name"
+    AMBIENT_SOUND    = "ambient_sound"
+    PLAYLIST_MOOD    = "playlist_mood"
+    PLAYLIST_ACTIVITY = "playlist_activity"
     NEWS_CATEGORY    = "news_category"
     GAME_TITLE       = "game_title"
     GAME_GENRE       = "game_genre"
@@ -195,12 +175,18 @@ class OCPEntityLabel(str, Enum):
     RADIO_GENRE      = "radio_genre"
 
     # ---- Media-type keyword labels (generic vocabulary) ----
-    # These mirror the OCPPlayIntent values and are used when no specific
-    # entity is found but a keyword strongly signals the media type.
+    # Raw media-type cue labels used when no specific entity is found but a
+    # keyword strongly signals the media type.
     MUSIC_KEYWORD              = "music"
     PODCAST_KEYWORD            = "podcast"
     RADIO_KEYWORD              = "radio"
     AUDIOBOOK_KEYWORD          = "audiobook"
+    BOOK_KEYWORD               = "book"
+    PLAYLIST_KEYWORD           = "playlist"
+    SOUND_EFFECT_KEYWORD       = "sound_effect"
+    INTERACTIVE_FICTION_KEYWORD = "interactive_fiction"
+    AMBIENT_KEYWORD            = "ambient"
+    COMIC_KEYWORD              = "comic"
     NEWS_KEYWORD               = "news"
     MOVIE_KEYWORD              = "movie"
     TV_KEYWORD                 = "tv"
@@ -221,210 +207,262 @@ class OCPEntityLabel(str, Enum):
     AUDIO_DESCRIPTION_KEYWORD  = "audio_description"
     MUSIC_VIDEO_KEYWORD        = "music_video"
     TRAILER_KEYWORD            = "trailer"
+    TEASER_KEYWORD             = "teaser"
     BEHIND_THE_SCENES_KEYWORD  = "behind_the_scenes"
+    MAKING_OF_KEYWORD          = "making_of"
+    BLOOPERS_KEYWORD           = "bloopers"
+    DELETED_SCENES_KEYWORD     = "deleted_scenes"
+    FEATURETTE_KEYWORD         = "featurette"
+    INTERVIEW_KEYWORD          = "interview"
+    CLIP_KEYWORD               = "clip"
     ADULT_KEYWORD              = "adult"
     ADULT_AUDIO_KEYWORD        = "adult_audio"
     HENTAI_KEYWORD             = "hentai"
 
 
 # ---------------------------------------------------------------------------
-# Canonical label → MediaType mapping
-# Shared by all backends — keeps training labels and runtime values in sync.
+# Raw detection label → (MediaType, genres)
+#
+# These are the raw label strings emitted by the ``.voc`` keyword backend, the
+# trained model heads, and the training datasets (``"music"``, ``"movie"``,
+# ``"adult"``, ``"asmr"``, ``"anime"`` …).  They resolve **directly** to a
+# canonical ``mediavocab.MediaType`` plus any ``mediavocab`` genre tags — there
+# is no per-media-type intent layer in between.
+#
+# Several labels collapse onto one ``MediaType`` (the taxonomy deliberately
+# models distinctions like anime / cartoon / silent / documentary as *genre* or
+# *content-form*, not as media types).  The nuance that the type map drops is
+# carried by ``LABEL_TO_GENRES`` below so it survives for content filtering /
+# ranking — most importantly the ``adult`` tag the content filter blocks on.
 # ---------------------------------------------------------------------------
 
-# Fine-grained play intent → canonical ``mediavocab.MediaType``.  Several
-# intents collapse onto one mediavocab type (the taxonomy deliberately models
-# distinctions like anime / cartoon / silent / documentary as *genre* or
-# *content-form*, not as media types) — the lost nuance is carried by
-# ``PLAY_INTENT_TO_GENRES`` below so it survives for content filtering / ranking.
-PLAY_INTENT_TO_MEDIA_TYPE: Dict[OCPPlayIntent, MediaType] = {
-    OCPPlayIntent.MUSIC:              MediaType.MUSIC,
-    OCPPlayIntent.PODCAST:            MediaType.PODCAST,
-    OCPPlayIntent.RADIO:              MediaType.RADIO,
-    OCPPlayIntent.AUDIOBOOK:          MediaType.AUDIOBOOK,
-    OCPPlayIntent.NEWS:               MediaType.RADIO,
-    OCPPlayIntent.MOVIE:              MediaType.MOVIE,
-    OCPPlayIntent.TV:                 MediaType.TV,
-    OCPPlayIntent.TV_SHOW:            MediaType.EPISODIC_SERIES,
-    OCPPlayIntent.VIDEO:              MediaType.MOVIE,
-    OCPPlayIntent.VIDEO_EPISODES:     MediaType.EPISODIC_SERIES,
-    OCPPlayIntent.AUDIO:              MediaType.MUSIC,
-    OCPPlayIntent.GAME:               MediaType.GAME,
-    OCPPlayIntent.ANIME:             MediaType.EPISODIC_SERIES,
-    OCPPlayIntent.CARTOON:            MediaType.EPISODIC_SERIES,
-    OCPPlayIntent.DOCUMENTARY:        MediaType.MOVIE,
-    OCPPlayIntent.SHORT_FILM:         MediaType.SHORT_FILM,
-    OCPPlayIntent.SILENT_MOVIE:       MediaType.MOVIE,
-    OCPPlayIntent.BW_MOVIE:           MediaType.MOVIE,
-    OCPPlayIntent.RADIO_THEATRE:      MediaType.AUDIO_DRAMA,
-    OCPPlayIntent.VISUAL_STORY:       MediaType.COMIC,
-    OCPPlayIntent.ASMR:               MediaType.PROCEDURAL_AMBIENT,
-    OCPPlayIntent.AUDIO_DESCRIPTION:  MediaType.MOVIE,
-    OCPPlayIntent.MUSIC_VIDEO:        MediaType.MUSIC_VIDEO,
-    OCPPlayIntent.TRAILER:            MediaType.MOVIE,
-    OCPPlayIntent.BEHIND_THE_SCENES:  MediaType.MOVIE,
-    OCPPlayIntent.ADULT:              MediaType.MOVIE,
-    OCPPlayIntent.ADULT_AUDIO:        MediaType.MUSIC,
-    OCPPlayIntent.HENTAI:             MediaType.EPISODIC_SERIES,
-    OCPPlayIntent.GENERIC:            MediaType.GENERIC,
-}
-
-# Fine-grained play intent → genre tags (all members of ``mediavocab`` KNOWN_GENRES).
-# These preserve the distinctions that collapse in the type map and, crucially,
-# carry the ``adult`` signal the content filter blocks on by default.
-_RAW_PLAY_INTENT_GENRES: Dict[OCPPlayIntent, List[str]] = {
-    OCPPlayIntent.ANIME:        ["anime"],
-    OCPPlayIntent.CARTOON:      ["animation"],
-    OCPPlayIntent.ASMR:         ["asmr"],
-    OCPPlayIntent.ADULT:        ["adult"],
-    OCPPlayIntent.ADULT_AUDIO:  ["adult"],
-    OCPPlayIntent.HENTAI:       ["anime", "adult"],
-}
-# enforce taxonomy: only emit genres mediavocab actually knows
-PLAY_INTENT_TO_GENRES: Dict[OCPPlayIntent, List[str]] = {
-    intent: [g for g in genres if g in KNOWN_GENRES]
-    for intent, genres in _RAW_PLAY_INTENT_GENRES.items()
-}
-
-# Canonical reverse (one representative intent per mediavocab type), used by
-# training/exploration tooling.  Explicit to avoid arbitrary last-wins collapse.
-MEDIA_TYPE_TO_PLAY_INTENT: Dict[MediaType, OCPPlayIntent] = {
-    MediaType.MUSIC:              OCPPlayIntent.MUSIC,
-    MediaType.PODCAST:            OCPPlayIntent.PODCAST,
-    MediaType.RADIO:              OCPPlayIntent.RADIO,
-    MediaType.AUDIOBOOK:          OCPPlayIntent.AUDIOBOOK,
-    MediaType.MOVIE:              OCPPlayIntent.MOVIE,
-    MediaType.TV:                 OCPPlayIntent.TV,
-    MediaType.EPISODIC_SERIES:    OCPPlayIntent.TV_SHOW,
-    MediaType.GAME:               OCPPlayIntent.GAME,
-    MediaType.SHORT_FILM:         OCPPlayIntent.SHORT_FILM,
-    MediaType.AUDIO_DRAMA:        OCPPlayIntent.RADIO_THEATRE,
-    MediaType.COMIC:              OCPPlayIntent.VISUAL_STORY,
-    MediaType.PROCEDURAL_AMBIENT: OCPPlayIntent.ASMR,
-    MediaType.MUSIC_VIDEO:        OCPPlayIntent.MUSIC_VIDEO,
-    MediaType.GENERIC:            OCPPlayIntent.GENERIC,
-}
-
-# String form of intent labels → MediaType (used by backends that emit raw strings)
 LABEL_TO_MEDIA_TYPE: Dict[str, MediaType] = {
-    intent.value: mt for intent, mt in PLAY_INTENT_TO_MEDIA_TYPE.items()
+    "music":              MediaType.MUSIC,
+    "podcast":            MediaType.PODCAST,
+    "radio":              MediaType.RADIO,
+    "audiobook":          MediaType.AUDIOBOOK,
+    "book":               MediaType.BOOK,
+    "playlist":           MediaType.PLAYLIST,
+    "sound_effect":       MediaType.SOUND_EFFECT,
+    "interactive_fiction": MediaType.INTERACTIVE_FICTION,
+    "ambient":            MediaType.PROCEDURAL_AMBIENT,
+    "comic":              MediaType.COMIC,
+    "news":               MediaType.RADIO,
+    "movie":              MediaType.MOVIE,
+    "tv":                 MediaType.TV,
+    "tv_show":            MediaType.EPISODIC_SERIES,
+    "video":              MediaType.MOVIE,
+    "video_episodes":     MediaType.EPISODIC_SERIES,
+    "audio":              MediaType.MUSIC,
+    "game":               MediaType.GAME,
+    "anime":              MediaType.EPISODIC_SERIES,
+    "cartoon":            MediaType.EPISODIC_SERIES,
+    "documentary":        MediaType.MOVIE,
+    "short_film":         MediaType.SHORT_FILM,
+    "silent_movie":       MediaType.MOVIE,
+    "bw_movie":           MediaType.MOVIE,
+    "radio_theatre":      MediaType.AUDIO_DRAMA,
+    "visual_story":       MediaType.COMIC,
+    "asmr":               MediaType.PROCEDURAL_AMBIENT,
+    "audio_description":  MediaType.MOVIE,
+    "music_video":        MediaType.MUSIC_VIDEO,
+    # Supplementary / promotional video content — the parent media_type stays
+    # MOVIE; the "I want the trailer / BTS, not the full title" distinction is
+    # carried on the orthogonal ContentForm axis (each backend matches it
+    # directly — the keyword backend from its ``.voc`` evidence, the trained
+    # backends from their ``content_form`` head).
+    "trailer":            MediaType.MOVIE,
+    "teaser":             MediaType.MOVIE,
+    "behind_the_scenes":  MediaType.MOVIE,
+    "making_of":          MediaType.MOVIE,
+    "bloopers":           MediaType.MOVIE,
+    "deleted_scenes":     MediaType.MOVIE,
+    "featurette":         MediaType.MOVIE,
+    "interview":          MediaType.MOVIE,
+    "clip":               MediaType.MOVIE,
+    "adult":              MediaType.MOVIE,
+    "adult_audio":        MediaType.MUSIC,
+    "hentai":             MediaType.EPISODIC_SERIES,
+    "generic":            MediaType.GENERIC,
 }
 
-# String form of intent labels → genre tags (raw model output → genres)
+# Raw label → genre tags.  Only labels that carry a genre signal appear here;
+# everything else implies no genre.  Filtered to ``mediavocab`` KNOWN_GENRES so
+# we never emit a tag the taxonomy does not recognise.
+_RAW_LABEL_GENRES: Dict[str, List[str]] = {
+    "anime":        ["anime"],
+    "cartoon":      ["animation"],
+    "asmr":         ["asmr"],
+    "adult":        ["adult"],
+    "adult_audio":  ["adult"],
+    "hentai":       ["anime", "adult"],
+}
 LABEL_TO_GENRES: Dict[str, List[str]] = {
-    intent.value: genres for intent, genres in PLAY_INTENT_TO_GENRES.items()
+    label: [g for g in genres if g in KNOWN_GENRES]
+    for label, genres in _RAW_LABEL_GENRES.items()
 }
 
 
 def genres_for_label(label: str) -> List[str]:
-    """Return the mediavocab genre tags implied by a raw play-intent label."""
+    """Return the mediavocab genre tags implied by a raw detection label."""
     return list(LABEL_TO_GENRES.get(label, []))
 
+
 # ---------------------------------------------------------------------------
-# NER entity label → OCPPlayIntent mapping
-# Covers every OCPEntityLabel value so AhocorasickMediaClassifier can map
-# any entity hit to a media type.  Keyed by the string value of the label
-# (e.g. "artist_name") so callers can use raw NER output directly.
+# NER entity label → (MediaType, genres)
+#
+# Covers every ``OCPEntityLabel`` value so AhocorasickMediaClassifier can map
+# any entity hit straight to a media type (and genres where the entity carries
+# one — e.g. an ``anime_title`` is an EPISODIC_SERIES tagged ``anime``, a
+# ``pornstar`` is a MOVIE tagged ``adult``).  Keyed by the string value of the
+# label (e.g. "artist_name") so callers can use raw NER output directly.
 # ---------------------------------------------------------------------------
 
-NER_LABEL_TO_PLAY_INTENT: Dict[str, OCPPlayIntent] = {
+NER_LABEL_TO_MEDIA_TYPE: Dict[str, MediaType] = {
     # ---- Streaming service labels ----
-    OCPEntityLabel.MUSIC_STREAMING_SERVICE:     OCPPlayIntent.MUSIC,
-    OCPEntityLabel.MOVIE_STREAMING_SERVICE:     OCPPlayIntent.MOVIE,
-    OCPEntityLabel.SHORTS_STREAMING_SERVICE:    OCPPlayIntent.SHORT_FILM,
-    OCPEntityLabel.PODCAST_STREAMING_SERVICE:   OCPPlayIntent.PODCAST,
-    OCPEntityLabel.AUDIOBOOK_STREAMING_SERVICE: OCPPlayIntent.AUDIOBOOK,
-    OCPEntityLabel.NEWS_PROVIDER:               OCPPlayIntent.NEWS,
-    OCPEntityLabel.TV_STREAMING_SERVICE:        OCPPlayIntent.TV,
-    OCPEntityLabel.RADIO_STREAMING_SERVICE:     OCPPlayIntent.RADIO,
-    OCPEntityLabel.ADULT_STREAMING_SERVICE:     OCPPlayIntent.ADULT,
+    OCPEntityLabel.MUSIC_STREAMING_SERVICE.value:     MediaType.MUSIC,
+    OCPEntityLabel.MOVIE_STREAMING_SERVICE.value:     MediaType.MOVIE,
+    OCPEntityLabel.SHORTS_STREAMING_SERVICE.value:    MediaType.SHORT_FILM,
+    OCPEntityLabel.PODCAST_STREAMING_SERVICE.value:   MediaType.PODCAST,
+    OCPEntityLabel.AUDIOBOOK_STREAMING_SERVICE.value: MediaType.AUDIOBOOK,
+    OCPEntityLabel.NEWS_PROVIDER.value:               MediaType.RADIO,
+    OCPEntityLabel.TV_STREAMING_SERVICE.value:        MediaType.TV,
+    OCPEntityLabel.RADIO_STREAMING_SERVICE.value:     MediaType.RADIO,
+    OCPEntityLabel.ADULT_STREAMING_SERVICE.value:     MediaType.MOVIE,
 
     # ---- Music entity labels ----
-    OCPEntityLabel.ARTIST_NAME:   OCPPlayIntent.MUSIC,
-    OCPEntityLabel.TRACK_NAME:    OCPPlayIntent.MUSIC,
-    OCPEntityLabel.ALBUM_NAME:    OCPPlayIntent.MUSIC,
-    OCPEntityLabel.ALBUM_TYPE:    OCPPlayIntent.MUSIC,
-    OCPEntityLabel.MUSIC_GENRE:   OCPPlayIntent.MUSIC,
-    OCPEntityLabel.RECORD_LABEL:  OCPPlayIntent.MUSIC,
-    OCPEntityLabel.RADIO_STATION: OCPPlayIntent.RADIO,
+    OCPEntityLabel.ARTIST_NAME.value:   MediaType.MUSIC,
+    OCPEntityLabel.TRACK_NAME.value:    MediaType.MUSIC,
+    OCPEntityLabel.ALBUM_NAME.value:    MediaType.MUSIC,
+    OCPEntityLabel.ALBUM_TYPE.value:    MediaType.MUSIC,
+    OCPEntityLabel.MUSIC_GENRE.value:   MediaType.MUSIC,
+    OCPEntityLabel.RECORD_LABEL.value:  MediaType.MUSIC,
 
     # ---- Video entity labels ----
-    OCPEntityLabel.MOVIE_TITLE:       OCPPlayIntent.MOVIE,
-    OCPEntityLabel.MOVIE_ACTOR:       OCPPlayIntent.MOVIE,
-    OCPEntityLabel.MOVIE_DIRECTOR:    OCPPlayIntent.MOVIE,
-    OCPEntityLabel.MOVIE_PRODUCER:    OCPPlayIntent.MOVIE,
-    OCPEntityLabel.MOVIE_WRITER:      OCPPlayIntent.MOVIE,
-    OCPEntityLabel.MOVIE_COMPOSER:    OCPPlayIntent.MOVIE,
-    OCPEntityLabel.MOVIE_STUDIO:      OCPPlayIntent.MOVIE,
-    OCPEntityLabel.VIDEO_GENRE:       OCPPlayIntent.VIDEO,
-    OCPEntityLabel.TV_SHOW_TITLE:     OCPPlayIntent.TV_SHOW,
-    OCPEntityLabel.ANIME_TITLE:       OCPPlayIntent.ANIME,
-    OCPEntityLabel.CARTOON_TITLE:     OCPPlayIntent.CARTOON,
-    OCPEntityLabel.DOCUMENTARY_TITLE: OCPPlayIntent.DOCUMENTARY,
-    OCPEntityLabel.TRAILER_TITLE:     OCPPlayIntent.TRAILER,
-    OCPEntityLabel.BTS_TITLE:         OCPPlayIntent.BEHIND_THE_SCENES,
-    OCPEntityLabel.MUSIC_VIDEO_TITLE: OCPPlayIntent.MUSIC_VIDEO,
-    OCPEntityLabel.VISUAL_STORY_TITLE: OCPPlayIntent.VISUAL_STORY,
-    OCPEntityLabel.SILENT_MOVIE_TITLE: OCPPlayIntent.SILENT_MOVIE,
-    OCPEntityLabel.BW_MOVIE_TITLE:     OCPPlayIntent.BW_MOVIE,
-    OCPEntityLabel.HENTAI_TITLE:       OCPPlayIntent.HENTAI,
-    OCPEntityLabel.RADIO_DRAMA_TITLE:  OCPPlayIntent.RADIO_THEATRE,
-    OCPEntityLabel.ADULT_TITLE:        OCPPlayIntent.ADULT,
-    OCPEntityLabel.PORNSTAR:           OCPPlayIntent.ADULT,
-    OCPEntityLabel.PORN_GENRE:          OCPPlayIntent.ADULT,
+    OCPEntityLabel.MOVIE_TITLE.value:        MediaType.MOVIE,
+    OCPEntityLabel.MOVIE_ACTOR.value:        MediaType.MOVIE,
+    OCPEntityLabel.MOVIE_DIRECTOR.value:     MediaType.MOVIE,
+    OCPEntityLabel.MOVIE_PRODUCER.value:     MediaType.MOVIE,
+    OCPEntityLabel.MOVIE_WRITER.value:       MediaType.MOVIE,
+    OCPEntityLabel.MOVIE_COMPOSER.value:     MediaType.MOVIE,
+    OCPEntityLabel.MOVIE_STUDIO.value:       MediaType.MOVIE,
+    OCPEntityLabel.VIDEO_GENRE.value:        MediaType.MOVIE,
+    OCPEntityLabel.TV_SHOW_TITLE.value:      MediaType.EPISODIC_SERIES,
+    OCPEntityLabel.ANIME_TITLE.value:        MediaType.EPISODIC_SERIES,
+    OCPEntityLabel.CARTOON_TITLE.value:      MediaType.EPISODIC_SERIES,
+    OCPEntityLabel.DOCUMENTARY_TITLE.value:  MediaType.MOVIE,
+    OCPEntityLabel.TRAILER_TITLE.value:      MediaType.MOVIE,
+    OCPEntityLabel.BTS_TITLE.value:          MediaType.MOVIE,
+    OCPEntityLabel.MUSIC_VIDEO_TITLE.value:  MediaType.MUSIC_VIDEO,
+    OCPEntityLabel.VISUAL_STORY_TITLE.value: MediaType.COMIC,
+    OCPEntityLabel.SILENT_MOVIE_TITLE.value: MediaType.MOVIE,
+    OCPEntityLabel.BW_MOVIE_TITLE.value:     MediaType.MOVIE,
+    OCPEntityLabel.HENTAI_TITLE.value:       MediaType.EPISODIC_SERIES,
+    OCPEntityLabel.RADIO_DRAMA_TITLE.value:  MediaType.AUDIO_DRAMA,
+    OCPEntityLabel.ADULT_TITLE.value:        MediaType.MOVIE,
+    OCPEntityLabel.PORNSTAR.value:           MediaType.MOVIE,
+    OCPEntityLabel.PORN_GENRE.value:         MediaType.MOVIE,
 
     # ---- TV / live stream entity labels ----
-    OCPEntityLabel.TV_CHANNEL:      OCPPlayIntent.TV,
-    OCPEntityLabel.YOUTUBE_CHANNEL: OCPPlayIntent.VIDEO_EPISODES,
-    OCPEntityLabel.TV_GENRE:        OCPPlayIntent.TV_SHOW,
-    OCPEntityLabel.TV_NETWORK:      OCPPlayIntent.TV_SHOW,
+    OCPEntityLabel.TV_CHANNEL.value:      MediaType.TV,
+    OCPEntityLabel.YOUTUBE_CHANNEL.value: MediaType.EPISODIC_SERIES,
+    OCPEntityLabel.TV_GENRE.value:        MediaType.EPISODIC_SERIES,
+    OCPEntityLabel.TV_NETWORK.value:      MediaType.EPISODIC_SERIES,
 
     # ---- Other media entity labels ----
-    OCPEntityLabel.PODCAST_TITLE:    OCPPlayIntent.PODCAST,
-    OCPEntityLabel.PODCAST_HOST:     OCPPlayIntent.PODCAST,
-    OCPEntityLabel.PODCAST_EPISODE:  OCPPlayIntent.PODCAST,
-    OCPEntityLabel.PODCAST_GENRE:    OCPPlayIntent.PODCAST,
-    OCPEntityLabel.AUDIOBOOK_TITLE:  OCPPlayIntent.AUDIOBOOK,
-    OCPEntityLabel.AUDIOBOOK_AUTHOR: OCPPlayIntent.AUDIOBOOK,
-    OCPEntityLabel.AUDIOBOOK_NARRATOR: OCPPlayIntent.AUDIOBOOK,
-    OCPEntityLabel.NEWS_CATEGORY:    OCPPlayIntent.NEWS,
-    OCPEntityLabel.GAME_TITLE:       OCPPlayIntent.GAME,
-    OCPEntityLabel.GAME_GENRE:       OCPPlayIntent.GAME,
-    OCPEntityLabel.GAME_PLATFORM:    OCPPlayIntent.GAME,
-    OCPEntityLabel.ASMR_ARTIST:      OCPPlayIntent.ASMR,
-    OCPEntityLabel.ANIME_STUDIO:     OCPPlayIntent.ANIME,
+    OCPEntityLabel.PODCAST_TITLE.value:      MediaType.PODCAST,
+    OCPEntityLabel.PODCAST_HOST.value:       MediaType.PODCAST,
+    OCPEntityLabel.PODCAST_EPISODE.value:    MediaType.PODCAST,
+    OCPEntityLabel.PODCAST_GENRE.value:      MediaType.PODCAST,
+    OCPEntityLabel.AUDIOBOOK_TITLE.value:    MediaType.AUDIOBOOK,
+    OCPEntityLabel.AUDIOBOOK_AUTHOR.value:   MediaType.AUDIOBOOK,
+    OCPEntityLabel.AUDIOBOOK_NARRATOR.value: MediaType.AUDIOBOOK,
+    OCPEntityLabel.BOOK_TITLE.value:         MediaType.BOOK,
+    OCPEntityLabel.BOOK_AUTHOR.value:        MediaType.BOOK,
+    OCPEntityLabel.BOOK_GENRE.value:         MediaType.BOOK,
+    OCPEntityLabel.COMIC_TITLE.value:        MediaType.COMIC,
+    OCPEntityLabel.COMIC_GENRE.value:        MediaType.COMIC,
+    OCPEntityLabel.SOUND_NAME.value:         MediaType.SOUND_EFFECT,
+    OCPEntityLabel.AMBIENT_SOUND.value:      MediaType.PROCEDURAL_AMBIENT,
+    OCPEntityLabel.PLAYLIST_MOOD.value:      MediaType.PLAYLIST,
+    OCPEntityLabel.PLAYLIST_ACTIVITY.value:  MediaType.PLAYLIST,
+    OCPEntityLabel.NEWS_CATEGORY.value:      MediaType.RADIO,
+    OCPEntityLabel.GAME_TITLE.value:         MediaType.GAME,
+    OCPEntityLabel.GAME_GENRE.value:         MediaType.GAME,
+    OCPEntityLabel.GAME_PLATFORM.value:      MediaType.GAME,
+    OCPEntityLabel.ASMR_ARTIST.value:        MediaType.PROCEDURAL_AMBIENT,
+    OCPEntityLabel.ANIME_STUDIO.value:       MediaType.EPISODIC_SERIES,
 
     # ---- Radio entity labels ----
-    OCPEntityLabel.RADIO_STATION:    OCPPlayIntent.RADIO,
-    OCPEntityLabel.RADIO_GENRE:      OCPPlayIntent.RADIO,
+    OCPEntityLabel.RADIO_STATION.value:      MediaType.RADIO,
+    OCPEntityLabel.RADIO_GENRE.value:        MediaType.RADIO,
 
     # ---- Media-type keyword labels (generic vocabulary) ----
-    OCPEntityLabel.MUSIC_KEYWORD:              OCPPlayIntent.MUSIC,
-    OCPEntityLabel.PODCAST_KEYWORD:            OCPPlayIntent.PODCAST,
-    OCPEntityLabel.RADIO_KEYWORD:              OCPPlayIntent.RADIO,
-    OCPEntityLabel.AUDIOBOOK_KEYWORD:          OCPPlayIntent.AUDIOBOOK,
-    OCPEntityLabel.NEWS_KEYWORD:               OCPPlayIntent.NEWS,
-    OCPEntityLabel.MOVIE_KEYWORD:              OCPPlayIntent.MOVIE,
-    OCPEntityLabel.TV_KEYWORD:                 OCPPlayIntent.TV,
-    OCPEntityLabel.TV_SHOW_KEYWORD:            OCPPlayIntent.TV_SHOW,
-    OCPEntityLabel.VIDEO_KEYWORD:              OCPPlayIntent.VIDEO,
-    OCPEntityLabel.VIDEO_EPISODES_KEYWORD:     OCPPlayIntent.VIDEO_EPISODES,
-    OCPEntityLabel.AUDIO_KEYWORD:              OCPPlayIntent.AUDIO,
-    OCPEntityLabel.GAME_KEYWORD:               OCPPlayIntent.GAME,
-    OCPEntityLabel.ANIME_KEYWORD:              OCPPlayIntent.ANIME,
-    OCPEntityLabel.CARTOON_KEYWORD:            OCPPlayIntent.CARTOON,
-    OCPEntityLabel.DOCUMENTARY_KEYWORD:        OCPPlayIntent.DOCUMENTARY,
-    OCPEntityLabel.SHORT_FILM_KEYWORD:         OCPPlayIntent.SHORT_FILM,
-    OCPEntityLabel.SILENT_MOVIE_KEYWORD:       OCPPlayIntent.SILENT_MOVIE,
-    OCPEntityLabel.BW_MOVIE_KEYWORD:           OCPPlayIntent.BW_MOVIE,
-    OCPEntityLabel.RADIO_THEATRE_KEYWORD:      OCPPlayIntent.RADIO_THEATRE,
-    OCPEntityLabel.VISUAL_STORY_KEYWORD:       OCPPlayIntent.VISUAL_STORY,
-    OCPEntityLabel.ASMR_KEYWORD:               OCPPlayIntent.ASMR,
-    OCPEntityLabel.AUDIO_DESCRIPTION_KEYWORD:  OCPPlayIntent.AUDIO_DESCRIPTION,
-    OCPEntityLabel.MUSIC_VIDEO_KEYWORD:        OCPPlayIntent.MUSIC_VIDEO,
-    OCPEntityLabel.TRAILER_KEYWORD:            OCPPlayIntent.TRAILER,
-    OCPEntityLabel.BEHIND_THE_SCENES_KEYWORD:  OCPPlayIntent.BEHIND_THE_SCENES,
-    OCPEntityLabel.ADULT_KEYWORD:              OCPPlayIntent.ADULT,
-    OCPEntityLabel.ADULT_AUDIO_KEYWORD:        OCPPlayIntent.ADULT_AUDIO,
-    OCPEntityLabel.HENTAI_KEYWORD:             OCPPlayIntent.HENTAI,
+    OCPEntityLabel.MUSIC_KEYWORD.value:              MediaType.MUSIC,
+    OCPEntityLabel.PODCAST_KEYWORD.value:            MediaType.PODCAST,
+    OCPEntityLabel.RADIO_KEYWORD.value:              MediaType.RADIO,
+    OCPEntityLabel.AUDIOBOOK_KEYWORD.value:          MediaType.AUDIOBOOK,
+    OCPEntityLabel.BOOK_KEYWORD.value:               MediaType.BOOK,
+    OCPEntityLabel.PLAYLIST_KEYWORD.value:           MediaType.PLAYLIST,
+    OCPEntityLabel.SOUND_EFFECT_KEYWORD.value:       MediaType.SOUND_EFFECT,
+    OCPEntityLabel.INTERACTIVE_FICTION_KEYWORD.value: MediaType.INTERACTIVE_FICTION,
+    OCPEntityLabel.AMBIENT_KEYWORD.value:            MediaType.PROCEDURAL_AMBIENT,
+    OCPEntityLabel.COMIC_KEYWORD.value:              MediaType.COMIC,
+    OCPEntityLabel.NEWS_KEYWORD.value:               MediaType.RADIO,
+    OCPEntityLabel.MOVIE_KEYWORD.value:              MediaType.MOVIE,
+    OCPEntityLabel.TV_KEYWORD.value:                 MediaType.TV,
+    OCPEntityLabel.TV_SHOW_KEYWORD.value:            MediaType.EPISODIC_SERIES,
+    OCPEntityLabel.VIDEO_KEYWORD.value:              MediaType.MOVIE,
+    OCPEntityLabel.VIDEO_EPISODES_KEYWORD.value:     MediaType.EPISODIC_SERIES,
+    OCPEntityLabel.AUDIO_KEYWORD.value:              MediaType.MUSIC,
+    OCPEntityLabel.GAME_KEYWORD.value:               MediaType.GAME,
+    OCPEntityLabel.ANIME_KEYWORD.value:              MediaType.EPISODIC_SERIES,
+    OCPEntityLabel.CARTOON_KEYWORD.value:            MediaType.EPISODIC_SERIES,
+    OCPEntityLabel.DOCUMENTARY_KEYWORD.value:        MediaType.MOVIE,
+    OCPEntityLabel.SHORT_FILM_KEYWORD.value:         MediaType.SHORT_FILM,
+    OCPEntityLabel.SILENT_MOVIE_KEYWORD.value:       MediaType.MOVIE,
+    OCPEntityLabel.BW_MOVIE_KEYWORD.value:           MediaType.MOVIE,
+    OCPEntityLabel.RADIO_THEATRE_KEYWORD.value:      MediaType.AUDIO_DRAMA,
+    OCPEntityLabel.VISUAL_STORY_KEYWORD.value:       MediaType.COMIC,
+    OCPEntityLabel.ASMR_KEYWORD.value:               MediaType.PROCEDURAL_AMBIENT,
+    OCPEntityLabel.AUDIO_DESCRIPTION_KEYWORD.value:  MediaType.MOVIE,
+    OCPEntityLabel.MUSIC_VIDEO_KEYWORD.value:        MediaType.MUSIC_VIDEO,
+    OCPEntityLabel.TRAILER_KEYWORD.value:            MediaType.MOVIE,
+    OCPEntityLabel.TEASER_KEYWORD.value:             MediaType.MOVIE,
+    OCPEntityLabel.BEHIND_THE_SCENES_KEYWORD.value:  MediaType.MOVIE,
+    OCPEntityLabel.MAKING_OF_KEYWORD.value:          MediaType.MOVIE,
+    OCPEntityLabel.BLOOPERS_KEYWORD.value:           MediaType.MOVIE,
+    OCPEntityLabel.DELETED_SCENES_KEYWORD.value:     MediaType.MOVIE,
+    OCPEntityLabel.FEATURETTE_KEYWORD.value:         MediaType.MOVIE,
+    OCPEntityLabel.INTERVIEW_KEYWORD.value:          MediaType.MOVIE,
+    OCPEntityLabel.CLIP_KEYWORD.value:               MediaType.MOVIE,
+    OCPEntityLabel.ADULT_KEYWORD.value:              MediaType.MOVIE,
+    OCPEntityLabel.ADULT_AUDIO_KEYWORD.value:        MediaType.MUSIC,
+    OCPEntityLabel.HENTAI_KEYWORD.value:             MediaType.EPISODIC_SERIES,
+}
+
+# NER entity label → genre tags.  Only entity labels that carry a genre signal
+# appear; this is what lets the content filter block adult entities (pornstar,
+# adult_title, …) and rank anime/asmr even though the entity's MediaType is a
+# generic MOVIE / EPISODIC_SERIES.  Filtered to ``mediavocab`` KNOWN_GENRES.
+_RAW_NER_LABEL_GENRES: Dict[str, List[str]] = {
+    OCPEntityLabel.ANIME_TITLE.value:    ["anime"],
+    OCPEntityLabel.ANIME_STUDIO.value:   ["anime"],
+    OCPEntityLabel.ANIME_KEYWORD.value:  ["anime"],
+    OCPEntityLabel.CARTOON_TITLE.value:   ["animation"],
+    OCPEntityLabel.CARTOON_KEYWORD.value: ["animation"],
+    OCPEntityLabel.ASMR_ARTIST.value:    ["asmr"],
+    OCPEntityLabel.ASMR_KEYWORD.value:   ["asmr"],
+    OCPEntityLabel.HENTAI_TITLE.value:   ["anime", "adult"],
+    OCPEntityLabel.HENTAI_KEYWORD.value: ["anime", "adult"],
+    OCPEntityLabel.ADULT_STREAMING_SERVICE.value: ["adult"],
+    OCPEntityLabel.ADULT_TITLE.value:    ["adult"],
+    OCPEntityLabel.PORNSTAR.value:       ["adult"],
+    OCPEntityLabel.PORN_GENRE.value:     ["adult"],
+    OCPEntityLabel.ADULT_KEYWORD.value:       ["adult"],
+    OCPEntityLabel.ADULT_AUDIO_KEYWORD.value: ["adult"],
+}
+NER_LABEL_TO_GENRES: Dict[str, List[str]] = {
+    label: [g for g in genres if g in KNOWN_GENRES]
+    for label, genres in _RAW_NER_LABEL_GENRES.items()
 }

@@ -1,0 +1,99 @@
+<lead_play_audio> my playlist
+[hey|ok|please] <lead_play_audio> my playlist [please|for me|right now|thanks]
+<lead_play_audio> my liked songs
+<lead_play_audio> my favorites
+[hey|ok|please] <lead_play_audio> my favorites [please|for me|right now|thanks]
+<lead_play_audio> my favourites
+[hey|ok|please] <lead_play_audio> my favourites [please|for me|right now|thanks]
+<lead_play_audio> a {playlist_mood} playlist
+[hey|ok|please] <lead_play_audio> a {playlist_mood} playlist [please|for me|right now|thanks]
+<lead_play_audio> a {playlist_mood} mix
+[hey|ok|please] <lead_play_audio> a {playlist_mood} mix [please|for me|right now|thanks]
+<lead_play_audio> my {playlist_activity} mix
+<lead_play_audio> my {playlist_activity} playlist
+[hey|ok|please] <lead_play_audio> my {playlist_activity} playlist [please|for me|right now|thanks]
+<lead_play_audio> my saved songs
+[hey|ok|please] <lead_play_audio> my saved songs [please|for me|right now|thanks]
+<lead_play_audio> the {playlist_mood} playlist
+[hey|ok|please] <lead_play_audio> the {playlist_mood} playlist [please|for me|right now|thanks]
+<lead_play_audio> my daily mix
+[hey|ok|please] <lead_play_audio> my daily mix [please|for me|right now|thanks]
+<lead_play_audio> my discover weekly
+[hey|ok|please] <lead_play_audio> my discover weekly [please|for me|right now|thanks]
+<lead_play_audio> a fresh playlist
+<lead_play_audio> my top songs
+[hey|ok|please] <lead_play_audio> my top songs [please|for me|right now|thanks]
+<lead_play_audio> a {playlist_activity} playlist
+[hey|ok|please] <lead_play_audio> a {playlist_activity} playlist [please|for me|right now|thanks]
+<lead_play_audio> the {playlist_activity} mix
+[hey|ok|please] <lead_play_audio> the {playlist_activity} mix [please|for me|right now|thanks]
+<lead_play_audio> a {playlist_mood} playlist for {playlist_activity}
+[hey|ok|please] <lead_play_audio> a {playlist_mood} playlist for {playlist_activity} [please|for me|right now|thanks]
+<lead_play_audio> my {playlist_activity} mix for when i feel {playlist_mood}
+[hey|ok|please] <lead_play_audio> my {playlist_activity} mix for when i feel {playlist_mood} [please|for me|right now|thanks]
+<lead_play_audio> a {playlist_mood} mix to {playlist_activity}
+<lead_play_audio> do you have a {playlist_mood} playlist
+[hey|ok|please] <lead_play_audio> do you have a {playlist_mood} playlist [please|for me|right now|thanks]
+<lead_play_audio> got a {playlist_activity} playlist
+[hey|ok|please] <lead_play_audio> got a {playlist_activity} playlist [please|for me|right now|thanks]
+<lead_play_audio> a {playlist_mood} playlist for the morning
+[hey|ok|please] <lead_play_audio> a {playlist_mood} playlist for the morning [please|for me|right now|thanks]
+<lead_play_audio> a {playlist_activity} playlist to keep me going
+[hey|ok|please] <lead_play_audio> a {playlist_activity} playlist to keep me going [please|for me|right now|thanks]
+my playlist, please
+my {playlist_activity} mix, please
+a {playlist_mood} playlist, thanks
+my favorites — put them on
+my {playlist_activity} playlist — let's go
+put on my {playlist_mood} playlist, would you?
+i could go for my {playlist_activity} mix
+i'm after a {playlist_mood} playlist
+i need my {playlist_activity} playlist
+what about a {playlist_mood} mix
+maybe my {playlist_activity} playlist
+we should put on a {playlist_mood} playlist
+something like my {playlist_activity} mix
+my usual {playlist_mood} playlist
+a {playlist_mood} playlist because i need a lift
+my {playlist_activity} mix to keep me moving
+um can you put on my {playlist_mood} playlist
+play my {playlist_activity} mix, actually no the {playlist_mood} one
+hey so put on my {playlist_activity} playlist
+you know what throw on my {playlist_mood} playlist
+wanna hear my {playlist_activity} mix
+lemme have my {playlist_mood} playlist
+gimme my {playlist_activity} playlist
+i'm cleaning up put on my {playlist_activity} mix
+i could really go for my {playlist_mood} playlist
+got my {playlist_mood} playlist handy?
+hey can you play me a {playlist_mood} playlist
+i'm feeling {playlist_mood} so <lead_play_audio> a mix please
+gimme something {playlist_activity} for my workout wait <lead_play_audio> a {playlist_mood} playlist
+do you have any {playlist_activity} playlists [i can listen to|for tonight]
+lemme hear my {playlist_activity} playlist right now
+um i think i want a {playlist_mood} playlist <lead_play_audio>
+i'm in the mood for {playlist_mood} <lead_play_audio> something nice
+yeah <lead_play_audio> my {playlist_activity} playlist that's the stuff
+i wanna listen to a {playlist_mood} playlist
+so i was thinking <lead_play_audio> some {playlist_mood} tracks
+i need a {playlist_mood} playlist to chill to <lead_play_audio>
+let's put on my {playlist_mood} mix for this evening
+hey are there any {playlist_activity} playlists i can stream
+<lead_play_audio> just the {playlist_mood} stuff you know what i mean
+i'm doing some {playlist_activity} right now <lead_play_audio> gimme the playlist
+got any {playlist_activity} playlists handy
+how about we put on a {playlist_activity} mix
+lemme hear my liked songs
+feels like a {playlist_mood} kinda night, hit the playlists
+<lead_play_audio> my {playlist_mood} favourites
+so i wanna hear my {playlist_activity} playlist
+hey, throw on a {playlist_mood} mix [please]
+i need a {playlist_activity} playlist [right now]
+'sup — gimme my liked songs
+let's find a {playlist_activity} playlist for when we're {playlist_mood}
+we should put on my favourites
+[so] i'm feelin' a {playlist_mood} playlist [i guess]
+i wanna hear something {playlist_mood}, hit the playlists
+got a {playlist_activity} playlist i can throw on
+think i need my {playlist_mood} favourites [right about now]
+how 'bout my liked songs — just play 'em

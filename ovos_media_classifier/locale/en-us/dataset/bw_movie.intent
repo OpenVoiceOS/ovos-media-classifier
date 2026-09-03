@@ -1,0 +1,102 @@
+<lead_watch> {bw_movie_title}
+[hey|ok|please] <lead_watch> {bw_movie_title} [please|for me|right now|thanks]
+<lead_watch> the black and white movie {bw_movie_title}
+[hey|ok|please] <lead_watch> the black and white movie {bw_movie_title} [please|for me|right now|thanks]
+<lead_watch> a black and white film
+[hey|ok|please] <lead_watch> a black and white film [please|for me|right now|thanks]
+<lead_watch> an old black and white movie
+[hey|ok|please] <lead_watch> an old black and white movie [please|for me|right now|thanks]
+<lead_watch> the black and white film {bw_movie_title}
+[hey|ok|please] <lead_watch> the black and white film {bw_movie_title} [please|for me|right now|thanks]
+<lead_watch> a {movie_genre} black and white movie
+[hey|ok|please] <lead_watch> a {movie_genre} black and white movie [please|for me|right now|thanks]
+<lead_watch> a classic black and white film
+[hey|ok|please] <lead_watch> a classic black and white film [please|for me|right now|thanks]
+<lead_watch> an old monochrome movie
+[hey|ok|please] <lead_watch> an old monochrome movie [please|for me|right now|thanks]
+<lead_watch> a vintage black and white film
+[hey|ok|please] <lead_watch> a vintage black and white film [please|for me|right now|thanks]
+<lead_watch> a black and white classic
+[hey|ok|please] <lead_watch> a black and white classic [please|for me|right now|thanks]
+<lead_watch> a monochrome film
+[hey|ok|please] <lead_watch> a monochrome film [please|for me|right now|thanks]
+<lead_watch> the b&w movie {bw_movie_title}
+[hey|ok|please] <lead_watch> the b&w movie {bw_movie_title} [please|for me|right now|thanks]
+<lead_watch> an old b&w film
+[hey|ok|please] <lead_watch> an old b&w film [please|for me|right now|thanks]
+<lead_watch> a {movie_genre} monochrome film
+[hey|ok|please] <lead_watch> a {movie_genre} monochrome film [please|for me|right now|thanks]
+<lead_watch> a black and white drama
+[hey|ok|please] <lead_watch> a black and white drama [please|for me|right now|thanks]
+<lead_watch> a black and white {movie_genre} film
+[hey|ok|please] <lead_watch> a black and white {movie_genre} film [please|for me|right now|thanks]
+<lead_watch> an old hollywood black and white film
+[hey|ok|please] <lead_watch> an old hollywood black and white film [please|for me|right now|thanks]
+<lead_watch> another black and white movie
+[hey|ok|please] <lead_watch> another black and white movie [please|for me|right now|thanks]
+<lead_watch> a noir black and white film
+[hey|ok|please] <lead_watch> a noir black and white film [please|for me|right now|thanks]
+<lead_watch> the classic black and white movie {bw_movie_title}
+[hey|ok|please] <lead_watch> the classic black and white movie {bw_movie_title} [please|for me|right now|thanks]
+<lead_watch> a black and white movie from the old days
+[hey|ok|please] <lead_watch> a black and white movie from the old days [please|for me|right now|thanks]
+<lead_watch> do you have any black and white films
+[hey|ok|please] <lead_watch> do you have any black and white films [please|for me|right now|thanks]
+<lead_watch> got a good black and white movie
+[hey|ok|please] <lead_watch> got a good black and white movie [please|for me|right now|thanks]
+<lead_watch> a black and white classic for tonight
+[hey|ok|please] <lead_watch> a black and white classic for tonight [please|for me|right now|thanks]
+<lead_watch> something old in black and white
+[hey|ok|please] <lead_watch> something old in black and white [please|for me|right now|thanks]
+<lead_watch> a black and white film for a cozy night
+[hey|ok|please] <lead_watch> a black and white film for a cozy night [please|for me|right now|thanks]
+<lead_watch> got any {movie_genre} black and white films
+[hey|ok|please] <lead_watch> got any {movie_genre} black and white films [please|for me|right now|thanks]
+{bw_movie_title}, please
+the black and white movie {bw_movie_title}, please
+a black and white film, thanks
+{bw_movie_title} — put it on
+that black and white classic — let's watch it
+put on the black and white film {bw_movie_title}, would you?
+i could go for a black and white film
+i'm after a classic black and white movie
+i need something old in black and white
+what about {bw_movie_title}
+maybe a {movie_genre} black and white movie
+we should watch {bw_movie_title}
+something like {bw_movie_title}
+any black and white films around?
+a black and white classic for a cozy night
+a monochrome film because i'm feeling nostalgic
+the old {bw_movie_title} in black and white
+<lead_watch> the black and white film based on {book_title}
+<lead_watch> a black and white movie based on the novel {book_title}
+um can you put on a black and white movie
+play {bw_movie_title}, actually no another {movie_genre} one
+hey so put on {bw_movie_title}
+you know what throw on an old black and white film
+wanna watch {bw_movie_title}
+lemme see a classic black and white movie
+gimme a {movie_genre} movie in black and white
+i'm feeling nostalgic put on a black and white film
+i could really go for an old black and white movie
+is there a good black and white {movie_genre} film
+got any black and white movies?
+i'm in the mood for a black and white {movie_genre} tonight
+<lead_watch> a monochrome {movie_genre} flick
+got any good black and white films [to watch|right now]
+[hey|um] <lead_watch> that black and white film {bw_movie_title}
+i wanna watch a black and white [movie|film] tonight
+<lead_watch> a classic black and white {movie_genre}
+what about a monochrome movie [for a change]
+gimme a black and white {movie_genre} [please|thanks]
+i'm looking for a black and white movie [to watch]
+<lead_watch> a black and white film with {movie_genre}
+let's check out {bw_movie_title} [i heard it's good]
+i feel like watching a black and white {movie_genre} [tonight]
+[um|so] <lead_watch> a monochrome picture [please|thanks]
+how bout we watch {bw_movie_title} [tonight|later]
+i need a good black and white movie [right now|tonight]
+<lead_watch> an old black and white {movie_genre} film
+[alright|so|hey] <lead_watch> a monochrome {movie_genre}
+[hey|um] can you put on a black and white movie like {bw_movie_title} [please|for me]

@@ -1,0 +1,163 @@
+<lead_watch> {documentary_title}
+[hey|ok|please] <lead_watch> {documentary_title} [please|for me|right now|thanks]
+<lead_watch> the documentary {documentary_title}
+[hey|ok|please] <lead_watch> the documentary {documentary_title} [please|for me|right now|thanks]
+<lead_watch> a documentary
+[hey|ok|please] <lead_watch> a documentary [please|for me|right now|thanks]
+<lead_watch> a nature documentary
+[hey|ok|please] <lead_watch> a nature documentary [please|for me|right now|thanks]
+<lead_watch> some documentaries
+[hey|ok|please] <lead_watch> some documentaries [please|for me|right now|thanks]
+<lead_watch> the {documentary_title} documentary
+[hey|ok|please] <lead_watch> the {documentary_title} documentary [please|for me|right now|thanks]
+<lead_watch> a good documentary
+[hey|ok|please] <lead_watch> a good documentary [please|for me|right now|thanks]
+<lead_watch> a history documentary
+[hey|ok|please] <lead_watch> a history documentary [please|for me|right now|thanks]
+<lead_watch> a science documentary
+[hey|ok|please] <lead_watch> a science documentary [please|for me|right now|thanks]
+<lead_watch> a true crime documentary
+[hey|ok|please] <lead_watch> a true crime documentary [please|for me|right now|thanks]
+<lead_watch> a {movie_genre} documentary
+[hey|ok|please] <lead_watch> a {movie_genre} documentary [please|for me|right now|thanks]
+<lead_watch> a documentary about {documentary_title}
+[hey|ok|please] <lead_watch> a documentary about {documentary_title} [please|for me|right now|thanks]
+<lead_watch> do you have any documentaries
+[hey|ok|please] <lead_watch> do you have any documentaries [please|for me|right now|thanks]
+<lead_watch> got a good documentary
+[hey|ok|please] <lead_watch> got a good documentary [please|for me|right now|thanks]
+<lead_watch> a documentary to fall asleep to
+[hey|ok|please] <lead_watch> a documentary to fall asleep to [please|for me|right now|thanks]
+<lead_watch> something educational to watch
+[hey|ok|please] <lead_watch> something educational to watch [please|for me|right now|thanks]
+<lead_watch> a documentary about {movie_actor}
+[hey|ok|please] <lead_watch> a documentary about {movie_actor} [please|for me|right now|thanks]
+<lead_watch> a documentary about {artist_name}
+[hey|ok|please] <lead_watch> a documentary about {artist_name} [please|for me|right now|thanks]
+<lead_watch> the {artist_name} documentary
+[hey|ok|please] <lead_watch> the {artist_name} documentary [please|for me|right now|thanks]
+<lead_watch> a documentary on {movie_director}
+[hey|ok|please] <lead_watch> a documentary on {movie_director} [please|for me|right now|thanks]
+<lead_watch> the documentary about {movie_title}
+[hey|ok|please] <lead_watch> the documentary about {movie_title} [please|for me|right now|thanks]
+{documentary_title}, please
+the documentary {documentary_title}, please
+a documentary, thanks
+{documentary_title} — put it on
+that documentary {documentary_title} — start it
+put on the documentary {documentary_title}, would you?
+i could go for a documentary
+i'm after a good documentary
+i need a documentary to fall asleep to
+what about a documentary on {movie_director}
+maybe a nature documentary
+we should watch a documentary
+something like {documentary_title}
+another documentary about {documentary_title}
+any good documentaries around?
+what documentaries do you have
+is there a documentary about {artist_name}
+the {artist_name} documentary, please
+a documentary because i want to learn something
+something educational while i eat
+the documentary everyone's recommending
+<lead_watch> a documentary about the show {tv_show_title}
+<lead_watch> a documentary about the making of {tv_show_title}
+<lead_watch> a documentary about the game {game_title}
+<lead_watch> a documentary about the comic {comic_title}
+<lead_watch> a documentary about the author {book_author}
+<lead_watch> a documentary about the writer {book_author}
+<lead_watch> the {book_author} documentary
+<lead_watch> a documentary about the podcaster {podcast_host}
+<lead_watch> a documentary about the band behind {album_name}
+<lead_watch> the making of the album {album_name}
+<lead_watch> a documentary about the studio {anime_studio}
+<lead_watch> a documentary about the making of {game_title}
+<lead_watch> a documentary on the history of {music_genre}
+<lead_watch> a documentary about the song {track_name}
+<lead_watch> a documentary about the writing of {book_title}
+<lead_watch> a documentary on {artist_name}
+<lead_watch> a documentary featuring {artist_name}
+<lead_watch> a documentary about {book_author}
+<lead_watch> a documentary on {book_author}
+<lead_watch> a documentary featuring {book_author}
+<lead_watch> a biography of {book_author}
+<lead_watch> a documentary about {podcast_host}
+<lead_watch> a documentary on {podcast_host}
+<lead_watch> the {podcast_host} documentary
+<lead_watch> a documentary featuring {podcast_host}
+<lead_watch> a biography of {podcast_host}
+<lead_watch> a documentary about {anime_studio}
+<lead_watch> a documentary on {anime_studio}
+<lead_watch> the {anime_studio} documentary
+<lead_watch> a documentary featuring {anime_studio}
+<lead_watch> a biography of {anime_studio}
+<lead_watch> a biopic of {artist_name}
+<lead_watch> a documentary about the life of {artist_name}
+<lead_watch> a biopic of {book_author}
+<lead_watch> the {book_author} biopic
+<lead_watch> a documentary about the life of {book_author}
+<lead_watch> a documentary about the series {tv_show_title}
+<lead_watch> a documentary about the anime {anime_title}
+<lead_watch> a documentary on the development of {game_title}
+<lead_watch> a documentary about the book {book_title}
+<lead_watch> a documentary about the novel {book_title}
+<lead_watch> a documentary about the podcast {podcast_title}
+<lead_watch> a documentary about the making of the album {album_name}
+<lead_watch> a documentary about the album {album_name}
+<lead_watch> a documentary about the rise of {artist_name}
+<lead_watch> a documentary chronicling {artist_name}
+<lead_watch> a documentary on {music_genre} music
+<lead_watch> the story of {artist_name}
+<lead_watch> the untold story of {artist_name}
+um can you put on a documentary about {music_genre}
+play {documentary_title}, actually no the one about {artist_name}
+uh maybe a documentary, something about {movie_genre}
+hey so put on {documentary_title}
+you know what throw on a documentary about {artist_name}
+wanna watch a documentary about {music_genre}
+lemme watch that documentary on {artist_name}
+gimme a documentary about {movie_title}
+i'm curious tonight put on a documentary
+i could really go for a documentary about {music_genre}
+i never finished that documentary about {artist_name}
+i'm in the mood for a documentary on {movie_genre}
+is there a good documentary about {artist_name}
+got any documentaries about {music_genre}?
+how about a documentary on {movie_title}
+<lead_watch> can you find a documentary about {movie_director} [for me|please]
+gimme that documentary {documentary_title} [please|thanks]
+[hey|ok|so] <lead_watch> any good documentaries on {book_author} [right now|for me]
+let's watch a docuseries [about {podcast_host}|on {tv_show_title}]
+<lead_watch> the documentary featuring {documentary_title} [please|thanks]
+[um|hey|so] can you throw on a doc about {comic_title} [right now|please]
+i'm feeling a documentary tonight [about {movie_genre}|on {anime_studio}]
+<lead_watch> lemme watch a documentary on {game_title} [please|right now]
+[hey|please|ok] <lead_watch> got any documentaries about {podcast_title} [thanks]
+wanna watch that docu about {movie_actor} [right now|tonight]
+<lead_watch> how about a documentary on {music_genre} [for me|please]
+i'd like to watch a doc about {book_author} [please|for me]
+<lead_watch> any docs on {tv_show_title} [right now|please]
+[hey|ok|so] lemme watch a documentary about {anime_title} [please]
+<lead_watch> got a documentary about {track_name} [for me|thanks]
+[um|hey|so] play the documentary about {album_name} [please|right now]
+<lead_watch> i'm in the mood for a docuseries on {movie_director} [tonight]
+so how about we watch a documentary on {tv_show_title}
+let's check out a documentary about the making of {game_title}
+we should watch a documentary about {movie_director} [tonight|soon]
+feels like a documentary night, got anything about {movie_genre}
+hey do you have a documentary about {anime_studio}
+i wanna watch a documentary about {comic_title} [please|if you can]
+gimme a doc about {movie_actor} [you know|like what they've been up to]
+so i was thinking a documentary about the writer of {book_title}
+what documentaries do you have about {movie_title}
+can you find me a good docuseries about {podcast_host}
+um i'd really like to watch something about {artist_name}, like a documentary
+got any documentaries about {documentary_title}
+<lead_watch> a documentary about the history of {tv_show_title}
+i'm looking for a documentary about {podcast_title}
+how about we put on a documentary about {anime_title}
+a doc about {book_title} by {book_author} sounds good [right now|actually]
+hey so i heard there's a documentary about {movie_director} directing {movie_title}
+we should check out a documentary about {music_genre} [or something|maybe]
+lemme find a good documentary about the making of {album_name}

@@ -1,0 +1,108 @@
+<lead_watch> a video
+[hey|ok|please] <lead_watch> a video [please|for me|right now|thanks]
+<lead_watch> some videos
+<lead_watch> something to watch
+[hey|ok|please] <lead_watch> something to watch [please|for me|right now|thanks]
+<lead_watch> a video about {documentary_title}
+[hey|ok|please] <lead_watch> a video about {documentary_title} [please|for me|right now|thanks]
+<lead_watch> something interesting
+[hey|ok|please] <lead_watch> something interesting [please|for me|right now|thanks]
+<lead_watch> any video
+[hey|ok|please] <lead_watch> any video [please|for me|right now|thanks]
+<lead_watch> a random video
+[hey|ok|please] <lead_watch> a random video [please|for me|right now|thanks]
+<lead_watch> another video
+[hey|ok|please] <lead_watch> another video [please|for me|right now|thanks]
+<lead_watch> a short video
+[hey|ok|please] <lead_watch> a short video [please|for me|right now|thanks]
+<lead_watch> some clips
+[hey|ok|please] <lead_watch> some clips [please|for me|right now|thanks]
+<lead_watch> a video to watch
+[hey|ok|please] <lead_watch> a video to watch [please|for me|right now|thanks]
+<lead_watch> anything to watch
+<lead_watch> a clip
+[hey|ok|please] <lead_watch> a clip [please|for me|right now|thanks]
+<lead_watch> a funny video
+[hey|ok|please] <lead_watch> a funny video [please|for me|right now|thanks]
+<lead_watch> a viral video
+[hey|ok|please] <lead_watch> a viral video [please|for me|right now|thanks]
+<lead_watch> a how-to video
+[hey|ok|please] <lead_watch> a how-to video [please|for me|right now|thanks]
+<lead_watch> a tutorial video
+[hey|ok|please] <lead_watch> a tutorial video [please|for me|right now|thanks]
+<lead_watch> an explainer video
+[hey|ok|please] <lead_watch> an explainer video [please|for me|right now|thanks]
+<lead_watch> a video about anything
+[hey|ok|please] <lead_watch> a video about anything [please|for me|right now|thanks]
+<lead_watch> a quick clip
+[hey|ok|please] <lead_watch> a quick clip [please|for me|right now|thanks]
+<lead_watch> a recommended video
+[hey|ok|please] <lead_watch> a recommended video [please|for me|right now|thanks]
+<lead_watch> a trending video
+<lead_watch> a video on {documentary_title}
+[hey|ok|please] <lead_watch> a video on {documentary_title} [please|for me|right now|thanks]
+<lead_watch> do you have any videos
+[hey|ok|please] <lead_watch> do you have any videos [please|for me|right now|thanks]
+<lead_watch> got something to watch
+[hey|ok|please] <lead_watch> got something to watch [please|for me|right now|thanks]
+<lead_watch> a video to pass the time
+[hey|ok|please] <lead_watch> a video to pass the time [please|for me|right now|thanks]
+<lead_watch> something quick to watch
+[hey|ok|please] <lead_watch> something quick to watch [please|for me|right now|thanks]
+<lead_watch> got a funny video
+[hey|ok|please] <lead_watch> got a funny video [please|for me|right now|thanks]
+<lead_watch> a video while i eat lunch
+[hey|ok|please] <lead_watch> a video while i eat lunch [please|for me|right now|thanks]
+<lead_watch> something interesting to watch
+[hey|ok|please] <lead_watch> something interesting to watch [please|for me|right now|thanks]
+<lead_watch> a short video to fill the time
+[hey|ok|please] <lead_watch> a short video to fill the time [please|for me|right now|thanks]
+a video, please
+something to watch, please
+a video — put it on
+something interesting — let's watch it
+i could go for a video
+i'm after something quick to watch
+i need a video to pass the time
+what about a funny video
+maybe a short video
+we should watch a video
+surprise me with a video
+something interesting to watch
+a quick clip because i'm on a break
+a funny video while i eat lunch
+anything watchable, really
+just play any video
+um can you put a video on
+play a video, actually no a documentary
+hey so put on a video
+you know what just throw on a video
+wanna watch something
+lemme watch a video
+gimme something to watch
+i could really go for a video right now
+is there a video about {documentary_title}
+how about you put on a video
+<lead_watch> something cool to watch [for a bit|real quick]
+[hey|ok] so <lead_watch> a video about {documentary_title} maybe
+wanna watch a clip [real quick|right now]
+[hey|um] <lead_watch> got any good videos [lately|today]
+let's find a video to watch [together|while we hang]
+<lead_watch> a random clip [please|for me|right now|thanks]
+got any videos about {documentary_title} [maybe|i guess]
+[hey|ok|please] <lead_watch> something on video [please|for me|right now|thanks]
+[so|hey] <lead_watch> find me a video [please|for me|right now|thanks]
+<lead_watch> a short clip [please|for me|right now|thanks]
+[hey|ok|please] <lead_watch> is there a video about {documentary_title} [please|for me|right now|thanks]
+gimme a video to watch [real quick|for a bit]
+[hey|um] <lead_watch> play any video [i guess|you pick|surprise me]
+how about a clip about {documentary_title} [maybe|or something]
+so <lead_watch> throw on a video [please|for me|right now|thanks]
+got any good videos [lately|right now]
+feels like a video kind of [night|moment|day]
+i wanna check out a video [real quick|while i can]
+[um|so] <lead_watch> a video called {documentary_title} [i guess]
+let's just put on a video [and relax|for a bit]
+<lead_watch> a video i haven't seen before
+[well|so] how about a clip or something [to watch|you know]
+you got any videos about {documentary_title} [lately|by chance]

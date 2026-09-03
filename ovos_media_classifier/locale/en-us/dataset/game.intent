@@ -1,0 +1,162 @@
+<lead_game> {game_title}
+[hey|ok|please] <lead_game> {game_title} [please|for me|right now|thanks]
+<lead_game> the game {game_title}
+[hey|ok|please] <lead_game> the game {game_title} [please|for me|right now|thanks]
+<lead_game> a {game_genre} game
+[hey|ok|please] <lead_game> a {game_genre} game [please|for me|right now|thanks]
+<lead_game> a game on {game_platform}
+[hey|ok|please] <lead_game> a game on {game_platform} [please|for me|right now|thanks]
+<lead_game> a round of {game_title}
+[hey|ok|please] <lead_game> a round of {game_title} [please|for me|right now|thanks]
+<lead_game> a quick {game_genre} game
+[hey|ok|please] <lead_game> a quick {game_genre} game [please|for me|right now|thanks]
+<lead_game> some {game_genre}
+[hey|ok|please] <lead_game> some {game_genre} [please|for me|right now|thanks]
+<lead_game> another {game_genre} game
+[hey|ok|please] <lead_game> another {game_genre} game [please|for me|right now|thanks]
+<lead_game> a good {game_genre} game
+[hey|ok|please] <lead_game> a good {game_genre} game [please|for me|right now|thanks]
+<lead_game> a game like {game_title}
+[hey|ok|please] <lead_game> a game like {game_title} [please|for me|right now|thanks]
+<lead_game> the {game_genre} game {game_title}
+[hey|ok|please] <lead_game> the {game_genre} game {game_title} [please|for me|right now|thanks]
+<lead_game> a {game_genre} game on {game_platform}
+[hey|ok|please] <lead_game> a {game_genre} game on {game_platform} [please|for me|right now|thanks]
+<lead_game> {game_title} on {game_platform}
+[hey|ok|please] <lead_game> {game_title} on {game_platform} [please|for me|right now|thanks]
+<lead_game> {game_genre} on {game_platform}
+[hey|ok|please] <lead_game> {game_genre} on {game_platform} [please|for me|right now|thanks]
+<lead_game> a {game_genre} game from {release_year}
+[hey|ok|please] <lead_game> a {game_genre} game from {release_year} [please|for me|right now|thanks]
+<lead_game> {game_title} from the {release_decade}
+[hey|ok|please] <lead_game> {game_title} from the {release_decade} [please|for me|right now|thanks]
+<lead_game> a retro {game_genre} game
+[hey|ok|please] <lead_game> a retro {game_genre} game [please|for me|right now|thanks]
+<lead_game> an indie {game_genre} game
+[hey|ok|please] <lead_game> an indie {game_genre} game [please|for me|right now|thanks]
+<lead_game> a multiplayer {game_genre} game
+[hey|ok|please] <lead_game> a multiplayer {game_genre} game [please|for me|right now|thanks]
+<lead_game> another round of {game_title}
+[hey|ok|please] <lead_game> another round of {game_title} [please|for me|right now|thanks]
+<lead_game> a co-op {game_genre} game
+[hey|ok|please] <lead_game> a co-op {game_genre} game [please|for me|right now|thanks]
+<lead_game> the {game_genre} game {game_title} on {game_platform}
+[hey|ok|please] <lead_game> the {game_genre} game {game_title} on {game_platform} [please|for me|right now|thanks]
+<lead_game> a {game_genre} game on {game_platform} from {release_year}
+[hey|ok|please] <lead_game> a {game_genre} game on {game_platform} from {release_year} [please|for me|right now|thanks]
+<lead_game> do you have any {game_genre} games
+[hey|ok|please] <lead_game> do you have any {game_genre} games [please|for me|right now|thanks]
+<lead_game> got a good {game_genre} game
+[hey|ok|please] <lead_game> got a good {game_genre} game [please|for me|right now|thanks]
+<lead_game> a {game_genre} game to unwind with
+[hey|ok|please] <lead_game> a {game_genre} game to unwind with [please|for me|right now|thanks]
+<lead_game> a quick game before bed
+[hey|ok|please] <lead_game> a quick game before bed [please|for me|right now|thanks]
+<lead_game> do you have {game_title}
+[hey|ok|please] <lead_game> do you have {game_title} [please|for me|right now|thanks]
+<lead_game> got any {game_genre} games on {game_platform}
+[hey|ok|please] <lead_game> got any {game_genre} games on {game_platform} [please|for me|right now|thanks]
+<lead_game> a {game_genre} game for the evening
+[hey|ok|please] <lead_game> a {game_genre} game for the evening [please|for me|right now|thanks]
+<lead_game> something quick to play
+[hey|ok|please] <lead_game> something quick to play [please|for me|right now|thanks]
+<lead_game> a game from {release_year}
+[hey|ok|please] <lead_game> a game from {release_year} [please|for me|right now|thanks]
+<lead_game> a {game_genre} game from the {release_decade}
+[hey|ok|please] <lead_game> a {game_genre} game from the {release_decade} [please|for me|right now|thanks]
+{game_title}, please
+the game {game_title}, please
+a {game_genre} game, thanks
+{game_title} — load it up
+a round of {game_title} — let's go
+boot up {game_title}, would you?
+fire up a {game_genre} game, can you?
+i'm in a {game_genre} mood
+in the mood for a {game_genre} game
+i could go for a {game_genre} game
+i'm after a good {game_genre} game
+i need a quick {game_genre} game
+what about {game_title}
+what about a {game_genre} game on {game_platform}
+maybe a {game_genre} game
+maybe a round of {game_title}
+something like {game_title}
+another {game_genre} game
+any {game_genre} games around?
+what {game_genre} games do you have
+is there a game like {game_title}
+a quick {game_genre} game to kill time
+{game_title} because i'm bored
+a {game_genre} game on {game_platform}, please
+<lead_game> the {movie_title} game
+<lead_game> a game based on {movie_title}
+<lead_game> the game adaptation of {movie_title}
+<lead_game> the video game based on the movie {movie_title}
+<lead_game> the {book_title} game
+<lead_game> a game based on the novel {book_title}
+<lead_game> the {tv_show_title} game
+<lead_game> a game based on the show {tv_show_title}
+<lead_game> the {anime_title} game
+<lead_game> a game based on the anime {anime_title}
+<lead_game> the {comic_title} game
+<lead_game> a game based on the comic {comic_title}
+<lead_game> a game featuring {movie_actor}
+<lead_game> the official {movie_title} tie-in game
+<lead_game> a game based on {book_title}
+<lead_game> a game based on {tv_show_title}
+<lead_game> a game based on {anime_title}
+<lead_game> a game based on {comic_title}
+<lead_game> the game adaptation of {book_title}
+<lead_game> the game adaptation of {tv_show_title}
+<lead_game> the game adaptation of {anime_title}
+<lead_game> the game adaptation of {comic_title}
+<lead_game> a video game based on {movie_title}
+<lead_game> a video game based on {book_title}
+<lead_game> a video game based on {tv_show_title}
+<lead_game> a video game based on {anime_title}
+<lead_game> a video game based on {comic_title}
+<lead_game> a game inspired by {movie_title}
+<lead_game> a game inspired by {book_title}
+<lead_game> a game inspired by {tv_show_title}
+<lead_game> a game inspired by {anime_title}
+<lead_game> a game inspired by {comic_title}
+<lead_game> the official tie-in game for {tv_show_title}
+<lead_game> a game with the voice of {movie_actor}
+<lead_game> a game with a soundtrack by {movie_composer}
+<lead_game> a game written by {book_author}
+um can you launch {game_title}
+play {game_title}, actually no a {game_genre} game
+uh maybe a {game_genre} game, yeah
+hey so fire up {game_title}
+you know what throw on {game_title}
+wanna play {game_title}
+lemme play some {game_title}
+gimme a {game_genre} game
+ugh i'm so bored let's play something
+the kids want to play stick on {game_title}
+i could really go for some {game_title}
+i never finished {game_title}
+i'm kind of in the mood for a {game_genre} game
+is there a good {game_genre} game
+got any {game_genre} games?
+how about we play {game_title}
+hey i'm looking for a good {game_genre} game to play
+<lead_game> something like {game_title} but new
+i wanna play that {game_title} game again
+so <lead_game> a {game_genre} from the {release_decade}
+lemme get a {game_genre} game for {game_platform}
+i'm in the mood for a retro {game_genre} game tonight
+<lead_game> got any {game_genre} games for {game_platform}
+we should fire up {game_title} later
+feels like a {game_genre} kind of day, got anything
+hey um <lead_game> that {game_title} game
+i need a {game_genre} game not too hard, you know
+how about we try that new {game_genre} game
+so i heard {game_title} is good, <lead_game>
+let's play a {game_genre} game on {game_platform} maybe
+i'm craving a good story-driven {game_genre} game
+<lead_game> something from {release_year} maybe {game_genre}
+could we play {game_title} i've been wanting to try it
+the kids wanna play a {game_genre} videogame together
+got any recommendations for a {game_genre} game lately
+i think we should play {game_title} tonight, what do you think
