@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.1a1](https://github.com/OpenVoiceOS/ovos-media-classifier/tree/0.2.1a1) (2026-09-03)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-media-classifier/compare/0.2.0a3...0.2.1a1)
+
+**Merged pull requests:**
+
+- fix: stop routing smart-home, punctuated and mixed-modality utterances as media [\#66](https://github.com/OpenVoiceOS/ovos-media-classifier/pull/66) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [0.2.0a3](https://github.com/OpenVoiceOS/ovos-media-classifier/tree/0.2.0a3) (2026-09-03)
 
 [Full Changelog](https://github.com/OpenVoiceOS/ovos-media-classifier/compare/0.2.0a2...0.2.0a3)
