@@ -134,15 +134,18 @@ from one rung to the next *is* the headline result.
    populated a NER store.
 3. **context+NER**, the keyword columns **plus** the `ner_*` columns: the
    features a populated NER would surface.
-4. **semantic**, *the documented next step, not yet implemented.* Sentence
-   embeddings as features.
+4. **semantic**, features that read the entity *value text* itself rather than
+   just which cue fired: hashed character n-grams and trained domain
+   word-vectors, shipped behind the `onnx` extra. §7 benchmarks this rung
+   head-to-head against the sklearn ladder.
 
-The two implemented learned rungs are the `FEATURE_SETS = ("context",
+The two sklearn rungs are the `FEATURE_SETS = ("context",
 "context_ner")` in [`train_sklearn.py`](../training/train_sklearn.py),
-`feature_columns` builds each column set. **Semantic embeddings are the next
-lift** because a bag of cue-presence flags cannot read entity *value text* (§1), the only way to recover the signal that lives inside the slot value (which genre,
-which mood, which decade) is to embed the surface string. §6 quantifies exactly
-which axes are starved by this.
+`feature_columns` builds each column set. **Semantic features matter** because a
+bag of cue-presence flags cannot read entity *value text* (§1); the only way to
+recover the signal that lives inside the slot value (which genre, which mood,
+which decade) is to embed the surface string. §6 quantifies exactly which axes
+are starved without it, §7 is the experimental neural backend that adds it.
 
 ---
 
