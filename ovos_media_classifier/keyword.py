@@ -301,11 +301,20 @@ _PICTURE_FORMAT_VOC_ORDER: List[Tuple[str, PictureFormat]] = [
 
 # A trailing duration ("30 seconds", "a minute", "2 mins") turns an ambiguous
 # directional cue ("go back", "forward") into a *seek* rather than a track skip.
+# English-only by design (the spelled-out small numbers -- "a", "two", "thirty"
+# -- have no locale-neutral equivalent to fall back on); other locales get the
+# ``has_digit_duration`` check below instead, via a ``DurationUnit.voc`` they
+# can opt into.
 _DURATION_RE = re.compile(
     r"\b(?:\d+|a|an|one|two|three|four|five|ten|fifteen|twenty|thirty|sixty)\b"
     r"[^.]*?\b(?:sec(?:ond)?s?|min(?:ute)?s?|hours?|hrs?)\b",
     re.IGNORECASE,
 )
+# Locale-neutral fallback: a bare digit plus *any* word from that locale's
+# ``DurationUnit.voc`` (native speaker judged, native unit words), for locales
+# that have not built out ``_DURATION_RE``'s richer spelled-number matching.
+# Absent that file, this is always False and changes nothing for the locale.
+_HAS_DIGIT_RE = re.compile(r"\d")
 
 
 # A weak control phrase ("turn off") only commands media when it governs nothing
@@ -651,7 +660,10 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
         q = query
         if self._is_iot_request(q, lang, ner_list):
             return None
-        has_duration = bool(_DURATION_RE.search(q))
+        has_duration = bool(_DURATION_RE.search(q)) or (
+            (bool(_HAS_DIGIT_RE.search(q)) or self._match(q, "DurationNumber", lang))
+            and self._match(q, "DurationUnit", lang)
+        )
 
         for voc_name, action in _CONTROL_VOC_ORDER:
             if not m(q, voc_name, lang):
@@ -680,19 +692,11 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
 
     def _explicit_seek_back(self, q: str, lang: str) -> bool:
         """True when an *unambiguous* rewind cue (not just "go back") fired."""
-        for kw in ("rewind", "skip back", "jump back", "seek backward",
-                   "seek back"):
-            if re.search(rf"\b{re.escape(kw)}\b", q, re.IGNORECASE):
-                return True
-        return False
+        return self._match(q, "CtrlSeekBackwardExplicit", lang)
 
     def _explicit_seek_fwd(self, q: str, lang: str) -> bool:
         """True when an *unambiguous* fast-forward cue (not just "forward") fired."""
-        for kw in ("fast forward", "skip ahead", "jump ahead", "skip forward",
-                   "seek forward"):
-            if re.search(rf"\b{re.escape(kw)}\b", q, re.IGNORECASE):
-                return True
-        return False
+        return self._match(q, "CtrlSeekForwardExplicit", lang)
 
     def classify_genres(self, query: str, lang: str) -> List[str]:
         """Return mediavocab genre tags implied by the winning keyword intent.
