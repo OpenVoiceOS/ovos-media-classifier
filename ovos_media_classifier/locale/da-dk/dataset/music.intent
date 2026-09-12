@@ -1,0 +1,265 @@
+<lead_play_audio> {artist_name}
+[hej|ok|okay] <lead_play_audio> {artist_name} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> noget {artist_name}
+<lead_play_audio> {artist_name}'s musik
+<lead_play_audio> musik af {artist_name}
+<lead_play_audio> sange af {artist_name}
+<lead_play_audio> det bedste af {artist_name}
+<lead_play_audio> hvad som helst af {artist_name}
+[hej|ok|okay] <lead_play_audio> hvad som helst af {artist_name} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> mere {artist_name}
+<lead_play_audio> {artist_name} radio
+<lead_play_audio> {artist_name} stationen
+<lead_play_audio> det seneste fra {artist_name}
+<lead_play_audio> {artist_name}'s nyeste
+[hej|ok|okay] <lead_play_audio> {artist_name}'s nyeste [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> {artist_name}'s største hits
+<lead_play_audio> en sang af {artist_name}
+<lead_play_audio> {track_name}
+<lead_play_audio> sangen {track_name}
+<lead_play_audio> nummeret {track_name}
+[hej|ok|okay] <lead_play_audio> nummeret {track_name} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> den sang {track_name}
+<lead_play_audio> {album_name}
+<lead_play_audio> albummet {album_name}
+<lead_play_audio> sange fra {album_name}
+<lead_play_audio> pladen {album_name}
+<lead_play_audio> noget {music_genre}
+[hej|ok|okay] <lead_play_audio> noget {music_genre} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> noget {music_genre} musik
+<lead_play_audio> en {music_genre} playliste
+<lead_play_audio> en {music_genre} mix
+<lead_play_audio> en {music_genre} sang
+<lead_play_audio> {music_genre} stationen
+[hej|ok|okay] <lead_play_audio> {music_genre} stationen [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> {record_label} kunstnere
+<lead_play_audio> musik på {record_label}
+<lead_play_audio> {track_name} af {artist_name}
+<lead_play_audio> {artist_name}'s {track_name}
+<lead_play_audio> sangen {track_name} af {artist_name}
+[hej|ok|okay] <lead_play_audio> sangen {track_name} af {artist_name} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> {album_name} af {artist_name}
+<lead_play_audio> {artist_name}'s {album_name}
+<lead_play_audio> albummet {album_name} af {artist_name}
+<lead_play_audio> sange fra {album_name} af {artist_name}
+<lead_play_audio> en sang med {artist_name}
+<lead_play_audio> {track_name} med {artist_name}
+[hej|ok|okay] <lead_play_audio> {track_name} med {artist_name} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> noget {music_genre} af {artist_name}
+<lead_play_audio> {artist_name}'s {music_genre}
+<lead_play_audio> en {music_genre} sang af {artist_name}
+<lead_play_audio> {music_genre} fra {artist_name}
+<lead_play_audio> {album_name} på {record_label}
+[hej|ok|okay] <lead_play_audio> {album_name} på {record_label} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> {artist_name} på {record_label}
+<lead_play_audio> den {music_genre} en der hedder {track_name}
+<lead_play_audio> noget {music_genre} fra {album_name}
+<lead_play_audio> {music_genre} fra {release_decade}
+<lead_play_audio> noget {artist_name} fra {release_decade}
+[hej|ok|okay] <lead_play_audio> noget {artist_name} fra {release_decade} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> {track_name} af {artist_name} fra {album_name}
+<lead_play_audio> {artist_name}'s {music_genre} sang {track_name}
+<lead_play_audio> {track_name} fra {album_name} af {artist_name}
+<lead_play_audio> {music_genre} nummeret {track_name} af {artist_name}
+<lead_play_audio> {album_name} af {artist_name} på {record_label}
+<lead_play_audio> noget {music_genre} af {artist_name} fra {album_name}
+[hej|ok|okay] <lead_play_audio> noget {music_genre} af {artist_name} fra {album_name} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> {artist_name}'s {music_genre} fra {release_decade}
+<lead_play_audio> {music_genre} sangen {track_name} fra {release_decade}
+<lead_play_audio> {music_genre} nummeret {track_name} af {artist_name} fra {album_name}
+<lead_play_audio> {track_name} af {artist_name} fra {album_name} på {record_label}
+<lead_play_audio> noget {music_genre} af {artist_name} fra {album_name} på {record_label}
+[hej|ok|okay] <lead_play_audio> noget {music_genre} af {artist_name} fra {album_name} på {record_label} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> {music_genre} sangen {track_name} af {artist_name} fra {release_decade}
+<lead_play_audio> {track_name} af {artist_name} fra {album_name}, en {music_genre} plade fra {release_decade}
+<lead_play_audio> {music_genre} nummeret {track_name} af {artist_name} fra {album_name} på {record_label}
+<lead_play_audio> har du noget {artist_name}
+<lead_play_audio> har du noget {music_genre}
+[hej|ok|okay] <lead_play_audio> har du noget {music_genre} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> har du noget {music_genre} af {artist_name}
+<lead_play_audio> noget {music_genre} til min træning
+<lead_play_audio> noget {music_genre} der kan hjælpe mig med at fokusere
+<lead_play_audio> en {music_genre} mix mens jeg laver mad
+<lead_play_audio> noget af {artist_name} at slappe af til
+<lead_play_audio> {movie_title} soundtracket
+[hej|ok|okay] <lead_play_audio> {movie_title} soundtracket [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> soundtracket til {movie_title}
+<lead_play_audio> soundtracket fra {movie_title}
+<lead_play_audio> musik fra {movie_title}
+<lead_play_audio> temasangen fra {movie_title}
+<lead_play_audio> temaet fra {movie_title}
+[hej|ok|okay] <lead_play_audio> temaet fra {movie_title} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> {movie_composer}'s score
+<lead_play_audio> scoren af {movie_composer}
+<lead_play_audio> {movie_title} temaet
+<lead_play_audio> sange fra {movie_title}
+<lead_play_audio> noget musik fra {release_decade}
+[hej|ok|okay] <lead_play_audio> noget musik fra {release_decade} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> et hit fra {release_year}
+<lead_play_audio> noget {media_country} musik
+<lead_play_audio> et hit fra {release_decade}
+<lead_play_audio> en {music_genre} playliste fra {release_decade}
+{artist_name}, tak
+{artist_name}, hvis du vil
+{track_name}, tak
+{track_name} af {artist_name}, tak
+noget {music_genre}, tak
+{album_name}, tak
+{artist_name} — sæt den på
+{track_name} — smid den på
+{album_name} — lad os høre det
+den {track_name} sang — sæt den på
+{track_name}, smid den på for mig
+spil {artist_name}, vil du?
+sæt noget {music_genre} på, ja?
+spil {track_name} af {artist_name}, vil du?
+sæt {album_name} på, kan du?
+sæt {artist_name} i kø, har du noget imod det?
+i humør til {music_genre}
+jeg kunne godt bruge noget {music_genre}
+jeg kunne virkelig godt bruge {artist_name} lige nu
+jeg leder efter noget {music_genre}
+jeg skal have noget {music_genre} lige nu
+jeg trænger til min {artist_name} dosis
+hvad med lidt {music_genre}
+hvad med {track_name} af {artist_name}
+vi burde høre {album_name}
+måske noget {music_genre}
+måske lidt {artist_name}
+noget ligesom {artist_name}
+noget i stil med {artist_name}
+mere ligesom {artist_name}
+noget {music_genre} måske
+har du noget {artist_name}
+har du noget af {artist_name}
+noget {music_genre} ved hånden?
+er der en {track_name} af {artist_name}
+hvilken {music_genre} har du
+hvad har du af {artist_name}
+noget fra {album_name}?
+{artist_name}'s største hit
+{artist_name}'s mest berømte sang
+det ene hit af {artist_name}
+den hvor {artist_name} synger {track_name}
+{artist_name}'s bedste sang
+det største {music_genre} hit
+det mest fængende {music_genre} nummer
+{music_genre} fordi jeg skal fokusere
+noget {artist_name} til at vække mig
+{music_genre} til at få gang i festen
+lidt {artist_name} til turen
+noget {music_genre} mens jeg gør rent
+{track_name} på gentag
+{artist_name} på bland
+kun {artist_name} i aften
+bare {music_genre} for nu
+<lead_play_audio> det originale soundtrack til {movie_title}
+<lead_play_audio> sangene fra {movie_title}
+<lead_play_audio> kærlighedstemaet fra {movie_title}
+<lead_play_audio> scoren fra {movie_title}
+<lead_play_audio> sange fra filmen {movie_title}
+<lead_play_audio> hovedtemaet fra {movie_title}
+<lead_play_audio> soundtracket til filmen {movie_title}
+<lead_play_audio> rulletekstsangen fra {movie_title}
+<lead_play_audio> {tv_show_title} temasangen
+<lead_play_audio> temaet fra {tv_show_title}
+<lead_play_audio> åbningstemaet fra {tv_show_title}
+<lead_play_audio> musik fra showet {tv_show_title}
+<lead_play_audio> {game_title} soundtracket
+<lead_play_audio> musik fra spillet {game_title}
+<lead_play_audio> {game_title} hovedtemaet
+<lead_play_audio> kampmusikken fra {game_title}
+<lead_play_audio> {anime_title} openingen
+<lead_play_audio> openingsangen fra {anime_title}
+<lead_play_audio> {anime_title} endingen
+<lead_play_audio> soundtracket komponeret af {movie_composer}
+<lead_play_audio> en filmscore af {movie_composer}
+<lead_play_audio> scoren skrevet af {movie_composer}
+<lead_play_audio> musik til filmen med score af {movie_composer}
+<lead_play_audio> scoren til {movie_title}
+<lead_play_audio> scoren af {movie_title}
+<lead_play_audio> åbningstemaet fra {movie_title}
+<lead_play_audio> afslutningstemaet fra {movie_title}
+<lead_play_audio> {tv_show_title} soundtracket
+<lead_play_audio> rulletekstsangen fra {tv_show_title}
+<lead_play_audio> temamelodien til {tv_show_title}
+<lead_play_audio> scoren til {game_title}
+<lead_play_audio> titeltemaet fra {game_title}
+<lead_play_audio> ost'en til {game_title}
+<lead_play_audio> boss-musikken fra {game_title}
+<lead_play_audio> {anime_title} openingtemaet
+<lead_play_audio> endingsangen fra {anime_title}
+<lead_play_audio> indslagssangen fra {anime_title}
+<lead_play_audio> et soundtrack af {movie_composer}
+<lead_play_audio> {movie_composer} scoren
+<lead_play_audio> en sang om {movie_actor}
+<lead_play_audio> en sang inspireret af {book_title}
+<lead_play_audio> en sang baseret på filmen {movie_title}
+<lead_play_audio> en hyldest til {movie_actor}
+<lead_play_audio> en cover af temaet fra {movie_title}
+<lead_play_audio> en cover af {tv_show_title} temaet
+<lead_play_audio> musik inspireret af {book_title}
+<lead_play_audio> et konceptalbum baseret på {book_title}
+<lead_play_audio> sange inspireret af spillet {game_title}
+øh kan du sætte {artist_name} på
+øh spil noget {music_genre} tror jeg
+spil {track_name}, faktisk nej {album_name}
+sæt {artist_name} på — nej vent {track_name}
+spil den sang, du ved, {track_name} af {artist_name}
+jeg vil gerne høre— nej sæt {album_name} på
+hmm måske noget {music_genre}, ja det
+hey så sæt {artist_name} på
+du ved hvad smid noget {music_genre} på
+lad mig høre {track_name}
+giv mig noget {music_genre}
+giv mig det {artist_name} nummer {track_name}
+har lyst til at høre noget {artist_name}
+ok så spil {album_name}
+ugh jeg keder mig så meget sæt noget {music_genre} på
+jeg har haft en lang dag sæt noget {music_genre} på
+det er fredag aften skru op for noget {music_genre}
+vi har gæster sæt noget {music_genre} på
+jeg skal slappe af spil noget af {artist_name}
+jeg kunne virkelig godt bruge noget {music_genre} lige nu
+jeg er sådan set i {artist_name} humør
+jeg bliver ved med at få den {track_name} sang på hjernen
+det føles som en {music_genre}-agtig aften
+har du noget af {artist_name}?
+har du det nye {artist_name} album {album_name}?
+kunne vi høre {track_name}
+hey jeg vil gerne høre noget fra {album_name}
+lad mig få det {track_name} nummer
+giv mig noget {music_genre} at chille til
+<lead_play_audio> den {record_label} lyd fra dengang i {release_decade}
+hvad med vi sætter {album_name} på
+så øh har du nogen {music_genre} numre ved hånden
+<lead_play_audio> greatest hits-albummet af {artist_name}
+har lyst til at høre den ballade fra {release_year}
+er der en plade der hedder {album_name} af {artist_name}
+<lead_play_audio> noget af {artist_name} fra {album_name}
+jeg er i humør til lidt vinyl i dag sæt {album_name} på
+hvad er det hit af {artist_name} fra {release_decade}
+hey kan du spille soundtracket til {movie_title}
+har du nogen {music_genre} album du kan anbefale
+så jeg vil virkelig gerne høre {track_name} lige nu
+<lead_play_audio> {music_genre} fra {release_decade}-æraen
+lad os høre det nummer et hit af {artist_name}
+jeg trænger til min {music_genre} dosis giv mig {artist_name}
+øh kunne du sætte den ep af {artist_name} der hedder {album_name} på
+<lead_play_audio> {track_name} fra det {music_genre} album {album_name}
+hey [så] <lead_play_audio> den {release_decade} sang {track_name} af {artist_name}
+hvad med vi hører {artist_name}'s album {album_name}
+har du nogen {music_genre} numre [du kan anbefale]?
+så jeg har hørt {artist_name} har lavet en ny plade {album_name} [kan du spille den]
+lad mig høre det {music_genre} nummer {track_name} [tak]
+har lyst til at sætte nogle {release_decade} plader på [i aften]?
+<lead_play_audio> {track_name} [remix] [versionen]
+jeg er i humør til {artist_name} [måske] deres album {album_name}
+det føles som en {music_genre}-agtig aften [så] <lead_play_audio> noget godt
+vi burde sætte {album_name} af {artist_name} på [hvad tænker du]
+øh <lead_play_audio> den sang {track_name} [jeg tror det er af {artist_name}]
+hey <lead_play_audio> nogen {music_genre} ballader [fra {release_decade}]
+jeg vil gerne høre {artist_name}'s største hits [eller] bare deres album {album_name}
+hvad med nogle {music_genre} fest-numre [for at komme i gang]?
+så <lead_play_audio> soundtrack-albummet {album_name} [af {artist_name}]
+jeg leder efter den sang {track_name} af {artist_name} [øh] fra {album_name}

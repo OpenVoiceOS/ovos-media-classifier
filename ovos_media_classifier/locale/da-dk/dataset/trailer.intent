@@ -1,0 +1,131 @@
+<lead_watch> traileren til {trailer_title}
+[hej|ok|okay] <lead_watch> traileren til {trailer_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> {trailer_title} traileren
+<lead_watch> en filmtrailer
+[hej|ok|okay] <lead_watch> en filmtrailer [tak|for mig|lige nu|tak skal du have]
+<lead_watch> de seneste trailere
+[hej|ok|okay] <lead_watch> de seneste trailere [tak|for mig|lige nu|tak skal du have]
+<lead_watch> {trailer_title} teaseren
+[hej|ok|okay] <lead_watch> {trailer_title} teaseren [tak|for mig|lige nu|tak skal du have]
+<lead_watch> den officielle trailer til {trailer_title}
+[hej|ok|okay] <lead_watch> den officielle trailer til {trailer_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en ny trailer
+[hej|ok|okay] <lead_watch> en ny trailer [tak|for mig|lige nu|tak skal du have]
+<lead_watch> teaseren til {trailer_title}
+[hej|ok|okay] <lead_watch> teaseren til {trailer_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> nogle filmtrailere
+[hej|ok|okay] <lead_watch> nogle filmtrailere [tak|for mig|lige nu|tak skal du have]
+<lead_watch> {trailer_title} traileren
+[hej|ok|okay] <lead_watch> {trailer_title} traileren [tak|for mig|lige nu|tak skal du have]
+<lead_watch> den nye {trailer_title} trailer
+[hej|ok|okay] <lead_watch> den nye {trailer_title} trailer [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en filmtrailer
+<lead_watch> {trailer_title} forhåndsvisningen
+[hej|ok|okay] <lead_watch> {trailer_title} forhåndsvisningen [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en spiltrailer
+[hej|ok|okay] <lead_watch> en spiltrailer [tak|for mig|lige nu|tak skal du have]
+<lead_watch> den officielle teaser til {trailer_title}
+[hej|ok|okay] <lead_watch> den officielle teaser til {trailer_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en tv-serie-trailer
+[hej|ok|okay] <lead_watch> en tv-serie-trailer [tak|for mig|lige nu|tak skal du have]
+<lead_watch> den sidste trailer til {trailer_title}
+[hej|ok|okay] <lead_watch> den sidste trailer til {trailer_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en kommende filmtrailer
+[hej|ok|okay] <lead_watch> en kommende filmtrailer [tak|for mig|lige nu|tak skal du have]
+<lead_watch> traileren til {trailer_title}
+[hej|ok|okay] <lead_watch> traileren til {trailer_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> et {trailer_title} smugkig
+[hej|ok|okay] <lead_watch> et {trailer_title} smugkig [tak|for mig|lige nu|tak skal du have]
+<lead_watch> har du traileren til {trailer_title}
+[hej|ok|okay] <lead_watch> har du traileren til {trailer_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> har du nogen nye trailere
+<lead_watch> en trailer at tjekke ud
+[hej|ok|okay] <lead_watch> en trailer at tjekke ud [tak|for mig|lige nu|tak skal du have]
+<lead_watch> hvilke trailere er nye
+[hej|ok|okay] <lead_watch> hvilke trailere er nye [tak|for mig|lige nu|tak skal du have]
+<lead_watch> har du {trailer_title} traileren
+[hej|ok|okay] <lead_watch> har du {trailer_title} traileren [tak|for mig|lige nu|tak skal du have]
+<lead_watch> har du teaseren til {trailer_title}
+[hej|ok|okay] <lead_watch> har du teaseren til {trailer_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> nogle trailere at se
+[hej|ok|okay] <lead_watch> nogle trailere at se [tak|for mig|lige nu|tak skal du have]
+<lead_watch> {movie_title} traileren
+[hej|ok|okay] <lead_watch> {movie_title} traileren [tak|for mig|lige nu|tak skal du have]
+<lead_watch> traileren til {movie_title}
+[hej|ok|okay] <lead_watch> traileren til {movie_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> traileren til {tv_show_title}
+[hej|ok|okay] <lead_watch> traileren til {tv_show_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> teaseren til {movie_title}
+[hej|ok|okay] <lead_watch> teaseren til {movie_title} [tak|for mig|lige nu|tak skal du have]
+traileren til {trailer_title}, tak
+{trailer_title} traileren, tak
+traileren til {trailer_title} — spil den
+{trailer_title} teaseren — lad os se den
+sæt {trailer_title} traileren på, vil du?
+jeg kunne godt bruge nogle filmtrailere
+jeg leder efter traileren til {trailer_title}
+jeg skal se {trailer_title} traileren
+hvad med traileren til {trailer_title}
+måske {trailer_title} teaseren
+vi burde se {trailer_title} traileren
+er der nogen nye trailere
+er der en trailer til {trailer_title}
+{trailer_title} forhåndsvisningen fordi jeg er nysgerrig
+nogle trailere at tjekke ud før sengetid
+den nye {trailer_title} trailer alle taler om
+<lead_watch> traileren til serien {tv_show_title}
+<lead_watch> traileren til spillet {game_title}
+<lead_watch> traileren til animeen {anime_title}
+<lead_watch> traileren til filmen baseret på {book_title}
+<lead_watch> den officielle trailer til {tv_show_title}
+<lead_watch> afsløringstraileren til {game_title}
+<lead_watch> lanceringstraileren til {game_title}
+<lead_watch> annonceringstraileren til {game_title}
+øh kan du spille {movie_title} traileren
+spil traileren til {movie_title}, faktisk nej {tv_show_title}
+hey så sæt {movie_title} traileren på
+du ved hvad smid traileren til {movie_title} på
+har lyst til at se {movie_title} traileren
+lad mig se traileren til {movie_title}
+giv mig {game_title} traileren
+jeg er nysgerrig spil traileren til {movie_title}
+er der en trailer til {movie_title}
+har du traileren til {movie_title}?
+<lead_watch> et smugkig af {movie_title}
+vis mig {tv_show_title} traileren vil du
+hey <lead_watch> den nye trailer til {movie_title}
+så <lead_watch> forhåndsvisningen af {tv_show_title}
+jeg vil gerne se {trailer_title} traileren
+lad mig se {game_title} afsløringstraileren
+hvad med vi tjekker {movie_title} forhåndsvisningen ud
+hey har du nogen trailere til {anime_title}
+<lead_watch> øh den der {trailer_title} ting jeg har hørt om
+<lead_watch> {tv_show_title} smugkigget
+så ligesom er der en trailer til {book_title}
+kan du <lead_watch> den nye {game_title} trailer
+hey øh <lead_watch> en forhåndsvisning af noget godt
+giv mig {movie_title} traileren nu
+lad os tjekke {trailer_title} forhåndsvisningen ud sammen
+jeg har hørt der er en trailer til {tv_show_title}
+<lead_watch> hvad som helst af trailere du har til {anime_title}
+så <lead_watch> {game_title} gameplay-traileren
+jeg vil gerne se forhåndsvisninger af {trailer_title}
+[hey|så|okay] hvad med vi tjekker en trailer til {movie_title} ud (i aften|en dag|)
+[jeg er] i humør til en {trailer_title} forhåndsvisning [tak]
+[hey|hør her|okay] <lead_watch> en ny trailer til {tv_show_title} [måske]
+[så|øh|hey] har du nogen trailere til {game_title} [jeg kunne se]
+[du ved hvad|skal jeg sige dig] <lead_watch> den seneste trailer til {anime_title}
+[hey|okay] <lead_watch> det (smugkig|forhåndsvisning) af {movie_title} [igen]
+har lyst til at se hvilke trailere (der er ude|kom ud) [i dag|denne uge]
+[hey|tak] <lead_watch> vis mig en trailer til {book_title} [tror jeg]
+[så|jeg mener] <lead_watch> traileren til {trailer_title} (ser sej ud|virker interessant)
+[hey|okay|tak] <lead_watch> nogen nye filmtrailere [lige nu]
+jeg har lyst til at se {tv_show_title} traileren [igen|hurtigt]
+[hey|øh] <lead_watch> den teaser-trailer til {anime_title} [tak]
+[så|hør her] <lead_watch> giv mig forhåndsvisningen af {game_title} [vil du]
+jeg tænker på om der er en trailer til {trailer_title} [et sted]
+[hey|tak|så] <lead_watch> hvilke (trailere|forhåndsvisninger) har du til {tv_show_title}
+lad mig se {movie_title} (traileren|forhåndsvisningen|smugkigget) [hurtigt]
+[så|jeg mener|hey] <lead_watch> nogen seje spiltrailere [for nylig]
+<lead_watch> traileren til {anime_title} (jeg har hørt om|der kom ud)
+[hey|okay] <lead_watch> er der en teaser til {book_title} [tilfældigvis]

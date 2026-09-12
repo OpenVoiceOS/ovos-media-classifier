@@ -1,0 +1,178 @@
+<lead_play_audio> {podcast_title}
+[hej|ok|okay] <lead_play_audio> {podcast_title} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> {podcast_title} podcasten
+<lead_play_audio> et afsnit af {podcast_title}
+[hej|ok|okay] <lead_play_audio> et afsnit af {podcast_title} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> det seneste {podcast_title} afsnit
+[hej|ok|okay] <lead_play_audio> det seneste {podcast_title} afsnit [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> en {podcast_genre} podcast
+[hej|ok|okay] <lead_play_audio> en {podcast_genre} podcast [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> podcasten med {podcast_host}
+[hej|ok|okay] <lead_play_audio> podcasten med {podcast_host} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> {podcast_host}'s podcast
+[hej|ok|okay] <lead_play_audio> {podcast_host}'s podcast [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> en podcast om {podcast_genre}
+[hej|ok|okay] <lead_play_audio> en podcast om {podcast_genre} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> podcasten som {podcast_host} er vært for
+[hej|ok|okay] <lead_play_audio> podcasten som {podcast_host} er vært for [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> en god {podcast_genre} podcast
+[hej|ok|okay] <lead_play_audio> en god {podcast_genre} podcast [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> {podcast_title} med {podcast_host} som vært
+[hej|ok|okay] <lead_play_audio> {podcast_title} med {podcast_host} som vært [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> en {podcast_genre} podcast med {podcast_host}
+[hej|ok|okay] <lead_play_audio> en {podcast_genre} podcast med {podcast_host} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> en {podcast_genre} podcast med {podcast_host} som vært
+[hej|ok|okay] <lead_play_audio> en {podcast_genre} podcast med {podcast_host} som vært [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> {podcast_title} afsnittet med {podcast_host}
+[hej|ok|okay] <lead_play_audio> {podcast_title} afsnittet med {podcast_host} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> en {podcast_genre} podcast der hedder {podcast_title} med {podcast_host}
+[hej|ok|okay] <lead_play_audio> en {podcast_genre} podcast der hedder {podcast_title} med {podcast_host} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> har du nogen {podcast_genre} podcasts
+[hej|ok|okay] <lead_play_audio> har du nogen {podcast_genre} podcasts [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> har du en god {podcast_genre} podcast
+[hej|ok|okay] <lead_play_audio> har du en god {podcast_genre} podcast [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> en {podcast_genre} podcast til pendlerturen
+[hej|ok|okay] <lead_play_audio> en {podcast_genre} podcast til pendlerturen [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> en podcast om {artist_name}
+[hej|ok|okay] <lead_play_audio> en podcast om {artist_name} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> en podcast om {movie_title}
+[hej|ok|okay] <lead_play_audio> en podcast om {movie_title} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> podcasten om {movie_actor}
+[hej|ok|okay] <lead_play_audio> podcasten om {movie_actor} [tak|for mig|lige nu|tak skal du have]
+{podcast_title}, tak
+{podcast_title} podcasten, tak
+en {podcast_genre} podcast, tak
+{podcast_title} — sæt den på
+det seneste {podcast_title} — lad os høre det
+den podcast {podcast_title} — start den
+sæt {podcast_title} på, vil du?
+sæt {podcast_host}'s podcast i kø, kan du?
+jeg er i {podcast_genre} podcast-humør
+i humør til en {podcast_genre} podcast
+jeg kunne godt bruge en {podcast_genre} podcast
+jeg leder efter en god {podcast_genre} podcast
+jeg skal have en {podcast_genre} podcast til køreturen
+hvad med {podcast_host}'s podcast
+måske en {podcast_genre} podcast
+måske et afsnit af {podcast_title}
+vi burde høre {podcast_title}
+noget ligesom {podcast_title}
+endnu en podcast ligesom {podcast_title}
+er der nogen {podcast_genre} podcasts
+hvilke {podcast_genre} podcasts har du
+er der en podcast med {podcast_host}
+det nyeste {podcast_title} afsnit
+{podcast_host}'s seneste afsnit
+en {podcast_genre} podcast mens jeg pendler
+noget med {podcast_host} til turen
+en {podcast_genre} podcast fordi jeg keder mig
+<lead_play_audio> en podcast med {movie_actor}
+<lead_play_audio> en interview-podcast med {movie_actor}
+<lead_play_audio> et podcast-afsnit der interviewer {movie_actor}
+<lead_play_audio> et podcast-afsnit om {artist_name}
+<lead_play_audio> en podcast hvor de interviewer {artist_name}
+<lead_play_audio> en podcast som {movie_director} er vært for
+<lead_play_audio> et podcast-interview med instruktøren {movie_director}
+<lead_play_audio> en podcast med forfatteren {book_author}
+<lead_play_audio> et podcast-interview med {book_author}
+<lead_play_audio> en podcast der diskuterer romanen {book_title}
+<lead_play_audio> en podcast der gennemgår filmen {movie_title}
+<lead_play_audio> en podcast der anmelder filmen {movie_title}
+<lead_play_audio> en podcast om spillet {game_title}
+<lead_play_audio> en podcast der diskuterer albummet {album_name}
+<lead_play_audio> en podcast om showet {tv_show_title}
+<lead_play_audio> en podcast om {movie_actor}
+<lead_play_audio> en podcast med {movie_actor}
+<lead_play_audio> et interview med {movie_actor}
+<lead_play_audio> et podcast-interview med {movie_actor}
+<lead_play_audio> en podcast om {movie_director}
+<lead_play_audio> en podcast med {movie_director}
+<lead_play_audio> en podcast med {movie_director}
+<lead_play_audio> et interview med {movie_director}
+<lead_play_audio> et podcast-interview med {movie_director}
+<lead_play_audio> et podcast-afsnit der interviewer {movie_director}
+<lead_play_audio> en podcast med {artist_name}
+<lead_play_audio> en podcast med {artist_name}
+<lead_play_audio> et interview med {artist_name}
+<lead_play_audio> et podcast-interview med {artist_name}
+<lead_play_audio> et podcast-afsnit der interviewer {artist_name}
+<lead_play_audio> en podcast om {book_author}
+<lead_play_audio> en podcast med {book_author}
+<lead_play_audio> en podcast med {book_author}
+<lead_play_audio> et interview med {book_author}
+<lead_play_audio> et podcast-afsnit der interviewer {book_author}
+<lead_play_audio> en podcast om {movie_writer}
+<lead_play_audio> en podcast med {movie_writer}
+<lead_play_audio> en podcast med {movie_writer}
+<lead_play_audio> et interview med {movie_writer}
+<lead_play_audio> et podcast-interview med {movie_writer}
+<lead_play_audio> et podcast-afsnit der interviewer {movie_writer}
+<lead_play_audio> en podcast om filmen {movie_title}
+<lead_play_audio> en podcast der diskuterer filmen {movie_title}
+<lead_play_audio> en podcast der opsummerer {tv_show_title}
+<lead_play_audio> en podcast der opsummerer showet {tv_show_title}
+<lead_play_audio> en podcast om videospillet {game_title}
+<lead_play_audio> en podcast om bogen {book_title}
+<lead_play_audio> en bogklub-podcast om {book_title}
+<lead_play_audio> en podcast om albummet {album_name}
+<lead_play_audio> en podcast om bandet {artist_name}
+<lead_play_audio> en podcast om animeen {anime_title}
+<lead_play_audio> en podcast om tegneserien {comic_title}
+<lead_play_audio> en podcast om {music_genre}
+<lead_play_audio> en podcast om historien bag {music_genre}
+<lead_play_audio> en podcast som {movie_actor} er vært for
+<lead_play_audio> en true crime-podcast om {movie_title}
+øh kan du sætte {podcast_title} på
+spil {podcast_title}, faktisk nej den om {music_genre}
+øh måske den podcast {podcast_title}
+hey så sæt {podcast_title} på
+du ved hvad smid {podcast_title} på
+har lyst til at høre {podcast_title}
+lad mig følge med i {podcast_title}
+giv mig en {podcast_genre} podcast
+ugh lang køretur foran mig sæt en podcast på
+jeg vasker op sæt {podcast_title} på
+jeg kunne virkelig godt bruge en {podcast_genre} podcast
+jeg blev aldrig færdig med den podcast om {music_genre}
+jeg er sådan set i humør til {podcast_host}
+er der et nyt afsnit af {podcast_title}
+har du nogen podcasts med {podcast_host}?
+hvad med den podcast {podcast_title}
+noget godt fra {podcast_host} for nylig?
+hey <lead_play_audio> det {podcast_title} afsnit jeg gik glip af
+så <lead_play_audio> noget om {music_genre} podcasts du ved
+øh kan vi høre den podcast med {podcast_host} igen
+<lead_play_audio> en podcast-serie som {podcast_host} er vært for
+lad mig høre det seneste afsnit af {podcast_title}
+<lead_play_audio> en podcast om {movie_title} med instruktøren
+har du nogen gode podcasts om {book_title}
+<lead_play_audio> den hvor {podcast_host} taler om {tv_show_title}
+hey spil det podcast-afsnit om {music_genre} tak
+så jeg vil gerne høre en podcast der interviewer {movie_actor}
+<lead_play_audio> en {podcast_genre} podcast jeg ikke har hørt endnu
+øh hvad hed den podcast der hed {podcast_title}
+lad os høre en dybdegående podcast om {game_title}
+<lead_play_audio> en podcast der gennemgår {comic_title}
+jeg har aldrig tjekket den podcast med {movie_writer} ud
+<lead_play_audio> et {podcast_genre} show som {podcast_host} er vært for
+hey så giv mig en god podcast om {anime_title}
+kan du spille en podcast om {album_name} af {artist_name}
+<lead_play_audio> podcasten hvor de anmelder {tv_show_title}
+hey så jeg vil gerne høre den {podcast_title} podcast med {podcast_host}
+lad mig høre den seneste {podcast_title}
+hvad med vi sætter en {podcast_genre} podcast på
+har du nogen podcasts som {podcast_host} er vært for
+jeg er i humør til en {podcast_genre} podcast-agtig dag
+spil podcasten hvor {podcast_host} taler om {movie_title}
+vi burde tjekke det {podcast_title} afsnit ud
+hey øh kan du finde mig en podcast om {tv_show_title}
+hvad med den podcast med {podcast_host}
+jeg vil gerne høre {podcast_host} på en podcast om {game_title}
+så der er den her podcast der hedder {podcast_title} spil den
+spil mig en {podcast_genre} podcast jeg ikke har hørt endnu
+hvad med en podcast om {book_title} af {book_author}
+jeg er i humør til {podcast_title} lige nu faktisk
+hey spil den podcast om {anime_title}
+sæt en podcast om {movie_director} film på eller noget
+lad os høre hvad {podcast_host} har at sige i {podcast_title}
+så jeg tænkte en podcast om {tv_show_title} ville være fedt

@@ -1,0 +1,136 @@
+<lead_watch> {cartoon_title}
+[hej|ok|okay] <lead_watch> {cartoon_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> tegnefilmen {cartoon_title}
+<lead_watch> nogle tegnefilm
+[hej|ok|okay] <lead_watch> nogle tegnefilm [tak|for mig|lige nu|tak skal du have]
+<lead_watch> et afsnit af {cartoon_title}
+[hej|ok|okay] <lead_watch> et afsnit af {cartoon_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en børnetegnefilm
+[hej|ok|okay] <lead_watch> en børnetegnefilm [tak|for mig|lige nu|tak skal du have]
+<lead_watch> serien {cartoon_title}
+[hej|ok|okay] <lead_watch> serien {cartoon_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en lørdagsmorgen-tegnefilm
+[hej|ok|okay] <lead_watch> en lørdagsmorgen-tegnefilm [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en gammel tegnefilm
+[hej|ok|okay] <lead_watch> en gammel tegnefilm [tak|for mig|lige nu|tak skal du have]
+<lead_watch> det næste afsnit af {cartoon_title}
+[hej|ok|okay] <lead_watch> det næste afsnit af {cartoon_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en klassisk tegnefilm
+[hej|ok|okay] <lead_watch> en klassisk tegnefilm [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en sjov tegnefilm
+[hej|ok|okay] <lead_watch> en sjov tegnefilm [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en animeret serie
+[hej|ok|okay] <lead_watch> en animeret serie [tak|for mig|lige nu|tak skal du have]
+<lead_watch> den animerede serie {cartoon_title}
+[hej|ok|okay] <lead_watch> den animerede serie {cartoon_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> endnu et afsnit af {cartoon_title}
+[hej|ok|okay] <lead_watch> endnu et afsnit af {cartoon_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en tegnefilmsserie
+[hej|ok|okay] <lead_watch> en tegnefilmsserie [tak|for mig|lige nu|tak skal du have]
+<lead_watch> nogle klassiske tegnefilm
+[hej|ok|okay] <lead_watch> nogle klassiske tegnefilm [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en gammeldags tegnefilm
+[hej|ok|okay] <lead_watch> en gammeldags tegnefilm [tak|for mig|lige nu|tak skal du have]
+<lead_watch> det nye {cartoon_title} afsnit
+[hej|ok|okay] <lead_watch> det nye {cartoon_title} afsnit [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en animeret børneserie
+[hej|ok|okay] <lead_watch> en animeret børneserie [tak|for mig|lige nu|tak skal du have]
+<lead_watch> {cartoon_title} tegnefilmen
+[hej|ok|okay] <lead_watch> {cartoon_title} tegnefilmen [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en tegnefilm til børn
+[hej|ok|okay] <lead_watch> en tegnefilm til børn [tak|for mig|lige nu|tak skal du have]
+<lead_watch> et afsnit af den tegnefilm
+[hej|ok|okay] <lead_watch> et afsnit af den tegnefilm [tak|for mig|lige nu|tak skal du have]
+<lead_watch> mere {cartoon_title}
+[hej|ok|okay] <lead_watch> mere {cartoon_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> har du nogen tegnefilm
+[hej|ok|okay] <lead_watch> har du nogen tegnefilm [tak|for mig|lige nu|tak skal du have]
+<lead_watch> har du nogen {cartoon_title} afsnit
+[hej|ok|okay] <lead_watch> har du nogen {cartoon_title} afsnit [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en tegnefilm til børnene
+[hej|ok|okay] <lead_watch> en tegnefilm til børnene [tak|for mig|lige nu|tak skal du have]
+<lead_watch> noget animeret til lørdag morgen
+[hej|ok|okay] <lead_watch> noget animeret til lørdag morgen [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en tegnefilm der kan holde børnene beskæftiget
+[hej|ok|okay] <lead_watch> en tegnefilm der kan holde børnene beskæftiget [tak|for mig|lige nu|tak skal du have]
+<lead_watch> har du en sjov tegnefilm
+[hej|ok|okay] <lead_watch> har du en sjov tegnefilm [tak|for mig|lige nu|tak skal du have]
+{cartoon_title}, tak
+tegnefilmen {cartoon_title}, tak
+nogle tegnefilm, tak
+{cartoon_title} — sæt den på
+det næste afsnit af {cartoon_title} — lad os gå
+sæt {cartoon_title} på, vil du?
+jeg kunne godt bruge nogle tegnefilm
+jeg leder efter en sjov tegnefilm
+jeg skal have en tegnefilm til børnene
+hvad med {cartoon_title}
+måske en klassisk tegnefilm
+vi burde se {cartoon_title}
+noget ligesom {cartoon_title}
+endnu et afsnit af {cartoon_title}
+er der nogen gode tegnefilm
+{cartoon_title} tegnefilmen, tak
+en tegnefilm der kan holde børnene beskæftiget
+nogle tegnefilm fordi det er lørdag morgen
+den gamle {cartoon_title} tegnefilm jeg plejede at se
+<lead_watch> en tegnefilm baseret på {comic_title}
+<lead_watch> en tegnefilm baseret på tegneserien {comic_title}
+<lead_watch> den animerede serie baseret på {comic_title}
+<lead_watch> en tegnefilm baseret på filmen {movie_title}
+<lead_watch> den animerede tilpasning af {movie_title}
+<lead_watch> en tegnefilm baseret på spillet {game_title}
+<lead_watch> en tegnefilm baseret på bogen {book_title}
+<lead_watch> en animeret serie baseret på romanen {book_title}
+<lead_watch> {comic_title} tegnefilmen
+<lead_watch> {movie_title} den animerede serie
+øh kan du sætte {cartoon_title} på
+se den— nej den anden {cartoon_title}
+sæt {cartoon_title} på, faktisk nej den {movie_title} en
+hey så sæt {cartoon_title} på
+du ved hvad smid {cartoon_title} på
+har lyst til at se {cartoon_title}
+lad mig se noget {cartoon_title}
+giv mig nogle tegnefilm
+børnene bliver urolige sæt {cartoon_title} på
+børnene keder sig sæt en tegnefilm på
+jeg kunne virkelig godt bruge noget {cartoon_title}
+jeg er nostalgisk sæt {cartoon_title} på
+er der et nyt afsnit af {cartoon_title}
+har du nogen tegnefilm til børnene?
+jeg er i humør til en tegnefilm, har du noget {cartoon_title}
+øh <lead_watch> noget animeret ligesom {cartoon_title} [måske]
+hey <lead_watch> det der lørdagsmorgen-tegnefilm-show
+så <lead_watch> en animeret serie [tak]
+lad mig se en animeret serie [eller noget]
+jeg vil gerne se nogle tegnefilm, måske {cartoon_title}
+<lead_watch> den tegnefilm fra bogen {book_title}
+har du nogen gode animerede serier [at se]
+så <lead_watch> tegnefilmsversionen af {movie_title}
+hey <lead_watch> lørdagsmorgen-tegnefilm eller hvad
+<lead_watch> en animeret serie ligesom {cartoon_title}
+jeg vil gerne se tegnefilm øh <lead_watch> {cartoon_title}
+så ligesom <lead_watch> en ny animeret serie [måske]
+lad mig se nogle tegnefilm [tak]
+<lead_watch> en tegnefilm baseret på spillet {game_title} faktisk vent den {comic_title} en
+så jeg leder efter nogle lørdagsmorgen-tegnefilm
+kan du <lead_watch> det nye {cartoon_title} afsnit
+hey har du nogen tegnefilmsafsnit [at se]
+jeg er i humør til et {cartoon_title} maraton
+hvad med vi <lead_watch> det {cartoon_title} show
+så jeg vil gerne <lead_watch> en animeret serie i aften
+hey har du nogen gode tegnefilm at <lead_watch>
+det føles som en tegnefilm-aften lad os <lead_watch> {cartoon_title}
+vi burde <lead_watch> det nye animerede show
+jeg vil gerne <lead_watch> {cartoon_title} tegnefilmen
+lad mig se hvilke tegnefilm der er på <lead_watch> {cartoon_title}
+det er lørdag morgen så lad os <lead_watch> tegnefilm
+giv mig en god animeret serie at binge
+så ligesom kan vi <lead_watch> den tegnefilm baseret på {book_title}
+jeg har hørt {cartoon_title} er god lad os <lead_watch> den
+jeg leder efter en animeret serie at <lead_watch>
+hvad med vi tjekker den tegnefilm baseret på {game_title} ud
+hvad er en god tegnefilm at <lead_watch> lige nu
+lad os <lead_watch> det seneste afsnit af {cartoon_title}
+jeg kunne godt bruge en animeret serie hvad med {cartoon_title}
+hey øh <lead_watch> en tegnefilm måske {cartoon_title} eller noget

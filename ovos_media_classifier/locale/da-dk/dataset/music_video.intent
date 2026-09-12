@@ -1,0 +1,132 @@
+<lead_watch> musikvideoen til {music_video_title}
+[hej|ok|okay] <lead_watch> musikvideoen til {music_video_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> {music_video_title}
+<lead_watch> {artist_name} musikvideoen
+[hej|ok|okay] <lead_watch> {artist_name} musikvideoen [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en musikvideo af {artist_name}
+[hej|ok|okay] <lead_watch> en musikvideo af {artist_name} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> den officielle video til {music_video_title}
+[hej|ok|okay] <lead_watch> den officielle video til {music_video_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> {artist_name}'s musikvideo
+[hej|ok|okay] <lead_watch> {artist_name}'s musikvideo [tak|for mig|lige nu|tak skal du have]
+<lead_watch> {music_video_title} videoen
+[hej|ok|okay] <lead_watch> {music_video_title} videoen [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en musikvideo
+[hej|ok|okay] <lead_watch> en musikvideo [tak|for mig|lige nu|tak skal du have]
+<lead_watch> nogle musikvideoer
+[hej|ok|okay] <lead_watch> nogle musikvideoer [tak|for mig|lige nu|tak skal du have]
+<lead_watch> den seneste {artist_name} musikvideo
+[hej|ok|okay] <lead_watch> den seneste {artist_name} musikvideo [tak|for mig|lige nu|tak skal du have]
+<lead_watch> endnu en {artist_name} musikvideo
+[hej|ok|okay] <lead_watch> endnu en {artist_name} musikvideo [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en {artist_name} video
+[hej|ok|okay] <lead_watch> en {artist_name} video [tak|for mig|lige nu|tak skal du have]
+<lead_watch> den officielle {music_video_title} video
+[hej|ok|okay] <lead_watch> den officielle {music_video_title} video [tak|for mig|lige nu|tak skal du have]
+<lead_watch> den nye musikvideo af {artist_name}
+[hej|ok|okay] <lead_watch> den nye musikvideo af {artist_name} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> nogle {artist_name} musikvideoer
+[hej|ok|okay] <lead_watch> nogle {artist_name} musikvideoer [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en ny musikvideo
+[hej|ok|okay] <lead_watch> en ny musikvideo [tak|for mig|lige nu|tak skal du have]
+<lead_watch> {music_video_title} den officielle video
+<lead_watch> musikvideoen {music_video_title}
+[hej|ok|okay] <lead_watch> musikvideoen {music_video_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> musikvideoen til {music_video_title} af {artist_name}
+[hej|ok|okay] <lead_watch> musikvideoen til {music_video_title} af {artist_name} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> {artist_name}'s musikvideo til {music_video_title}
+[hej|ok|okay] <lead_watch> {artist_name}'s musikvideo til {music_video_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> den officielle video til {music_video_title} af {artist_name}
+[hej|ok|okay] <lead_watch> den officielle video til {music_video_title} af {artist_name} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> har du musikvideoen til {music_video_title}
+[hej|ok|okay] <lead_watch> har du musikvideoen til {music_video_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> har du nogen {artist_name} musikvideoer
+[hej|ok|okay] <lead_watch> har du nogen {artist_name} musikvideoer [tak|for mig|lige nu|tak skal du have]
+<lead_watch> nogle musikvideoer til festen
+[hej|ok|okay] <lead_watch> nogle musikvideoer til festen [tak|for mig|lige nu|tak skal du have]
+<lead_watch> har du nogen musikvideoer af {artist_name}
+[hej|ok|okay] <lead_watch> har du nogen musikvideoer af {artist_name} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en musikvideo at chille til
+[hej|ok|okay] <lead_watch> en musikvideo at chille til [tak|for mig|lige nu|tak skal du have]
+<lead_watch> har du videoen til {music_video_title}
+[hej|ok|okay] <lead_watch> har du videoen til {music_video_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> musikvideoen af {artist_name}
+[hej|ok|okay] <lead_watch> musikvideoen af {artist_name} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> den officielle video til {track_name}
+[hej|ok|okay] <lead_watch> den officielle video til {track_name} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> {track_name} musikvideoen
+[hej|ok|okay] <lead_watch> {track_name} musikvideoen [tak|for mig|lige nu|tak skal du have]
+musikvideoen til {music_video_title}, tak
+{music_video_title}, tak
+{artist_name} musikvideoen — sæt den på
+den officielle video til {music_video_title} — lad os se den
+sæt {artist_name} musikvideoen på, vil du?
+jeg kunne godt bruge nogle musikvideoer
+jeg leder efter den seneste {artist_name} musikvideo
+jeg skal have en musikvideo at chille til
+hvad med musikvideoen til {music_video_title}
+måske en {artist_name} musikvideo
+vi burde se {music_video_title} videoen
+noget ligesom {artist_name}'s musikvideoer
+er der nogen {artist_name} musikvideoer
+den nye {artist_name} musikvideo alle taler om
+nogle musikvideoer fordi det er festtid
+{track_name} musikvideoen, tak
+<lead_watch> musikvideoen til sangen {track_name}
+<lead_watch> den officielle musikvideo af {track_name}
+<lead_watch> videoklippet til {track_name}
+<lead_watch> musikvideoen fra albummet {album_name}
+<lead_watch> musikvideoen til en sang fra {album_name}
+<lead_watch> videoen til singlen {track_name}
+<lead_watch> lyric videoen til {track_name}
+<lead_watch> visualizeren til {track_name}
+<lead_watch> musikvideoen med {movie_actor}
+<lead_watch> en musikvideo instrueret af {movie_director}
+øh kan du sætte {track_name} videoen på
+spil {track_name} videoen, faktisk nej noget af {artist_name}
+hey så sæt videoen til {track_name} på
+du ved hvad smid en musikvideo af {artist_name} på
+har lyst til at se {track_name} videoen
+lad mig se musikvideoen til {track_name}
+giv mig en musikvideo af {artist_name}
+jeg kunne virkelig godt bruge nogle musikvideoer
+er der en video til {track_name}
+har du musikvideoen til {track_name}?
+hvad med {artist_name} videoen
+<lead_watch> den officielle video til {track_name} af {artist_name}
+hey så jeg vil gerne se lyric videoen til {track_name}
+lad os tjekke den vevo-video af {artist_name} ud
+hvad med vi sætter en musikvideo fra {album_name} på
+giv mig den officielle musikvideo til {track_name}
+<lead_watch> den {artist_name} musikvideo fra {album_name}
+kan vi se en musikvideo med {movie_actor}
+[så|øh] jeg har hørt der er et videoklip til {music_video_title}
+har du nogen videoklip af {artist_name}
+<lead_watch> den nye {music_video_title} video af {artist_name}
+jeg vil gerne se den officielle video instrueret af {movie_director}
+måske spil lyric videoen til {track_name}
+lad os se en musikvideo med {movie_actor} i
+<lead_watch> en vevo-musikvideo af {artist_name}
+jeg leder efter den officielle musikvideo af {track_name}
+smid et videoklip fra {album_name} af {artist_name} på
+hvad med den musikvideo som {movie_director} instruerede
+<lead_watch> {music_video_title} videoen fra {album_name}
+har du nogen officielle videoer til {music_video_title}
+jeg er i humør til en {artist_name} musikvideo
+lad os tjekke lyric videoen til {track_name} ud
+<lead_watch> vevo-videoen til sangen {track_name}
+vi burde se {artist_name} den officielle musikvideo
+det føles som en musikvideo-aften, vis mig {artist_name}
+jeg vil gerne se den officielle video til {track_name} af {artist_name}
+har du nogen gode {artist_name} musikvideoer
+<lead_watch> den nye {music_video_title} video
+så øh kan du spille {artist_name} den officielle musikvideo
+lad mig se videoklippet til {track_name}
+<lead_watch> en lyric video af {artist_name}
+hvad med vi ser musikvideoer af {artist_name}
+jeg vil elske at se den officielle musikvideo til {track_name}
+<lead_watch> {artist_name} videoklippet
+hey lad os se den officielle video til {track_name} fra albummet {album_name}
+vis mig vevo-videoen til {music_video_title}
+jeg er i humør til en {artist_name} lyric video
+spil den officielle video til sangen {track_name} tak

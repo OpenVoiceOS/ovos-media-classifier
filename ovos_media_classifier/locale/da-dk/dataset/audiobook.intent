@@ -1,0 +1,130 @@
+<lead_play_audio> lydbogen {audiobook_title}
+[hej|ok|okay] <lead_play_audio> lydbogen {audiobook_title} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> lydbogen af {audiobook_title}
+<lead_play_audio> en lydbog af {audiobook_author}
+[hej|ok|okay] <lead_play_audio> en lydbog af {audiobook_author} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> en lydbog oplæst af {audiobook_narrator}
+[hej|ok|okay] <lead_play_audio> en lydbog oplæst af {audiobook_narrator} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> en {audiobook_genre} lydbog
+[hej|ok|okay] <lead_play_audio> en {audiobook_genre} lydbog [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> lydbogsudgaven af {audiobook_title}
+[hej|ok|okay] <lead_play_audio> lydbogsudgaven af {audiobook_title} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> hvad som helst af {audiobook_author}
+[hej|ok|okay] <lead_play_audio> hvad som helst af {audiobook_author} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> en god {audiobook_genre} lydbog
+[hej|ok|okay] <lead_play_audio> en god {audiobook_genre} lydbog [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> lydbogen {audiobook_title} af {audiobook_author}
+[hej|ok|okay] <lead_play_audio> lydbogen {audiobook_title} af {audiobook_author} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> lydbogen {audiobook_title} oplæst af {audiobook_narrator}
+[hej|ok|okay] <lead_play_audio> lydbogen {audiobook_title} oplæst af {audiobook_narrator} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> en lydbog af {audiobook_author} oplæst af {audiobook_narrator}
+[hej|ok|okay] <lead_play_audio> en lydbog af {audiobook_author} oplæst af {audiobook_narrator} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> en {audiobook_genre} lydbog af {audiobook_author}
+[hej|ok|okay] <lead_play_audio> en {audiobook_genre} lydbog af {audiobook_author} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> en {audiobook_genre} lydbog oplæst af {audiobook_narrator}
+[hej|ok|okay] <lead_play_audio> en {audiobook_genre} lydbog oplæst af {audiobook_narrator} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> lydbogen {audiobook_title} af {audiobook_author} oplæst af {audiobook_narrator}
+[hej|ok|okay] <lead_play_audio> lydbogen {audiobook_title} af {audiobook_author} oplæst af {audiobook_narrator} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> en {audiobook_genre} lydbog af {audiobook_author} oplæst af {audiobook_narrator}
+[hej|ok|okay] <lead_play_audio> en {audiobook_genre} lydbog af {audiobook_author} oplæst af {audiobook_narrator} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> har du nogen {audiobook_genre} lydbøger
+[hej|ok|okay] <lead_play_audio> har du nogen {audiobook_genre} lydbøger [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> en lydbog til at falde i søvn til
+[hej|ok|okay] <lead_play_audio> en lydbog til at falde i søvn til [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> en {audiobook_genre} lydbog til turen
+[hej|ok|okay] <lead_play_audio> en {audiobook_genre} lydbog til turen [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> lydbogen af {movie_title}
+[hej|ok|okay] <lead_play_audio> lydbogen af {movie_title} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> lydbogsudgaven af {movie_title}
+[hej|ok|okay] <lead_play_audio> lydbogsudgaven af {movie_title} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> {movie_title} som lydbog
+[hej|ok|okay] <lead_play_audio> {movie_title} som lydbog [tak|for mig|lige nu|tak skal du have]
+lydbogen {audiobook_title}, tak
+{audiobook_title} af {audiobook_author}, tak
+en {audiobook_genre} lydbog, tak
+{audiobook_title} — læs den for mig
+den lydbog {audiobook_title} — start den
+lydbogen af {audiobook_title} — sæt den på
+sæt lydbogen {audiobook_title} på, vil du?
+jeg er i humør til en {audiobook_genre} lydbog
+i humør til en {audiobook_genre} lydbog
+jeg kunne godt bruge en lydbog af {audiobook_author}
+jeg leder efter en god {audiobook_genre} lydbog
+jeg skal have en lydbog til turen
+hvad med en lydbog af {audiobook_author}
+måske en {audiobook_genre} lydbog
+måske lydbogen af {audiobook_title}
+vi burde høre {audiobook_title}
+noget ligesom {audiobook_title}
+endnu en lydbog af {audiobook_author}
+er der nogen {audiobook_genre} lydbøger
+hvilke {audiobook_genre} lydbøger har du
+er der en lydbog oplæst af {audiobook_narrator}
+{audiobook_author}'s seneste lydbog
+den lydbog alle taler om af {audiobook_author}
+en {audiobook_genre} lydbog til den lange køretur
+en lydbog oplæst af {audiobook_narrator} til sengetid
+noget af {audiobook_author} fordi jeg ikke kan sove
+<lead_play_audio> lydbogen af {book_title}
+<lead_play_audio> lydbogsudgaven af {book_title}
+<lead_play_audio> lydbogen af romanen {book_title}
+<lead_play_audio> lydbogen oplæst af {book_author}
+<lead_play_audio> en lydbog af {book_author}
+<lead_play_audio> lydbogen af {book_author}'s seneste bog
+<lead_play_audio> lydbogserindringerne af {movie_actor}
+<lead_play_audio> {movie_actor} der læser sine erindringer op
+<lead_play_audio> lydbogsselvbiografien af {artist_name}
+<lead_play_audio> {book_title} som lydbog
+<lead_play_audio> lydbogsudgaven af {book_title}
+<lead_play_audio> lydbogsudgaven af {movie_title}
+<lead_play_audio> lydbogen skrevet af {book_author}
+<lead_play_audio> lydbogsbiografien af {artist_name}
+<lead_play_audio> erindringerne af {movie_director} som lydbog
+<lead_play_audio> lydbogen oplæst af {movie_actor}
+<lead_play_audio> en lydbog læst af {movie_actor}
+<lead_play_audio> lydbogen af biografien om {artist_name}
+<lead_play_audio> lydbogs-romanudgaven af {movie_title}
+<lead_play_audio> den uforkortede lydbog af {book_title}
+<lead_play_audio> lydbogen af erindringerne fra {podcast_host}
+øh kan du læse {book_title} for mig
+spil {book_title}, faktisk nej den af {book_author}
+øh måske lydbogen af {book_title}
+hey så sæt lydbogen {book_title} på
+du ved hvad smid {book_title} på som lydbog
+har lyst til at høre {book_title}
+lad mig fortsætte {book_title} hvor jeg slap
+giv mig en lydbog af {book_author}
+jeg kan ikke sove sæt en lydbog på
+lang flyvetur foran mig sæt {book_title} på
+jeg kunne virkelig godt bruge en lydbog lige nu
+jeg blev aldrig færdig med lydbogen af {book_title}
+jeg er i humør til noget af {book_author}
+er der en lydbog læst af {movie_actor}
+har du lydbogen af {book_title}?
+hey <lead_play_audio> jeg vil gerne høre {audiobook_title}
+så <lead_play_audio> lydbogsudgaven af {book_title} okay
+lad mig høre den lydbog af {audiobook_author} du ved
+hey <lead_play_audio> hvad som helst læst af {movie_actor} som lydbog
+har du nogen lydbøger i {audiobook_genre} genren
+så ligesom jeg vil gerne høre lydbogen af {book_title} af {book_author}
+hey <lead_play_audio> den lydbog oplæst af {audiobook_narrator} ja
+så <lead_play_audio> lydbogsudgaven af {book_title} tak
+øh lad mig få oplæsningen af {audiobook_narrator} tak
+<lead_play_audio> lydbogen skrevet af {audiobook_author} og læst af {audiobook_narrator}
+jeg vil gerne høre en lydbog af {audiobook_title} tak
+så har du nogen lydbøger læst af {audiobook_narrator}
+jeg er i humør til en lydbog af {audiobook_narrator}
+sig, har du nogen {audiobook_genre} lydbøger jeg kunne tjekke ud
+hvad med vi hører en oplæst bog af {audiobook_author}
+jeg vil gerne høre den {audiobook_title} lydbog
+lad mig få en {audiobook_genre} lydbog oplæst af {audiobook_narrator}
+<lead_play_audio> øh jeg leder efter noget af {book_author} måske en lydbog
+så jeg tænkte en lydbog af {audiobook_author} ville være rart
+det føles som en god aften til en {audiobook_genre} oplæsning
+<lead_play_audio> kunne du finde mig lydbogen af {book_title}
+hvad med den oplæste bog af {audiobook_narrator}
+jeg ville elske at høre {audiobook_author} læse noget op
+<lead_play_audio> har du lydbogsudgaven af {book_title}
+lad os sætte en lydbog på måske noget af {audiobook_author}
+giv mig en {audiobook_genre} lydbog at høre
+<lead_play_audio> du ved hvad jeg vil have den lydbog af {audiobook_narrator}

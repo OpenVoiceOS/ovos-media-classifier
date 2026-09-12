@@ -1,0 +1,106 @@
+<lead_play_audio> radiodramaet {radio_drama_title}
+[hej|ok|okay] <lead_play_audio> radiodramaet {radio_drama_title} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> {radio_drama_title}
+[hej|ok|okay] <lead_play_audio> {radio_drama_title} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> et hørespil
+[hej|ok|okay] <lead_play_audio> et hørespil [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> et radiospil
+[hej|ok|okay] <lead_play_audio> et radiospil [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> noget radioteater
+[hej|ok|okay] <lead_play_audio> noget radioteater [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> hørespillet {radio_drama_title}
+[hej|ok|okay] <lead_play_audio> hørespillet {radio_drama_title} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> et radiodrama
+[hej|ok|okay] <lead_play_audio> et radiodrama [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> en gammeldags radioudsendelse
+[hej|ok|okay] <lead_play_audio> en gammeldags radioudsendelse [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> radiospillet {radio_drama_title}
+[hej|ok|okay] <lead_play_audio> radiospillet {radio_drama_title} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> et {radio_genre} radiodrama
+[hej|ok|okay] <lead_play_audio> et {radio_genre} radiodrama [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> noget gammeldags radio
+[hej|ok|okay] <lead_play_audio> noget gammeldags radio [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> har du nogen radiodramaer
+[hej|ok|okay] <lead_play_audio> har du nogen radiodramaer [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> har du et godt hørespil
+[hej|ok|okay] <lead_play_audio> har du et godt hørespil [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> et hørespil til aftenen
+[hej|ok|okay] <lead_play_audio> et hørespil til aftenen [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> et radiospil til at falde til ro med
+[hej|ok|okay] <lead_play_audio> et radiospil til at falde til ro med [tak|for mig|lige nu|tak skal du have]
+{radio_drama_title}, tak
+radiodramaet {radio_drama_title}, tak
+{radio_drama_title} — sæt den på
+det radiospil {radio_drama_title} — start det
+sæt hørespillet {radio_drama_title} på, vil du?
+jeg er i humør til noget ligesom et hørespil
+i humør til et radiospil
+jeg kunne godt bruge en gammeldags radioudsendelse
+jeg leder efter et godt radiodrama
+jeg skal have et hørespil til aftenen
+hvad med radiodramaet {radio_drama_title}
+måske et {radio_genre} radiodrama
+vi burde høre {radio_drama_title}
+noget ligesom {radio_drama_title}
+er der nogen radiodramaer
+hvilke radiospil har du
+er der et hørespil der hedder {radio_drama_title}
+et {radio_genre} radiodrama til at falde til ro med
+en gammeldags radioudsendelse fordi jeg er nostalgisk
+<lead_play_audio> et radiodrama baseret på {book_title}
+<lead_play_audio> et radiospil baseret på romanen {book_title}
+<lead_play_audio> en radio-dramatisering af {book_title}
+<lead_play_audio> en radiodrama-tilpasning af {movie_title}
+<lead_play_audio> et radiospil baseret på tegneserien {comic_title}
+<lead_play_audio> et radiodrama skrevet af {book_author}
+<lead_play_audio> et hørespil baseret på spillet {game_title}
+<lead_play_audio> en radiospil-tilpasning af {tv_show_title}
+øh kan du sætte et radiodrama på
+spil {radio_drama_title}, faktisk nej et {radio_genre} et
+hey så sæt {radio_drama_title} på
+du ved hvad smid et radiospil på
+har lyst til at høre {radio_drama_title}
+lad mig høre et radiodrama
+giv mig et {radio_genre} radiospil
+jeg kunne virkelig godt bruge et radiodrama
+er der et radiospil af {book_title}
+har du nogen radiodramaer?
+<lead_play_audio> et radiodrama om {book_title}
+hey, har du nogen {radio_genre} hørespil
+jeg er i humør til et radiospil — overrask mig
+så <lead_play_audio> det hørespil {radio_drama_title}
+lad mig høre en radioteater-version af {movie_title}
+kender du nogen gode radiospil af {book_author}
+hvad med et hørespil baseret på {game_title}
+<lead_play_audio> radioteater-tilpasningen af {tv_show_title}
+jeg vil gerne høre et radiospil, har du nogen {radio_genre} en
+find mig et radiodrama ligesom {radio_drama_title}
+er der en radioteater-version af {comic_title}
+giv mig et radiospil baseret på {book_title} [eller noget lignende]
+øh, jeg har lyst til et hørespil lige nu
+lad os høre et radiospil — {radio_drama_title} måske
+faktisk <lead_play_audio> noget radioteater {radio_genre}
+har ledt efter et hørespil af {game_title}
+<lead_play_audio> noget fra radioteater-samlingen
+hvilke radiodramaer har du med {book_author}
+ja, <lead_play_audio> et radiospil, et hvilket som helst {radio_genre}
+<lead_play_audio> et hørespil jeg ikke har hørt endnu
+jeg er i humør til et radiospil faktisk
+hvad med vi hører et radiodrama [eller noget]
+<lead_play_audio> det radioteater-stykke vi startede
+lad mig høre et hørespil af {book_author}
+har du nogen gode radiodramaer i {radio_genre}
+det føles som en hørespil-agtig aften {radio_genre} måske
+så jeg tænkte <lead_play_audio> et radiodrama
+hvad har du af radioteater [lige nu]
+lad os sætte et hørespil fra {radio_drama_title} på
+jeg vil gerne tjekke et radiospil baseret på {tv_show_title}
+<lead_play_audio> et hørespil [tak] tror jeg
+hey <lead_play_audio> et {radio_genre} radiospil [ok]
+hvad med noget radioteater {radio_genre} eller noget
+jeg er i humør til et radiodrama ligesom {radio_drama_title}
+vi burde høre et radiospil [i aften]
+øh <lead_play_audio> et hørespil af {book_author} måske
+har haft lyst til at høre et radiodrama af {book_title}
+lad os finde en radioteater-udsendelse [til at slappe af til]
+hvad med et hørespil i {radio_genre} [for en forandring]

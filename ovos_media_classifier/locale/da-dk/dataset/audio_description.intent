@@ -1,0 +1,95 @@
+<lead_watch> {movie_title} med synstolkning
+[hej|ok|okay] <lead_watch> {movie_title} med synstolkning [tak|for mig|lige nu|tak skal du have]
+<lead_watch> den synstolkede version af {movie_title}
+[hej|ok|okay] <lead_watch> den synstolkede version af {movie_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en film med synstolkning
+[hej|ok|okay] <lead_watch> en film med synstolkning [tak|for mig|lige nu|tak skal du have]
+<lead_watch> den synstolkede udgave af {movie_title}
+[hej|ok|okay] <lead_watch> den synstolkede udgave af {movie_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en synstolket {movie_genre} film
+[hej|ok|okay] <lead_watch> en synstolket {movie_genre} film [tak|for mig|lige nu|tak skal du have]
+<lead_watch> {movie_title} synstolket
+[hej|ok|okay] <lead_watch> {movie_title} synstolket [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en {movie_genre} film med synstolkning
+[hej|ok|okay] <lead_watch> en {movie_genre} film med synstolkning [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en synstolket film
+[hej|ok|okay] <lead_watch> en synstolket film [tak|for mig|lige nu|tak skal du have]
+<lead_watch> den synstolkede {movie_title}
+[hej|ok|okay] <lead_watch> den synstolkede {movie_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> {movie_title} med fortælling
+[hej|ok|okay] <lead_watch> {movie_title} med fortælling [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en tilgængelig version af {movie_title}
+[hej|ok|okay] <lead_watch> en tilgængelig version af {movie_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> den fortalte version af {movie_title}
+[hej|ok|okay] <lead_watch> den fortalte version af {movie_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en film med synstolkning
+[hej|ok|okay] <lead_watch> en film med synstolkning [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en {movie_genre} film med fortælling
+[hej|ok|okay] <lead_watch> en {movie_genre} film med fortælling [tak|for mig|lige nu|tak skal du have]
+<lead_watch> {movie_title} for blinde
+[hej|ok|okay] <lead_watch> {movie_title} for blinde [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en synstolket {movie_genre} film
+[hej|ok|okay] <lead_watch> en synstolket {movie_genre} film [tak|for mig|lige nu|tak skal du have]
+<lead_watch> den synstolkede film {movie_title}
+[hej|ok|okay] <lead_watch> den synstolkede film {movie_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en film med beskrivende fortælling
+[hej|ok|okay] <lead_watch> en film med beskrivende fortælling [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en tilgængelig {movie_genre} film
+[hej|ok|okay] <lead_watch> en tilgængelig {movie_genre} film [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en {movie_genre} film med synstolkning med {movie_actor}
+[hej|ok|okay] <lead_watch> en {movie_genre} film med synstolkning med {movie_actor} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> {movie_title} med synstolkning med {movie_actor}
+[hej|ok|okay] <lead_watch> {movie_title} med synstolkning med {movie_actor} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> har du {movie_title} med synstolkning
+[hej|ok|okay] <lead_watch> har du {movie_title} med synstolkning [tak|for mig|lige nu|tak skal du have]
+<lead_watch> har du nogen synstolkede film
+[hej|ok|okay] <lead_watch> har du nogen synstolkede film [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en synstolket film til filmaften
+[hej|ok|okay] <lead_watch> en synstolket film til filmaften [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en synstolket film til aftenen
+[hej|ok|okay] <lead_watch> en synstolket film til aftenen [tak|for mig|lige nu|tak skal du have]
+<lead_watch> har du en tilgængelig version af {movie_title}
+[hej|ok|okay] <lead_watch> har du en tilgængelig version af {movie_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> har du nogen {movie_genre} film med synstolkning
+[hej|ok|okay] <lead_watch> har du nogen {movie_genre} film med synstolkning [tak|for mig|lige nu|tak skal du have]
+{movie_title} med synstolkning, tak
+den synstolkede version af {movie_title}, tak
+{movie_title} synstolket — sæt den på
+sæt {movie_title} med synstolkning på, vil du?
+jeg kunne godt bruge en synstolket film
+jeg leder efter en {movie_genre} film med synstolkning
+jeg skal have {movie_title} med fortælling
+hvad med den synstolkede version af {movie_title}
+måske en {movie_genre} film med synstolkning
+vi burde se {movie_title} synstolket
+er der en tilgængelig version af {movie_title}
+den synstolkede {movie_title} fordi jeg ikke kan se skærmen
+en synstolket {movie_genre} film til aftenen
+<lead_watch> den synstolkede version af {tv_show_title}
+<lead_watch> den synstolkede version af serien {tv_show_title}
+øh kan du sætte {movie_title} med synstolkning på
+spil {movie_title} synstolket, faktisk nej {tv_show_title}
+hey så sæt {movie_title} med synstolkning på
+du ved hvad smid den synstolkede version af {movie_title} på
+har lyst til at se {movie_title} med synstolkning
+lad mig se {movie_title} med fortællesporet
+giv mig {movie_title} med synstolkning
+jeg kunne virkelig godt bruge en synstolket {movie_genre} film
+er der en synstolket version af {movie_title}
+har du {movie_title} med synstolkning?
+[hej|ok|så] <lead_watch> synstolkningsversionen af {movie_title} [tak]
+[så] <lead_watch> en {movie_genre} film med synstolkning [til mig]
+[hey] jeg vil gerne se en {movie_genre} film med synstolkning
+[så] <lead_watch> synstolkningsudgaven af {movie_title} — [ja] den ene
+jeg leder efter en film med synstolkning med {movie_actor}
+[hey|så] hvad med vi finder en synstolkningsversion af {movie_title}
+[øh] kan du finde en {movie_genre} film med synstolkning
+[ok] <lead_watch> den {movie_genre} film med {movie_actor} og synstolkning — nej vent {tv_show_title}
+jeg skal have en film med synstolkning — måske {movie_genre}
+[hey] giv mig synstolkningen af {movie_title} [tak] — nej vent {tv_show_title}
+[så] <lead_watch> en synstolket {movie_genre} film med synstolkning [tak]
+[hej|ok] lad os tjekke synstolkningsversionen af {movie_title}
+jeg leder efter en {movie_genre} film der har synstolkning
+[så] <lead_watch> {movie_title} men med synstolkning [tak]
+[øh] kunne vi se noget med synstolkning — {movie_genre} måske
+[hey] det føles som en filmaften <lead_watch> en {movie_genre} film med synstolkning

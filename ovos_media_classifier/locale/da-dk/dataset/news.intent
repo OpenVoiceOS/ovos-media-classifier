@@ -1,0 +1,85 @@
+<lead_play_audio> nyhederne
+[hej|ok|okay] <lead_play_audio> nyhederne [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> dagens nyheder
+[hej|ok|okay] <lead_play_audio> dagens nyheder [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> de seneste nyheder
+[hej|ok|okay] <lead_play_audio> de seneste nyheder [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> morgennyhederne
+[hej|ok|okay] <lead_play_audio> morgennyhederne [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> et nyhedsoverblik
+[hej|ok|okay] <lead_play_audio> et nyhedsoverblik [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> overskrifterne
+[hej|ok|okay] <lead_play_audio> overskrifterne [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> nyhederne fra {news_provider}
+[hej|ok|okay] <lead_play_audio> nyhederne fra {news_provider} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> {news_provider} nyheder
+[hej|ok|okay] <lead_play_audio> {news_provider} nyheder [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> {news_category} nyhederne
+[hej|ok|okay] <lead_play_audio> {news_category} nyhederne [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> {news_category} overskrifter
+[hej|ok|okay] <lead_play_audio> {news_category} overskrifter [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> de seneste {news_category} nyheder
+[hej|ok|okay] <lead_play_audio> de seneste {news_category} nyheder [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> en opdatering om {news_category}
+[hej|ok|okay] <lead_play_audio> en opdatering om {news_category} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> nogle {news_category} nyheder
+[hej|ok|okay] <lead_play_audio> nogle {news_category} nyheder [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> {news_category} overskrifterne fra {news_provider}
+[hej|ok|okay] <lead_play_audio> {news_category} overskrifterne fra {news_provider} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> {news_category} nyhederne fra {news_provider}
+[hej|ok|okay] <lead_play_audio> {news_category} nyhederne fra {news_provider} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> hvad er de seneste {news_category} nyheder
+[hej|ok|okay] <lead_play_audio> hvad er de seneste {news_category} nyheder [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> nogen {news_category} nyheder
+[hej|ok|okay] <lead_play_audio> nogen {news_category} nyheder [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> {news_category} overskrifterne til min morgen
+[hej|ok|okay] <lead_play_audio> {news_category} overskrifterne til min morgen [tak|for mig|lige nu|tak skal du have]
+nyhederne, tak
+dagens overskrifter, tak
+{news_category} nyhederne, tak
+nyhederne — lad os høre dem
+opdater mig på nyhederne, vil du?
+sæt {news_provider} på, kan du?
+jeg kunne godt bruge overskrifterne
+jeg leder efter de seneste nyheder
+jeg skal have {news_category} nyhederne nu
+hvad med nyhederne fra {news_provider}
+måske {news_category} overskrifterne
+vi burde høre nyhederne
+hvad sker der i {news_category}
+noget nyt i {news_category}?
+{news_category} nyhederne fordi jeg er ude af løbet
+overskrifterne mens jeg laver kaffe
+mine morgennyheder fra {news_provider}
+{news_category} opdateringen til turen på arbejde
+<lead_tune> nyhederne om {movie_title}
+<lead_tune> nyhedsdækning af {game_title} lanceringen
+<lead_tune> et nyhedsindslag om {artist_name}
+<lead_tune> de seneste nyheder om {tv_show_title}
+<lead_tune> nyheder om den nye {movie_title} udgivelse
+øh kan du sætte nyhederne på
+spil nyhederne, faktisk nej bare {news_category}
+hey så sæt nyhederne på
+du ved hvad smid {news_category} nyhederne på
+har lyst til at høre nyhederne
+lad mig høre {news_category} overskrifterne
+giv mig nyhederne fra {news_provider}
+jeg er lige vågnet sæt nyhederne på
+jeg er ude af løbet sæt {news_category} nyhederne på
+jeg kunne virkelig godt bruge overskrifterne
+er der nogen nyheder om {tv_show_title}
+har du de seneste fra {news_provider}?
+<lead_tune> giv mig {news_category} nyhederne
+[hey] <lead_tune> seneste {news_category} rapport
+så <lead_play_audio> hvad er de seneste nyheder [om {news_category}]
+har du nogen {news_category} nyheder [til mig]
+[øh] <lead_tune> {news_category} nyhedsbulletinen
+lad mig få overskrifterne fra {news_provider}
+[ok] <lead_play_audio> breaking news [om {news_category}]
+<lead_tune> topnyhederne [fra {news_provider}]
+[hey] kan jeg få {news_category} nyhederne [tak]
+<lead_play_audio> den seneste nyhedsudsendelse fra {news_provider}
+så øh <lead_tune> nogen breaking news
+lad os høre {news_category} overskrifterne
+<lead_tune> giv mig topnyhederne [fra {news_provider}]
+[hey] så <lead_play_audio> hvad er nyhederne [om {news_category}]

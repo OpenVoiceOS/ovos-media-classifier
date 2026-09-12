@@ -1,0 +1,99 @@
+<lead_play_audio> {ambient_sound}
+[hej|ok|okay] <lead_play_audio> {ambient_sound} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> noget {ambient_sound}
+<lead_play_audio> {ambient_sound} lyde
+[hej|ok|okay] <lead_play_audio> {ambient_sound} lyde [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> hvid støj
+[hej|ok|okay] <lead_play_audio> hvid støj [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> brun støj
+[hej|ok|okay] <lead_play_audio> brun støj [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> pink støj
+<lead_play_audio> regnlyde
+[hej|ok|okay] <lead_play_audio> regnlyde [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> havbølger
+[hej|ok|okay] <lead_play_audio> havbølger [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> naturlyde
+[hej|ok|okay] <lead_play_audio> naturlyde [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> skovlyde
+<lead_play_audio> tordenvejrslyde
+[hej|ok|okay] <lead_play_audio> tordenvejrslyde [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> fokusmusik
+[hej|ok|okay] <lead_play_audio> fokusmusik [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> søvnlyde
+[hej|ok|okay] <lead_play_audio> søvnlyde [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> noget ambientmusik
+<lead_play_audio> noget baggrundsstøj
+[hej|ok|okay] <lead_play_audio> noget baggrundsstøj [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> lyden af {ambient_sound}
+[hej|ok|okay] <lead_play_audio> lyden af {ambient_sound} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> en {ambient_sound} lydkulisse
+[hej|ok|okay] <lead_play_audio> en {ambient_sound} lydkulisse [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> et loop af {ambient_sound}
+<lead_play_audio> blid {ambient_sound}
+[hej|ok|okay] <lead_play_audio> blid {ambient_sound} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> noget {ambient_sound} til at sove til
+[hej|ok|okay] <lead_play_audio> noget {ambient_sound} til at sove til [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> beroligende {ambient_sound}
+[hej|ok|okay] <lead_play_audio> beroligende {ambient_sound} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> har du noget {ambient_sound}
+<lead_play_audio> har du noget {ambient_sound} lyde
+[hej|ok|okay] <lead_play_audio> har du noget {ambient_sound} lyde [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> noget {ambient_sound} der kan hjælpe mig med at sove
+[hej|ok|okay] <lead_play_audio> noget {ambient_sound} der kan hjælpe mig med at sove [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> {ambient_sound} mens jeg arbejder
+[hej|ok|okay] <lead_play_audio> {ambient_sound} mens jeg arbejder [tak|for mig|lige nu|tak skal du have]
+{ambient_sound}, tak
+noget {ambient_sound}, tak
+{ambient_sound} — sæt den på
+lidt hvid støj — jeg skal fokusere
+sæt noget {ambient_sound} på, vil du?
+jeg kunne godt bruge noget {ambient_sound}
+jeg leder efter noget {ambient_sound}
+jeg skal have noget {ambient_sound} for at sove
+hvad med noget {ambient_sound}
+måske noget regnlyde
+vi burde sætte noget {ambient_sound} på
+noget {ambient_sound} fordi det er for stille
+{ambient_sound} i baggrunden mens jeg læser
+et loop af {ambient_sound} for at hjælpe mig med at koncentrere mig
+blid {ambient_sound} til at falde til ro
+øh kan du sætte noget ambientlyd på
+spil {ambient_sound}, faktisk nej lidt hvid støj
+hey så sæt {ambient_sound} på
+du ved hvad smid noget {ambient_sound} på
+har lyst til at have noget {ambient_sound} på
+lad mig få {ambient_sound} i baggrunden
+jeg kan ikke fokusere sæt noget {ambient_sound} på
+jeg kunne virkelig godt bruge noget {ambient_sound}
+jeg prøver at sove sæt {ambient_sound} på
+har du noget {ambient_sound} lyde?
+jeg vil gerne høre {ambient_sound}
+<lead_play_audio> øh har du noget {ambient_sound} at chille til
+bare sæt noget {ambient_sound} på vil du
+hvad med noget havbølger til at falde i søvn til
+<lead_play_audio> jeg er i humør til {ambient_sound} lige nu
+lad os høre lidt brun støj
+så jeg tænkte måske {ambient_sound} i baggrunden hele natten
+giv mig lidt ventilatorstøj tak
+<lead_play_audio> kan du spille {ambient_sound} et stykke tid
+jeg har virkelig brug for noget regnlyde for at fokusere
+<lead_play_audio> øh så {ambient_sound} ville være rart
+smid noget naturlyde på vil du
+jeg vil sådan set gerne høre {ambient_sound} lige nu
+<lead_play_audio> hvad med {ambient_sound} for en forandring
+sæt noget skovlyde på i baggrunden
+jeg prøver at sove så giv mig noget {ambient_sound}
+<lead_play_audio> hvad har du af {ambient_sound}
+lad mig få gang i lidt hvid støj
+<lead_play_audio> måske noget fokusmusik eller noget
+[hey|øh] kan vi få gang i noget {ambient_sound}
+lad os sætte {ambient_sound} på [i baggrunden|hele natten]
+det føles som en {ambient_sound}-agtig [dag|nat|eftermiddag]
+vi burde spille noget {ambient_sound} [herinde]
+<lead_play_audio> lidt {ambient_sound} [til stemningen|til mig]
+så jeg tænkte måske noget {ambient_sound} [ville være rart]
+lad mig få gang i noget {ambient_sound} [tak]
+egentlig bare sæt {ambient_sound} på [i stedet]
+hvid støj ville være [fedt|perfekt] [lige nu]
+jeg prøver at finde noget {ambient_sound} [at spille]
+[hey|ok] skru op for noget {ambient_sound} [tak]

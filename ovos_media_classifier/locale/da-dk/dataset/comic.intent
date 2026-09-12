@@ -1,0 +1,165 @@
+<lead_read> mangaen {comic_title}
+[hej|ok|okay] <lead_read> mangaen {comic_title} [tak|for mig|lige nu|tak skal du have]
+<lead_read> tegneserien {comic_title}
+[hej|ok|okay] <lead_read> tegneserien {comic_title} [tak|for mig|lige nu|tak skal du have]
+<lead_read> {comic_title}
+[hej|ok|okay] <lead_read> {comic_title} [tak|for mig|lige nu|tak skal du have]
+<lead_read> en {comic_genre} manga
+[hej|ok|okay] <lead_read> en {comic_genre} manga [tak|for mig|lige nu|tak skal du have]
+<lead_read> en {comic_genre} tegneserie
+[hej|ok|okay] <lead_read> en {comic_genre} tegneserie [tak|for mig|lige nu|tak skal du have]
+<lead_read> tegneserien {comic_title}
+[hej|ok|okay] <lead_read> tegneserien {comic_title} [tak|for mig|lige nu|tak skal du have]
+<lead_read> en graphic novel
+[hej|ok|okay] <lead_read> en graphic novel [tak|for mig|lige nu|tak skal du have]
+<lead_read> noget manga
+[hej|ok|okay] <lead_read> noget manga [tak|for mig|lige nu|tak skal du have]
+<lead_read> en {comic_genre} graphic novel
+[hej|ok|okay] <lead_read> en {comic_genre} graphic novel [tak|for mig|lige nu|tak skal du have]
+<lead_read> en webtegneserie
+[hej|ok|okay] <lead_read> en webtegneserie [tak|for mig|lige nu|tak skal du have]
+<lead_read> det næste kapitel af {comic_title}
+[hej|ok|okay] <lead_read> det næste kapitel af {comic_title} [tak|for mig|lige nu|tak skal du have]
+<lead_read> det seneste {comic_title} kapitel
+[hej|ok|okay] <lead_read> det seneste {comic_title} kapitel [tak|for mig|lige nu|tak skal du have]
+<lead_read> en tegneserie
+[hej|ok|okay] <lead_read> en tegneserie [tak|for mig|lige nu|tak skal du have]
+<lead_read> manga-serien {comic_title}
+[hej|ok|okay] <lead_read> manga-serien {comic_title} [tak|for mig|lige nu|tak skal du have]
+<lead_read> en {comic_genre} webtegneserie
+[hej|ok|okay] <lead_read> en {comic_genre} webtegneserie [tak|for mig|lige nu|tak skal du have]
+<lead_read> graphic novellen {comic_title}
+[hej|ok|okay] <lead_read> graphic novellen {comic_title} [tak|for mig|lige nu|tak skal du have]
+<lead_read> et kapitel af {comic_title}
+[hej|ok|okay] <lead_read> et kapitel af {comic_title} [tak|for mig|lige nu|tak skal du have]
+<lead_read> noget {comic_genre} manga
+[hej|ok|okay] <lead_read> noget {comic_genre} manga [tak|for mig|lige nu|tak skal du have]
+<lead_read> en digital tegneserie
+[hej|ok|okay] <lead_read> en digital tegneserie [tak|for mig|lige nu|tak skal du have]
+<lead_read> webtegneserien {comic_title}
+[hej|ok|okay] <lead_read> webtegneserien {comic_title} [tak|for mig|lige nu|tak skal du have]
+<lead_read> en {comic_genre} manga-serie
+[hej|ok|okay] <lead_read> en {comic_genre} manga-serie [tak|for mig|lige nu|tak skal du have]
+<lead_read> mere af {comic_title}
+[hej|ok|okay] <lead_read> mere af {comic_title} [tak|for mig|lige nu|tak skal du have]
+<lead_read> et nummer af {comic_title}
+[hej|ok|okay] <lead_read> et nummer af {comic_title} [tak|for mig|lige nu|tak skal du have]
+<lead_read> en superhelte-tegneserie
+[hej|ok|okay] <lead_read> en superhelte-tegneserie [tak|for mig|lige nu|tak skal du have]
+<lead_read> {comic_genre} mangaen {comic_title}
+[hej|ok|okay] <lead_read> {comic_genre} mangaen {comic_title} [tak|for mig|lige nu|tak skal du have]
+<lead_read> {comic_genre} tegneserien {comic_title}
+[hej|ok|okay] <lead_read> {comic_genre} tegneserien {comic_title} [tak|for mig|lige nu|tak skal du have]
+<lead_read> en {comic_genre} tegneserie der hedder {comic_title}
+[hej|ok|okay] <lead_read> en {comic_genre} tegneserie der hedder {comic_title} [tak|for mig|lige nu|tak skal du have]
+<lead_read> {comic_genre} graphic novellen {comic_title}
+[hej|ok|okay] <lead_read> {comic_genre} graphic novellen {comic_title} [tak|for mig|lige nu|tak skal du have]
+<lead_read> har du nogen {comic_genre} manga
+[hej|ok|okay] <lead_read> har du nogen {comic_genre} manga [tak|for mig|lige nu|tak skal du have]
+<lead_read> har du en god {comic_genre} tegneserie
+[hej|ok|okay] <lead_read> har du en god {comic_genre} tegneserie [tak|for mig|lige nu|tak skal du have]
+<lead_read> en {comic_genre} tegneserie at læse i aften
+[hej|ok|okay] <lead_read> en {comic_genre} tegneserie at læse i aften [tak|for mig|lige nu|tak skal du have]
+<lead_read> noget manga at læse
+[hej|ok|okay] <lead_read> noget manga at læse [tak|for mig|lige nu|tak skal du have]
+<lead_read> har du mangaen {comic_title}
+[hej|ok|okay] <lead_read> har du mangaen {comic_title} [tak|for mig|lige nu|tak skal du have]
+<lead_read> har du nogen {comic_genre} graphic novels
+[hej|ok|okay] <lead_read> har du nogen {comic_genre} graphic novels [tak|for mig|lige nu|tak skal du have]
+<lead_read> en {comic_genre} tegneserie til weekenden
+[hej|ok|okay] <lead_read> en {comic_genre} tegneserie til weekenden [tak|for mig|lige nu|tak skal du have]
+{comic_title}, tak
+mangaen {comic_title}, tak
+en {comic_genre} tegneserie, tak
+{comic_title} — find den frem
+{comic_title} — lad os læse den
+den manga {comic_title} — åbn den
+læs {comic_title}, vil du?
+åbn {comic_title}, kan du?
+jeg er i {comic_genre} tegneserie-humør
+i humør til noget manga
+jeg kunne godt bruge en {comic_genre} manga
+jeg leder efter en god graphic novel
+jeg skal have en {comic_genre} tegneserie
+måske en {comic_genre} manga
+måske det næste kapitel af {comic_title}
+hvad med {comic_title}
+vi burde læse {comic_title}
+noget ligesom {comic_title}
+endnu en tegneserie ligesom {comic_title}
+er der nogen {comic_genre} manga
+hvilke {comic_genre} tegneserier har du
+er der en manga der hedder {comic_title}
+det seneste {comic_title} nummer
+det nyeste kapitel af {comic_title}
+en {comic_genre} tegneserie til weekenden
+noget manga fordi jeg keder mig
+en graphic novel at slappe af med
+<lead_read> {movie_title} tegneserien
+<lead_read> en tegneserie baseret på {movie_title}
+<lead_read> graphic novel-tilpasningen af {movie_title}
+<lead_read> {tv_show_title} tegneserien
+<lead_read> en tegneserie baseret på serien {tv_show_title}
+<lead_read> {game_title} tegneserien
+<lead_read> en tegneserie baseret på spillet {game_title}
+<lead_read> {anime_title} mangaen
+<lead_read> mangaen som animeen {anime_title} er baseret på
+<lead_read> graphic novel-tilpasningen af {book_title}
+<lead_read> {book_title} tegneserien
+<lead_read> {anime_title} tegneserien
+<lead_read> en tegneserie baseret på {tv_show_title}
+<lead_read> en tegneserie baseret på {game_title}
+<lead_read> en tegneserie baseret på {book_title}
+<lead_read> en tegneserie baseret på {anime_title}
+<lead_read> graphic novel-tilpasningen af {tv_show_title}
+<lead_read> graphic novel-tilpasningen af {game_title}
+<lead_read> graphic novel-tilpasningen af {anime_title}
+<lead_read> graphic novellen baseret på {movie_title}
+<lead_read> graphic novellen baseret på {tv_show_title}
+<lead_read> graphic novellen baseret på {game_title}
+<lead_read> graphic novellen baseret på {book_title}
+<lead_read> graphic novellen baseret på {anime_title}
+<lead_read> en manga baseret på {movie_title}
+<lead_read> en manga baseret på {tv_show_title}
+<lead_read> en manga baseret på {game_title}
+<lead_read> en manga baseret på {book_title}
+<lead_read> en manga baseret på {anime_title}
+<lead_read> en tegneserie baseret på filmen {movie_title}
+<lead_read> den officielle tegneserie til {game_title}
+<lead_read> tie-in-tegneserien til {movie_title}
+<lead_read> en tegneserie-tilpasning af romanen {book_title}
+<lead_read> en tegneserie om {artist_name}
+<lead_read> en graphic novel-biografi om {artist_name}
+<lead_read> en tegneserie skrevet af {movie_writer}
+øh kan du læse {comic_title} for mig
+læs {comic_title}, faktisk nej en {comic_genre} en
+hey så find {comic_title} frem
+du ved hvad smid {comic_title} på
+har lyst til at læse {comic_title}
+lad mig læse noget {comic_title}
+giv mig en {comic_genre} tegneserie
+jeg kunne virkelig godt bruge en {comic_genre} tegneserie
+jeg blev aldrig færdig med {comic_title}
+er der et nyt nummer af {comic_title}
+har du nogen {comic_genre} tegneserier?
+hvad med {comic_title}
+<lead_read> en manga af {artist_name}
+jeg vil gerne læse en {comic_genre} tegneserie
+<lead_read> den {comic_title} graphic novel jeg har villet tjekke ud
+hey, har du nogen {comic_genre} manga-anbefalinger
+<lead_read> {tv_show_title} tegneserie-tilpasningen
+så jeg er i humør til en {comic_genre} manga eller noget
+<lead_read> en animeret tegneserie-version af {movie_title}
+lad mig se nogle {comic_genre} tegneserier
+<lead_read> en visuel historie af {artist_name}
+hvad med en {comic_genre} graphic novel til i aften
+<lead_read> det seneste {comic_title} tegneserienummer
+jeg leder efter en god {comic_genre} manga at gå i gang med
+<lead_read> øh, har du nogen {comic_genre} tegneserier
+kan du finde mig en {comic_genre} animeret tegneserie
+<lead_read> den {book_title} graphic novel-tilpasning
+lad os tjekke noget {comic_genre} manga ud
+<lead_read> {game_title} tegneserie-serien
+jeg vil gerne læse nogle tegneserier, måske {comic_genre} eller noget
+<lead_read> en manga ligesom {anime_title}
+giv mig en {comic_genre} tegneserie at læse

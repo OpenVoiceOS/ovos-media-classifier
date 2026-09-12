@@ -1,0 +1,73 @@
+<lead_play_audio> en {sound_name} lyd
+[hej|ok|okay] <lead_play_audio> en {sound_name} lyd [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> en {sound_name} lydeffekt
+[hej|ok|okay] <lead_play_audio> en {sound_name} lydeffekt [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> lyden af {sound_name}
+[hej|ok|okay] <lead_play_audio> lyden af {sound_name} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> en {sound_name} støj
+[hej|ok|okay] <lead_play_audio> en {sound_name} støj [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> {sound_name} lydeffekten
+[hej|ok|okay] <lead_play_audio> {sound_name} lydeffekten [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> nogle {sound_name} lyde
+[hej|ok|okay] <lead_play_audio> nogle {sound_name} lyde [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> en {sound_name} sfx
+[hej|ok|okay] <lead_play_audio> en {sound_name} sfx [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> {sound_name} støjen
+[hej|ok|okay] <lead_play_audio> {sound_name} støjen [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> {sound_name} lyde
+[hej|ok|okay] <lead_play_audio> {sound_name} lyde [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> {sound_name} sfx'en
+[hej|ok|okay] <lead_play_audio> {sound_name} sfx'en [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> et klip af en {sound_name}
+[hej|ok|okay] <lead_play_audio> et klip af en {sound_name} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> et {sound_name} klip
+[hej|ok|okay] <lead_play_audio> et {sound_name} klip [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> lydeffekten af {sound_name}
+[hej|ok|okay] <lead_play_audio> lydeffekten af {sound_name} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> en optagelse af en {sound_name}
+[hej|ok|okay] <lead_play_audio> en optagelse af en {sound_name} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> har du en {sound_name} lyd
+[hej|ok|okay] <lead_play_audio> har du en {sound_name} lyd [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> har du en {sound_name} lydeffekt
+[hej|ok|okay] <lead_play_audio> har du en {sound_name} lydeffekt [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> en {sound_name} lyd til min video
+[hej|ok|okay] <lead_play_audio> en {sound_name} lyd til min video [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> lyden af en {sound_name} tak
+[hej|ok|okay] <lead_play_audio> lyden af en {sound_name} tak [tak|for mig|lige nu|tak skal du have]
+en {sound_name} lyd, tak
+lyden af en {sound_name}, tak
+en {sound_name} lydeffekt — spil den
+jeg mangler en {sound_name} lyd
+jeg leder efter en {sound_name} lydeffekt
+hvad med en {sound_name} støj
+måske en {sound_name} lyd
+en {sound_name} lyd, vil du?
+er der en {sound_name} lydeffekt
+{sound_name} lyden til min video
+et {sound_name} klip fordi jeg skal bruge det til redigering
+en hurtig {sound_name} lydeffekt
+øh kan du spille {sound_name} lyden
+spil {sound_name}, faktisk nej en anden
+hey så spil {sound_name} lyden
+du ved hvad spil en {sound_name}
+har lyst til at høre {sound_name} lyden
+lad mig høre en {sound_name}
+giv mig en {sound_name} lyd
+er der en {sound_name} effekt jeg kan afspille
+har du en {sound_name} lyd?
+hvad med {sound_name} lyden
+[øh|hey|så] lad mig høre en {sound_name} lydeffekt [tak]
+giv mig den {sound_name} sfx [lige nu|tak]
+har du nogen {sound_name} lydeffekter [til mig]
+<lead_play_audio> lyden af en {sound_name} [tror jeg|okay]
+har lyst til at spille {sound_name} lydeffekten
+[hey|så] <lead_play_audio> giv mig en {sound_name} lydeffekt
+lyd af en {sound_name} [ja|tak]
+bare {sound_name} lydeffekten [tak]
+jeg vil gerne høre noget {sound_name} sfx
+så <lead_play_audio> lad mig få en {sound_name} lydeffekt
+en {sound_name} lydeffekt [tak] <lead_play_audio>
+<lead_play_audio> en lyd af {sound_name} [måske]
+[ok|hey] giv mig en {sound_name} lydeffekt
+<lead_play_audio> spil en {sound_name} lydeffekt [tak]
+lydeffekter af {sound_name} [tak]

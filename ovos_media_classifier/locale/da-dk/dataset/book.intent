@@ -1,0 +1,217 @@
+<lead_read> {book_title}
+[hej|ok|okay] <lead_read> {book_title} [tak|for mig|lige nu|tak skal du have]
+<lead_read> bogen {book_title}
+[hej|ok|okay] <lead_read> bogen {book_title} [tak|for mig|lige nu|tak skal du have]
+<lead_read> romanen {book_title}
+[hej|ok|okay] <lead_read> romanen {book_title} [tak|for mig|lige nu|tak skal du have]
+<lead_read> en bog af {book_author}
+[hej|ok|okay] <lead_read> en bog af {book_author} [tak|for mig|lige nu|tak skal du have]
+<lead_read> hvad som helst af {book_author}
+[hej|ok|okay] <lead_read> hvad som helst af {book_author} [tak|for mig|lige nu|tak skal du have]
+<lead_read> en {book_genre} bog
+[hej|ok|okay] <lead_read> en {book_genre} bog [tak|for mig|lige nu|tak skal du have]
+<lead_read> en {book_genre} roman
+[hej|ok|okay] <lead_read> en {book_genre} roman [tak|for mig|lige nu|tak skal du have]
+<lead_read> en bog om {book_genre}
+[hej|ok|okay] <lead_read> en bog om {book_genre} [tak|for mig|lige nu|tak skal du have]
+<lead_read> en god {book_genre} bog
+[hej|ok|okay] <lead_read> en god {book_genre} bog [tak|for mig|lige nu|tak skal du have]
+<lead_read> noget {book_genre}
+[hej|ok|okay] <lead_read> noget {book_genre} [tak|for mig|lige nu|tak skal du have]
+<lead_read> {book_title} af {book_author}
+[hej|ok|okay] <lead_read> {book_title} af {book_author} [tak|for mig|lige nu|tak skal du have]
+<lead_read> romanen {book_title} af {book_author}
+[hej|ok|okay] <lead_read> romanen {book_title} af {book_author} [tak|for mig|lige nu|tak skal du have]
+<lead_read> bogen {book_title} af {book_author}
+[hej|ok|okay] <lead_read> bogen {book_title} af {book_author} [tak|for mig|lige nu|tak skal du have]
+<lead_read> {book_genre} bogen {book_title}
+[hej|ok|okay] <lead_read> {book_genre} bogen {book_title} [tak|for mig|lige nu|tak skal du have]
+<lead_read> en {book_genre} bog af {book_author}
+[hej|ok|okay] <lead_read> en {book_genre} bog af {book_author} [tak|for mig|lige nu|tak skal du have]
+<lead_read> en {book_genre} roman af {book_author}
+[hej|ok|okay] <lead_read> en {book_genre} roman af {book_author} [tak|for mig|lige nu|tak skal du have]
+<lead_read> den seneste bog af {book_author}
+[hej|ok|okay] <lead_read> den seneste bog af {book_author} [tak|for mig|lige nu|tak skal du have]
+<lead_read> endnu en {book_genre} bog
+[hej|ok|okay] <lead_read> endnu en {book_genre} bog [tak|for mig|lige nu|tak skal du have]
+<lead_read> et kapitel af {book_title}
+[hej|ok|okay] <lead_read> et kapitel af {book_title} [tak|for mig|lige nu|tak skal du have]
+<lead_read> det næste kapitel af {book_title}
+[hej|ok|okay] <lead_read> det næste kapitel af {book_title} [tak|for mig|lige nu|tak skal du have]
+<lead_read> mere af {book_title}
+[hej|ok|okay] <lead_read> mere af {book_title} [tak|for mig|lige nu|tak skal du have]
+<lead_read> en novelle af {book_author}
+[hej|ok|okay] <lead_read> en novelle af {book_author} [tak|for mig|lige nu|tak skal du have]
+<lead_read> {book_genre} bogen {book_title} af {book_author}
+[hej|ok|okay] <lead_read> {book_genre} bogen {book_title} af {book_author} [tak|for mig|lige nu|tak skal du have]
+<lead_read> {book_genre} romanen {book_title} af {book_author}
+[hej|ok|okay] <lead_read> {book_genre} romanen {book_title} af {book_author} [tak|for mig|lige nu|tak skal du have]
+<lead_read> har du nogen {book_genre} bøger
+[hej|ok|okay] <lead_read> har du nogen {book_genre} bøger [tak|for mig|lige nu|tak skal du have]
+<lead_read> har du en god {book_genre} roman
+[hej|ok|okay] <lead_read> har du en god {book_genre} roman [tak|for mig|lige nu|tak skal du have]
+<lead_read> en {book_genre} bog at læse ved sengetid
+[hej|ok|okay] <lead_read> en {book_genre} bog at læse ved sengetid [tak|for mig|lige nu|tak skal du have]
+<lead_read> har du noget af {book_author}
+[hej|ok|okay] <lead_read> har du noget af {book_author} [tak|for mig|lige nu|tak skal du have]
+<lead_read> har du en {book_genre} bog
+[hej|ok|okay] <lead_read> har du en {book_genre} bog [tak|for mig|lige nu|tak skal du have]
+<lead_read> en {book_genre} roman til weekenden
+[hej|ok|okay] <lead_read> en {book_genre} roman til weekenden [tak|for mig|lige nu|tak skal du have]
+<lead_read> noget af {book_author} for at slappe af
+[hej|ok|okay] <lead_read> noget af {book_author} for at slappe af [tak|for mig|lige nu|tak skal du have]
+<lead_read> {movie_title} romanen
+[hej|ok|okay] <lead_read> {movie_title} romanen [tak|for mig|lige nu|tak skal du have]
+<lead_read> romanen {movie_title}
+[hej|ok|okay] <lead_read> romanen {movie_title} [tak|for mig|lige nu|tak skal du have]
+<lead_read> bogen {movie_title}
+[hej|ok|okay] <lead_read> bogen {movie_title} [tak|for mig|lige nu|tak skal du have]
+<lead_read> {movie_title} romanen
+[hej|ok|okay] <lead_read> {movie_title} romanen [tak|for mig|lige nu|tak skal du have]
+{book_title}, tak
+{book_title} af {book_author}, tak
+en {book_genre} bog, tak
+{book_title} — læs den for mig
+{book_title} — lad os gå i gang med den
+den bog {book_title} — start den
+læs {book_title}, vil du?
+læs mig noget af {book_author}, kan du?
+jeg er i {book_genre} humør
+i humør til noget {book_genre}
+jeg kunne godt bruge en {book_genre} roman
+jeg har lyst til en {book_genre} bog
+jeg leder efter noget {book_genre}
+jeg skal have en god {book_genre} roman
+hvad med en {book_genre} bog
+hvad med noget af {book_author}
+måske en {book_genre} roman
+måske noget af {book_author}
+noget ligesom {book_title}
+noget i stilen af {book_author}
+endnu en bog ligesom {book_title}
+har du nogen {book_genre} romaner
+har du noget af {book_author}
+nogen {book_genre} bøger ved hånden?
+hvilke {book_genre} bøger har du
+er der en bog af {book_author}
+{book_author}'s seneste roman
+{book_author}'s mest berømte bog
+den berømte {book_genre} roman
+en {book_genre} bog at slappe af med
+noget af {book_author} til natten
+en {book_genre} roman fordi jeg ikke kan sove
+<lead_read> en biografi om {movie_actor}
+<lead_read> erindringerne af {movie_actor}
+<lead_read> {movie_actor}'s erindringer
+<lead_read> selvbiografien af {movie_actor}
+<lead_read> en biografi om {artist_name}
+<lead_read> {artist_name}'s selvbiografi
+<lead_read> en biografi om instruktøren {movie_director}
+<lead_read> erindringerne af {podcast_host}
+<lead_read> romanudgaven af {movie_title}
+<lead_read> romanen baseret på filmen {movie_title}
+<lead_read> bogudgaven af {movie_title}
+<lead_read> tie-in-romanen til {game_title}
+<lead_read> romanen baseret på spillet {game_title}
+<lead_read> ledsagebogen til {tv_show_title}
+<lead_read> en bog skrevet af {movie_writer}
+<lead_read> biografien om {movie_actor}
+<lead_read> {movie_actor}'s selvbiografi
+<lead_read> en bog om {movie_actor}
+<lead_read> en biografi om {movie_director}
+<lead_read> biografien om {movie_director}
+<lead_read> erindringerne af {movie_director}
+<lead_read> {movie_director}'s erindringer
+<lead_read> selvbiografien af {movie_director}
+<lead_read> {movie_director}'s selvbiografi
+<lead_read> en bog om {movie_director}
+<lead_read> biografien om {artist_name}
+<lead_read> erindringerne af {artist_name}
+<lead_read> {artist_name}'s erindringer
+<lead_read> selvbiografien af {artist_name}
+<lead_read> en bog om {artist_name}
+<lead_read> biografien om {podcast_host}
+<lead_read> {podcast_host}'s erindringer
+<lead_read> selvbiografien af {podcast_host}
+<lead_read> {podcast_host}'s selvbiografi
+<lead_read> en bog om {podcast_host}
+<lead_read> en biografi om {movie_writer}
+<lead_read> biografien om {movie_writer}
+<lead_read> erindringerne af {movie_writer}
+<lead_read> {movie_writer}'s erindringer
+<lead_read> selvbiografien af {movie_writer}
+<lead_read> {movie_writer}'s selvbiografi
+<lead_read> en bog om {movie_writer}
+<lead_read> en biografi om {movie_composer}
+<lead_read> biografien om {movie_composer}
+<lead_read> erindringerne af {movie_composer}
+<lead_read> {movie_composer}'s erindringer
+<lead_read> selvbiografien af {movie_composer}
+<lead_read> {movie_composer}'s selvbiografi
+<lead_read> en bog om {movie_composer}
+<lead_read> romanudgaven af filmen {movie_title}
+<lead_read> romanudgaven af spillet {game_title}
+<lead_read> {game_title} romanen
+<lead_read> romanen baseret på showet {tv_show_title}
+<lead_read> bogen der inspirerede {movie_title}
+<lead_read> bogen {movie_title} er baseret på
+<lead_read> en bog om tilblivelsen af {movie_title}
+<lead_read> en bog om bandet {artist_name}
+<lead_read> en bog om {music_genre}
+<lead_read> den officielle bog til showet {tv_show_title}
+<lead_read> artbooken til {game_title}
+<lead_read> en bog om instruktøren {movie_director}
+<lead_read> biografien om bandet {artist_name}
+øh kan du læse {book_title} for mig
+læs {book_title}, faktisk nej den af {book_author}
+øh måske noget af {book_author}
+hey så læs {book_title} for mig
+du ved hvad læs mig noget {book_genre}
+har lyst til at læse {book_title}
+lad mig gå i gang med {book_title}
+giv mig noget af {book_author}
+jeg kan ikke sove læs {book_title} for mig
+jeg kunne virkelig godt bruge en {book_genre} bog
+jeg blev aldrig færdig med {book_title}
+jeg er i humør til noget af {book_author}
+har du noget af {book_author}
+har du {book_title}?
+hvad med vi læser {book_title}
+jeg vil gerne læse {book_title} eller noget lignende
+så øh har du nogen {book_genre} romaner jeg kunne tjekke ud
+hey <lead_read> en ny e-bog til mig tak
+lad mig få den {book_title} e-bog jeg har hørt om
+hvilke e-bøger af {book_author} har du
+hvad med vi <lead_read> en roman sammen
+så jeg skal have en god bog ligesom {book_title} du ved
+giv mig noget af {book_author}, en roman eller hvad det nu er
+<lead_read> den {book_genre} e-bog jeg downloadede
+har du nogen bøger skrevet af {movie_writer} eller instrueret af {movie_director}
+jeg vil gerne tjekke en {book_genre} novelle eller noget ud
+hey øh kan du <lead_read> {book_title} for mig
+lad os <lead_read> en bog, måske noget af {book_author}
+så jeg har villet læse den roman {book_title}
+nogen e-bøger i {book_genre} genren du kan anbefale
+ok så <lead_read> en bog om {movie_actor} eller noget
+vil du finde mig en {book_genre} e-bog jeg ikke har læst endnu
+hey har du den bog af {book_author} klar til mig
+jeg prøver at læse en roman, noget godt i {book_genre}
+jeg er i humør til en {book_genre} roman, har du noget
+hey <lead_read> den {book_title} bog jeg kiggede på
+lad mig tjekke nogle {book_genre} e-bøger ud
+hvad med vi læser en {book_genre} bog i aften
+så jeg leder efter bøger af {book_author}
+<lead_read> øh den {book_title} roman
+jeg vil gerne læse en god {book_genre} e-bog
+det føles som en {book_genre} roman-agtig aften
+har du nogen {book_genre} bøger af {book_author}
+lad os finde en ny e-bog [til mig]
+jeg skal have en ny bog [at læse] noget {book_genre} måske
+hvilke e-bøger har du i {book_genre}
+så jeg tænkte på den bog {book_title} [af {book_author}]
+kan du finde mig en {book_genre} novelle
+<lead_read> noget ligesom {book_title}
+jeg leder efter e-bøger af {book_author}
+hvad med en {book_genre} bog jeg ikke har læst endnu
+<lead_read> nogen gode {book_genre} romaner
+vis mig nogle {book_genre} e-bøger [tak|tak skal du have]
