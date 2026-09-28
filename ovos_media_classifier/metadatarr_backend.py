@@ -229,7 +229,7 @@ class MetadatarrMediaClassifier(AbstractMediaClassifier):
         sig = self._resolved_signals(query, lang)
         return getattr(sig, "content_form", None) if sig is not None else None
 
-    def to_signals(self, query: str, lang: str = "en-us"):
+    def to_signals(self, query: str, lang: str):
         """Provider-ready ``Signals`` enriched with metadatarr's resolved record.
 
         When metadatarr resolves the title confidently, its merged ``Signals``
