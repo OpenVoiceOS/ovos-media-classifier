@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.2.1a2](https://github.com/OpenVoiceOS/ovos-media-classifier/tree/0.2.1a2) (2026-10-01)
+
+[Full Changelog](https://github.com/OpenVoiceOS/ovos-media-classifier/compare/0.2.1a1...0.2.1a2)
+
+**Merged pull requests:**
+
+- translate\(kab\): update ADKeyword.voc [\#73](https://github.com/OpenVoiceOS/ovos-media-classifier/pull/73) ([ovos-localize[bot]](https://github.com/apps/ovos-localize))
+- translate\(da-dk\): phase 2 - all 34 dataset training templates [\#69](https://github.com/OpenVoiceOS/ovos-media-classifier/pull/69) ([andlo](https://github.com/andlo))
+- translate\(da-dk\): phase 1 keyword vocab + fix locale-blind seek/duration disambiguation [\#68](https://github.com/OpenVoiceOS/ovos-media-classifier/pull/68) ([andlo](https://github.com/andlo))
+
 ## [0.2.1a1](https://github.com/OpenVoiceOS/ovos-media-classifier/tree/0.2.1a1) (2026-09-03)
 
 [Full Changelog](https://github.com/OpenVoiceOS/ovos-media-classifier/compare/0.2.0a3...0.2.1a1)
