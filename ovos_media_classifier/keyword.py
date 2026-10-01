@@ -129,6 +129,11 @@ def _normalized_ner_list(
     return out
 
 
+# Vocabularies whose job is to BLOCK. These resolve as a union with English
+# rather than replacing it: see _VocMatcher._voc_phrases.
+SAFETY_VOCABS = frozenset({"AdultKeyword", "HentaiKeyword"})
+
+
 class _VocMatcher:
     """Vocabulary matcher backed by ``.voc`` files via ``ovos-spec-tools``.
 
@@ -160,13 +165,28 @@ class _VocMatcher:
         # spec-tools resolves the lang subdir (case-insensitive) and the
         # language-family fallback chain internally.
         phrases = self._resources.vocabularies(lang).get(vocab_name)
+        english = ()
+        if lang.lower() != "en-us":
+            english = tuple(self._resources.vocabularies("en-us").get(vocab_name)
+                            or ())
+
+        if vocab_name in SAFETY_VOCABS:
+            # A safety vocabulary is the UNION of the language's own terms and
+            # the canonical English ones, never a replacement for them.
+            #
+            # Blocking is asymmetric: a false block is an annoyance the user
+            # rephrases around, a missed block is the failure this vocabulary
+            # exists to prevent. A user on any box can type an English term, and
+            # a locale that ships three words would otherwise be LESS protected
+            # than one that ships none, because a present file suppresses the
+            # fallback below. That is the wrong way round for a filter.
+            return tuple(dict.fromkeys(tuple(phrases or ()) + english))
+
         if phrases:
             return tuple(phrases)
         # Final safety net: the canonical en-us source.
-        if lang.lower() != "en-us":
-            phrases = self._resources.vocabularies("en-us").get(vocab_name)
-            if phrases:
-                return tuple(phrases)
+        if english:
+            return english
         return ()
 
     @lru_cache(maxsize=1024)
