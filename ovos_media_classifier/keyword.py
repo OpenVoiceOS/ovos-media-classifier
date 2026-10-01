@@ -80,6 +80,36 @@ from ovos_media_classifier.intents import (
 # Bundled locale directory (ported from ovos-ocp-pipeline-plugin)
 _LOCALE_DIR = os.path.join(os.path.dirname(__file__), "locale")
 
+# Vocabularies whose whole job is to BLOCK. These are matched against the union
+# of the configured language and ``en-us``, never the configured language alone.
+#
+# The resolver falls back to ``en-us`` only when a locale has NO file for a
+# vocabulary. For ordinary vocabularies that is right: a locale that ships
+# ``VerbAudio`` means its own list to REPLACE the English one. For a blocklist
+# it inverts the safety property, because a locale that ships three adult terms
+# then shadows the thirty in ``en-us``, and a half-translated locale ends
+# up LESS safe than an untranslated one (T-6805: "play some porn" was blocked on
+# en-us, pl-pl and eu-es, and passed on nl-nl, fr-fr, da-dk, it-it, ca-es and
+# gl-es). Adult loanwords cross languages in speech, so the English list is a
+# floor under every locale, not a substitute for translating one.
+#
+# The union only ever adds phrases, so the ADULT GENRE TAG is monotone in it: a
+# query tagged adult before is tagged adult after. The FILTER'S VERDICT is not,
+# and the difference is the adult family's leaf precedence below: an adult cue
+# rewrites the leaf (GAME -> MOVIE + ["adult"]), so under a policy that permits
+# adult and blocks another type, a request the union newly tags adult escapes
+# the type that was blocked. Measured: with allow_adult_content true and
+# blocked_media_types ["game"], fr-fr "joue au jeu hardcore" is blocked as
+# "blocked media type: game" before this change and ALLOWED after it.
+#
+# That is a real loss on a non-default policy, weighed against a fail-open hole
+# on the default one, and it is the leaf precedence that causes it rather than
+# the union. It is tracked separately.
+#
+# The union is not a reason to leave a locale untranslated: a native term absent
+# from both lists is still missed, which is why these files are still translated.
+_SAFETY_VOCABS = frozenset({"AdultKeyword", "HentaiKeyword"})
+
 
 def _fold(text: str) -> str:
     """Normalize *text* for keyword matching, punctuation and all.
@@ -159,15 +189,19 @@ class _VocMatcher:
     def _voc_phrases(self, vocab_name: str, lang: str) -> Tuple[str, ...]:
         # spec-tools resolves the lang subdir (case-insensitive) and the
         # language-family fallback chain internally.
-        phrases = self._resources.vocabularies(lang).get(vocab_name)
-        if phrases:
-            return tuple(phrases)
-        # Final safety net: the canonical en-us source.
+        phrases = tuple(self._resources.vocabularies(lang).get(vocab_name) or ())
+        if phrases and vocab_name not in _SAFETY_VOCABS:
+            return phrases
+        # A blocklist vocabulary takes the UNION with en-us rather than letting
+        # a partial locale list shadow it; everything else falls back to en-us
+        # only when the locale has nothing. See ``_SAFETY_VOCABS``.
         if lang.lower() != "en-us":
-            phrases = self._resources.vocabularies("en-us").get(vocab_name)
-            if phrases:
-                return tuple(phrases)
-        return ()
+            fallback = self._resources.vocabularies("en-us").get(vocab_name)
+            if fallback:
+                seen = dict.fromkeys(phrases)
+                seen.update(dict.fromkeys(fallback))
+                return tuple(seen)
+        return phrases
 
     @lru_cache(maxsize=1024)
     def _voc_regex(self, vocab_name: str, lang: str) -> Optional[re.Pattern]:
@@ -379,7 +413,25 @@ class KeywordMediaClassifier(AbstractMediaClassifier):
         return cls(locale_dir=locale_dir)
 
     def _match(self, phrase: str, vocab: str, lang: str) -> bool:
-        return bool(self._voc_match(phrase, vocab, lang=lang))
+        if bool(self._voc_match(phrase, vocab, lang=lang)):
+            return True
+        # Pipeline mode: the HOST owns the locale files, so the union applied
+        # inside ``_VocMatcher`` never runs and the gate has to be asked here.
+        #
+        # This does NOT cover the one consumer in our organisations:
+        # ovos-ocp-pipeline-plugin builds ContextAwareClassifier with no
+        # voc_match_func (opm.py:145 and :945), so it runs standalone and is
+        # fixed by the ``_voc_phrases`` half alone. This half covers a host that
+        # does supply one, and it holds only if that host owns an en-us locale —
+        # a host owning nl-nl alone still lets "play some porn" through, because
+        # there is no en-us list for it to answer from.
+        #
+        # Note it calls ``voc_match_func`` with a language the host did not
+        # configure. That is deliberate for a blocklist and is the reason the
+        # extra call is scoped to ``_SAFETY_VOCABS``.
+        if vocab in _SAFETY_VOCABS and lang.lower() != "en-us":
+            return bool(self._voc_match(phrase, vocab, lang="en-us"))
+        return False
 
     # ------------------------------------------------------------------
     # Negative evidence: smart-home objects a voice assistant controls but
