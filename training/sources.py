@@ -5,8 +5,8 @@ Single source of truth for:
   - MUSIC_CSV_SOURCES — music-specific CSVs (forced to ocp_play:music)
   - GITHUB_CSV_LANGS  — language codes for per-lang GitHub CSVs
   - HF_DATASETS     — HuggingFace dataset names used by NER + synthetic generation
-  - AUDIO_INTENTS   — set of OCPPlayIntent string values that are audio-only
-  - VIDEO_INTENTS   — set of OCPPlayIntent string values that are video
+  - AUDIO_INTENTS   — set of raw media labels that are audio-only
+  - VIDEO_INTENTS   — set of raw media labels that are video
   - SCHEMA_COLUMNS  — standard column order for all output CSVs
 """
 from __future__ import annotations

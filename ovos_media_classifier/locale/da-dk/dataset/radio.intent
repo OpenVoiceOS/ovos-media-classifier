@@ -1,0 +1,144 @@
+<lead_tune> {radio_station}
+[hej|ok|okay] <lead_tune> {radio_station} [tak|for mig|lige nu|tak skal du have]
+<lead_tune> radiostationen {radio_station}
+[hej|ok|okay] <lead_tune> radiostationen {radio_station} [tak|for mig|lige nu|tak skal du have]
+<lead_tune> {radio_station} radio
+[hej|ok|okay] <lead_tune> {radio_station} radio [tak|for mig|lige nu|tak skal du have]
+<lead_tune> noget {radio_genre} radio
+[hej|ok|okay] <lead_tune> noget {radio_genre} radio [tak|for mig|lige nu|tak skal du have]
+<lead_tune> en {radio_genre} station
+[hej|ok|okay] <lead_tune> en {radio_genre} station [tak|for mig|lige nu|tak skal du have]
+<lead_tune> direkte radio
+[hej|ok|okay] <lead_tune> direkte radio [tak|for mig|lige nu|tak skal du have]
+<lead_tune> {radio_genre} stationen
+[hej|ok|okay] <lead_tune> {radio_genre} stationen [tak|for mig|lige nu|tak skal du have]
+<lead_tune> {radio_station} strømmen
+[hej|ok|okay] <lead_tune> {radio_station} strømmen [tak|for mig|lige nu|tak skal du have]
+<lead_tune> endnu en {radio_genre} station
+[hej|ok|okay] <lead_tune> endnu en {radio_genre} station [tak|for mig|lige nu|tak skal du have]
+<lead_tune> noget direkte radio
+[hej|ok|okay] <lead_tune> noget direkte radio [tak|for mig|lige nu|tak skal du have]
+<lead_tune> en lokal radiostation
+[hej|ok|okay] <lead_tune> en lokal radiostation [tak|for mig|lige nu|tak skal du have]
+<lead_tune> {radio_station} fm
+[hej|ok|okay] <lead_tune> {radio_station} fm [tak|for mig|lige nu|tak skal du have]
+<lead_tune> fm-stationen {radio_station}
+[hej|ok|okay] <lead_tune> fm-stationen {radio_station} [tak|for mig|lige nu|tak skal du have]
+<lead_tune> en internetradiostation
+[hej|ok|okay] <lead_tune> en internetradiostation [tak|for mig|lige nu|tak skal du have]
+<lead_tune> en {radio_genre} internetstation
+[hej|ok|okay] <lead_tune> en {radio_genre} internetstation [tak|for mig|lige nu|tak skal du have]
+<lead_tune> en {radio_genre} fm-station
+[hej|ok|okay] <lead_tune> en {radio_genre} fm-station [tak|for mig|lige nu|tak skal du have]
+<lead_tune> taleradio
+[hej|ok|okay] <lead_tune> taleradio [tak|for mig|lige nu|tak skal du have]
+<lead_tune> {radio_genre} tale-stationen
+[hej|ok|okay] <lead_tune> {radio_genre} tale-stationen [tak|for mig|lige nu|tak skal du have]
+<lead_tune> nyhedsradio
+[hej|ok|okay] <lead_tune> nyhedsradio [tak|for mig|lige nu|tak skal du have]
+<lead_tune> en musikstation
+[hej|ok|okay] <lead_tune> en musikstation [tak|for mig|lige nu|tak skal du have]
+<lead_tune> en {radio_genre} musikstation
+[hej|ok|okay] <lead_tune> en {radio_genre} musikstation [tak|for mig|lige nu|tak skal du have]
+<lead_tune> min favoritradiostation
+[hej|ok|okay] <lead_tune> min favoritradiostation [tak|for mig|lige nu|tak skal du have]
+<lead_tune> morgenprogrammet på {radio_station}
+[hej|ok|okay] <lead_tune> morgenprogrammet på {radio_station} [tak|for mig|lige nu|tak skal du have]
+<lead_tune> {radio_genre} stationen {radio_station}
+[hej|ok|okay] <lead_tune> {radio_genre} stationen {radio_station} [tak|for mig|lige nu|tak skal du have]
+<lead_tune> {radio_station}, en {radio_genre} station
+[hej|ok|okay] <lead_tune> {radio_station}, en {radio_genre} station [tak|for mig|lige nu|tak skal du have]
+<lead_tune> {radio_station} den {radio_genre} station
+[hej|ok|okay] <lead_tune> {radio_station} den {radio_genre} station [tak|for mig|lige nu|tak skal du have]
+<lead_tune> har du noget {radio_genre} radio
+[hej|ok|okay] <lead_tune> har du noget {radio_genre} radio [tak|for mig|lige nu|tak skal du have]
+<lead_tune> har du nogen {radio_genre} stationer
+[hej|ok|okay] <lead_tune> har du nogen {radio_genre} stationer [tak|for mig|lige nu|tak skal du have]
+<lead_tune> noget {radio_genre} radio til køreturen
+[hej|ok|okay] <lead_tune> noget {radio_genre} radio til køreturen [tak|for mig|lige nu|tak skal du have]
+<lead_tune> en {radio_genre} station at vågne op til
+[hej|ok|okay] <lead_tune> en {radio_genre} station at vågne op til [tak|for mig|lige nu|tak skal du have]
+<lead_tune> hvilke {radio_genre} stationer er der
+[hej|ok|okay] <lead_tune> hvilke {radio_genre} stationer er der [tak|for mig|lige nu|tak skal du have]
+<lead_tune> en {radio_genre} station til baggrunden
+[hej|ok|okay] <lead_tune> en {radio_genre} station til baggrunden [tak|for mig|lige nu|tak skal du have]
+<lead_tune> noget direkte radio mens jeg arbejder
+[hej|ok|okay] <lead_tune> noget direkte radio mens jeg arbejder [tak|for mig|lige nu|tak skal du have]
+<lead_tune> en {radio_genre} station til pendlerturen
+[hej|ok|okay] <lead_tune> en {radio_genre} station til pendlerturen [tak|for mig|lige nu|tak skal du have]
+{radio_station}, tak
+stationen {radio_station}, tak
+noget {radio_genre} radio, tak
+{radio_station} — sæt den på
+den station {radio_station} — stil ind
+sæt {radio_station} på, vil du?
+skift til {radio_station}, kan du?
+jeg er i humør til noget {radio_genre} radio
+i humør til en {radio_genre} station
+jeg kunne godt bruge noget {radio_genre} radio
+jeg leder efter en {radio_genre} station
+jeg skal have en {radio_genre} station til køreturen
+hvad med {radio_station}
+måske en {radio_genre} station
+vi burde sætte {radio_station} på
+noget ligesom {radio_station}
+endnu en {radio_genre} station
+er der nogen {radio_genre} stationer
+hvilke {radio_genre} stationer har du
+er der en station der hedder {radio_station}
+min sædvanlige {radio_genre} station
+den {radio_genre} station jeg altid hører
+noget {radio_genre} radio til pendlerturen
+en {radio_genre} station fordi der er stille herinde
+{radio_station} kørende i baggrunden
+øh kan du sætte {radio_station} på
+stil ind på {radio_station}, faktisk nej en {radio_genre} station
+hey så sæt {radio_station} på
+du ved hvad smid noget {radio_genre} radio på
+har lyst til at høre {radio_station}
+lad mig få {radio_station} på
+giv mig en {radio_genre} station
+jeg kunne virkelig godt bruge noget {radio_genre} radio
+jeg er i humør til en {radio_genre} station
+er der en {radio_genre} station på
+har du en god {radio_genre} station?
+hey lad os finde noget {radio_genre} online radio
+<lead_tune> {radio_station} am-radio
+jeg er i humør til {radio_genre} i radioen
+så <lead_tune> en internetradiostation
+lad mig høre {radio_station} i radioen
+kan vi få gang i {radio_genre} fm-radio
+hvad med den radiostation {radio_station}
+øh bare sæt noget {radio_genre} radio på tak
+<lead_tune> en station der spiller {radio_genre}
+har du nogen gode {radio_genre} radiostationer
+jeg vil gerne høre internetradio — måske {radio_genre}
+<lead_tune> den am-station {radio_station}
+find mig et {radio_genre} radioprogram
+lad os stille ind på {radio_station} online radio
+hey spil noget {radio_genre} på internetradio
+giv mig {radio_station} am-radio
+så ligesom en {radio_genre} fm-station måske
+jeg leder efter {radio_station} radiostationen
+<lead_tune> noget med {radio_genre}
+sæt en {radio_genre} internetradiostation på for mig
+<lead_tune> jeg er i humør til noget {radio_genre} radio
+hvad med vi hører {radio_station} i radioen [et stykke tid]
+[hey|så] lad os finde en {radio_genre} radiostation [online]
+jeg vil gerne høre {radio_station} i radioen [tak]
+det føles som en {radio_genre} radio-agtig dag
+[ok|hey] <lead_tune> stil ind på {radio_station} [for mig]
+er der noget direkte radio der spiller {radio_genre} [lige nu]
+lad mig høre {radio_station} i radioen [for en forandring]
+jeg kunne virkelig godt bruge noget {radio_genre} på fm-radio
+<lead_tune> hvordan er modtagelsen på {radio_station}
+[hey] kan vi sætte {radio_station} radio på [måske]
+[så|øh] jeg leder efter en {radio_genre} internetradiostation
+<lead_tune> lad os tjekke hvad der er på {radio_station} [i dag]
+hey <lead_tune> spil noget {radio_genre} radio [tak]
+jeg er i humør til {radio_station} i radioen [faktisk]
+hvad med noget {radio_genre} i radioen [lige nu]
+<lead_tune> giv mig {radio_station} [tak]
+vi burde høre {radio_genre} radio [et stykke tid]
+[øh] kan du stille ind på {radio_station} i radioen [tak]
+lad os høre noget {radio_genre} på am-radio [eller fm]

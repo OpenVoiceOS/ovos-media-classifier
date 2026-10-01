@@ -18,5 +18,34 @@ dist/
 scripts/ocp_*.csv
 **/ocp_agentpipe.csv*
 templates_new/
+# agentpipe template-generator checkpoint sidecar (resume state, not source)
+training/.agentpipe_templates.done.jsonl
 .venv/
 venv/
+.claude/
+# top-level data/ scratch (entity pools, generated gazetteer, trained bundles)
+# is gitignored; the small bundled default under the package IS tracked.
+/data/
+!ovos_media_classifier/data/
+
+# generated template output
+/templates/
+
+# stray agent scratch at repo root
+/anime_*.json
+/asmr_*.json
+/audiobook_*.json
+/*_commands.json
+/*_utterances.json
+/*_questions.json
+/*_training_data.json
+/*_templates.json
+/templates_*.json
+/templates_*.txt
+/nsfw_*.json
+/de_de_*.json
+/fr_*.json
+.kilo/
+.tmp/
+
+uv.lock

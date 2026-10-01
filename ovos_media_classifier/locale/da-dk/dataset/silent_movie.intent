@@ -1,0 +1,104 @@
+<lead_watch> {silent_movie_title}
+[hej|ok|okay] <lead_watch> {silent_movie_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> stumfilmen {silent_movie_title}
+[hej|ok|okay] <lead_watch> stumfilmen {silent_movie_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en stumfilm
+[hej|ok|okay] <lead_watch> en stumfilm [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en gammel stumfilm
+[hej|ok|okay] <lead_watch> en gammel stumfilm [tak|for mig|lige nu|tak skal du have]
+<lead_watch> stumfilmen {silent_movie_title}
+[hej|ok|okay] <lead_watch> stumfilmen {silent_movie_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en klassisk stumfilm
+[hej|ok|okay] <lead_watch> en klassisk stumfilm [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en {movie_genre} stumfilm
+[hej|ok|okay] <lead_watch> en {movie_genre} stumfilm [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en tidlig stumfilm
+[hej|ok|okay] <lead_watch> en tidlig stumfilm [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en stum komedie
+[hej|ok|okay] <lead_watch> en stum komedie [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en klassiker fra stumfilmæraen
+[hej|ok|okay] <lead_watch> en klassiker fra stumfilmæraen [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en stumfilm
+[hej|ok|okay] <lead_watch> en stumfilm [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en gammel stumfilm
+[hej|ok|okay] <lead_watch> en gammel stumfilm [tak|for mig|lige nu|tak skal du have]
+<lead_watch> stumfilmen {silent_movie_title}
+[hej|ok|okay] <lead_watch> stumfilmen {silent_movie_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en {movie_genre} stumfilm
+[hej|ok|okay] <lead_watch> en {movie_genre} stumfilm [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en stumfilm-klassiker
+[hej|ok|okay] <lead_watch> en stumfilm-klassiker [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en tidlig biograf-klassiker
+[hej|ok|okay] <lead_watch> en tidlig biograf-klassiker [tak|for mig|lige nu|tak skal du have]
+<lead_watch> et stumt drama
+[hej|ok|okay] <lead_watch> et stumt drama [tak|for mig|lige nu|tak skal du have]
+<lead_watch> den klassiske stumfilm {silent_movie_title}
+[hej|ok|okay] <lead_watch> den klassiske stumfilm {silent_movie_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> endnu en stumfilm
+[hej|ok|okay] <lead_watch> endnu en stumfilm [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en stumfilm fra de tidlige dage
+[hej|ok|okay] <lead_watch> en stumfilm fra de tidlige dage [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en gammeldags stumfilm
+[hej|ok|okay] <lead_watch> en gammeldags stumfilm [tak|for mig|lige nu|tak skal du have]
+<lead_watch> har du nogen stumfilm
+[hej|ok|okay] <lead_watch> har du nogen stumfilm [tak|for mig|lige nu|tak skal du have]
+<lead_watch> har du en god stumfilm
+[hej|ok|okay] <lead_watch> har du en god stumfilm [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en stumfilm-klassiker til aftenen
+[hej|ok|okay] <lead_watch> en stumfilm-klassiker til aftenen [tak|for mig|lige nu|tak skal du have]
+<lead_watch> noget fra stumfilmæraen
+[hej|ok|okay] <lead_watch> noget fra stumfilmæraen [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en stum komedie til i aften
+[hej|ok|okay] <lead_watch> en stum komedie til i aften [tak|for mig|lige nu|tak skal du have]
+<lead_watch> har du nogen {movie_genre} stumfilm
+[hej|ok|okay] <lead_watch> har du nogen {movie_genre} stumfilm [tak|for mig|lige nu|tak skal du have]
+{silent_movie_title}, tak
+stumfilmen {silent_movie_title}, tak
+en stumfilm, tak
+{silent_movie_title} — sæt den på
+sæt stumfilmen {silent_movie_title} på, vil du?
+jeg kunne godt bruge en stumfilm
+jeg leder efter en klassisk stumfilm
+jeg skal have noget fra stumfilmæraen
+hvad med {silent_movie_title}
+måske en {movie_genre} stumfilm
+vi burde se {silent_movie_title}
+noget ligesom {silent_movie_title}
+er der nogen stumfilm
+en stumfilm-klassiker til aftenen
+en stum komedie fordi jeg skal grine
+den gamle {silent_movie_title} fra stumfilmens dage
+<lead_watch> stumfilm-udgaven af {book_title}
+<lead_watch> en stumfilm baseret på romanen {book_title}
+<lead_watch> en stumfilm baseret på skuespillet {book_title}
+øh kan du sætte en stumfilm på
+spil {silent_movie_title}, faktisk nej en anden stumfilm
+hey så sæt {silent_movie_title} på
+du ved hvad smid en gammel stumfilm på
+har lyst til at se {silent_movie_title}
+lad mig se en klassisk stumfilm
+giv mig en {movie_genre} stumfilm
+jeg er nostalgisk sæt en stumfilm på
+jeg kunne virkelig godt bruge en stumfilm
+er der en god stum {movie_genre} film
+har du nogen stumfilm?
+jeg vil gerne se en stumfilm i aften
+så <lead_watch> en af de gamle stumfilm
+hey, har du nogen stumfilm med {movie_genre}?
+lad mig se en klassisk stumfilm
+jeg er i humør til en stumfilm, har du noget?
+<lead_watch> en stumfilm [måske] med {movie_genre}
+hvad med vi <lead_watch> en stumfilm?
+øh, <lead_watch> en stumfilm-klassiker [tak]
+kan du <lead_watch> en stumfilm for mig?
+jeg har lyst til en stumfilm, {silent_movie_title} måske
+så, nogen stumfilm med {movie_genre}?
+giv mig en stumfilm at se
+jeg vil gerne tjekke en gammel stumfilm ud
+<lead_watch> noget stumt, ligesom en klassiker
+hvilke stumfilm har du? {movie_genre} måske
+lad os <lead_watch> en stumfilm, jeg er i humør til det
+har du nogen gode stumfilm med {silent_movie_title}?
+hey, <lead_watch> en stumfilm-klassiker for mig
+jeg vil elske at se en stumfilm lige nu
+så hvad med vi <lead_watch> den stumfilm {silent_movie_title}?

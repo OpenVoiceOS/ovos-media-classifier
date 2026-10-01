@@ -1,0 +1,110 @@
+<lead_watch> {tv_channel}
+[hej|ok|okay] <lead_watch> {tv_channel} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> kanalen {tv_channel}
+<lead_watch> direkte tv
+[hej|ok|okay] <lead_watch> direkte tv [tak|for mig|lige nu|tak skal du have]
+<lead_watch> {tv_channel} direkte
+[hej|ok|okay] <lead_watch> {tv_channel} direkte [tak|for mig|lige nu|tak skal du have]
+<lead_watch> hvad der end kører på {tv_channel}
+[hej|ok|okay] <lead_watch> hvad der end kører på {tv_channel} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en {tv_genre} kanal
+[hej|ok|okay] <lead_watch> en {tv_genre} kanal [tak|for mig|lige nu|tak skal du have]
+<lead_watch> kanal {tv_channel}
+[hej|ok|okay] <lead_watch> kanal {tv_channel} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> hvad kører der på {tv_channel}
+[hej|ok|okay] <lead_watch> hvad kører der på {tv_channel} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> noget direkte tv
+[hej|ok|okay] <lead_watch> noget direkte tv [tak|for mig|lige nu|tak skal du have]
+<lead_watch> {tv_channel} strømmen
+<lead_watch> endnu en {tv_genre} kanal
+[hej|ok|okay] <lead_watch> endnu en {tv_genre} kanal [tak|for mig|lige nu|tak skal du have]
+<lead_watch> direkte {tv_genre} tv
+[hej|ok|okay] <lead_watch> direkte {tv_genre} tv [tak|for mig|lige nu|tak skal du have]
+<lead_watch> nyhedskanalen
+[hej|ok|okay] <lead_watch> nyhedskanalen [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en sportskanal
+[hej|ok|okay] <lead_watch> en sportskanal [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en filmkanal
+[hej|ok|okay] <lead_watch> en filmkanal [tak|for mig|lige nu|tak skal du have]
+<lead_watch> {tv_channel} direkte-feedet
+[hej|ok|okay] <lead_watch> {tv_channel} direkte-feedet [tak|for mig|lige nu|tak skal du have]
+<lead_watch> direkte {tv_genre} kanal
+[hej|ok|okay] <lead_watch> direkte {tv_genre} kanal [tak|for mig|lige nu|tak skal du have]
+<lead_watch> hvad der end er i fjernsynet
+<lead_watch> almindeligt tv
+[hej|ok|okay] <lead_watch> almindeligt tv [tak|for mig|lige nu|tak skal du have]
+<lead_watch> flow-tv
+[hej|ok|okay] <lead_watch> flow-tv [tak|for mig|lige nu|tak skal du have]
+<lead_watch> den direkte {tv_genre} kanal
+[hej|ok|okay] <lead_watch> den direkte {tv_genre} kanal [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en anden kanal
+[hej|ok|okay] <lead_watch> en anden kanal [tak|for mig|lige nu|tak skal du have]
+<lead_watch> {tv_genre} kanalen {tv_channel}
+[hej|ok|okay] <lead_watch> {tv_genre} kanalen {tv_channel} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> {tv_channel}, en {tv_genre} kanal
+[hej|ok|okay] <lead_watch> {tv_channel}, en {tv_genre} kanal [tak|for mig|lige nu|tak skal du have]
+<lead_watch> har du {tv_channel}
+[hej|ok|okay] <lead_watch> har du {tv_channel} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> har du nogen {tv_genre} kanaler
+<lead_watch> noget direkte tv til baggrunden
+[hej|ok|okay] <lead_watch> noget direkte tv til baggrunden [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en {tv_genre} kanal at sætte på
+[hej|ok|okay] <lead_watch> en {tv_genre} kanal at sætte på [tak|for mig|lige nu|tak skal du have]
+<lead_watch> hvad kører der lige nu
+[hej|ok|okay] <lead_watch> hvad kører der lige nu [tak|for mig|lige nu|tak skal du have]
+<lead_watch> har du en {tv_genre} kanal
+[hej|ok|okay] <lead_watch> har du en {tv_genre} kanal [tak|for mig|lige nu|tak skal du have]
+<lead_watch> noget direkte tv mens jeg laver mad
+[hej|ok|okay] <lead_watch> noget direkte tv mens jeg laver mad [tak|for mig|lige nu|tak skal du have]
+<lead_watch> sæt noget på i fjernsynet
+[hej|ok|okay] <lead_watch> sæt noget på i fjernsynet [tak|for mig|lige nu|tak skal du have]
+{tv_channel}, tak
+kanal {tv_channel}, tak
+en {tv_genre} kanal, tak
+{tv_channel} — sæt den på
+direkte tv — lad os se hvad der kører
+sæt {tv_channel} på, vil du?
+skift til {tv_channel}, kan du?
+jeg kunne godt bruge noget direkte tv
+jeg leder efter en {tv_genre} kanal
+jeg skal have noget i baggrunden
+hvad med {tv_channel}
+hvad med en {tv_genre} kanal
+måske en {tv_genre} kanal
+vi burde sætte nyhedskanalen på
+noget godt på {tv_channel}?
+hvad kører der på {tv_genre} lige nu?
+min sædvanlige {tv_genre} kanal
+en {tv_genre} kanal fordi jeg keder mig
+noget direkte tv mens jeg folder tøj
+bare sæt hvad der end kører på i fjernsynet
+øh kan du sætte {tv_channel} på
+tænd for {tv_channel}, faktisk nej en {tv_genre} kanal
+hey så sæt {tv_channel} på
+du ved hvad smid noget {tv_genre} tv på
+har lyst til at se noget tv
+lad mig få {tv_channel} på
+giv mig en {tv_genre} kanal
+jeg kunne virkelig godt bruge noget {tv_genre} tv
+er der noget på {tv_channel}
+har du en {tv_genre} kanal?
+[hey|så|øh] <lead_watch> kanalen {tv_channel} [måske|tror jeg]
+jeg vil gerne se noget {tv_genre} i fjernsynet lige nu
+<lead_watch> noget i boksen [tak|vil du]
+hvad med vi tjekker hvad der kører på {tv_channel}
+lad os se direkte tv et stykke tid
+giv mig en {tv_genre} kanal at se
+[så|hey] tænd for {tv_channel} på tv'et
+kan du finde en {tv_genre} kanal til mig
+[hey] jeg er i humør til noget {tv_genre} i fjernsynet
+sæt boksen på {tv_channel}
+har du nogen {tv_genre} kanaler i boksen
+[øh|så] <lead_watch> direkte iptv [tak]
+lad mig se {tv_channel} et stykke tid
+[hey] hvad kører der i fjernsynet
+<lead_watch> et {tv_genre} program på kanal {tv_channel}
+jeg vil gerne se tv-kanalen {tv_channel}
+[så] skift til {tv_channel} på tv'et
+<lead_watch> en eller anden {tv_genre} kanal lige nu
+[hey|ok] stil ind på {tv_channel} direkte
+kan vi tjekke en {tv_genre} kanal i fjernsynet

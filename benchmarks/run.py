@@ -64,10 +64,10 @@ def _load_ahocorasick():
     import os as _os
     from ovos_media_classifier.ahocorasick import AhocorasickMediaClassifier
     from ovos_media_classifier.intents import OCPEntityLabel
-    from benchmarks.dataset import LOCALE_DIR, _VOC_TO_INTENT
+    from benchmarks.dataset import LOCALE_DIR
 
     # Map each keyword voc to the closest *_KEYWORD entity label so hits resolve
-    # to the right play intent via NER_LABEL_TO_PLAY_INTENT.
+    # to the right MediaType via NER_LABEL_TO_MEDIA_TYPE.
     voc_to_label = {
         "MusicKeyword": OCPEntityLabel.MUSIC_KEYWORD,
         "PodcastKeyword": OCPEntityLabel.PODCAST_KEYWORD,

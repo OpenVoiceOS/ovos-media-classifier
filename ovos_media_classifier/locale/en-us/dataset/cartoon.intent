@@ -1,0 +1,136 @@
+<lead_watch> {cartoon_title}
+[hey|ok|please] <lead_watch> {cartoon_title} [please|for me|right now|thanks]
+<lead_watch> the cartoon {cartoon_title}
+<lead_watch> some cartoons
+[hey|ok|please] <lead_watch> some cartoons [please|for me|right now|thanks]
+<lead_watch> an episode of {cartoon_title}
+[hey|ok|please] <lead_watch> an episode of {cartoon_title} [please|for me|right now|thanks]
+<lead_watch> a kids cartoon
+[hey|ok|please] <lead_watch> a kids cartoon [please|for me|right now|thanks]
+<lead_watch> the show {cartoon_title}
+[hey|ok|please] <lead_watch> the show {cartoon_title} [please|for me|right now|thanks]
+<lead_watch> a saturday morning cartoon
+[hey|ok|please] <lead_watch> a saturday morning cartoon [please|for me|right now|thanks]
+<lead_watch> an old cartoon
+[hey|ok|please] <lead_watch> an old cartoon [please|for me|right now|thanks]
+<lead_watch> the next episode of {cartoon_title}
+[hey|ok|please] <lead_watch> the next episode of {cartoon_title} [please|for me|right now|thanks]
+<lead_watch> a classic cartoon
+[hey|ok|please] <lead_watch> a classic cartoon [please|for me|right now|thanks]
+<lead_watch> a funny cartoon
+[hey|ok|please] <lead_watch> a funny cartoon [please|for me|right now|thanks]
+<lead_watch> an animated show
+[hey|ok|please] <lead_watch> an animated show [please|for me|right now|thanks]
+<lead_watch> the animated series {cartoon_title}
+[hey|ok|please] <lead_watch> the animated series {cartoon_title} [please|for me|right now|thanks]
+<lead_watch> another episode of {cartoon_title}
+[hey|ok|please] <lead_watch> another episode of {cartoon_title} [please|for me|right now|thanks]
+<lead_watch> a cartoon show
+[hey|ok|please] <lead_watch> a cartoon show [please|for me|right now|thanks]
+<lead_watch> some classic cartoons
+[hey|ok|please] <lead_watch> some classic cartoons [please|for me|right now|thanks]
+<lead_watch> a vintage cartoon
+[hey|ok|please] <lead_watch> a vintage cartoon [please|for me|right now|thanks]
+<lead_watch> the new {cartoon_title} episode
+[hey|ok|please] <lead_watch> the new {cartoon_title} episode [please|for me|right now|thanks]
+<lead_watch> a kids animated show
+[hey|ok|please] <lead_watch> a kids animated show [please|for me|right now|thanks]
+<lead_watch> the {cartoon_title} cartoon
+[hey|ok|please] <lead_watch> the {cartoon_title} cartoon [please|for me|right now|thanks]
+<lead_watch> a cartoon for children
+[hey|ok|please] <lead_watch> a cartoon for children [please|for me|right now|thanks]
+<lead_watch> an episode of that cartoon
+[hey|ok|please] <lead_watch> an episode of that cartoon [please|for me|right now|thanks]
+<lead_watch> more {cartoon_title}
+[hey|ok|please] <lead_watch> more {cartoon_title} [please|for me|right now|thanks]
+<lead_watch> do you have any cartoons
+[hey|ok|please] <lead_watch> do you have any cartoons [please|for me|right now|thanks]
+<lead_watch> got any {cartoon_title} episodes
+[hey|ok|please] <lead_watch> got any {cartoon_title} episodes [please|for me|right now|thanks]
+<lead_watch> a cartoon for the kids
+[hey|ok|please] <lead_watch> a cartoon for the kids [please|for me|right now|thanks]
+<lead_watch> something animated for saturday morning
+[hey|ok|please] <lead_watch> something animated for saturday morning [please|for me|right now|thanks]
+<lead_watch> a cartoon to keep the kids busy
+[hey|ok|please] <lead_watch> a cartoon to keep the kids busy [please|for me|right now|thanks]
+<lead_watch> got a funny cartoon
+[hey|ok|please] <lead_watch> got a funny cartoon [please|for me|right now|thanks]
+{cartoon_title}, please
+the cartoon {cartoon_title}, please
+some cartoons, thanks
+{cartoon_title} — put it on
+the next episode of {cartoon_title} — let's go
+put on {cartoon_title}, would you?
+i could go for some cartoons
+i'm after a funny cartoon
+i need a cartoon for the kids
+what about {cartoon_title}
+maybe a classic cartoon
+we should watch {cartoon_title}
+something like {cartoon_title}
+another episode of {cartoon_title}
+any good cartoons around?
+the {cartoon_title} cartoon, please
+a cartoon to keep the kids busy
+some cartoons because it's saturday morning
+the old {cartoon_title} cartoon i used to watch
+<lead_watch> a cartoon based on {comic_title}
+<lead_watch> a cartoon based on the comic {comic_title}
+<lead_watch> the animated series based on {comic_title}
+<lead_watch> a cartoon based on the movie {movie_title}
+<lead_watch> the animated adaptation of {movie_title}
+<lead_watch> a cartoon based on the game {game_title}
+<lead_watch> a cartoon based on the book {book_title}
+<lead_watch> an animated series based on the novel {book_title}
+<lead_watch> the {comic_title} cartoon
+<lead_watch> the {movie_title} animated series
+um can you put on {cartoon_title}
+watch the— no the other {cartoon_title}
+put on {cartoon_title}, actually no the {movie_title} one
+hey so put on {cartoon_title}
+you know what throw on {cartoon_title}
+wanna watch {cartoon_title}
+lemme watch some {cartoon_title}
+gimme some cartoons
+the kids are losing it stick on {cartoon_title}
+the kids are bored put on a cartoon
+i could really go for some {cartoon_title}
+i'm feeling nostalgic put on {cartoon_title}
+is there a new episode of {cartoon_title}
+got any cartoons for the kids?
+i'm in the mood for a cartoon, got any {cartoon_title}
+um <lead_watch> something animated like {cartoon_title} [maybe]
+hey <lead_watch> that saturday morning cartoon show
+so <lead_watch> an animated show [please]
+lemme watch an animated series [or something]
+i wanna watch some cartoons, maybe {cartoon_title}
+<lead_watch> that one cartoon from the book {book_title}
+got any good animated series [to watch]
+so <lead_watch> the cartoon version of {movie_title}
+hey <lead_watch> saturday morning cartoons or whatever
+<lead_watch> an animated series like {cartoon_title}
+i wanna watch cartoons um <lead_watch> {cartoon_title}
+so like <lead_watch> a new animated show [maybe]
+lemme see some cartoons [please]
+<lead_watch> a cartoon based on the game {game_title} actually wait the {comic_title} one
+so i'm looking for some saturday morning cartoons
+could you <lead_watch> that new {cartoon_title} episode
+hey got any cartoon episodes [to watch]
+i'm in the mood for a {cartoon_title} marathon
+how about we <lead_watch> that {cartoon_title} show
+so i wanna <lead_watch> an animated series tonight
+hey got any good cartoons to <lead_watch>
+feels like a cartoon night let's <lead_watch> {cartoon_title}
+we should <lead_watch> that new animated show
+i wanna <lead_watch> the {cartoon_title} cartoon movie
+lemme see what cartoons are on <lead_watch> {cartoon_title}
+it's saturday morning so let's <lead_watch> cartoons
+gimme a good animated series to binge
+so like can we <lead_watch> that cartoon based on {book_title}
+i heard {cartoon_title} is good let's <lead_watch> it
+i'm looking for an animated show to <lead_watch>
+how about we check out that cartoon based on {game_title}
+what's a good cartoon to <lead_watch> right now
+let's <lead_watch> the latest episode of {cartoon_title}
+i could go for an animated series how about {cartoon_title}
+hey um <lead_watch> a cartoon maybe {cartoon_title} or something

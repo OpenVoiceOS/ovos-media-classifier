@@ -1,0 +1,104 @@
+<lead_watch> {silent_movie_title}
+[hey|ok|please] <lead_watch> {silent_movie_title} [please|for me|right now|thanks]
+<lead_watch> the silent movie {silent_movie_title}
+[hey|ok|please] <lead_watch> the silent movie {silent_movie_title} [please|for me|right now|thanks]
+<lead_watch> a silent film
+[hey|ok|please] <lead_watch> a silent film [please|for me|right now|thanks]
+<lead_watch> an old silent movie
+[hey|ok|please] <lead_watch> an old silent movie [please|for me|right now|thanks]
+<lead_watch> the silent film {silent_movie_title}
+[hey|ok|please] <lead_watch> the silent film {silent_movie_title} [please|for me|right now|thanks]
+<lead_watch> a classic silent movie
+[hey|ok|please] <lead_watch> a classic silent movie [please|for me|right now|thanks]
+<lead_watch> a {movie_genre} silent film
+[hey|ok|please] <lead_watch> a {movie_genre} silent film [please|for me|right now|thanks]
+<lead_watch> an early silent film
+[hey|ok|please] <lead_watch> an early silent film [please|for me|right now|thanks]
+<lead_watch> a silent comedy
+[hey|ok|please] <lead_watch> a silent comedy [please|for me|right now|thanks]
+<lead_watch> a silent era classic
+[hey|ok|please] <lead_watch> a silent era classic [please|for me|right now|thanks]
+<lead_watch> a silent picture
+[hey|ok|please] <lead_watch> a silent picture [please|for me|right now|thanks]
+<lead_watch> an old silent picture
+[hey|ok|please] <lead_watch> an old silent picture [please|for me|right now|thanks]
+<lead_watch> the silent picture {silent_movie_title}
+[hey|ok|please] <lead_watch> the silent picture {silent_movie_title} [please|for me|right now|thanks]
+<lead_watch> a {movie_genre} silent movie
+[hey|ok|please] <lead_watch> a {movie_genre} silent movie [please|for me|right now|thanks]
+<lead_watch> a silent movie classic
+[hey|ok|please] <lead_watch> a silent movie classic [please|for me|right now|thanks]
+<lead_watch> an early cinema classic
+[hey|ok|please] <lead_watch> an early cinema classic [please|for me|right now|thanks]
+<lead_watch> a silent drama
+[hey|ok|please] <lead_watch> a silent drama [please|for me|right now|thanks]
+<lead_watch> the classic silent film {silent_movie_title}
+[hey|ok|please] <lead_watch> the classic silent film {silent_movie_title} [please|for me|right now|thanks]
+<lead_watch> another silent movie
+[hey|ok|please] <lead_watch> another silent movie [please|for me|right now|thanks]
+<lead_watch> a silent film from the early days
+[hey|ok|please] <lead_watch> a silent film from the early days [please|for me|right now|thanks]
+<lead_watch> a vintage silent movie
+[hey|ok|please] <lead_watch> a vintage silent movie [please|for me|right now|thanks]
+<lead_watch> do you have any silent films
+[hey|ok|please] <lead_watch> do you have any silent films [please|for me|right now|thanks]
+<lead_watch> got a good silent movie
+[hey|ok|please] <lead_watch> got a good silent movie [please|for me|right now|thanks]
+<lead_watch> a silent classic for the evening
+[hey|ok|please] <lead_watch> a silent classic for the evening [please|for me|right now|thanks]
+<lead_watch> something from the silent era
+[hey|ok|please] <lead_watch> something from the silent era [please|for me|right now|thanks]
+<lead_watch> a silent comedy for tonight
+[hey|ok|please] <lead_watch> a silent comedy for tonight [please|for me|right now|thanks]
+<lead_watch> got any {movie_genre} silent films
+[hey|ok|please] <lead_watch> got any {movie_genre} silent films [please|for me|right now|thanks]
+{silent_movie_title}, please
+the silent movie {silent_movie_title}, please
+a silent film, thanks
+{silent_movie_title} — put it on
+put on the silent film {silent_movie_title}, would you?
+i could go for a silent movie
+i'm after a classic silent film
+i need something from the silent era
+what about {silent_movie_title}
+maybe a {movie_genre} silent film
+we should watch {silent_movie_title}
+something like {silent_movie_title}
+any silent films around?
+a silent classic for the evening
+a silent comedy because i need to laugh
+the old {silent_movie_title} from the silent days
+<lead_watch> the silent film adaptation of {book_title}
+<lead_watch> a silent movie based on the novel {book_title}
+<lead_watch> a silent film based on the play {book_title}
+um can you put on a silent movie
+play {silent_movie_title}, actually no another silent one
+hey so put on {silent_movie_title}
+you know what throw on an old silent film
+wanna watch {silent_movie_title}
+lemme see a classic silent movie
+gimme a {movie_genre} silent film
+i'm feeling nostalgic put on a silent movie
+i could really go for a silent film
+is there a good silent {movie_genre} movie
+got any silent movies?
+i wanna watch a silent movie tonight
+so <lead_watch> one of those old silent films
+hey, got any silent movies with {movie_genre}?
+lemme see a classic silent film
+i'm in the mood for a silent movie, got anything?
+<lead_watch> a silent film [maybe] with {movie_genre}
+how about we <lead_watch> a silent movie?
+um, <lead_watch> a silent classic [please]
+can you <lead_watch> a silent film for me?
+i feel like a silent movie, {silent_movie_title} maybe
+so, any silent films with {movie_genre}?
+gimme a silent movie to watch
+i wanna check out an old silent film
+<lead_watch> something silent, like a classic
+what silent movies you got? {movie_genre} maybe
+let's <lead_watch> a silent film, i'm in the mood
+got any good silent movies starring {silent_movie_title}?
+hey, <lead_watch> a silent film classic for me
+i'd love to see a silent movie right now
+so how about we <lead_watch> that silent film {silent_movie_title}?

@@ -43,14 +43,17 @@ The ground truth is sourced **entirely from the bundled `.voc` keyword files** �
 the same vocabulary the keyword backend ships with — so the benchmark needs no
 network and no external dataset. For each `<Type>Keyword.voc`:
 
-1. The voc file name maps to an `OCPPlayIntent` (mirroring the branch order in
-   `KeywordMediaClassifier._classify_intent`).
-2. That intent maps to a canonical `mediavocab.MediaType` via
-   `PLAY_INTENT_TO_MEDIA_TYPE`, and to genre tags via `PLAY_INTENT_TO_GENRES`
-   (this is where the `adult` signal comes from).
-3. Each keyword phrase is dropped into play-style templates
-   (`"play {kw}"`, `"put on some {kw}"`, `"i want to watch a {kw}"`, …) to make
-   realistic utterances.
+1. The voc file name maps directly to a canonical `mediavocab.MediaType` and any
+   genre tags (`_VOC_TO_MEDIA_TYPE` / `_VOC_TO_GENRES`, mirroring the branch
+   outcomes in `KeywordMediaClassifier._classify_leaf`) — this is where the
+   `adult` signal comes from.
+3. Each keyword phrase is dropped into **modality-consistent** play-style
+   templates. The keyword backend is hierarchical (coarse-to-fine): it predicts
+   the playback modality from the carrier verb FIRST and constrains the leaf to
+   it, so the carrier must agree with the leaf's modality — a video leaf gets a
+   "watch …" carrier, an audio leaf a "listen to …" carrier, etc. (no
+   self-inflicted "watch a radio" mislabels). Every leaf also gets the neutral
+   `"play {kw}"` carriers.
 
 Keyword phrases that are shared across media types (genuinely ambiguous for the
 keyword backend) are dropped so the labels stay honest. Sampling uses a fixed
@@ -77,35 +80,100 @@ rows/sec. Globally: **content-filter recall** — of the adult-genre rows, the
 fraction the default `ContentFilter().check(clf, utterance, lang)` blocks — plus
 the false-block rate over the non-adult slice.
 
-## Latest results
+## Latest results — read this framing first
 
-Eval set: **936 utterances** across 3 languages (`de-de`=308, `en-us`=360,
-`pt-pt`=268), **64 adult-genre rows**.
+There are **two very different numbers**, and conflating them is misleading:
 
-| backend | status | accuracy | macro-F1 | median ms | p95 ms | rows/s | CF recall | false-block |
-|---|---|---|---|---|---|---|---|---|
-| keyword | available | 0.981 | 0.989 | 0.0132 | 0.0337 | 53915 | 0.938 (60/64) | 0.000 |
-| ahocorasick | available | 0.481 | 0.613 | 0.0050 | 0.0120 | 141910 | 0.000 (0/64) | 0.000 |
-| sklearn | unavailable | – | – | – | – | – | – | – |
-| padatious | unavailable | – | – | – | – | – | – | – |
-| model2vec | unavailable | – | – | – | – | – | – | – |
-| guided_onnx | unavailable | – | – | – | – | – | – | – |
+**1. Synthetic eval set (`benchmarks/eval_set.csv`)** — utterances generated *from
+the bundled `.voc` files*. This measures **vocabulary coverage / wiring** (is every
+keyword reachable, does adult precedence hold), **NOT generalization.** A keyword
+matcher scores ~0.99 here almost by construction — the test is built from its own
+vocabulary.
 
-Notes from this run:
+| backend | accuracy | macro-F1 | median ms | rows/s | CF recall | false-block |
+|---|---|---|---|---|---|---|
+| keyword | **0.990** | 0.984 | 0.027 | 7900 | 1.000 (64/64) | 0.000 |
+| ahocorasick | 0.495 | 0.628 | 0.003 | 408000 | 0.469 (30/64) | 0.000 |
 
-- The keyword backend's only systematic errors are `episodic_series` ("tv show")
-  resolving to `tv` (the `TVKeyword`/`IPTVKeyword` branch outranks `SeriesKeyword`)
-  and a handful of `movie` titles caught by an `audiobook` substring.
-- Keyword content-filter recall is **0.938** (60/64); the 4 misses are German
-  `sexfilm` utterances that the `de-de` `AdultKeyword.voc` does not cover — a real
-  localization gap surfaced by the benchmark. False-block rate on non-adult rows
-  is **0.000**.
-- The ahocorasick exact-match baseline blocks **0** adult rows because it does not
-  surface a genre signal (`classify_genres` is the default empty), so the content
-  filter has nothing to act on — useful to keep visible.
+**2. Neutral HF test split (`--hf-dataset TigreGotico/ocp-media-intents`)** — real,
+naturally-phrased commands the classifier has never seen. This measures **actual
+generalization**, and it is the number that matters:
+
+| backend | accuracy | macro-F1 | CF recall |
+|---|---|---|---|
+| keyword | **0.290** | 0.442 | (3-row adult sample, not significant) |
+| ahocorasick | 0.169 | 0.244 | — |
+
+### What this means
+
+- **The keyword backend is a deterministic FLOOR**, not a production-accuracy
+  classifier: ~0.29 on real queries. It exists so OCP works offline with zero ML
+  deps; **real accuracy comes from the trained ONNX backend.** Do not cite the 0.99.
+- Neither the **coarse-to-fine** restructure nor **word-boundary** matching moved the
+  real-query number (both improved the *synthetic* score; on the HF split they are
+  neutral-to-slightly-negative — word boundaries trade a little natural-language
+  recall for correctness, e.g. German "sexfilm" no longer false-matches "film").
+  They are justified by **architecture and safety**, not a keyword accuracy gain.
+- **Adult content-filter recall is 1.000** on the 64-row synthetic adult slice (the
+  reliable measure); the HF split has too few adult rows to be meaningful.
+- The gap between 0.99 and 0.29 is the **dataset itself**: it is ~99% synthetic
+  slot-fill, so models trained/measured on it overfit templated phrasing. Closing
+  the gap needs more *natural* training data, not more keyword tuning.
 
 See `benchmarks/results.md` for the full per-type tables and
 `benchmarks/results.json` for the raw numbers and confusion matrices.
+
+## Harm-weighted routing eval (the honest OOD ground truth)
+
+`benchmarks/run.py` above grades backends on an **in-distribution** set built
+from the keyword backend's own `.voc` files — so the keyword backend scores ~0.99
+by construction (a false green). The **routing eval** is the separate, honest
+measurement: a hand-curated, **out-of-distribution** set scored by a
+**harm-weighted** metric that reflects how the classifier is actually used — as a
+**router** (gate `is_ocp_query`, route by `media_type`/`playback_type`, apply
+adult content-policy), where the error cost is asymmetric.
+
+```bash
+# keyword + every trained data/models/* bundle
+~/.venvs/ovos/bin/python -m benchmarks.routing_eval
+# keyword only (zero deps)
+~/.venvs/ovos/bin/python -m benchmarks.routing_eval --only-keyword
+# add an explicit ONNX bundle
+~/.venvs/ovos/bin/python -m benchmarks.routing_eval --bundle path/to/bundle
+```
+
+| File | What it is |
+|---|---|
+| `benchmarks/routing_eval.jsonl` | The hand-curated, OOD eval set (222 cases). |
+| `benchmarks/routing_eval.py` | The harm-weighted harness (mis-route / false-hijack / false-miss / adult-leak). |
+| `benchmarks/routing_eval_results.{json,md}` | Results (regenerated each run). |
+
+**The metric is mis-route rate** (confident-wrong `media_type`), and
+**GENERIC/abstain is scored as SAFE** — a confident-wrong route prunes the
+correct provider (harm), while an abstain still lets every provider search
+(harmless). Gate **false-hijack** (non-media → OCP) and **adult-leak** (adult not
+flagged) are reported as separate headlines. The full rationale, metric
+definitions, and an honest read of the baseline are in
+[`docs/routing-eval.md`](../docs/routing-eval.md).
+
+### Routing eval set provenance
+
+The 222 cases in `routing_eval.jsonl` are **authored by hand** and every label
+was hand-checked against the [`mediavocab`](../ovos_media_classifier/intents.py)
+taxonomy and the routing semantics in `docs/routing-eval.md`. They are
+deliberately **out-of-distribution**: the phrasings do **not** reuse the
+`locale/<lang>/dataset/*.intent` template structure — they are written the way
+people actually speak (elliptical, slang, typo'd, keyword-less bare titles), so
+the set measures *generalization*, not vocabulary coverage. Real titles/artists
+(the Matrix, Miles Davis, Bluey, Breaking Bad, …) are used as natural content.
+A dedicated **`conversational`** slice (36 cases) is the messy-spoken/ASR-style
+register — disfluencies (`um` / `uh` / `like`), elisions (`wanna` / `gimme` /
+`lemme` / `gonna`), and no punctuation — scored as its own slice in the results
+so the ASR-realism training can be measured directly. Languages: `en-us` (176)
+plus `es-es`, `de-de`, `pt-pt` (15–16 each, native phrasings). The set is small
+on purpose — **quality and OOD-ness over volume**; agentpipe (free agents only)
+can extend it later, but every generated label must still be hand-checked before
+it is added. No network is needed to run the eval.
 
 ## Plots
 

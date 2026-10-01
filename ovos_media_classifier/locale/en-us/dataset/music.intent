@@ -1,0 +1,265 @@
+<lead_play_audio> {artist_name}
+[hey|ok|please] <lead_play_audio> {artist_name} [please|for me|right now|thanks]
+<lead_play_audio> some {artist_name}
+<lead_play_audio> {artist_name}'s music
+<lead_play_audio> music by {artist_name}
+<lead_play_audio> songs by {artist_name}
+<lead_play_audio> the best of {artist_name}
+<lead_play_audio> anything by {artist_name}
+[hey|ok|please] <lead_play_audio> anything by {artist_name} [please|for me|right now|thanks]
+<lead_play_audio> more {artist_name}
+<lead_play_audio> {artist_name} radio
+<lead_play_audio> the {artist_name} station
+<lead_play_audio> the latest from {artist_name}
+<lead_play_audio> {artist_name}'s newest
+[hey|ok|please] <lead_play_audio> {artist_name}'s newest [please|for me|right now|thanks]
+<lead_play_audio> {artist_name}'s greatest hits
+<lead_play_audio> a song by {artist_name}
+<lead_play_audio> {track_name}
+<lead_play_audio> the song {track_name}
+<lead_play_audio> the track {track_name}
+[hey|ok|please] <lead_play_audio> the track {track_name} [please|for me|right now|thanks]
+<lead_play_audio> that song {track_name}
+<lead_play_audio> {album_name}
+<lead_play_audio> the album {album_name}
+<lead_play_audio> songs from {album_name}
+<lead_play_audio> the record {album_name}
+<lead_play_audio> some {music_genre}
+[hey|ok|please] <lead_play_audio> some {music_genre} [please|for me|right now|thanks]
+<lead_play_audio> some {music_genre} music
+<lead_play_audio> a {music_genre} playlist
+<lead_play_audio> a {music_genre} mix
+<lead_play_audio> a {music_genre} song
+<lead_play_audio> the {music_genre} station
+[hey|ok|please] <lead_play_audio> the {music_genre} station [please|for me|right now|thanks]
+<lead_play_audio> {record_label} artists
+<lead_play_audio> music on {record_label}
+<lead_play_audio> {track_name} by {artist_name}
+<lead_play_audio> {artist_name}'s {track_name}
+<lead_play_audio> the song {track_name} by {artist_name}
+[hey|ok|please] <lead_play_audio> the song {track_name} by {artist_name} [please|for me|right now|thanks]
+<lead_play_audio> {album_name} by {artist_name}
+<lead_play_audio> {artist_name}'s {album_name}
+<lead_play_audio> the album {album_name} by {artist_name}
+<lead_play_audio> songs from {album_name} by {artist_name}
+<lead_play_audio> a song featuring {artist_name}
+<lead_play_audio> {track_name} featuring {artist_name}
+[hey|ok|please] <lead_play_audio> {track_name} featuring {artist_name} [please|for me|right now|thanks]
+<lead_play_audio> some {music_genre} by {artist_name}
+<lead_play_audio> {artist_name}'s {music_genre}
+<lead_play_audio> a {music_genre} song by {artist_name}
+<lead_play_audio> {music_genre} from {artist_name}
+<lead_play_audio> {album_name} on {record_label}
+[hey|ok|please] <lead_play_audio> {album_name} on {record_label} [please|for me|right now|thanks]
+<lead_play_audio> {artist_name} on {record_label}
+<lead_play_audio> the {music_genre} one called {track_name}
+<lead_play_audio> some {music_genre} from {album_name}
+<lead_play_audio> {music_genre} from the {release_decade}
+<lead_play_audio> some {artist_name} from the {release_decade}
+[hey|ok|please] <lead_play_audio> some {artist_name} from the {release_decade} [please|for me|right now|thanks]
+<lead_play_audio> {track_name} by {artist_name} from {album_name}
+<lead_play_audio> {artist_name}'s {music_genre} song {track_name}
+<lead_play_audio> {track_name} off {album_name} by {artist_name}
+<lead_play_audio> the {music_genre} track {track_name} by {artist_name}
+<lead_play_audio> {album_name} by {artist_name} on {record_label}
+<lead_play_audio> some {music_genre} by {artist_name} from {album_name}
+[hey|ok|please] <lead_play_audio> some {music_genre} by {artist_name} from {album_name} [please|for me|right now|thanks]
+<lead_play_audio> {artist_name}'s {music_genre} from the {release_decade}
+<lead_play_audio> the {music_genre} song {track_name} from the {release_decade}
+<lead_play_audio> the {music_genre} track {track_name} by {artist_name} off {album_name}
+<lead_play_audio> {track_name} by {artist_name} from {album_name} on {record_label}
+<lead_play_audio> some {music_genre} by {artist_name} from {album_name} on {record_label}
+[hey|ok|please] <lead_play_audio> some {music_genre} by {artist_name} from {album_name} on {record_label} [please|for me|right now|thanks]
+<lead_play_audio> the {music_genre} song {track_name} by {artist_name} from the {release_decade}
+<lead_play_audio> {track_name} by {artist_name} from {album_name}, a {music_genre} record from the {release_decade}
+<lead_play_audio> the {music_genre} track {track_name} by {artist_name} off {album_name} on {record_label}
+<lead_play_audio> do you have any {artist_name}
+<lead_play_audio> got any {music_genre}
+[hey|ok|please] <lead_play_audio> got any {music_genre} [please|for me|right now|thanks]
+<lead_play_audio> do you have any {music_genre} by {artist_name}
+<lead_play_audio> something {music_genre} for my workout
+<lead_play_audio> some {music_genre} to help me focus
+<lead_play_audio> a {music_genre} mix while i cook
+<lead_play_audio> something by {artist_name} to relax to
+<lead_play_audio> the {movie_title} soundtrack
+[hey|ok|please] <lead_play_audio> the {movie_title} soundtrack [please|for me|right now|thanks]
+<lead_play_audio> the soundtrack to {movie_title}
+<lead_play_audio> the soundtrack from {movie_title}
+<lead_play_audio> music from {movie_title}
+<lead_play_audio> the theme song from {movie_title}
+<lead_play_audio> the theme from {movie_title}
+[hey|ok|please] <lead_play_audio> the theme from {movie_title} [please|for me|right now|thanks]
+<lead_play_audio> {movie_composer}'s score
+<lead_play_audio> the score by {movie_composer}
+<lead_play_audio> the {movie_title} theme
+<lead_play_audio> songs from {movie_title}
+<lead_play_audio> some music from the {release_decade}
+[hey|ok|please] <lead_play_audio> some music from the {release_decade} [please|for me|right now|thanks]
+<lead_play_audio> a {release_year} hit
+<lead_play_audio> some {media_country} music
+<lead_play_audio> a hit from the {release_decade}
+<lead_play_audio> a {music_genre} playlist from the {release_decade}
+{artist_name}, please
+{artist_name}, if you would
+{track_name}, please
+{track_name} by {artist_name}, please
+some {music_genre}, please
+{album_name}, thanks
+{artist_name} — put it on
+{track_name} — throw it on
+{album_name} — let's hear it
+that {track_name} song — put it on
+{track_name}, throw it on for me
+play {artist_name}, would you?
+put on some {music_genre}, yeah?
+play {track_name} by {artist_name}, would you?
+stick on {album_name}, can you?
+queue up {artist_name}, would you mind?
+in the mood for {music_genre}
+i could go for some {music_genre}
+i could really go for {artist_name} right now
+i'm after some {music_genre}
+i need some {music_genre} right now
+i need my {artist_name} fix
+how about a bit of {music_genre}
+what about {track_name} by {artist_name}
+we should listen to {album_name}
+maybe some {music_genre}
+maybe a bit of {artist_name}
+something like {artist_name}
+something in the vein of {artist_name}
+more stuff like {artist_name}
+something {music_genre} maybe
+do you have any {artist_name}
+got anything by {artist_name}
+any {music_genre} on hand?
+is there a {track_name} by {artist_name}
+what {music_genre} do you have
+what have you got by {artist_name}
+anything off {album_name}?
+{artist_name}'s biggest hit
+{artist_name}'s most famous song
+that one hit by {artist_name}
+the one where {artist_name} sings {track_name}
+{artist_name}'s best song
+the biggest {music_genre} hit
+the catchiest {music_genre} track
+{music_genre} because i need to focus
+some {artist_name} to wake me up
+{music_genre} to get the party going
+a bit of {artist_name} for the road
+some {music_genre} while i clean
+{track_name} on repeat
+{artist_name} on shuffle
+nothing but {artist_name} tonight
+just {music_genre} for now
+<lead_play_audio> the original soundtrack of {movie_title}
+<lead_play_audio> the songs featured in {movie_title}
+<lead_play_audio> the love theme from {movie_title}
+<lead_play_audio> the score from {movie_title}
+<lead_play_audio> songs from the movie {movie_title}
+<lead_play_audio> the main theme of {movie_title}
+<lead_play_audio> the soundtrack to the film {movie_title}
+<lead_play_audio> the end credits song from {movie_title}
+<lead_play_audio> the {tv_show_title} theme song
+<lead_play_audio> the theme from {tv_show_title}
+<lead_play_audio> the opening theme of {tv_show_title}
+<lead_play_audio> music from the show {tv_show_title}
+<lead_play_audio> the {game_title} soundtrack
+<lead_play_audio> music from the game {game_title}
+<lead_play_audio> the {game_title} main theme
+<lead_play_audio> the battle music from {game_title}
+<lead_play_audio> the {anime_title} opening
+<lead_play_audio> the opening song from {anime_title}
+<lead_play_audio> the {anime_title} ending theme
+<lead_play_audio> the soundtrack composed by {movie_composer}
+<lead_play_audio> a film score by {movie_composer}
+<lead_play_audio> the score written by {movie_composer}
+<lead_play_audio> music for the movie scored by {movie_composer}
+<lead_play_audio> the score to {movie_title}
+<lead_play_audio> the score of {movie_title}
+<lead_play_audio> the opening theme of {movie_title}
+<lead_play_audio> the closing theme from {movie_title}
+<lead_play_audio> the {tv_show_title} soundtrack
+<lead_play_audio> the closing credits song from {tv_show_title}
+<lead_play_audio> the theme tune to {tv_show_title}
+<lead_play_audio> the score to {game_title}
+<lead_play_audio> the title theme from {game_title}
+<lead_play_audio> the ost of {game_title}
+<lead_play_audio> the boss music from {game_title}
+<lead_play_audio> the {anime_title} opening theme
+<lead_play_audio> the ending song of {anime_title}
+<lead_play_audio> the insert song from {anime_title}
+<lead_play_audio> a soundtrack by {movie_composer}
+<lead_play_audio> the {movie_composer} score
+<lead_play_audio> a song about {movie_actor}
+<lead_play_audio> a song inspired by {book_title}
+<lead_play_audio> a song based on the movie {movie_title}
+<lead_play_audio> a tribute to {movie_actor}
+<lead_play_audio> a cover of the theme from {movie_title}
+<lead_play_audio> a cover of the {tv_show_title} theme
+<lead_play_audio> music inspired by {book_title}
+<lead_play_audio> a concept album based on {book_title}
+<lead_play_audio> songs inspired by the game {game_title}
+um can you put on {artist_name}
+uh play some {music_genre} i guess
+play {track_name}, actually no {album_name}
+put on {artist_name} — no wait {track_name}
+play that song, you know, {track_name} by {artist_name}
+i wanna hear— no put on {album_name}
+hmm maybe some {music_genre}, yeah that
+hey so put on {artist_name}
+you know what throw on some {music_genre}
+lemme hear {track_name}
+gimme some {music_genre}
+gimme that {artist_name} track {track_name}
+wanna hear some {artist_name}
+ok so play {album_name}
+ugh i'm so bored put some {music_genre} on
+i've had a long day put on some {music_genre}
+it's friday night crank up some {music_genre}
+we're having people over put on some {music_genre}
+i need to relax play something by {artist_name}
+i could really go for some {music_genre} right now
+i'm kind of in a {artist_name} mood
+i keep getting that {track_name} song stuck in my head
+feels like a {music_genre} kind of evening
+got anything by {artist_name}?
+you got that new {artist_name} album {album_name}?
+could we listen to {track_name}
+hey i wanna hear something from {album_name}
+lemme get that {track_name} track
+gimme some {music_genre} to vibe to
+<lead_play_audio> that {record_label} sound from back in {release_decade}
+how about we put on {album_name}
+so um got any {music_genre} tunes handy
+<lead_play_audio> the greatest hits album by {artist_name}
+wanna hear that ballad from {release_year}
+is there a record called {album_name} by {artist_name}
+<lead_play_audio> something by {artist_name} off of {album_name}
+i'm feeling like some vinyl today spin {album_name}
+what's that hit song by {artist_name} from {release_decade}
+hey can you play the soundtrack to {movie_title}
+got any {music_genre} albums you'd recommend
+so i really wanna hear {track_name} right now
+<lead_play_audio> {music_genre} from the {release_decade} era
+let's hear that number one by {artist_name}
+i need my {music_genre} fix gimme {artist_name}
+um could you put on that ep by {artist_name} titled {album_name}
+<lead_play_audio> {track_name} from that {music_genre} album {album_name}
+hey [so] <lead_play_audio> that {release_decade} song {track_name} by {artist_name}
+how about we listen to {artist_name}'s album {album_name}
+got any {music_genre} tunes [you'd recommend]?
+so i heard {artist_name} dropped a new record {album_name} [can you play it]
+lemme hear that {music_genre} track {track_name} [please]
+wanna spin some {release_decade} records [tonight]?
+<lead_play_audio> {track_name} [the] remix [version]
+i'm in the mood for {artist_name} [maybe] their album {album_name}
+feels like a {music_genre} kinda night [so] <lead_play_audio> something good
+we should put on {album_name} by {artist_name} [what do you think]
+um <lead_play_audio> that song {track_name} [i think it's by {artist_name}]
+hey <lead_play_audio> any {music_genre} ballads [from the {release_decade}]
+i wanna hear {artist_name}'s greatest hits [or] just their album {album_name}
+how about some {music_genre} anthems [to get us going]?
+so <lead_play_audio> the soundtrack album {album_name} [by {artist_name}]
+i'm looking for that song {track_name} by {artist_name} [um] from {album_name}

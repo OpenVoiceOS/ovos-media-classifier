@@ -1,0 +1,102 @@
+<lead_watch> {bw_movie_title}
+[hej|ok|okay] <lead_watch> {bw_movie_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> den sort-hvide film {bw_movie_title}
+[hej|ok|okay] <lead_watch> den sort-hvide film {bw_movie_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en sort-hvid film
+[hej|ok|okay] <lead_watch> en sort-hvid film [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en gammel sort-hvid film
+[hej|ok|okay] <lead_watch> en gammel sort-hvid film [tak|for mig|lige nu|tak skal du have]
+<lead_watch> den sort-hvide film {bw_movie_title}
+[hej|ok|okay] <lead_watch> den sort-hvide film {bw_movie_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en {movie_genre} sort-hvid film
+[hej|ok|okay] <lead_watch> en {movie_genre} sort-hvid film [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en klassisk sort-hvid film
+[hej|ok|okay] <lead_watch> en klassisk sort-hvid film [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en gammel monokrom film
+[hej|ok|okay] <lead_watch> en gammel monokrom film [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en gammeldags sort-hvid film
+[hej|ok|okay] <lead_watch> en gammeldags sort-hvid film [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en sort-hvid klassiker
+[hej|ok|okay] <lead_watch> en sort-hvid klassiker [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en monokrom film
+[hej|ok|okay] <lead_watch> en monokrom film [tak|for mig|lige nu|tak skal du have]
+<lead_watch> s/h-filmen {bw_movie_title}
+[hej|ok|okay] <lead_watch> s/h-filmen {bw_movie_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en gammel s/h-film
+[hej|ok|okay] <lead_watch> en gammel s/h-film [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en {movie_genre} monokrom film
+[hej|ok|okay] <lead_watch> en {movie_genre} monokrom film [tak|for mig|lige nu|tak skal du have]
+<lead_watch> et sort-hvidt drama
+[hej|ok|okay] <lead_watch> et sort-hvidt drama [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en sort-hvid {movie_genre} film
+[hej|ok|okay] <lead_watch> en sort-hvid {movie_genre} film [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en gammel Hollywood sort-hvid film
+[hej|ok|okay] <lead_watch> en gammel Hollywood sort-hvid film [tak|for mig|lige nu|tak skal du have]
+<lead_watch> endnu en sort-hvid film
+[hej|ok|okay] <lead_watch> endnu en sort-hvid film [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en noir sort-hvid film
+[hej|ok|okay] <lead_watch> en noir sort-hvid film [tak|for mig|lige nu|tak skal du have]
+<lead_watch> den klassiske sort-hvide film {bw_movie_title}
+[hej|ok|okay] <lead_watch> den klassiske sort-hvide film {bw_movie_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en sort-hvid film fra gamle dage
+[hej|ok|okay] <lead_watch> en sort-hvid film fra gamle dage [tak|for mig|lige nu|tak skal du have]
+<lead_watch> har du nogen sort-hvide film
+[hej|ok|okay] <lead_watch> har du nogen sort-hvide film [tak|for mig|lige nu|tak skal du have]
+<lead_watch> har du en god sort-hvid film
+[hej|ok|okay] <lead_watch> har du en god sort-hvid film [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en sort-hvid klassiker til i aften
+[hej|ok|okay] <lead_watch> en sort-hvid klassiker til i aften [tak|for mig|lige nu|tak skal du have]
+<lead_watch> noget gammelt i sort-hvid
+[hej|ok|okay] <lead_watch> noget gammelt i sort-hvid [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en sort-hvid film til en hyggelig aften
+[hej|ok|okay] <lead_watch> en sort-hvid film til en hyggelig aften [tak|for mig|lige nu|tak skal du have]
+<lead_watch> har du nogen {movie_genre} sort-hvide film
+[hej|ok|okay] <lead_watch> har du nogen {movie_genre} sort-hvide film [tak|for mig|lige nu|tak skal du have]
+{bw_movie_title}, tak
+den sort-hvide film {bw_movie_title}, tak
+en sort-hvid film, tak
+{bw_movie_title} — sæt den på
+den sort-hvide klassiker — lad os se den
+sæt den sort-hvide film {bw_movie_title} på, vil du?
+jeg kunne godt bruge en sort-hvid film
+jeg leder efter en klassisk sort-hvid film
+jeg skal have noget gammelt i sort-hvid
+hvad med {bw_movie_title}
+måske en {movie_genre} sort-hvid film
+vi burde se {bw_movie_title}
+noget ligesom {bw_movie_title}
+er der nogen sort-hvide film
+en sort-hvid klassiker til en hyggelig aften
+en monokrom film fordi jeg er nostalgisk
+den gamle {bw_movie_title} i sort-hvid
+<lead_watch> den sort-hvide film baseret på {book_title}
+<lead_watch> en sort-hvid film baseret på romanen {book_title}
+øh kan du sætte en sort-hvid film på
+spil {bw_movie_title}, faktisk nej en anden {movie_genre} en
+hey så sæt {bw_movie_title} på
+du ved hvad smid en gammel sort-hvid film på
+har lyst til at se {bw_movie_title}
+lad mig se en klassisk sort-hvid film
+giv mig en {movie_genre} film i sort-hvid
+jeg er nostalgisk sæt en sort-hvid film på
+jeg kunne virkelig godt bruge en gammel sort-hvid film
+er der en god sort-hvid {movie_genre} film
+har du nogen sort-hvide film?
+jeg er i humør til en sort-hvid {movie_genre} film i aften
+<lead_watch> en monokrom {movie_genre} film
+har du nogen gode sort-hvide film [at se|lige nu]
+[hey|øh] <lead_watch> den sort-hvide film {bw_movie_title}
+jeg vil gerne se en sort-hvid film i aften
+<lead_watch> en klassisk sort-hvid {movie_genre}
+hvad med en monokrom film [for en forandring]
+giv mig en sort-hvid {movie_genre} [tak]
+jeg leder efter en sort-hvid film [at se]
+<lead_watch> en sort-hvid film med {movie_genre}
+lad os tjekke {bw_movie_title} [jeg har hørt den er god]
+jeg har lyst til at se en sort-hvid {movie_genre} [i aften]
+[øh|så] <lead_watch> et monokromt billede [tak]
+hvad med vi ser {bw_movie_title} [i aften|senere]
+jeg skal have en god sort-hvid film [lige nu|i aften]
+<lead_watch> en gammel sort-hvid {movie_genre} film
+[okay|så|hey] <lead_watch> en monokrom {movie_genre}
+[hey|øh] kan du sætte en sort-hvid film på som {bw_movie_title} [tak|for mig]

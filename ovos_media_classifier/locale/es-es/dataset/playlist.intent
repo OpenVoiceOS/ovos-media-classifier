@@ -1,0 +1,23 @@
+<lead_play_audio> my playlist
+<lead_play_audio> my liked songs
+<lead_play_audio> my favorites
+<lead_play_audio> my favourites
+<lead_play_audio> a {playlist_mood} playlist
+<lead_play_audio> a {playlist_mood} mix
+<lead_play_audio> my {playlist_activity} mix
+<lead_play_audio> my {playlist_activity} playlist
+<lead_play_audio> my saved songs
+<lead_play_audio> the {playlist_mood} playlist
+<lead_play_audio> my daily mix
+<lead_play_audio> my discover weekly
+<lead_play_audio> a fresh playlist
+<lead_play_audio> my top songs
+<lead_play_audio> a {playlist_activity} playlist
+<lead_play_audio> the {playlist_activity} mix
+<lead_play_audio> a {playlist_mood} playlist for {playlist_activity}
+<lead_play_audio> my {playlist_activity} mix for when i feel {playlist_mood}
+<lead_play_audio> a {playlist_mood} mix to {playlist_activity}
+<lead_play_audio> do you have a {playlist_mood} playlist
+<lead_play_audio> got a {playlist_activity} playlist
+<lead_play_audio> a {playlist_mood} playlist for the morning
+<lead_play_audio> a {playlist_activity} playlist to keep me going

@@ -1,0 +1,27 @@
+<lead_watch> {movie_title} with audio description
+<lead_watch> the audio described version of {movie_title}
+<lead_watch> a movie with audio description
+<lead_watch> the described version of {movie_title}
+<lead_watch> a described {movie_genre} movie
+<lead_watch> {movie_title} described
+<lead_watch> a {movie_genre} movie with audio description
+<lead_watch> an audio described film
+<lead_watch> the described {movie_title}
+<lead_watch> {movie_title} with narration
+<lead_watch> an accessible version of {movie_title}
+<lead_watch> the narrated version of {movie_title}
+<lead_watch> a film with audio description
+<lead_watch> a {movie_genre} film with narration
+<lead_watch> {movie_title} for the blind
+<lead_watch> an audio described {movie_genre} film
+<lead_watch> the described film {movie_title}
+<lead_watch> a movie with descriptive narration
+<lead_watch> an accessible {movie_genre} movie
+<lead_watch> a {movie_genre} film with audio description starring {movie_actor}
+<lead_watch> {movie_title} with audio description starring {movie_actor}
+<lead_watch> do you have {movie_title} with audio description
+<lead_watch> got any audio described movies
+<lead_watch> a described movie for movie night
+<lead_watch> an audio described film for the evening
+<lead_watch> do you have an accessible version of {movie_title}
+<lead_watch> got any {movie_genre} movies with audio description

@@ -1,0 +1,31 @@
+<lead_game> {game_title}
+<lead_game> the game {game_title}
+<lead_game> a {game_genre} game
+<lead_game> a game on {game_platform}
+<lead_game> a round of {game_title}
+<lead_game> a quick {game_genre} game
+<lead_game> some {game_genre}
+<lead_game> another {game_genre} game
+<lead_game> a good {game_genre} game
+<lead_game> a game like {game_title}
+<lead_game> the {game_genre} game {game_title}
+<lead_game> a {game_genre} game on {game_platform}
+<lead_game> {game_title} on {game_platform}
+<lead_game> {game_genre} on {game_platform}
+<lead_game> a {game_genre} game from {release_year}
+<lead_game> {game_title} from the {release_decade}
+<lead_game> a retro {game_genre} game
+<lead_game> an indie {game_genre} game
+<lead_game> a multiplayer {game_genre} game
+<lead_game> another round of {game_title}
+<lead_game> a co-op {game_genre} game
+<lead_game> the {game_genre} game {game_title} on {game_platform}
+<lead_game> a {game_genre} game on {game_platform} from {release_year}
+<lead_game> do you have any {game_genre} games
+<lead_game> got a good {game_genre} game
+<lead_game> a {game_genre} game to unwind with
+<lead_game> a quick game before bed
+<lead_game> do you have {game_title}
+<lead_game> got any {game_genre} games on {game_platform}
+<lead_game> a {game_genre} game for the evening
+<lead_game> something quick to play

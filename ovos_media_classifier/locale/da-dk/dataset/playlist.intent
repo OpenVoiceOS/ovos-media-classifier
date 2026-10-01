@@ -1,0 +1,99 @@
+<lead_play_audio> min playliste
+[hej|ok|okay] <lead_play_audio> min playliste [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> mine synes godt om-sange
+<lead_play_audio> mine favoritter
+[hej|ok|okay] <lead_play_audio> mine favoritter [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> mine favoritsange
+[hej|ok|okay] <lead_play_audio> mine favoritsange [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> en {playlist_mood} playliste
+[hej|ok|okay] <lead_play_audio> en {playlist_mood} playliste [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> en {playlist_mood} mix
+[hej|ok|okay] <lead_play_audio> en {playlist_mood} mix [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> min {playlist_activity} mix
+<lead_play_audio> min {playlist_activity} playliste
+[hej|ok|okay] <lead_play_audio> min {playlist_activity} playliste [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> mine gemte sange
+[hej|ok|okay] <lead_play_audio> mine gemte sange [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> {playlist_mood} playlisten
+[hej|ok|okay] <lead_play_audio> {playlist_mood} playlisten [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> min daglige mix
+[hej|ok|okay] <lead_play_audio> min daglige mix [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> min ugentlige opdagelse
+[hej|ok|okay] <lead_play_audio> min ugentlige opdagelse [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> en frisk playliste
+<lead_play_audio> mine mest spillede sange
+[hej|ok|okay] <lead_play_audio> mine mest spillede sange [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> en {playlist_activity} playliste
+[hej|ok|okay] <lead_play_audio> en {playlist_activity} playliste [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> {playlist_activity} mixet
+[hej|ok|okay] <lead_play_audio> {playlist_activity} mixet [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> en {playlist_mood} playliste til {playlist_activity}
+[hej|ok|okay] <lead_play_audio> en {playlist_mood} playliste til {playlist_activity} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> min {playlist_activity} mix til når jeg føler mig {playlist_mood}
+[hej|ok|okay] <lead_play_audio> min {playlist_activity} mix til når jeg føler mig {playlist_mood} [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> en {playlist_mood} mix til {playlist_activity}
+<lead_play_audio> har du en {playlist_mood} playliste
+[hej|ok|okay] <lead_play_audio> har du en {playlist_mood} playliste [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> har du en {playlist_activity} playliste
+[hej|ok|okay] <lead_play_audio> har du en {playlist_activity} playliste [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> en {playlist_mood} playliste til morgenen
+[hej|ok|okay] <lead_play_audio> en {playlist_mood} playliste til morgenen [tak|for mig|lige nu|tak skal du have]
+<lead_play_audio> en {playlist_activity} playliste der kan holde mig i gang
+[hej|ok|okay] <lead_play_audio> en {playlist_activity} playliste der kan holde mig i gang [tak|for mig|lige nu|tak skal du have]
+min playliste, tak
+min {playlist_activity} mix, tak
+en {playlist_mood} playliste, tak
+mine favoritter — sæt dem på
+min {playlist_activity} playliste — lad os gå
+sæt min {playlist_mood} playliste på, vil du?
+jeg kunne godt bruge min {playlist_activity} mix
+jeg leder efter en {playlist_mood} playliste
+jeg skal have min {playlist_activity} playliste
+hvad med en {playlist_mood} mix
+måske min {playlist_activity} playliste
+vi burde sætte en {playlist_mood} playliste på
+noget ligesom min {playlist_activity} mix
+min sædvanlige {playlist_mood} playliste
+en {playlist_mood} playliste fordi jeg trænger til et løft
+min {playlist_activity} mix der kan holde mig i gang
+øh kan du sætte min {playlist_mood} playliste på
+spil min {playlist_activity} mix, faktisk nej den {playlist_mood} en
+hey så sæt min {playlist_activity} playliste på
+du ved hvad smid min {playlist_mood} playliste på
+har lyst til at høre min {playlist_activity} mix
+lad mig få min {playlist_mood} playliste
+giv mig min {playlist_activity} playliste
+jeg gør rent sæt min {playlist_activity} mix på
+jeg kunne virkelig godt bruge min {playlist_mood} playliste
+har du min {playlist_mood} playliste ved hånden?
+hey kan du spille mig en {playlist_mood} playliste
+jeg føler mig {playlist_mood} så <lead_play_audio> en mix tak
+giv mig noget {playlist_activity} til min træning vent <lead_play_audio> en {playlist_mood} playliste
+har du nogen {playlist_activity} playlister [jeg kan høre|til i aften]
+lad mig høre min {playlist_activity} playliste lige nu
+øh jeg tror jeg vil have en {playlist_mood} playliste <lead_play_audio>
+jeg er i humør til {playlist_mood} <lead_play_audio> noget rart
+ja <lead_play_audio> min {playlist_activity} playliste det er den rigtige
+jeg vil gerne høre en {playlist_mood} playliste
+så jeg tænkte <lead_play_audio> nogle {playlist_mood} numre
+jeg skal have en {playlist_mood} playliste til at slappe af til <lead_play_audio>
+lad os sætte min {playlist_mood} mix på til i aften
+hey er der nogen {playlist_activity} playlister jeg kan streame
+<lead_play_audio> bare det {playlist_mood} stads du ved hvad jeg mener
+jeg laver noget {playlist_activity} lige nu <lead_play_audio> giv mig playlisten
+har du nogen {playlist_activity} playlister ved hånden
+hvad med vi sætter en {playlist_activity} mix på
+lad mig høre mine synes godt om-sange
+det føles som en {playlist_mood} aften, sæt playlisterne på
+<lead_play_audio> mine {playlist_mood} favoritter
+så jeg vil gerne høre min {playlist_activity} playliste
+hey, smid en {playlist_mood} mix på [tak]
+jeg skal have en {playlist_activity} playliste [lige nu]
+hej — giv mig mine synes godt om-sange
+lad os finde en {playlist_activity} playliste til når vi er {playlist_mood}
+vi burde sætte mine favoritter på
+[så] jeg er i humør til en {playlist_mood} playliste [tror jeg]
+jeg vil gerne høre noget {playlist_mood}, sæt playlisterne på
+har du en {playlist_activity} playliste jeg kan smide på
+jeg tror jeg skal have mine {playlist_mood} favoritter [lige nu]
+hvad med mine synes godt om-sange — spil dem bare

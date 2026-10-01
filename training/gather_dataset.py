@@ -4,7 +4,7 @@ This script fetches the same OVOS intent CSV files used by the general
 intent classifier but re-labels them for the OCP two-level hierarchy:
 
   domain   → OCPDomain    ("ocp_play" | "ocp_control" | "not_ocp")
-  intent   → OCPPlayIntent ("music" | "movie" | "podcast" | …)
+  label    → raw media label ("music" | "movie" | "podcast" | …)
              OCPControlIntent ("pause" | "next" | "resume" | …)
              "not_ocp"    (for all non-OCP utterances)
 
@@ -64,7 +64,7 @@ os.makedirs(CACHE_DIR, exist_ok=True)
 # ---------------------------------------------------------------------------
 
 from ovos_media_classifier.intents import (
-    OCPDomain, OCPPlayIntent, OCPControlIntent,
+    OCPDomain, OCPControlIntent,
     LABEL_TO_MEDIA_TYPE,
 )
 
@@ -77,37 +77,38 @@ OCP_PLAY_SKILL_DOMAINS = {
     "ovos-skill-radio.openvoiceos",
 }
 
-# Intent name → OCPPlayIntent label (for ocp:play intents and music datasets)
+# Intent-name substring → raw media label (a ``LABEL_TO_MEDIA_TYPE`` key) for
+# ocp:play intents and music datasets.
 _PLAY_INTENT_PATTERNS: list[tuple[str, str]] = [
-    # Music query datasets (template → music intent, ocp_play domain)
-    ("play",          OCPPlayIntent.GENERIC.value),
-    ("music",         OCPPlayIntent.MUSIC.value),
-    ("podcast",       OCPPlayIntent.PODCAST.value),
-    ("radio",         OCPPlayIntent.RADIO.value),
-    ("audiobook",     OCPPlayIntent.AUDIOBOOK.value),
-    ("news",          OCPPlayIntent.NEWS.value),
-    ("movie",         OCPPlayIntent.MOVIE.value),
-    ("film",          OCPPlayIntent.MOVIE.value),
-    ("tv_show",       OCPPlayIntent.TV_SHOW.value),
-    ("iptv",          OCPPlayIntent.TV.value),
-    ("live_tv",       OCPPlayIntent.TV.value),
-    ("tv_channel",    OCPPlayIntent.TV.value),
-    ("series",        OCPPlayIntent.VIDEO_EPISODES.value),
-    ("anime",         OCPPlayIntent.ANIME.value),
-    ("cartoon",       OCPPlayIntent.CARTOON.value),
-    ("documentary",   OCPPlayIntent.DOCUMENTARY.value),
-    ("short",         OCPPlayIntent.SHORT_FILM.value),
-    ("silent",        OCPPlayIntent.SILENT_MOVIE.value),
-    ("bw",            OCPPlayIntent.BW_MOVIE.value),
-    ("game",          OCPPlayIntent.GAME.value),
-    ("asmr",          OCPPlayIntent.ASMR.value),
-    ("audio_descrip", OCPPlayIntent.AUDIO_DESCRIPTION.value),
-    ("audio",         OCPPlayIntent.AUDIO.value),
-    ("video",         OCPPlayIntent.VIDEO.value),
-    ("music_video",   OCPPlayIntent.MUSIC_VIDEO.value),
-    ("trailer",       OCPPlayIntent.TRAILER.value),
-    ("behind",        OCPPlayIntent.BEHIND_THE_SCENES.value),
-    ("bts",           OCPPlayIntent.BEHIND_THE_SCENES.value),
+    # Music query datasets (template → music label, ocp_play domain)
+    ("play",          "generic"),
+    ("music",         "music"),
+    ("podcast",       "podcast"),
+    ("radio",         "radio"),
+    ("audiobook",     "audiobook"),
+    ("news",          "news"),
+    ("movie",         "movie"),
+    ("film",          "movie"),
+    ("tv_show",       "tv_show"),
+    ("iptv",          "tv"),
+    ("live_tv",       "tv"),
+    ("tv_channel",    "tv"),
+    ("series",        "video_episodes"),
+    ("anime",         "anime"),
+    ("cartoon",       "cartoon"),
+    ("documentary",   "documentary"),
+    ("short",         "short_film"),
+    ("silent",        "silent_movie"),
+    ("bw",            "bw_movie"),
+    ("game",          "game"),
+    ("asmr",          "asmr"),
+    ("audio_descrip", "audio_description"),
+    ("audio",         "audio"),
+    ("video",         "video"),
+    ("music_video",   "music_video"),
+    ("trailer",       "trailer"),
+    ("behind",        "behind_the_scenes"),
+    ("bts",           "behind_the_scenes"),
 ]
 
 # Intent name patterns → OCPControlIntent label
@@ -151,7 +152,7 @@ def _intent_to_ocp_label(domain: str, intent: str) -> tuple[str, str]:
             if pattern in intent_lc:
                 return OCPDomain.OCP_PLAY.value, play_label
         # Fallback: generic play
-        return OCPDomain.OCP_PLAY.value, OCPPlayIntent.GENERIC.value
+        return OCPDomain.OCP_PLAY.value, "generic"
 
     # Check if a non-OCP skill happens to have a known control intent name
     for pattern, ctrl_label in _CONTROL_INTENT_PATTERNS:

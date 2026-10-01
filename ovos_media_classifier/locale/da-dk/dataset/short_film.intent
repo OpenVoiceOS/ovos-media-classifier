@@ -1,0 +1,117 @@
+<lead_watch> {short_film_title}
+[hej|ok|okay] <lead_watch> {short_film_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> kortfilmen {short_film_title}
+[hej|ok|okay] <lead_watch> kortfilmen {short_film_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en kortfilm
+[hej|ok|okay] <lead_watch> en kortfilm [tak|for mig|lige nu|tak skal du have]
+<lead_watch> nogle kortfilm
+[hej|ok|okay] <lead_watch> nogle kortfilm [tak|for mig|lige nu|tak skal du have]
+<lead_watch> kortfilmen {short_film_title}
+[hej|ok|okay] <lead_watch> kortfilmen {short_film_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en prisvindende kortfilm
+[hej|ok|okay] <lead_watch> en prisvindende kortfilm [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en animeret kortfilm
+[hej|ok|okay] <lead_watch> en animeret kortfilm [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en {movie_genre} kortfilm
+[hej|ok|okay] <lead_watch> en {movie_genre} kortfilm [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en kort {movie_genre} film
+[hej|ok|okay] <lead_watch> en kort {movie_genre} film [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en hurtig kortfilm
+[hej|ok|okay] <lead_watch> en hurtig kortfilm [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en kort film
+[hej|ok|okay] <lead_watch> en kort film [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en oscar-nomineret kortfilm
+[hej|ok|okay] <lead_watch> en oscar-nomineret kortfilm [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en live-action kortfilm
+[hej|ok|okay] <lead_watch> en live-action kortfilm [tak|for mig|lige nu|tak skal du have]
+<lead_watch> kortfilmen der hedder {short_film_title}
+[hej|ok|okay] <lead_watch> kortfilmen der hedder {short_film_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en festivalkortfilm
+[hej|ok|okay] <lead_watch> en festivalkortfilm [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en indie-kortfilm
+[hej|ok|okay] <lead_watch> en indie-kortfilm [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en studenterkortfilm
+[hej|ok|okay] <lead_watch> en studenterkortfilm [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en {movie_genre} kort film
+[hej|ok|okay] <lead_watch> en {movie_genre} kort film [tak|for mig|lige nu|tak skal du have]
+<lead_watch> endnu en kortfilm
+[hej|ok|okay] <lead_watch> endnu en kortfilm [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en kortfilm af en indie-instruktør
+[hej|ok|okay] <lead_watch> en kortfilm af en indie-instruktør [tak|for mig|lige nu|tak skal du have]
+<lead_watch> den korte {movie_genre} film {short_film_title}
+[hej|ok|okay] <lead_watch> den korte {movie_genre} film {short_film_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> har du nogen kortfilm
+[hej|ok|okay] <lead_watch> har du nogen kortfilm [tak|for mig|lige nu|tak skal du have]
+<lead_watch> har du en god kortfilm
+[hej|ok|okay] <lead_watch> har du en god kortfilm [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en kortfilm til en hurtig pause
+[hej|ok|okay] <lead_watch> en kortfilm til en hurtig pause [tak|for mig|lige nu|tak skal du have]
+<lead_watch> noget kort at se
+[hej|ok|okay] <lead_watch> noget kort at se [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en kortfilm mens jeg venter
+[hej|ok|okay] <lead_watch> en kortfilm mens jeg venter [tak|for mig|lige nu|tak skal du have]
+<lead_watch> har du nogen {movie_genre} kortfilm
+[hej|ok|okay] <lead_watch> har du nogen {movie_genre} kortfilm [tak|for mig|lige nu|tak skal du have]
+{short_film_title}, tak
+kortfilmen {short_film_title}, tak
+en kortfilm, tak
+{short_film_title} — sæt den på
+sæt kortfilmen {short_film_title} på, vil du?
+jeg kunne godt bruge en kortfilm
+jeg leder efter en hurtig kortfilm
+jeg skal have noget kort at se
+hvad med {short_film_title}
+måske en {movie_genre} kortfilm
+vi burde se {short_film_title}
+noget ligesom {short_film_title}
+er der nogen gode kortfilm
+den prisvindende kortfilm {short_film_title}
+en kortfilm mens jeg venter
+en animeret kortfilm fordi jeg kun har et minut
+<lead_watch> en kortfilm baseret på {book_title}
+<lead_watch> en kortfilm-tilpasning af {book_title}
+<lead_watch> en kortfilm baseret på historien {book_title}
+<lead_watch> en kortfilm der er en forhistorie til {movie_title}
+<lead_watch> en kortfilm der foregår i universet fra {movie_title}
+<lead_watch> en kortfilm om {artist_name}
+<lead_watch> en kortfilm af instruktøren {movie_director}
+<lead_watch> en animeret kortfilm baseret på tegneserien {comic_title}
+øh kan du sætte en kortfilm af {movie_director} på
+spil {short_film_title}, faktisk nej en {movie_genre} kortfilm
+hey så sæt {short_film_title} på
+du ved hvad smid en kortfilm på
+har lyst til at se en hurtig kortfilm
+lad mig se {short_film_title}
+giv mig en {movie_genre} kortfilm
+jeg har kun et par minutter sæt en kortfilm på
+jeg kunne virkelig godt bruge en kortfilm
+er der en god kortfilm af {movie_director}
+har du nogen {movie_genre} kortfilm?
+hey så <lead_watch> en kortfilm måske om {movie_genre}
+jeg vil gerne se en kortfilm der hedder {short_film_title}
+har du nogen kortfilm af {movie_director}
+lad mig se en kortfilm med {artist_name}
+hvad med vi ser en kortfilm, øh, {short_film_title} måske
+så der er den her kortfilm jeg har hørt om der hedder {short_film_title}
+giv mig nogle kortfilm i {movie_genre} genren
+jeg er i humør til en kortfilm, du ved, noget ligesom {movie_title}
+hey <lead_watch> en kortfilm instrueret af {movie_director}
+har lyst til at se {short_film_title} det er en kortfilm
+lad os tjekke en kortfilm ud, hvad med {short_film_title}
+kan du spille den kortfilm {short_film_title} for mig
+hvilke kortfilm har du baseret på {book_title}
+jeg vil gerne se en kortfilm, måske noget i stil med {movie_title}
+kan du <lead_watch> nogen kortfilm af {artist_name}
+hvad med vi ser en kortfilm ligesom {short_film_title} [i aften|lige nu]
+lad os tjekke nogle kortfilm ud [måske] af {movie_director}
+<lead_watch> en kortfilm-spin-off af {movie_title}
+har du nogen kortfilm baseret på {comic_title}
+jeg vil gerne se en kortfilm [tak|måske] instrueret af {movie_director}
+hey så jeg leder efter kortfilm med {artist_name}
+vi burde se en {movie_genre} kortfilm [i aften]
+det føles som en kortfilm-agtig [dag|nat] [så] <lead_watch> noget
+kan du finde mig en kortfilm-version af {comic_title}
+øh lad os tjekke {short_film_title} ud [det er en kortfilm jeg har hørt]
+<lead_watch> en kortfilm [tror jeg|måske] af {movie_director}
+jeg er i humør til kortfilm <lead_watch> en {movie_genre} en
+så ligesom lad mig se nogle kortfilm [tak|jeg mener] {movie_genre} måske

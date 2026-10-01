@@ -1,0 +1,128 @@
+<lead_watch> {visual_story_title}
+[hej|ok|okay] <lead_watch> {visual_story_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> motion comicen {visual_story_title}
+<lead_watch> en visuel historie
+[hej|ok|okay] <lead_watch> en visuel historie [tak|for mig|lige nu|tak skal du have]
+<lead_watch> den visuelle historie {visual_story_title}
+[hej|ok|okay] <lead_watch> den visuelle historie {visual_story_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en motion comic
+[hej|ok|okay] <lead_watch> en motion comic [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en interaktiv historie
+[hej|ok|okay] <lead_watch> en interaktiv historie [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en animeret historie
+[hej|ok|okay] <lead_watch> en animeret historie [tak|for mig|lige nu|tak skal du have]
+<lead_watch> den animerede tegneserie {visual_story_title}
+[hej|ok|okay] <lead_watch> den animerede tegneserie {visual_story_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en digital tegneserie-historie
+[hej|ok|okay] <lead_watch> en digital tegneserie-historie [tak|for mig|lige nu|tak skal du have]
+<lead_watch> {visual_story_title} motion comicen
+[hej|ok|okay] <lead_watch> {visual_story_title} motion comicen [tak|for mig|lige nu|tak skal du have]
+<lead_watch> nogle visuelle historier
+[hej|ok|okay] <lead_watch> nogle visuelle historier [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en illustreret historie
+[hej|ok|okay] <lead_watch> en illustreret historie [tak|for mig|lige nu|tak skal du have]
+<lead_watch> den illustrerede historie {visual_story_title}
+[hej|ok|okay] <lead_watch> den illustrerede historie {visual_story_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en webtoon
+[hej|ok|okay] <lead_watch> en webtoon [tak|for mig|lige nu|tak skal du have]
+<lead_watch> webtoonen {visual_story_title}
+[hej|ok|okay] <lead_watch> webtoonen {visual_story_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> et historie-diasshow
+[hej|ok|okay] <lead_watch> et historie-diasshow [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en animeret tegneserie
+<lead_watch> en fortalt billedhistorie
+[hej|ok|okay] <lead_watch> en fortalt billedhistorie [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en billedhistorie
+[hej|ok|okay] <lead_watch> en billedhistorie [tak|for mig|lige nu|tak skal du have]
+<lead_watch> den digitale historie {visual_story_title}
+[hej|ok|okay] <lead_watch> den digitale historie {visual_story_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> endnu en visuel historie
+[hej|ok|okay] <lead_watch> endnu en visuel historie [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en visuel historie til børn
+[hej|ok|okay] <lead_watch> en visuel historie til børn [tak|for mig|lige nu|tak skal du have]
+<lead_watch> et motion comic-afsnit
+[hej|ok|okay] <lead_watch> et motion comic-afsnit [tak|for mig|lige nu|tak skal du have]
+<lead_watch> har du nogen visuelle historier
+[hej|ok|okay] <lead_watch> har du nogen visuelle historier [tak|for mig|lige nu|tak skal du have]
+<lead_watch> har du motion comicen {visual_story_title}
+[hej|ok|okay] <lead_watch> har du motion comicen {visual_story_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en visuel historie til sengetid
+[hej|ok|okay] <lead_watch> en visuel historie til sengetid [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en animeret historie at se
+[hej|ok|okay] <lead_watch> en animeret historie at se [tak|for mig|lige nu|tak skal du have]
+<lead_watch> har du webtoonen {visual_story_title}
+[hej|ok|okay] <lead_watch> har du webtoonen {visual_story_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> har du nogen visuelle historier
+[hej|ok|okay] <lead_watch> har du nogen visuelle historier [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en visuel historie til at falde til ro med
+[hej|ok|okay] <lead_watch> en visuel historie til at falde til ro med [tak|for mig|lige nu|tak skal du have]
+{visual_story_title}, tak
+motion comicen {visual_story_title}, tak
+en visuel historie, tak
+{visual_story_title} — sæt den på
+webtoonen {visual_story_title} — lad os læse den
+sæt motion comicen {visual_story_title} på, vil du?
+jeg kunne godt bruge en visuel historie
+jeg leder efter en god motion comic
+jeg skal have en visuel historie til sengetid
+hvad med webtoonen {visual_story_title}
+måske en animeret historie
+vi burde se {visual_story_title}
+noget ligesom {visual_story_title}
+er der nogen visuelle historier
+{visual_story_title} motion comicen, tak
+en visuel historie til at falde til ro med
+en illustreret historie fordi jeg er træt af at læse
+<lead_read> en webtegneserie baseret på {book_title}
+<lead_read> en visuel historie baseret på spillet {game_title}
+<lead_read> en visuel historie baseret på filmen {movie_title}
+<lead_read> en webtoon baseret på animeen {anime_title}
+<lead_read> en visuel roman baseret på {book_title}
+<lead_read> en motion comic-tilpasning af {movie_title}
+øh kan du sætte {visual_story_title} på
+læs {visual_story_title}, faktisk nej den baseret på {anime_title}
+hey så find {visual_story_title} frem
+du ved hvad smid {visual_story_title} på
+har lyst til at læse {visual_story_title}
+lad mig læse {visual_story_title}
+giv mig en visuel roman
+jeg kunne virkelig godt bruge en visuel roman
+jeg blev aldrig færdig med {visual_story_title}
+er der en visuel roman baseret på {anime_title}
+har du nogen visuelle romaner?
+måske <lead_watch> en tegneserie {visual_story_title} eller noget
+jeg vil <lead_watch> en graphic novel {visual_story_title}
+hey <lead_watch> har du nogen tegneserier jeg ikke har set
+så <lead_watch> den manga {visual_story_title} alle taler om
+lad mig <lead_watch> en motion comic {visual_story_title}
+jeg er i humør til en tegneserie {visual_story_title}
+hvad med vi <lead_watch> en visuel historie {visual_story_title}
+<lead_watch> øh den animerede graphic novel {visual_story_title}
+hey <lead_read> mig en tegneserie {visual_story_title} tak
+jeg vil <lead_read> en manga {visual_story_title}
+giv mig en visuel historie at se {visual_story_title}
+lad os <lead_watch> {visual_story_title} tegneserie-tilpasningen
+så jeg tænker <lead_watch> en motion comic måske {visual_story_title}
+<lead_read> den tegneserie {visual_story_title} jeg bliver ved med at høre om
+hey har du nogen graphic novels ligesom {visual_story_title}
+øh <lead_watch> en tegneserie {visual_story_title} eller noget lignende
+har lyst til <lead_watch> en animeret visuel historie {visual_story_title}
+så ligesom <lead_watch> {visual_story_title} graphic novellen eller hvad det nu er
+vær venlig <lead_watch> en manga-tilpasning af {visual_story_title}
+giv mig en tegneserie {visual_story_title} at tjekke ud
+[hej|ok] <lead_read> en graphic novel [tak|for mig]
+hvad med vi tjekker {visual_story_title} ud [i aften]
+<lead_read> noget manga [til mig|i aften]
+[ok|så] vi burde se en tegneserie-tilpasning [eller noget]
+det føles som en tegneserie-agtig aften
+har du nogen animerede tegneserier at se [med mig]
+[øh] jeg prøver at finde en visuel historie ligesom {visual_story_title}
+<lead_watch> {movie_title} som en animeret tegneserie
+[hey] lad mig se nogle graphic novels [tak]
+jeg leder efter en illustreret historie [eller] en tegneserie [at læse|at se]
+<lead_watch> en motion comic-version af {visual_story_title}
+lad os se noget der er som en graphic novel der bliver levende
+måske er {visual_story_title} en graphic novel jeg ville kunne lide
+<lead_watch> illustrerede historier [eller animerede tegneserier]
+<lead_read> tegneserier [eller] graphic novels [tak]
+jeg vil have noget som en tegneserie men med bevægelse [tak]

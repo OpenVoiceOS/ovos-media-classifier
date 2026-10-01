@@ -1,0 +1,138 @@
+<lead_watch> afsnit af {tv_show_title}
+[hej|ok|okay] <lead_watch> afsnit af {tv_show_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> det næste afsnit af {tv_show_title}
+<lead_watch> flere afsnit af {tv_show_title}
+[hej|ok|okay] <lead_watch> flere afsnit af {tv_show_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en webserie
+[hej|ok|okay] <lead_watch> en webserie [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en videoserie
+[hej|ok|okay] <lead_watch> en videoserie [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en online videoserie
+[hej|ok|okay] <lead_watch> en online videoserie [tak|for mig|lige nu|tak skal du have]
+<lead_watch> det seneste afsnit af {tv_show_title} online
+[hej|ok|okay] <lead_watch> det seneste afsnit af {tv_show_title} online [tak|for mig|lige nu|tak skal du have]
+<lead_watch> det næste afsnit
+[hej|ok|okay] <lead_watch> det næste afsnit [tak|for mig|lige nu|tak skal du have]
+<lead_watch> mere af den webserie
+[hej|ok|okay] <lead_watch> mere af den webserie [tak|for mig|lige nu|tak skal du have]
+<lead_watch> de nye afsnit af {tv_show_title}
+[hej|ok|okay] <lead_watch> de nye afsnit af {tv_show_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> endnu et afsnit af {tv_show_title}
+[hej|ok|okay] <lead_watch> endnu et afsnit af {tv_show_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en videopodcast-serie
+[hej|ok|okay] <lead_watch> en videopodcast-serie [tak|for mig|lige nu|tak skal du have]
+<lead_watch> {tv_show_title} webserien
+[hej|ok|okay] <lead_watch> {tv_show_title} webserien [tak|for mig|lige nu|tak skal du have]
+<lead_watch> det seneste videoafsnit
+[hej|ok|okay] <lead_watch> det seneste videoafsnit [tak|for mig|lige nu|tak skal du have]
+<lead_watch> et afsnit af den webserie
+[hej|ok|okay] <lead_watch> et afsnit af den webserie [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en youtube-serie
+[hej|ok|okay] <lead_watch> en youtube-serie [tak|for mig|lige nu|tak skal du have]
+<lead_watch> den næste del af {tv_show_title}
+<lead_watch> flere videoafsnit
+[hej|ok|okay] <lead_watch> flere videoafsnit [tak|for mig|lige nu|tak skal du have]
+<lead_watch> {tv_show_title} videoserien
+[hej|ok|okay] <lead_watch> {tv_show_title} videoserien [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en streaming-webserie
+[hej|ok|okay] <lead_watch> en streaming-webserie [tak|for mig|lige nu|tak skal du have]
+<lead_watch> et afsnit fra {tv_show_title}
+[hej|ok|okay] <lead_watch> et afsnit fra {tv_show_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> det nyeste afsnit af {tv_show_title}
+[hej|ok|okay] <lead_watch> det nyeste afsnit af {tv_show_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> et onlineserie-afsnit
+[hej|ok|okay] <lead_watch> et onlineserie-afsnit [tak|for mig|lige nu|tak skal du have]
+<lead_watch> har du flere afsnit af {tv_show_title}
+[hej|ok|okay] <lead_watch> har du flere afsnit af {tv_show_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> har du det næste afsnit af {tv_show_title}
+[hej|ok|okay] <lead_watch> har du det næste afsnit af {tv_show_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> nogle afsnit at binge
+[hej|ok|okay] <lead_watch> nogle afsnit at binge [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en webserie til aftenen
+[hej|ok|okay] <lead_watch> en webserie til aftenen [tak|for mig|lige nu|tak skal du have]
+<lead_watch> har du det seneste {tv_show_title} afsnit
+[hej|ok|okay] <lead_watch> har du det seneste {tv_show_title} afsnit [tak|for mig|lige nu|tak skal du have]
+<lead_watch> har du en god webserie
+[hej|ok|okay] <lead_watch> har du en god webserie [tak|for mig|lige nu|tak skal du have]
+<lead_watch> nogle videoafsnit at se
+[hej|ok|okay] <lead_watch> nogle videoafsnit at se [tak|for mig|lige nu|tak skal du have]
+<lead_watch> sæson {season_number} af {tv_show_title}
+[hej|ok|okay] <lead_watch> sæson {season_number} af {tv_show_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> afsnit {episode_number} af {tv_show_title}
+[hej|ok|okay] <lead_watch> afsnit {episode_number} af {tv_show_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> sæson {season_number} afsnit {episode_number} af {tv_show_title}
+[hej|ok|okay] <lead_watch> sæson {season_number} afsnit {episode_number} af {tv_show_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> {tv_show_title} sæson {season_number} afsnit {episode_number}
+<lead_watch> {tv_show_title} s{season_number}e{episode_number}
+<lead_watch> {episode_title} afsnittet af {tv_show_title}
+[hej|ok|okay] <lead_watch> {episode_title} afsnittet af {tv_show_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> afsnit {episode_number} sæson {season_number} af {tv_show_title}
+<lead_watch> det næste afsnit af sæson {season_number} af {tv_show_title}
+<lead_watch> {tv_show_title} afsnit {episode_number}
+<lead_watch> det første afsnit af {tv_show_title}
+<lead_watch> sæson {season_number} finalen af {tv_show_title}
+<lead_watch> {episode_title} afsnittet
+det næste afsnit af {tv_show_title}, tak
+afsnit {episode_number} af {tv_show_title}, tak
+det næste afsnit — sæt det på
+sæson {season_number} afsnit {episode_number} af {tv_show_title} — lad os gå
+sæt det næste afsnit af {tv_show_title} på, vil du?
+jeg kunne godt bruge det næste afsnit af {tv_show_title}
+jeg leder efter flere afsnit af {tv_show_title}
+jeg skal have det næste afsnit af {tv_show_title}
+hvad med afsnit {episode_number} af {tv_show_title}
+måske endnu et afsnit af {tv_show_title}
+vi burde se det næste afsnit af {tv_show_title}
+noget ligesom den webserie
+hvor var vi i {tv_show_title}?
+fortsæt {tv_show_title} hvor vi slap
+{episode_title} afsnittet af {tv_show_title}, tak
+mere {tv_show_title} fordi jeg er hooked
+et par afsnit af {tv_show_title} at binge
+øh kan du spille det næste afsnit af {tv_show_title}
+spil afsnit {episode_number}, faktisk nej start sæsonen
+hey så sæt det næste {tv_show_title} afsnit på
+du ved hvad smid afsnit {episode_number} af {tv_show_title} på
+har lyst til at se det næste afsnit af {tv_show_title}
+lad mig blive færdig med sæson {season_number} af {tv_show_title}
+giv mig det næste afsnit af {tv_show_title}
+jeg kunne virkelig godt bruge endnu et afsnit af {tv_show_title}
+er der et nyt afsnit af {tv_show_title}
+har du det næste afsnit af {tv_show_title}?
+jeg er i humør til et webserie-maraton fra sæson {season_number}
+hey øh lad os tjekke den tv-serie {tv_show_title} ud
+så jeg vil gerne se afsnit {episode_number} af {tv_show_title}
+giv mig det næste afsnit af den sitcom tak
+lad os binge hele den miniserie {tv_show_title}
+hvad med vi starter et nyt tv-show i aften
+jeg leder efter sæson {season_number} af {tv_show_title}
+hey sæt den webserie {tv_show_title} på fra begyndelsen
+hvad hedder det seneste afsnit af {tv_show_title} der hedder {episode_title}
+har lyst til at se det boksæt af {tv_show_title} fra sæson {season_number}
+så øh hvor kan jeg finde afsnit af {tv_show_title} online
+lad os følge med i {tv_show_title} sæson {season_number}
+skal se det næste afsnit af den serie
+hey lad mig se afsnit {episode_number} af {tv_show_title}
+jeg har lyst til at se en tv-serie måske {tv_show_title}
+så der er den her webserie der hedder {tv_show_title} kan vi se den
+spil den seneste sæson {season_number} af {tv_show_title}
+[hej|ok|tak] <lead_watch> klip fra {tv_show_title} [tak|for mig|lige nu|tak skal du have]
+hvad med den miniserie {tv_show_title} fra starten
+jeg er i humør til et tv-serie-maraton [tak]
+lad os se {episode_number} af den webserie
+[hey|så] <lead_watch> en miniserie at komme i gang med [tak]
+vi burde følge med i {tv_show_title} afsnit
+[ok|så] jeg vil gerne binge et boksæt i aften
+det føles som en sitcom-agtig aften [du ved]
+hvad med vi <lead_watch> {tv_show_title} fra {season_number}
+lad mig <lead_watch> nogle afsnit jeg ikke har set
+har du nogen gode webserier at anbefale
+lad os <lead_watch> {tv_show_title} miniserien
+jeg leder efter et tv-show at begynde at se
+så <lead_watch> {season_number} af {tv_show_title} [tak]
+[hey|øh] <lead_watch> den sitcom fra begyndelsen
+hvad med vi ser nogle videoklip i stedet
+jeg kunne godt bruge et boksæt lige nu
+[hey|så] <lead_watch> {episode_title} den hvor [du ved|øh]
+vi burde maratonse den webserie i weekenden
+giv mig nogle afsnit af et godt tv-show at binge

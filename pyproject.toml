@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
+requires = ["setuptools>=77.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -10,65 +10,84 @@ readme = "README.md"
 authors = [
     { name = "JarbasAI", email = "jarbasai@mailfence.com" }
 ]
-license = { text = "Apache-2.0" }
+license = "Apache-2.0"
+license-files = ["LICENSE"]
 requires-python = ">=3.10"
 dependencies = [
     "ovos-utils>=0.0.38",
-    "mediavocab>=1.0.0,<2.0.0",
-    "ovos-plugin-manager>=2.1.0,<3.0.0",
+    "mediavocab>=1.3.0a2,<2.0.0",
+    # OVOS-INTENT-2 .voc loader + word-boundary matcher for the bundled locale
+    "ovos-spec-tools>=0.6.0a1",
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: Apache Software License",
     "Operating System :: OS Independent",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
 
 [project.optional-dependencies]
-# ONNX inference with categorical embeddings (no torch required at runtime)
-guided = [
-    "guided-categorical-embeddings[sklearn]",
+onnx = [
     "onnxruntime",
+    "numpy",
 ]
-# Training the guided-embeddings models (adds torch + data deps)
-train = [
-    "guided-categorical-embeddings[train,sklearn]",
-    "pandas",
-    "pyarrow",
-]
-sklearn = [
-    "scikit-learn",
-    "joblib",
-]
+# --- optional NER (entity-based) backend (Aho-Corasick over the user's real entities) ---
 ner = [
     "ahocorasick-ner>=0.0.1",
-]
-padatious = [
-    "padatious",
-]
-m2v = [
-    "model2vec",
-    "numpy",
-    "onnxruntime",
 ]
 media_servers = [
     "requests",
 ]
+# --- Layer B online metadatarr backend (network, opt-in, OFF by default) ---
+# Adds the metadatarr metadata-resolution layer the online classifier calls to
+# resolve a bare title's canonical media_type. Latency-aware: enable only via
+# ``media_classifier_online_metadatarr: true``.
+online = [
+    "metadatarr>=0.5.0a1",
+]
 huggingface = [
     "datasets",
 ]
-# test deps — the suite mocks all optional ML backends, so only core is needed
+
+# --- training-only deps (NOT needed at runtime) ---
+# Train the ONNX bundle (``training/train_sklearn.py``) and rebuild the dataset
+# (``training/build_dataset.py``).  The runtime backend stays on
+# ``onnxruntime`` + ``numpy`` (the ``onnx`` extra); this extra only adds the
+# offline scikit-learn → ONNX toolchain.
+train = [
+    "scikit-learn",
+    "skl2onnx",
+    "onnx",
+    "onnxruntime",
+    "numpy",
+    "pandas",
+    # neural (PyTorch → ONNX) training path (training/train_torch.py) + the
+    # domain word-vector corpus (training/build_corpus.py).  Inference stays on
+    # onnxruntime + numpy only — torch/gensim are TRAIN-ONLY, never imported at
+    # runtime (the exported bundle is a plain ONNX graph + a saved .npy matrix).
+    "torch",
+    "gensim",
+]
+
+# test deps — the online metadatarr backend is patched (never hits the network)
+# but must be importable for the patch target to exist
 test = [
     "pytest",
     "pytest-cov",
-]
-all = [
-    "ovos-media-classifier[guided,sklearn,ner,padatious,m2v,media_servers,huggingface]",
+    "metadatarr>=0.5.0a1",
+    # test_embedding.py / test_gazetteer.py build the embedding-router axis
+    # heads by hand with plain numpy arrays (no onnxruntime, no model file) —
+    # numpy alone is enough for these to collect and run.
+    "numpy",
 ]
 
 # NOTE: dataset-build/training tooling lives in the top-level ``training/`` dir
-# (NOT shipped in the wheel); run it from a checkout via ``python -m training.<x>``
-# with the ``[train]`` extra installed. See training/README.md.
+# (NOT shipped in the wheel); run it from a checkout. See training/README.md.
+
+# Self-registration under the plugin group this repo defines: the keyword
+# backend is the reference opm.media.classifier plugin, so OPM discovery and
+# the external-plugin path are exercised by the package itself.
+[project.entry-points."opm.media.classifier"]
+ovos-media-classifier-keyword = "ovos_media_classifier.keyword:KeywordMediaClassifier"
 
 [tool.setuptools.dynamic]
 version = { attr = "ovos_media_classifier.version.__version__" }
@@ -76,3 +95,28 @@ version = { attr = "ovos_media_classifier.version.__version__" }
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["ovos_media_classifier*"]
+
+# ship the bundled locale resources: the .voc keyword + lead-in files (the no-arg
+# KeywordMediaClassifier reads ovos_media_classifier/locale/<lang>/<Vocab>.voc
+# directly off disk) and the translatable dataset .intent templates under
+# locale/<lang>/dataset/ (so ovos-localize and build_dataset see them in the
+# installed package) + the PEP 561 typing marker for downstream type-checkers.
+[tool.setuptools.package-data]
+ovos_media_classifier = [
+    "locale/*/*.voc",
+    "locale/*/dataset/*.intent",
+    "data/gazetteer.json",
+    "py.typed",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["test"]
+addopts = "-q"
+
+[tool.coverage.run]
+source = ["ovos_media_classifier"]
+branch = true
+
+[tool.coverage.report]
+skip_covered = false
+show_missing = true

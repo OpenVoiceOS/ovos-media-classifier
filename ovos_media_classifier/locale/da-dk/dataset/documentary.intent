@@ -1,0 +1,163 @@
+<lead_watch> {documentary_title}
+[hej|ok|okay] <lead_watch> {documentary_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> dokumentaren {documentary_title}
+[hej|ok|okay] <lead_watch> dokumentaren {documentary_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en dokumentar
+[hej|ok|okay] <lead_watch> en dokumentar [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en naturdokumentar
+[hej|ok|okay] <lead_watch> en naturdokumentar [tak|for mig|lige nu|tak skal du have]
+<lead_watch> nogle dokumentarer
+[hej|ok|okay] <lead_watch> nogle dokumentarer [tak|for mig|lige nu|tak skal du have]
+<lead_watch> {documentary_title} dokumentaren
+[hej|ok|okay] <lead_watch> {documentary_title} dokumentaren [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en god dokumentar
+[hej|ok|okay] <lead_watch> en god dokumentar [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en historiedokumentar
+[hej|ok|okay] <lead_watch> en historiedokumentar [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en videnskabsdokumentar
+[hej|ok|okay] <lead_watch> en videnskabsdokumentar [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en true crime-dokumentar
+[hej|ok|okay] <lead_watch> en true crime-dokumentar [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en {movie_genre} dokumentar
+[hej|ok|okay] <lead_watch> en {movie_genre} dokumentar [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en dokumentar om {documentary_title}
+[hej|ok|okay] <lead_watch> en dokumentar om {documentary_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> har du nogen dokumentarer
+[hej|ok|okay] <lead_watch> har du nogen dokumentarer [tak|for mig|lige nu|tak skal du have]
+<lead_watch> har du en god dokumentar
+[hej|ok|okay] <lead_watch> har du en god dokumentar [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en dokumentar til at falde i søvn til
+[hej|ok|okay] <lead_watch> en dokumentar til at falde i søvn til [tak|for mig|lige nu|tak skal du have]
+<lead_watch> noget lærerigt at se
+[hej|ok|okay] <lead_watch> noget lærerigt at se [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en dokumentar om {movie_actor}
+[hej|ok|okay] <lead_watch> en dokumentar om {movie_actor} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en dokumentar om {artist_name}
+[hej|ok|okay] <lead_watch> en dokumentar om {artist_name} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> {artist_name} dokumentaren
+[hej|ok|okay] <lead_watch> {artist_name} dokumentaren [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en dokumentar om {movie_director}
+[hej|ok|okay] <lead_watch> en dokumentar om {movie_director} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> dokumentaren om {movie_title}
+[hej|ok|okay] <lead_watch> dokumentaren om {movie_title} [tak|for mig|lige nu|tak skal du have]
+{documentary_title}, tak
+dokumentaren {documentary_title}, tak
+en dokumentar, tak
+{documentary_title} — sæt den på
+den dokumentar {documentary_title} — start den
+sæt dokumentaren {documentary_title} på, vil du?
+jeg kunne godt bruge en dokumentar
+jeg leder efter en god dokumentar
+jeg skal have en dokumentar til at falde i søvn til
+hvad med en dokumentar om {movie_director}
+måske en naturdokumentar
+vi burde se en dokumentar
+noget ligesom {documentary_title}
+endnu en dokumentar om {documentary_title}
+er der nogen gode dokumentarer
+hvilke dokumentarer har du
+er der en dokumentar om {artist_name}
+{artist_name} dokumentaren, tak
+en dokumentar fordi jeg vil lære noget
+noget lærerigt mens jeg spiser
+den dokumentar alle anbefaler
+<lead_watch> en dokumentar om showet {tv_show_title}
+<lead_watch> en dokumentar om tilblivelsen af {tv_show_title}
+<lead_watch> en dokumentar om spillet {game_title}
+<lead_watch> en dokumentar om tegneserien {comic_title}
+<lead_watch> en dokumentar om forfatteren {book_author}
+<lead_watch> en dokumentar om skribenten {book_author}
+<lead_watch> {book_author} dokumentaren
+<lead_watch> en dokumentar om podcasteren {podcast_host}
+<lead_watch> en dokumentar om bandet bag {album_name}
+<lead_watch> tilblivelsen af albummet {album_name}
+<lead_watch> en dokumentar om studiet {anime_studio}
+<lead_watch> en dokumentar om tilblivelsen af {game_title}
+<lead_watch> en dokumentar om historien bag {music_genre}
+<lead_watch> en dokumentar om sangen {track_name}
+<lead_watch> en dokumentar om tilblivelsen af {book_title}
+<lead_watch> en dokumentar om {artist_name}
+<lead_watch> en dokumentar med {artist_name}
+<lead_watch> en dokumentar om {book_author}
+<lead_watch> en dokumentar om {book_author}
+<lead_watch> en dokumentar med {book_author}
+<lead_watch> en biografi om {book_author}
+<lead_watch> en dokumentar om {podcast_host}
+<lead_watch> en dokumentar om {podcast_host}
+<lead_watch> {podcast_host} dokumentaren
+<lead_watch> en dokumentar med {podcast_host}
+<lead_watch> en biografi om {podcast_host}
+<lead_watch> en dokumentar om {anime_studio}
+<lead_watch> en dokumentar om {anime_studio}
+<lead_watch> {anime_studio} dokumentaren
+<lead_watch> en dokumentar med {anime_studio}
+<lead_watch> en biografi om {anime_studio}
+<lead_watch> en biopic om {artist_name}
+<lead_watch> en dokumentar om livet af {artist_name}
+<lead_watch> en biopic om {book_author}
+<lead_watch> {book_author} biopicen
+<lead_watch> en dokumentar om livet af {book_author}
+<lead_watch> en dokumentar om serien {tv_show_title}
+<lead_watch> en dokumentar om animeen {anime_title}
+<lead_watch> en dokumentar om udviklingen af {game_title}
+<lead_watch> en dokumentar om bogen {book_title}
+<lead_watch> en dokumentar om romanen {book_title}
+<lead_watch> en dokumentar om podcasten {podcast_title}
+<lead_watch> en dokumentar om tilblivelsen af albummet {album_name}
+<lead_watch> en dokumentar om albummet {album_name}
+<lead_watch> en dokumentar om opstigningen af {artist_name}
+<lead_watch> en dokumentar der skildrer {artist_name}
+<lead_watch> en dokumentar om {music_genre} musik
+<lead_watch> historien om {artist_name}
+<lead_watch> den ufortalte historie om {artist_name}
+øh kan du sætte en dokumentar om {music_genre} på
+spil {documentary_title}, faktisk nej den om {artist_name}
+øh måske en dokumentar, noget om {movie_genre}
+hey så sæt {documentary_title} på
+du ved hvad smid en dokumentar om {artist_name} på
+har lyst til at se en dokumentar om {music_genre}
+lad mig se den dokumentar om {artist_name}
+giv mig en dokumentar om {movie_title}
+jeg er nysgerrig i aften sæt en dokumentar på
+jeg kunne virkelig godt bruge en dokumentar om {music_genre}
+jeg blev aldrig færdig med den dokumentar om {artist_name}
+jeg er i humør til en dokumentar om {movie_genre}
+er der en god dokumentar om {artist_name}
+har du nogen dokumentarer om {music_genre}?
+hvad med en dokumentar om {movie_title}
+<lead_watch> kan du finde en dokumentar om {movie_director} [til mig|tak]
+giv mig den dokumentar {documentary_title} [tak]
+[hey|ok|så] <lead_watch> nogen gode dokumentarer om {book_author} [lige nu|til mig]
+lad os se en dokumentarserie [om {podcast_host}|om {tv_show_title}]
+<lead_watch> dokumentaren med {documentary_title} [tak]
+[øh|hey|så] kan du smide en dokumentar om {comic_title} på [lige nu|tak]
+jeg har lyst til en dokumentar i aften [om {movie_genre}|om {anime_studio}]
+<lead_watch> lad mig se en dokumentar om {game_title} [tak|lige nu]
+[hey|tak|ok] <lead_watch> har du nogen dokumentarer om {podcast_title} [tak]
+har lyst til at se den dokumentar om {movie_actor} [lige nu|i aften]
+<lead_watch> hvad med en dokumentar om {music_genre} [til mig|tak]
+jeg vil gerne se en dokumentar om {book_author} [tak|til mig]
+<lead_watch> nogen dokumentarer om {tv_show_title} [lige nu|tak]
+[hey|ok|så] lad mig se en dokumentar om {anime_title} [tak]
+<lead_watch> har du en dokumentar om {track_name} [til mig|tak]
+[øh|hey|så] spil dokumentaren om {album_name} [tak|lige nu]
+<lead_watch> jeg er i humør til en dokumentarserie om {movie_director} [i aften]
+så hvad med vi ser en dokumentar om {tv_show_title}
+lad os tjekke en dokumentar om tilblivelsen af {game_title} ud
+vi burde se en dokumentar om {movie_director} [i aften|snart]
+det føles som en dokumentar-aften, har du noget om {movie_genre}
+hey har du en dokumentar om {anime_studio}
+jeg vil gerne se en dokumentar om {comic_title} [tak|hvis du kan]
+giv mig en dokumentar om {movie_actor} [du ved|hvad de har lavet på det seneste]
+så jeg tænkte en dokumentar om forfatteren til {book_title}
+hvilke dokumentarer har du om {movie_title}
+kan du finde mig en god dokumentarserie om {podcast_host}
+øh jeg vil virkelig gerne se noget om {artist_name}, ligesom en dokumentar
+har du nogen dokumentarer om {documentary_title}
+<lead_watch> en dokumentar om historien bag {tv_show_title}
+jeg leder efter en dokumentar om {podcast_title}
+hvad med vi sætter en dokumentar om {anime_title} på
+en dokumentar om {book_title} af {book_author} lyder godt [lige nu|faktisk]
+hey så jeg har hørt der er en dokumentar om {movie_director} der instruerer {movie_title}
+vi burde tjekke en dokumentar om {music_genre} ud [eller noget|måske]
+lad mig finde en god dokumentar om tilblivelsen af {album_name}

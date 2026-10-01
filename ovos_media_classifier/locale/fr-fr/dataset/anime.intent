@@ -1,0 +1,20 @@
+<lead_watch> {anime_title}
+<lead_watch> the anime {anime_title}
+<lead_watch> an episode of {anime_title}
+<lead_watch> some anime
+<lead_watch> anime by {anime_studio}
+<lead_watch> a {anime_studio} anime
+<lead_watch> the new season of {anime_title}
+<lead_watch> the next episode of {anime_title}
+<lead_watch> a {anime_genre} anime
+<lead_watch> some {anime_genre} anime
+<lead_watch> a good anime
+<lead_watch> the {anime_studio} anime {anime_title}
+<lead_watch> {anime_title} by {anime_studio}
+<lead_watch> a {anime_genre} anime by {anime_studio}
+<lead_watch> a {anime_genre} anime from {anime_studio}
+<lead_watch> {anime_title} from {anime_studio}
+<lead_watch> the {anime_genre} anime {anime_title} by {anime_studio}
+<lead_watch> do you have any {anime_genre} anime
+<lead_watch> got a good {anime_genre} anime
+<lead_watch> some {anime_genre} anime to binge

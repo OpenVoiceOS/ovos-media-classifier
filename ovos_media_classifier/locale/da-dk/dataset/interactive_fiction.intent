@@ -1,0 +1,126 @@
+<lead_game> et teksteventyr
+[hej|ok|okay] <lead_game> et teksteventyr [tak|for mig|lige nu|tak skal du have]
+<lead_game> noget interaktiv fiktion
+[hej|ok|okay] <lead_game> noget interaktiv fiktion [tak|for mig|lige nu|tak skal du have]
+<lead_game> et vælg-dit-eget-eventyr
+[hej|ok|okay] <lead_game> et vælg-dit-eget-eventyr [tak|for mig|lige nu|tak skal du have]
+<lead_game> et vælg-dit-eget-eventyr-spil
+[hej|ok|okay] <lead_game> et vælg-dit-eget-eventyr-spil [tak|for mig|lige nu|tak skal du have]
+<lead_game> den interaktive historie {game_title}
+[hej|ok|okay] <lead_game> den interaktive historie {game_title} [tak|for mig|lige nu|tak skal du have]
+<lead_game> en interaktiv roman
+[hej|ok|okay] <lead_game> en interaktiv roman [tak|for mig|lige nu|tak skal du have]
+<lead_game> et teksteventyr-spil
+[hej|ok|okay] <lead_game> et teksteventyr-spil [tak|for mig|lige nu|tak skal du have]
+<lead_game> et interaktiv fiktion-spil
+[hej|ok|okay] <lead_game> et interaktiv fiktion-spil [tak|for mig|lige nu|tak skal du have]
+<lead_game> teksteventyret {game_title}
+[hej|ok|okay] <lead_game> teksteventyret {game_title} [tak|for mig|lige nu|tak skal du have]
+<lead_game> et historiespil
+[hej|ok|okay] <lead_game> et historiespil [tak|for mig|lige nu|tak skal du have]
+<lead_game> et forgrenet historiespil
+[hej|ok|okay] <lead_game> et forgrenet historiespil [tak|for mig|lige nu|tak skal du have]
+<lead_game> den interaktive fiktion {game_title}
+[hej|ok|okay] <lead_game> den interaktive fiktion {game_title} [tak|for mig|lige nu|tak skal du have]
+<lead_game> et parser-spil
+[hej|ok|okay] <lead_game> et parser-spil [tak|for mig|lige nu|tak skal du have]
+<lead_game> et {game_genre} teksteventyr
+[hej|ok|okay] <lead_game> et {game_genre} teksteventyr [tak|for mig|lige nu|tak skal du have]
+<lead_game> et gammelt teksteventyr
+[hej|ok|okay] <lead_game> et gammelt teksteventyr [tak|for mig|lige nu|tak skal du have]
+<lead_game> en interaktiv historie
+[hej|ok|okay] <lead_game> en interaktiv historie [tak|for mig|lige nu|tak skal du have]
+<lead_game> en spillebog
+[hej|ok|okay] <lead_game> en spillebog [tak|for mig|lige nu|tak skal du have]
+<lead_game> spillebogen {game_title}
+[hej|ok|okay] <lead_game> spillebogen {game_title} [tak|for mig|lige nu|tak skal du have]
+<lead_game> et if-spil
+[hej|ok|okay] <lead_game> et if-spil [tak|for mig|lige nu|tak skal du have]
+<lead_game> et klassisk teksteventyr
+[hej|ok|okay] <lead_game> et klassisk teksteventyr [tak|for mig|lige nu|tak skal du have]
+<lead_game> historiespillet {game_title}
+[hej|ok|okay] <lead_game> historiespillet {game_title} [tak|for mig|lige nu|tak skal du have]
+<lead_game> et {game_genre} interaktiv fiktion-spil
+[hej|ok|okay] <lead_game> et {game_genre} interaktiv fiktion-spil [tak|for mig|lige nu|tak skal du have]
+<lead_game> et eventyrspil med valg
+[hej|ok|okay] <lead_game> et eventyrspil med valg [tak|for mig|lige nu|tak skal du have]
+<lead_game> den forgrenede historie {game_title}
+[hej|ok|okay] <lead_game> den forgrenede historie {game_title} [tak|for mig|lige nu|tak skal du have]
+<lead_game> endnu et teksteventyr
+[hej|ok|okay] <lead_game> endnu et teksteventyr [tak|for mig|lige nu|tak skal du have]
+<lead_game> et tekstbaseret spil
+[hej|ok|okay] <lead_game> et tekstbaseret spil [tak|for mig|lige nu|tak skal du have]
+<lead_game> den interaktive roman {game_title}
+[hej|ok|okay] <lead_game> den interaktive roman {game_title} [tak|for mig|lige nu|tak skal du have]
+<lead_game> har du nogen teksteventyr
+[hej|ok|okay] <lead_game> har du nogen teksteventyr [tak|for mig|lige nu|tak skal du have]
+<lead_game> har du et godt vælg-dit-eget-eventyr
+[hej|ok|okay] <lead_game> har du et godt vælg-dit-eget-eventyr [tak|for mig|lige nu|tak skal du have]
+<lead_game> et teksteventyr til i aften
+[hej|ok|okay] <lead_game> et teksteventyr til i aften [tak|for mig|lige nu|tak skal du have]
+<lead_game> en interaktiv historie til sengetid
+[hej|ok|okay] <lead_game> en interaktiv historie til sengetid [tak|for mig|lige nu|tak skal du have]
+<lead_game> har du teksteventyret {game_title}
+[hej|ok|okay] <lead_game> har du teksteventyret {game_title} [tak|for mig|lige nu|tak skal du have]
+<lead_game> har du nogen {game_genre} teksteventyr
+[hej|ok|okay] <lead_game> har du nogen {game_genre} teksteventyr [tak|for mig|lige nu|tak skal du have]
+<lead_game> en interaktiv historie til at falde til ro med
+[hej|ok|okay] <lead_game> en interaktiv historie til at falde til ro med [tak|for mig|lige nu|tak skal du have]
+et teksteventyr, tak
+teksteventyret {game_title}, tak
+noget interaktiv fiktion, tak
+teksteventyret {game_title} — indlæs det
+et teksteventyr — lad os spille
+start den interaktive historie {game_title}, vil du?
+jeg er i humør til et teksteventyr
+i humør til noget interaktiv fiktion
+jeg kunne godt bruge et teksteventyr
+jeg leder efter et godt vælg-dit-eget-eventyr
+jeg skal have et historiespil til i aften
+hvad med teksteventyret {game_title}
+måske en interaktiv historie
+endnu et teksteventyr ligesom {game_title}
+endnu et teksteventyr
+er der nogen teksteventyr
+hvilken interaktiv fiktion har du
+er der en spillebog der hedder {game_title}
+et {game_genre} teksteventyr til aftenen
+en interaktiv historie fordi jeg ikke kan sove
+det klassiske teksteventyr {game_title}
+<lead_game> et teksteventyr baseret på {book_title}
+<lead_game> en interaktiv historie baseret på romanen {book_title}
+<lead_game> et teksteventyr baseret på filmen {movie_title}
+<lead_game> en interaktiv fiktion baseret på {movie_title}
+<lead_game> en spillebog baseret på {book_title}
+<lead_game> en interaktiv historie baseret på serien {tv_show_title}
+<lead_game> et teksteventyr der foregår i universet fra {game_title}
+<lead_game> et teksteventyr baseret på tegneserien {comic_title}
+<lead_game> en interaktiv historie skrevet af {book_author}
+<lead_game> en interaktiv fiktion-tilpasning af {book_title}
+øh kan du starte et interaktiv fiktion-spil
+spil {game_title}, faktisk nej et {game_genre} et
+hey så start {game_title}
+du ved hvad smid et teksteventyr på
+har lyst til at spille noget interaktiv fiktion
+lad mig spille et teksteventyr
+giv mig et {game_genre} teksteventyr
+jeg kunne virkelig godt bruge et teksteventyr
+jeg blev aldrig færdig med {game_title}
+er der et godt interaktiv fiktion-spil
+har du nogen teksteventyr?
+hvad med {game_title}
+<lead_game> har du nogen teksteventyr [{game_genre}] [lige nu]
+så <lead_game> lad mig spille et vælg-dit-eget-eventyr
+<lead_game> øh jeg vil gerne prøve et teksteventyr [tak]
+lad os spille en interaktiv historie [spil] [tak]
+<lead_game> giv mig et teksteventyr [{game_genre}] [tak]
+så <lead_game> jeg leder efter et interaktiv fiktion-spil [{game_title}]
+<lead_game> det teksteventyr baseret på {movie_title} [tak]
+har lyst til at spille et vælg-dit-eget-eventyr [{game_genre}] [lige nu]
+hey <lead_game> har du nogen interaktive romaner [{game_genre}]
+<lead_game> måske en interaktiv historie baseret på {tv_show_title}
+så lad mig få et vælg-dit-eget-eventyr-spil [tak]
+<lead_game> øh jeg skal have en interaktiv roman ligesom {game_title} [tak]
+hey så <lead_game> jeg vil gerne spille et teksteventyr [{game_title}] [tak]
+<lead_game> nogen gode interaktive romaner [{game_genre}] [lige nu]
+jeg er sådan set i humør til et vælg-dit-eget-eventyr [{game_title}]

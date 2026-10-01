@@ -89,13 +89,23 @@ class ContentFilter:
     def check(self, classifier, query: str, lang: str = "en-us") -> Tuple[bool, str]:
         """Classify *query* with *classifier* and apply the filter.
 
-        Convenience wrapper: pulls both the media type and the genre tags from an
+        Convenience wrapper: pulls the media type and the **content-form genre
+        tags** from an
         :class:`~ovos_media_classifier.base.AbstractMediaClassifier`.
+
+        It reads ``classify_content_form_genres`` — the dedicated sensitive-genre
+        axis — so a trained backend can flag ``adult`` from its own head even
+        when it is unsure of the exact media type (robust blocking).  The base
+        implementation of that method delegates to ``classify_genres``, so the
+        keyword backend behaves identically.
         """
         media_type, _ = classifier.classify(query, lang)
         genres: List[str] = []
         try:
-            genres = classifier.classify_genres(query, lang)
+            genres = classifier.classify_content_form_genres(query, lang)
         except Exception:
-            pass
+            try:
+                genres = classifier.classify_genres(query, lang)
+            except Exception:
+                pass
         return self.is_blocked(media_type, genres)

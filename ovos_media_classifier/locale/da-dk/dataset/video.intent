@@ -1,0 +1,108 @@
+<lead_watch> en video
+[hej|ok|okay] <lead_watch> en video [tak|for mig|lige nu|tak skal du have]
+<lead_watch> nogle videoer
+<lead_watch> noget at se
+[hej|ok|okay] <lead_watch> noget at se [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en video om {documentary_title}
+[hej|ok|okay] <lead_watch> en video om {documentary_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> noget interessant
+[hej|ok|okay] <lead_watch> noget interessant [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en eller anden video
+[hej|ok|okay] <lead_watch> en eller anden video [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en tilfældig video
+[hej|ok|okay] <lead_watch> en tilfældig video [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en anden video
+[hej|ok|okay] <lead_watch> en anden video [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en kort video
+[hej|ok|okay] <lead_watch> en kort video [tak|for mig|lige nu|tak skal du have]
+<lead_watch> nogle klip
+[hej|ok|okay] <lead_watch> nogle klip [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en video at se
+[hej|ok|okay] <lead_watch> en video at se [tak|for mig|lige nu|tak skal du have]
+<lead_watch> hvad som helst at se
+<lead_watch> et klip
+[hej|ok|okay] <lead_watch> et klip [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en sjov video
+[hej|ok|okay] <lead_watch> en sjov video [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en viral video
+[hej|ok|okay] <lead_watch> en viral video [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en guide-video
+[hej|ok|okay] <lead_watch> en guide-video [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en instruktionsvideo
+[hej|ok|okay] <lead_watch> en instruktionsvideo [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en forklaringsvideo
+[hej|ok|okay] <lead_watch> en forklaringsvideo [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en video om hvad som helst
+[hej|ok|okay] <lead_watch> en video om hvad som helst [tak|for mig|lige nu|tak skal du have]
+<lead_watch> et hurtigt klip
+[hej|ok|okay] <lead_watch> et hurtigt klip [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en anbefalet video
+[hej|ok|okay] <lead_watch> en anbefalet video [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en populær video
+<lead_watch> en video om {documentary_title}
+[hej|ok|okay] <lead_watch> en video om {documentary_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> har du nogen videoer
+[hej|ok|okay] <lead_watch> har du nogen videoer [tak|for mig|lige nu|tak skal du have]
+<lead_watch> har du noget at se
+[hej|ok|okay] <lead_watch> har du noget at se [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en video til at fordrive tiden
+[hej|ok|okay] <lead_watch> en video til at fordrive tiden [tak|for mig|lige nu|tak skal du have]
+<lead_watch> noget hurtigt at se
+[hej|ok|okay] <lead_watch> noget hurtigt at se [tak|for mig|lige nu|tak skal du have]
+<lead_watch> har du en sjov video
+[hej|ok|okay] <lead_watch> har du en sjov video [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en video mens jeg spiser frokost
+[hej|ok|okay] <lead_watch> en video mens jeg spiser frokost [tak|for mig|lige nu|tak skal du have]
+<lead_watch> noget interessant at se
+[hej|ok|okay] <lead_watch> noget interessant at se [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en kort video til at fylde tiden
+[hej|ok|okay] <lead_watch> en kort video til at fylde tiden [tak|for mig|lige nu|tak skal du have]
+en video, tak
+noget at se, tak
+en video — sæt den på
+noget interessant — lad os se det
+jeg kunne godt bruge en video
+jeg leder efter noget hurtigt at se
+jeg skal have en video til at fordrive tiden
+hvad med en sjov video
+måske en kort video
+vi burde se en video
+overrask mig med en video
+noget interessant at se
+et hurtigt klip fordi jeg holder pause
+en sjov video mens jeg spiser frokost
+hvad som helst der kan ses, ærligt talt
+bare spil en eller anden video
+øh kan du sætte en video på
+spil en video, faktisk nej en dokumentar
+hey så sæt en video på
+du ved hvad bare smid en video på
+har lyst til at se noget
+lad mig se en video
+giv mig noget at se
+jeg kunne virkelig godt bruge en video lige nu
+er der en video om {documentary_title}
+hvad med du sætter en video på
+<lead_watch> noget sejt at se [et stykke tid|hurtigt]
+[hej|ok] så <lead_watch> en video om {documentary_title} måske
+har lyst til at se et klip [hurtigt|lige nu]
+[hey|øh] <lead_watch> har du nogen gode videoer [for nylig|i dag]
+lad os finde en video at se [sammen|mens vi hænger ud]
+<lead_watch> et tilfældigt klip [tak|for mig|lige nu|tak skal du have]
+har du nogen videoer om {documentary_title} [måske|tror jeg]
+[hej|ok|tak] <lead_watch> noget på video [tak|for mig|lige nu|tak skal du have]
+[så|hey] <lead_watch> find mig en video [tak|for mig|lige nu|tak skal du have]
+<lead_watch> et kort klip [tak|for mig|lige nu|tak skal du have]
+[hej|ok|tak] <lead_watch> er der en video om {documentary_title} [tak|for mig|lige nu|tak skal du have]
+giv mig en video at se [hurtigt|et stykke tid]
+[hey|øh] <lead_watch> spil en eller anden video [tror jeg|du vælger|overrask mig]
+hvad med et klip om {documentary_title} [måske|eller noget]
+så <lead_watch> smid en video på [tak|for mig|lige nu|tak skal du have]
+har du nogen gode videoer [for nylig|lige nu]
+det føles som en video-agtig [aften|øjeblik|dag]
+jeg vil gerne se en video [hurtigt|mens jeg kan]
+[øh|så] <lead_watch> en video der hedder {documentary_title} [tror jeg]
+lad os bare sætte en video på [og slappe af|et stykke tid]
+<lead_watch> en video jeg ikke har set før
+[jamen|så] hvad med et klip eller noget [at se|du ved]
+har du nogen videoer om {documentary_title} [for nylig|tilfældigvis]

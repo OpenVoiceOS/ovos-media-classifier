@@ -1,0 +1,162 @@
+<lead_game> {game_title}
+[hej|ok|okay] <lead_game> {game_title} [tak|for mig|lige nu|tak skal du have]
+<lead_game> spillet {game_title}
+[hej|ok|okay] <lead_game> spillet {game_title} [tak|for mig|lige nu|tak skal du have]
+<lead_game> et {game_genre} spil
+[hej|ok|okay] <lead_game> et {game_genre} spil [tak|for mig|lige nu|tak skal du have]
+<lead_game> et spil på {game_platform}
+[hej|ok|okay] <lead_game> et spil på {game_platform} [tak|for mig|lige nu|tak skal du have]
+<lead_game> en runde {game_title}
+[hej|ok|okay] <lead_game> en runde {game_title} [tak|for mig|lige nu|tak skal du have]
+<lead_game> et hurtigt {game_genre} spil
+[hej|ok|okay] <lead_game> et hurtigt {game_genre} spil [tak|for mig|lige nu|tak skal du have]
+<lead_game> noget {game_genre}
+[hej|ok|okay] <lead_game> noget {game_genre} [tak|for mig|lige nu|tak skal du have]
+<lead_game> endnu et {game_genre} spil
+[hej|ok|okay] <lead_game> endnu et {game_genre} spil [tak|for mig|lige nu|tak skal du have]
+<lead_game> et godt {game_genre} spil
+[hej|ok|okay] <lead_game> et godt {game_genre} spil [tak|for mig|lige nu|tak skal du have]
+<lead_game> et spil ligesom {game_title}
+[hej|ok|okay] <lead_game> et spil ligesom {game_title} [tak|for mig|lige nu|tak skal du have]
+<lead_game> {game_genre} spillet {game_title}
+[hej|ok|okay] <lead_game> {game_genre} spillet {game_title} [tak|for mig|lige nu|tak skal du have]
+<lead_game> et {game_genre} spil på {game_platform}
+[hej|ok|okay] <lead_game> et {game_genre} spil på {game_platform} [tak|for mig|lige nu|tak skal du have]
+<lead_game> {game_title} på {game_platform}
+[hej|ok|okay] <lead_game> {game_title} på {game_platform} [tak|for mig|lige nu|tak skal du have]
+<lead_game> {game_genre} på {game_platform}
+[hej|ok|okay] <lead_game> {game_genre} på {game_platform} [tak|for mig|lige nu|tak skal du have]
+<lead_game> et {game_genre} spil fra {release_year}
+[hej|ok|okay] <lead_game> et {game_genre} spil fra {release_year} [tak|for mig|lige nu|tak skal du have]
+<lead_game> {game_title} fra {release_decade}
+[hej|ok|okay] <lead_game> {game_title} fra {release_decade} [tak|for mig|lige nu|tak skal du have]
+<lead_game> et retro {game_genre} spil
+[hej|ok|okay] <lead_game> et retro {game_genre} spil [tak|for mig|lige nu|tak skal du have]
+<lead_game> et indie {game_genre} spil
+[hej|ok|okay] <lead_game> et indie {game_genre} spil [tak|for mig|lige nu|tak skal du have]
+<lead_game> et multiplayer {game_genre} spil
+[hej|ok|okay] <lead_game> et multiplayer {game_genre} spil [tak|for mig|lige nu|tak skal du have]
+<lead_game> endnu en runde {game_title}
+[hej|ok|okay] <lead_game> endnu en runde {game_title} [tak|for mig|lige nu|tak skal du have]
+<lead_game> et co-op {game_genre} spil
+[hej|ok|okay] <lead_game> et co-op {game_genre} spil [tak|for mig|lige nu|tak skal du have]
+<lead_game> {game_genre} spillet {game_title} på {game_platform}
+[hej|ok|okay] <lead_game> {game_genre} spillet {game_title} på {game_platform} [tak|for mig|lige nu|tak skal du have]
+<lead_game> et {game_genre} spil på {game_platform} fra {release_year}
+[hej|ok|okay] <lead_game> et {game_genre} spil på {game_platform} fra {release_year} [tak|for mig|lige nu|tak skal du have]
+<lead_game> har du nogen {game_genre} spil
+[hej|ok|okay] <lead_game> har du nogen {game_genre} spil [tak|for mig|lige nu|tak skal du have]
+<lead_game> har du et godt {game_genre} spil
+[hej|ok|okay] <lead_game> har du et godt {game_genre} spil [tak|for mig|lige nu|tak skal du have]
+<lead_game> et {game_genre} spil at slappe af med
+[hej|ok|okay] <lead_game> et {game_genre} spil at slappe af med [tak|for mig|lige nu|tak skal du have]
+<lead_game> et hurtigt spil før sengetid
+[hej|ok|okay] <lead_game> et hurtigt spil før sengetid [tak|for mig|lige nu|tak skal du have]
+<lead_game> har du {game_title}
+[hej|ok|okay] <lead_game> har du {game_title} [tak|for mig|lige nu|tak skal du have]
+<lead_game> har du nogen {game_genre} spil på {game_platform}
+[hej|ok|okay] <lead_game> har du nogen {game_genre} spil på {game_platform} [tak|for mig|lige nu|tak skal du have]
+<lead_game> et {game_genre} spil til aftenen
+[hej|ok|okay] <lead_game> et {game_genre} spil til aftenen [tak|for mig|lige nu|tak skal du have]
+<lead_game> noget hurtigt at spille
+[hej|ok|okay] <lead_game> noget hurtigt at spille [tak|for mig|lige nu|tak skal du have]
+<lead_game> et spil fra {release_year}
+[hej|ok|okay] <lead_game> et spil fra {release_year} [tak|for mig|lige nu|tak skal du have]
+<lead_game> et {game_genre} spil fra {release_decade}
+[hej|ok|okay] <lead_game> et {game_genre} spil fra {release_decade} [tak|for mig|lige nu|tak skal du have]
+{game_title}, tak
+spillet {game_title}, tak
+et {game_genre} spil, tak
+{game_title} — indlæs det
+en runde {game_title} — lad os gå
+start {game_title}, vil du?
+start et {game_genre} spil, kan du?
+jeg er i {game_genre} humør
+i humør til et {game_genre} spil
+jeg kunne godt bruge et {game_genre} spil
+jeg leder efter et godt {game_genre} spil
+jeg skal have et hurtigt {game_genre} spil
+hvad med {game_title}
+hvad med et {game_genre} spil på {game_platform}
+måske et {game_genre} spil
+måske en runde {game_title}
+noget ligesom {game_title}
+endnu et {game_genre} spil
+er der nogen {game_genre} spil
+hvilke {game_genre} spil har du
+er der et spil ligesom {game_title}
+et hurtigt {game_genre} spil til at slå tiden ihjel
+{game_title} fordi jeg keder mig
+et {game_genre} spil på {game_platform}, tak
+<lead_game> {movie_title} spillet
+<lead_game> et spil baseret på {movie_title}
+<lead_game> spil-tilpasningen af {movie_title}
+<lead_game> videospillet baseret på filmen {movie_title}
+<lead_game> {book_title} spillet
+<lead_game> et spil baseret på romanen {book_title}
+<lead_game> {tv_show_title} spillet
+<lead_game> et spil baseret på serien {tv_show_title}
+<lead_game> {anime_title} spillet
+<lead_game> et spil baseret på animeen {anime_title}
+<lead_game> {comic_title} spillet
+<lead_game> et spil baseret på tegneserien {comic_title}
+<lead_game> et spil med {movie_actor}
+<lead_game> det officielle {movie_title} tie-in-spil
+<lead_game> et spil baseret på {book_title}
+<lead_game> et spil baseret på {tv_show_title}
+<lead_game> et spil baseret på {anime_title}
+<lead_game> et spil baseret på {comic_title}
+<lead_game> spil-tilpasningen af {book_title}
+<lead_game> spil-tilpasningen af {tv_show_title}
+<lead_game> spil-tilpasningen af {anime_title}
+<lead_game> spil-tilpasningen af {comic_title}
+<lead_game> et videospil baseret på {movie_title}
+<lead_game> et videospil baseret på {book_title}
+<lead_game> et videospil baseret på {tv_show_title}
+<lead_game> et videospil baseret på {anime_title}
+<lead_game> et videospil baseret på {comic_title}
+<lead_game> et spil inspireret af {movie_title}
+<lead_game> et spil inspireret af {book_title}
+<lead_game> et spil inspireret af {tv_show_title}
+<lead_game> et spil inspireret af {anime_title}
+<lead_game> et spil inspireret af {comic_title}
+<lead_game> det officielle tie-in-spil til {tv_show_title}
+<lead_game> et spil med stemmen fra {movie_actor}
+<lead_game> et spil med et soundtrack af {movie_composer}
+<lead_game> et spil skrevet af {book_author}
+øh kan du starte {game_title}
+spil {game_title}, faktisk nej et {game_genre} spil
+øh måske et {game_genre} spil, ja
+hey så start {game_title}
+du ved hvad smid {game_title} på
+har lyst til at spille {game_title}
+lad mig spille noget {game_title}
+giv mig et {game_genre} spil
+ugh jeg keder mig så meget lad os spille noget
+børnene vil gerne spille sæt {game_title} på
+jeg kunne virkelig godt bruge noget {game_title}
+jeg blev aldrig færdig med {game_title}
+jeg er sådan set i humør til et {game_genre} spil
+er der et godt {game_genre} spil
+har du nogen {game_genre} spil?
+hvad med vi spiller {game_title}
+hey jeg leder efter et godt {game_genre} spil at spille
+<lead_game> noget ligesom {game_title} men nyt
+jeg vil gerne spille det {game_title} spil igen
+så <lead_game> et {game_genre} fra {release_decade}
+lad mig få et {game_genre} spil til {game_platform}
+jeg er i humør til et retro {game_genre} spil i aften
+<lead_game> har du nogen {game_genre} spil til {game_platform}
+vi burde starte {game_title} senere
+det føles som en {game_genre}-agtig dag, har du noget
+hey øh <lead_game> det {game_title} spil
+jeg skal have et {game_genre} spil der ikke er for svært, du ved
+hvad med vi prøver det nye {game_genre} spil
+så jeg har hørt {game_title} er godt, <lead_game>
+lad os spille et {game_genre} spil på {game_platform} måske
+jeg trænger til et godt historiedrevet {game_genre} spil
+<lead_game> noget fra {release_year} måske {game_genre}
+kunne vi spille {game_title} jeg har villet prøve det
+børnene vil gerne spille et {game_genre} videospil sammen
+har du nogen anbefalinger til et {game_genre} spil for nylig
+jeg tror vi skal spille {game_title} i aften, hvad tænker du

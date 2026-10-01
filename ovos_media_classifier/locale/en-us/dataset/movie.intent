@@ -1,0 +1,243 @@
+<lead_watch> {movie_title}
+[hey|ok|please] <lead_watch> {movie_title} [please|for me|right now|thanks]
+<lead_watch> the movie {movie_title}
+<lead_watch> the film {movie_title}
+[hey|ok|please] <lead_watch> the film {movie_title} [please|for me|right now|thanks]
+<lead_watch> a {movie_genre} movie
+<lead_watch> a {movie_genre} film
+[hey|ok|please] <lead_watch> a {movie_genre} film [please|for me|right now|thanks]
+<lead_watch> some {movie_genre} movie
+<lead_watch> an old {movie_genre} movie
+[hey|ok|please] <lead_watch> an old {movie_genre} movie [please|for me|right now|thanks]
+<lead_watch> a classic {movie_genre} movie
+<lead_watch> a good {movie_genre} film
+[hey|ok|please] <lead_watch> a good {movie_genre} film [please|for me|right now|thanks]
+<lead_watch> something with {movie_actor}
+<lead_watch> a movie with {movie_actor}
+[hey|ok|please] <lead_watch> a movie with {movie_actor} [please|for me|right now|thanks]
+<lead_watch> a film starring {movie_actor}
+[hey|ok|please] <lead_watch> a film starring {movie_actor} [please|for me|right now|thanks]
+<lead_watch> anything with {movie_actor}
+<lead_watch> a movie directed by {movie_director}
+[hey|ok|please] <lead_watch> a movie directed by {movie_director} [please|for me|right now|thanks]
+<lead_watch> a film by {movie_director}
+<lead_watch> a movie produced by {movie_producer}
+[hey|ok|please] <lead_watch> a movie produced by {movie_producer} [please|for me|right now|thanks]
+<lead_watch> a movie written by {movie_writer}
+<lead_watch> a film written by {movie_writer}
+[hey|ok|please] <lead_watch> a film written by {movie_writer} [please|for me|right now|thanks]
+<lead_watch> a movie scored by {movie_composer}
+<lead_watch> a film with music by {movie_composer}
+[hey|ok|please] <lead_watch> a film with music by {movie_composer} [please|for me|right now|thanks]
+<lead_watch> {movie_title} with {movie_actor}
+[hey|ok|please] <lead_watch> {movie_title} with {movie_actor} [please|for me|right now|thanks]
+<lead_watch> {movie_title} starring {movie_actor}
+<lead_watch> {movie_title} directed by {movie_director}
+[hey|ok|please] <lead_watch> {movie_title} directed by {movie_director} [please|for me|right now|thanks]
+<lead_watch> the film {movie_title} by {movie_director}
+<lead_watch> a {movie_genre} film with {movie_actor}
+[hey|ok|please] <lead_watch> a {movie_genre} film with {movie_actor} [please|for me|right now|thanks]
+<lead_watch> a {movie_genre} movie directed by {movie_director}
+<lead_watch> a {movie_genre} film by {movie_director}
+[hey|ok|please] <lead_watch> a {movie_genre} film by {movie_director} [please|for me|right now|thanks]
+<lead_watch> a movie with {movie_actor} directed by {movie_director}
+<lead_watch> a film starring {movie_actor} and {movie_director}
+[hey|ok|please] <lead_watch> a film starring {movie_actor} and {movie_director} [please|for me|right now|thanks]
+<lead_watch> a {movie_genre} movie from {release_year}
+<lead_watch> a {movie_genre} film from {media_country}
+[hey|ok|please] <lead_watch> a {movie_genre} film from {media_country} [please|for me|right now|thanks]
+<lead_watch> a {movie_genre} film directed by {movie_director} starring {movie_actor}
+[hey|ok|please] <lead_watch> a {movie_genre} film directed by {movie_director} starring {movie_actor} [please|for me|right now|thanks]
+<lead_watch> {movie_title} directed by {movie_director} starring {movie_actor}
+<lead_watch> a {movie_genre} movie with {movie_actor} from {release_year}
+[hey|ok|please] <lead_watch> a {movie_genre} movie with {movie_actor} from {release_year} [please|for me|right now|thanks]
+<lead_watch> a movie directed by {movie_director} written by {movie_writer} starring {movie_actor}
+<lead_watch> a {movie_genre} film from {media_country} starring {movie_actor}
+[hey|ok|please] <lead_watch> a {movie_genre} film from {media_country} starring {movie_actor} [please|for me|right now|thanks]
+<lead_watch> {movie_title} directed by {movie_director} starring {movie_actor}, a {movie_genre} film
+<lead_watch> a {movie_genre} film directed by {movie_director} starring {movie_actor} from {release_year}
+[hey|ok|please] <lead_watch> a {movie_genre} film directed by {movie_director} starring {movie_actor} from {release_year} [please|for me|right now|thanks]
+<lead_watch> {movie_title} directed by {movie_director} starring {movie_actor}, a {movie_genre} film from {release_year}
+<lead_watch> do you have any {movie_genre} movies
+[hey|ok|please] <lead_watch> do you have any {movie_genre} movies [please|for me|right now|thanks]
+<lead_watch> got a good {movie_genre} film
+[hey|ok|please] <lead_watch> got a good {movie_genre} film [please|for me|right now|thanks]
+<lead_watch> do you have anything with {movie_actor}
+<lead_watch> something {movie_genre} for movie night
+[hey|ok|please] <lead_watch> something {movie_genre} for movie night [please|for me|right now|thanks]
+<lead_watch> a {movie_genre} movie to watch with the kids
+<lead_watch> a movie from {release_year}
+[hey|ok|please] <lead_watch> a movie from {release_year} [please|for me|right now|thanks]
+<lead_watch> some {media_country} cinema
+<lead_watch> a {media_country} film
+[hey|ok|please] <lead_watch> a {media_country} film [please|for me|right now|thanks]
+<lead_watch> a movie from the {release_decade}
+<lead_watch> a {movie_genre} film from the {release_decade}
+[hey|ok|please] <lead_watch> a {movie_genre} film from the {release_decade} [please|for me|right now|thanks]
+{movie_title}, please
+the movie {movie_title}, please
+a {movie_genre} film, thanks
+{movie_title} — put it on
+{movie_title} — let's watch it
+that film {movie_title} — start it up
+put on {movie_title}, would you?
+throw on a {movie_genre} movie, can you?
+i'm in a {movie_genre} mood
+in the mood for a {movie_genre} movie
+i could go for a {movie_genre} film
+i'm after a good {movie_genre} movie
+i need a {movie_genre} film tonight
+what about {movie_title}
+what about a {movie_genre} film with {movie_actor}
+maybe a {movie_genre} movie
+maybe something with {movie_actor}
+we should watch {movie_title}
+something like {movie_title}
+something in the vein of {movie_director}
+another film like {movie_title}
+any {movie_genre} movies around?
+what {movie_genre} films do you have
+is there a movie with {movie_actor}
+{movie_director}'s best film
+{movie_actor}'s most famous movie
+that classic {movie_genre} film
+a {movie_genre} movie for movie night
+something with {movie_actor} to relax to
+a {movie_genre} film because it's raining
+the {movie_genre} one directed by {movie_director}
+<lead_watch> a movie about {book_title}
+<lead_watch> the film adaptation of {book_title}
+<lead_watch> a movie based on {book_title}
+<lead_watch> the movie based on the book {book_title}
+<lead_watch> a film version of {book_title}
+<lead_watch> the live action {book_title} movie
+<lead_watch> a movie based on the novel {book_title}
+<lead_watch> the movie based on a book by {book_author}
+<lead_watch> a film adapted from a {book_author} novel
+<lead_watch> a biopic about {book_author}
+<lead_watch> a movie based on {game_title}
+<lead_watch> the film adaptation of {game_title}
+<lead_watch> a movie based on the game {game_title}
+<lead_watch> the live action {game_title} movie
+<lead_watch> the {tv_show_title} movie
+<lead_watch> a movie based on {tv_show_title}
+<lead_watch> the film spinoff of {tv_show_title}
+<lead_watch> the movie version of {tv_show_title}
+<lead_watch> the {comic_title} movie
+<lead_watch> a movie based on the comic {comic_title}
+<lead_watch> the film adaptation of {comic_title}
+<lead_watch> the live action {anime_title} movie
+<lead_watch> a movie based on the anime {anime_title}
+<lead_watch> a biopic about {artist_name}
+<lead_watch> a movie about the life of {artist_name}
+<lead_watch> the {artist_name} biopic
+<lead_watch> a film about the band {artist_name}
+<lead_watch> a movie based on {comic_title}
+<lead_watch> a movie based on {anime_title}
+<lead_watch> a film based on {book_title}
+<lead_watch> a film based on {tv_show_title}
+<lead_watch> a film based on {game_title}
+<lead_watch> a film based on {comic_title}
+<lead_watch> a film based on {anime_title}
+<lead_watch> a movie adapted from {book_title}
+<lead_watch> a movie adapted from {tv_show_title}
+<lead_watch> a movie adapted from {game_title}
+<lead_watch> a movie adapted from {comic_title}
+<lead_watch> a movie adapted from {anime_title}
+<lead_watch> a film adaptation of {book_title}
+<lead_watch> a film adaptation of {tv_show_title}
+<lead_watch> a film adaptation of {game_title}
+<lead_watch> a film adaptation of {comic_title}
+<lead_watch> a film adaptation of {anime_title}
+<lead_watch> an adaptation of {book_title}
+<lead_watch> an adaptation of {tv_show_title}
+<lead_watch> an adaptation of {game_title}
+<lead_watch> an adaptation of {comic_title}
+<lead_watch> an adaptation of {anime_title}
+<lead_watch> the movie version of {book_title}
+<lead_watch> the movie version of {game_title}
+<lead_watch> the movie version of {comic_title}
+<lead_watch> the movie version of {anime_title}
+<lead_watch> the film version of {book_title}
+<lead_watch> the film version of {tv_show_title}
+<lead_watch> the film version of {game_title}
+<lead_watch> the film version of {comic_title}
+<lead_watch> the film version of {anime_title}
+<lead_watch> a movie inspired by {book_title}
+<lead_watch> a movie inspired by {tv_show_title}
+<lead_watch> a movie inspired by {game_title}
+<lead_watch> a movie inspired by {comic_title}
+<lead_watch> a movie inspired by {anime_title}
+<lead_watch> a movie based on the book {book_title}
+<lead_watch> a film adapted from the novel {book_title}
+<lead_watch> a movie based on a book by {book_author}
+<lead_watch> a movie based on the show {tv_show_title}
+<lead_watch> a movie continuation of {tv_show_title}
+<lead_watch> a film based on the video game {game_title}
+<lead_watch> a film based on the graphic novel {comic_title}
+<lead_watch> the live action {comic_title} movie
+<lead_watch> a film adaptation of the manga {comic_title}
+<lead_watch> a biopic about {podcast_host}
+<lead_watch> a movie about {artist_name}
+<lead_watch> a film about the making of {album_name}
+<lead_watch> a movie inspired by the song {track_name}
+<lead_watch> a movie inspired by true events from {podcast_title}
+<lead_watch> the story of {artist_name} on screen
+um can you put on {movie_title}
+watch the— no the other {movie_title}
+play {movie_title}, actually no let's do a {movie_genre} movie
+put on {movie_title} — wait no something with {movie_actor}
+uh maybe a {movie_genre} film, yeah one of those
+hey so put on {movie_title}
+you know what throw on a {movie_genre} movie
+wanna watch {movie_title}
+lemme see that {movie_actor} movie
+gimme a good {movie_genre} film
+ugh i'm so bored put a movie on
+it's date night find us a {movie_genre} film
+the kids are home stick on a {movie_genre} movie
+i need a laugh put on a {movie_genre} movie
+it's raining let's watch {movie_title}
+i could really go for a {movie_genre} film tonight
+i'm kind of in the mood for {movie_actor}
+i never got around to watching {movie_title}
+is there anything good with {movie_actor}
+got any {movie_genre} movies?
+what do you think we should watch, maybe {movie_title}
+so like, <lead_watch> a movie with {movie_actor} in it or something
+hey you got any {movie_genre} movies starring {movie_actor}
+i wanna watch a {movie_genre} flick tonight
+lemme see what {movie_genre} films you got from the {release_decade}
+im in the mood for a motion picture directed by {movie_director}
+got any flicks that came out in {release_year}
+i heard {movie_title} is good, can you play that movie
+so um is there a movie version of {tv_show_title} i could check out
+<lead_watch> a feature length film produced by {movie_producer}
+you know any good cinema from {movie_director}
+hey find me a {movie_genre} motion picture from {media_country}
+i wanna see that film with {movie_actor} where they play a detective or whatever
+lets watch a movie written by {movie_writer}
+gimme something from the {release_decade} like a classic film
+so i was thinking <lead_watch> a movie and um maybe something by {movie_director}
+play a movie like that one with {movie_actor} you know the action flick
+<lead_watch> a feature film composed by {movie_composer}
+hey, how about we watch {movie_title} tonight
+lemme see what {movie_genre} movies you got
+i'm in the mood for a {movie_genre} flick directed by {movie_director}
+so i was thinking maybe we could watch {movie_title} with {movie_actor}
+got any good {movie_genre} films from {release_decade}
+what {movie_genre} movies do you have starring {movie_actor}
+i wanna watch that new {movie_genre} feature film
+how about a {movie_genre} motion picture from {release_year}
+feels like a {movie_genre} night — got anything good
+we should check out {movie_title} i heard it's great
+is there a {movie_genre} movie directed by {movie_director}
+gimme a {movie_genre} blockbuster with {movie_actor}
+i'm looking for a film directed by {movie_director} from {release_year}
+let's put on a {movie_genre} film, any suggestions
+can you find {movie_title} with {movie_actor}
+hey so i want a {movie_genre} movie from {release_decade} starring {movie_actor}
+find me a film produced by {movie_producer} with {movie_actor}
+what's a good {movie_genre} flick from the {release_decade}
+wanna watch a {movie_genre} film directed by {movie_director} starring {movie_actor}
+i'm in the mood for a cinema classic a {movie_genre} film from {release_year}

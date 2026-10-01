@@ -10,4 +10,4 @@ jobs:
     uses: OpenVoiceOS/gh-automations/.github/workflows/repo-health.yml@dev
     secrets: inherit
     with:
-      version_file: 'ocp_pipeline/version.py'
+      version_file: 'ovos_media_classifier/version.py'

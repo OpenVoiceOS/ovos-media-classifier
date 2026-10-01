@@ -1,0 +1,1231 @@
+{
+  "composition": {
+    "total": 222,
+    "by_lang": {
+      "en-us": 176,
+      "es-es": 16,
+      "de-de": 15,
+      "pt-pt": 15
+    },
+    "by_category": {
+      "media": 59,
+      "playback_divergent": 13,
+      "keywordless": 21,
+      "gate_negative": 41,
+      "control": 28,
+      "content_policy": 21,
+      "noise": 3,
+      "conversational": 36
+    },
+    "by_domain": {
+      "ocp_play": 143,
+      "not_ocp": 48,
+      "ocp_control": 31
+    },
+    "explicit_adult": 23,
+    "abstain_ok": 171
+  },
+  "backends": {
+    "keyword": {
+      "status": "available",
+      "reason": "",
+      "n": 222,
+      "mis_route_rate": 0.0504,
+      "media_type": {
+        "confident_correct": 77,
+        "confident_wrong": 7,
+        "abstain": 55,
+        "n": 139,
+        "mis_route_rate": 0.0504,
+        "abstain_rate": 0.3957
+      },
+      "playback_type": {
+        "confident_correct": 79,
+        "confident_wrong": 4,
+        "abstain": 56,
+        "n": 139,
+        "mis_route_rate": 0.0288,
+        "abstain_rate": 0.4029
+      },
+      "gate": {
+        "false_hijack_n": 10,
+        "false_hijack_total": 48,
+        "false_hijack_rate": 0.2083,
+        "false_miss_n": 18,
+        "false_miss_total": 174,
+        "false_miss_rate": 0.1034
+      },
+      "adult_leak": {
+        "adult_total": 23,
+        "leak_n": 0,
+        "leak_rate": 0.0,
+        "clean_total": 199,
+        "overflag_n": 0,
+        "overflag_rate": 0.0
+      },
+      "control": {
+        "total": 31,
+        "hit_n": 16,
+        "recall": 0.5161
+      },
+      "resolved": {
+        "total": 88,
+        "resolved_n": 28,
+        "rate": 0.3182
+      },
+      "latency": null
+    },
+    "onnx:models/context": {
+      "status": "available",
+      "reason": "",
+      "n": 222,
+      "mis_route_rate": 0.1007,
+      "media_type": {
+        "confident_correct": 80,
+        "confident_wrong": 14,
+        "abstain": 45,
+        "n": 139,
+        "mis_route_rate": 0.1007,
+        "abstain_rate": 0.3237
+      },
+      "playback_type": {
+        "confident_correct": 100,
+        "confident_wrong": 37,
+        "abstain": 2,
+        "n": 139,
+        "mis_route_rate": 0.2662,
+        "abstain_rate": 0.0144
+      },
+      "gate": {
+        "false_hijack_n": 8,
+        "false_hijack_total": 48,
+        "false_hijack_rate": 0.1667,
+        "false_miss_n": 69,
+        "false_miss_total": 174,
+        "false_miss_rate": 0.3966
+      },
+      "adult_leak": {
+        "adult_total": 23,
+        "leak_n": 1,
+        "leak_rate": 0.0435,
+        "clean_total": 199,
+        "overflag_n": 0,
+        "overflag_rate": 0.0
+      },
+      "control": {
+        "total": 31,
+        "hit_n": 0,
+        "recall": 0.0
+      },
+      "resolved": {
+        "total": 88,
+        "resolved_n": 33,
+        "rate": 0.375
+      },
+      "latency": null
+    },
+    "onnx:models/context_ner": {
+      "status": "available",
+      "reason": "",
+      "n": 222,
+      "mis_route_rate": 0.1655,
+      "media_type": {
+        "confident_correct": 59,
+        "confident_wrong": 23,
+        "abstain": 57,
+        "n": 139,
+        "mis_route_rate": 0.1655,
+        "abstain_rate": 0.4101
+      },
+      "playback_type": {
+        "confident_correct": 96,
+        "confident_wrong": 32,
+        "abstain": 11,
+        "n": 139,
+        "mis_route_rate": 0.2302,
+        "abstain_rate": 0.0791
+      },
+      "gate": {
+        "false_hijack_n": 7,
+        "false_hijack_total": 48,
+        "false_hijack_rate": 0.1458,
+        "false_miss_n": 81,
+        "false_miss_total": 174,
+        "false_miss_rate": 0.4655
+      },
+      "adult_leak": {
+        "adult_total": 23,
+        "leak_n": 0,
+        "leak_rate": 0.0,
+        "clean_total": 199,
+        "overflag_n": 0,
+        "overflag_rate": 0.0
+      },
+      "control": {
+        "total": 31,
+        "hit_n": 0,
+        "recall": 0.0
+      },
+      "resolved": {
+        "total": 88,
+        "resolved_n": 22,
+        "rate": 0.25
+      },
+      "latency": null
+    },
+    "onnx:models_text/tfidf_char35": {
+      "status": "available",
+      "reason": "",
+      "n": 222,
+      "mis_route_rate": 0.3741,
+      "media_type": {
+        "confident_correct": 87,
+        "confident_wrong": 52,
+        "abstain": 0,
+        "n": 139,
+        "mis_route_rate": 0.3741,
+        "abstain_rate": 0.0
+      },
+      "playback_type": {
+        "confident_correct": 101,
+        "confident_wrong": 35,
+        "abstain": 3,
+        "n": 139,
+        "mis_route_rate": 0.2518,
+        "abstain_rate": 0.0216
+      },
+      "gate": {
+        "false_hijack_n": 41,
+        "false_hijack_total": 48,
+        "false_hijack_rate": 0.8542,
+        "false_miss_n": 14,
+        "false_miss_total": 174,
+        "false_miss_rate": 0.0805
+      },
+      "adult_leak": {
+        "adult_total": 23,
+        "leak_n": 14,
+        "leak_rate": 0.6087,
+        "clean_total": 199,
+        "overflag_n": 0,
+        "overflag_rate": 0.0
+      },
+      "control": {
+        "total": 31,
+        "hit_n": 0,
+        "recall": 0.0
+      },
+      "resolved": {
+        "total": 88,
+        "resolved_n": 45,
+        "rate": 0.5114
+      },
+      "latency": null
+    },
+    "onnx:models_text/tfidf_word12": {
+      "status": "available",
+      "reason": "",
+      "n": 222,
+      "mis_route_rate": 0.3885,
+      "media_type": {
+        "confident_correct": 79,
+        "confident_wrong": 54,
+        "abstain": 6,
+        "n": 139,
+        "mis_route_rate": 0.3885,
+        "abstain_rate": 0.0432
+      },
+      "playback_type": {
+        "confident_correct": 108,
+        "confident_wrong": 29,
+        "abstain": 2,
+        "n": 139,
+        "mis_route_rate": 0.2086,
+        "abstain_rate": 0.0144
+      },
+      "gate": {
+        "false_hijack_n": 32,
+        "false_hijack_total": 48,
+        "false_hijack_rate": 0.6667,
+        "false_miss_n": 23,
+        "false_miss_total": 174,
+        "false_miss_rate": 0.1322
+      },
+      "adult_leak": {
+        "adult_total": 23,
+        "leak_n": 14,
+        "leak_rate": 0.6087,
+        "clean_total": 199,
+        "overflag_n": 0,
+        "overflag_rate": 0.0
+      },
+      "control": {
+        "total": 31,
+        "hit_n": 0,
+        "recall": 0.0
+      },
+      "resolved": {
+        "total": 88,
+        "resolved_n": 44,
+        "rate": 0.5
+      },
+      "latency": null
+    },
+    "onnx:models_text/tfidf_word13": {
+      "status": "available",
+      "reason": "",
+      "n": 222,
+      "mis_route_rate": 0.3957,
+      "media_type": {
+        "confident_correct": 80,
+        "confident_wrong": 55,
+        "abstain": 4,
+        "n": 139,
+        "mis_route_rate": 0.3957,
+        "abstain_rate": 0.0288
+      },
+      "playback_type": {
+        "confident_correct": 103,
+        "confident_wrong": 33,
+        "abstain": 3,
+        "n": 139,
+        "mis_route_rate": 0.2374,
+        "abstain_rate": 0.0216
+      },
+      "gate": {
+        "false_hijack_n": 33,
+        "false_hijack_total": 48,
+        "false_hijack_rate": 0.6875,
+        "false_miss_n": 20,
+        "false_miss_total": 174,
+        "false_miss_rate": 0.1149
+      },
+      "adult_leak": {
+        "adult_total": 23,
+        "leak_n": 15,
+        "leak_rate": 0.6522,
+        "clean_total": 199,
+        "overflag_n": 0,
+        "overflag_rate": 0.0
+      },
+      "control": {
+        "total": 31,
+        "hit_n": 0,
+        "recall": 0.0
+      },
+      "resolved": {
+        "total": 88,
+        "resolved_n": 44,
+        "rate": 0.5
+      },
+      "latency": null
+    },
+    "onnx:models_torch/cat": {
+      "status": "available",
+      "reason": "",
+      "n": 222,
+      "mis_route_rate": 0.3453,
+      "media_type": {
+        "confident_correct": 91,
+        "confident_wrong": 48,
+        "abstain": 0,
+        "n": 139,
+        "mis_route_rate": 0.3453,
+        "abstain_rate": 0.0
+      },
+      "playback_type": {
+        "confident_correct": 92,
+        "confident_wrong": 37,
+        "abstain": 10,
+        "n": 139,
+        "mis_route_rate": 0.2662,
+        "abstain_rate": 0.0719
+      },
+      "gate": {
+        "false_hijack_n": 48,
+        "false_hijack_total": 48,
+        "false_hijack_rate": 1.0,
+        "false_miss_n": 0,
+        "false_miss_total": 174,
+        "false_miss_rate": 0.0
+      },
+      "adult_leak": {
+        "adult_total": 23,
+        "leak_n": 0,
+        "leak_rate": 0.0,
+        "clean_total": 199,
+        "overflag_n": 3,
+        "overflag_rate": 0.0151
+      },
+      "control": {
+        "total": 31,
+        "hit_n": 0,
+        "recall": 0.0
+      },
+      "resolved": {
+        "total": 88,
+        "resolved_n": 43,
+        "rate": 0.4886
+      },
+      "latency": null
+    },
+    "onnx:models_torch/cat_all": {
+      "status": "available",
+      "reason": "",
+      "n": 222,
+      "mis_route_rate": 0.3597,
+      "media_type": {
+        "confident_correct": 89,
+        "confident_wrong": 50,
+        "abstain": 0,
+        "n": 139,
+        "mis_route_rate": 0.3597,
+        "abstain_rate": 0.0
+      },
+      "playback_type": {
+        "confident_correct": 106,
+        "confident_wrong": 30,
+        "abstain": 3,
+        "n": 139,
+        "mis_route_rate": 0.2158,
+        "abstain_rate": 0.0216
+      },
+      "gate": {
+        "false_hijack_n": 48,
+        "false_hijack_total": 48,
+        "false_hijack_rate": 1.0,
+        "false_miss_n": 0,
+        "false_miss_total": 174,
+        "false_miss_rate": 0.0
+      },
+      "adult_leak": {
+        "adult_total": 23,
+        "leak_n": 2,
+        "leak_rate": 0.087,
+        "clean_total": 199,
+        "overflag_n": 9,
+        "overflag_rate": 0.0452
+      },
+      "control": {
+        "total": 31,
+        "hit_n": 0,
+        "recall": 0.0
+      },
+      "resolved": {
+        "total": 88,
+        "resolved_n": 44,
+        "rate": 0.5
+      },
+      "latency": null
+    },
+    "onnx:models_torch/cat_all_deep": {
+      "status": "available",
+      "reason": "",
+      "n": 222,
+      "mis_route_rate": 0.3381,
+      "media_type": {
+        "confident_correct": 92,
+        "confident_wrong": 47,
+        "abstain": 0,
+        "n": 139,
+        "mis_route_rate": 0.3381,
+        "abstain_rate": 0.0
+      },
+      "playback_type": {
+        "confident_correct": 109,
+        "confident_wrong": 27,
+        "abstain": 3,
+        "n": 139,
+        "mis_route_rate": 0.1942,
+        "abstain_rate": 0.0216
+      },
+      "gate": {
+        "false_hijack_n": 48,
+        "false_hijack_total": 48,
+        "false_hijack_rate": 1.0,
+        "false_miss_n": 0,
+        "false_miss_total": 174,
+        "false_miss_rate": 0.0
+      },
+      "adult_leak": {
+        "adult_total": 23,
+        "leak_n": 0,
+        "leak_rate": 0.0,
+        "clean_total": 199,
+        "overflag_n": 13,
+        "overflag_rate": 0.0653
+      },
+      "control": {
+        "total": 31,
+        "hit_n": 0,
+        "recall": 0.0
+      },
+      "resolved": {
+        "total": 88,
+        "resolved_n": 45,
+        "rate": 0.5114
+      },
+      "latency": null
+    },
+    "onnx:models_torch/cat_all_wide": {
+      "status": "available",
+      "reason": "",
+      "n": 222,
+      "mis_route_rate": 0.3525,
+      "media_type": {
+        "confident_correct": 90,
+        "confident_wrong": 49,
+        "abstain": 0,
+        "n": 139,
+        "mis_route_rate": 0.3525,
+        "abstain_rate": 0.0
+      },
+      "playback_type": {
+        "confident_correct": 109,
+        "confident_wrong": 27,
+        "abstain": 3,
+        "n": 139,
+        "mis_route_rate": 0.1942,
+        "abstain_rate": 0.0216
+      },
+      "gate": {
+        "false_hijack_n": 48,
+        "false_hijack_total": 48,
+        "false_hijack_rate": 1.0,
+        "false_miss_n": 0,
+        "false_miss_total": 174,
+        "false_miss_rate": 0.0
+      },
+      "adult_leak": {
+        "adult_total": 23,
+        "leak_n": 2,
+        "leak_rate": 0.087,
+        "clean_total": 199,
+        "overflag_n": 11,
+        "overflag_rate": 0.0553
+      },
+      "control": {
+        "total": 31,
+        "hit_n": 0,
+        "recall": 0.0
+      },
+      "resolved": {
+        "total": 88,
+        "resolved_n": 43,
+        "rate": 0.4886
+      },
+      "latency": null
+    },
+    "onnx:models_torch/cat_text": {
+      "status": "available",
+      "reason": "",
+      "n": 222,
+      "mis_route_rate": 0.2806,
+      "media_type": {
+        "confident_correct": 100,
+        "confident_wrong": 39,
+        "abstain": 0,
+        "n": 139,
+        "mis_route_rate": 0.2806,
+        "abstain_rate": 0.0
+      },
+      "playback_type": {
+        "confident_correct": 107,
+        "confident_wrong": 29,
+        "abstain": 3,
+        "n": 139,
+        "mis_route_rate": 0.2086,
+        "abstain_rate": 0.0216
+      },
+      "gate": {
+        "false_hijack_n": 48,
+        "false_hijack_total": 48,
+        "false_hijack_rate": 1.0,
+        "false_miss_n": 0,
+        "false_miss_total": 174,
+        "false_miss_rate": 0.0
+      },
+      "adult_leak": {
+        "adult_total": 23,
+        "leak_n": 1,
+        "leak_rate": 0.0435,
+        "clean_total": 199,
+        "overflag_n": 11,
+        "overflag_rate": 0.0553
+      },
+      "control": {
+        "total": 31,
+        "hit_n": 0,
+        "recall": 0.0
+      },
+      "resolved": {
+        "total": 88,
+        "resolved_n": 52,
+        "rate": 0.5909
+      },
+      "latency": null
+    },
+    "onnx:models_torch/cat_wordvec": {
+      "status": "available",
+      "reason": "",
+      "n": 222,
+      "mis_route_rate": 0.295,
+      "media_type": {
+        "confident_correct": 98,
+        "confident_wrong": 41,
+        "abstain": 0,
+        "n": 139,
+        "mis_route_rate": 0.295,
+        "abstain_rate": 0.0
+      },
+      "playback_type": {
+        "confident_correct": 108,
+        "confident_wrong": 28,
+        "abstain": 3,
+        "n": 139,
+        "mis_route_rate": 0.2014,
+        "abstain_rate": 0.0216
+      },
+      "gate": {
+        "false_hijack_n": 48,
+        "false_hijack_total": 48,
+        "false_hijack_rate": 1.0,
+        "false_miss_n": 0,
+        "false_miss_total": 174,
+        "false_miss_rate": 0.0
+      },
+      "adult_leak": {
+        "adult_total": 23,
+        "leak_n": 1,
+        "leak_rate": 0.0435,
+        "clean_total": 199,
+        "overflag_n": 21,
+        "overflag_rate": 0.1055
+      },
+      "control": {
+        "total": 31,
+        "hit_n": 0,
+        "recall": 0.0
+      },
+      "resolved": {
+        "total": 88,
+        "resolved_n": 51,
+        "rate": 0.5795
+      },
+      "latency": null
+    },
+    "onnx:models_torch/cat_wordvec_cbow": {
+      "status": "available",
+      "reason": "",
+      "n": 222,
+      "mis_route_rate": 0.3741,
+      "media_type": {
+        "confident_correct": 87,
+        "confident_wrong": 52,
+        "abstain": 0,
+        "n": 139,
+        "mis_route_rate": 0.3741,
+        "abstain_rate": 0.0
+      },
+      "playback_type": {
+        "confident_correct": 107,
+        "confident_wrong": 29,
+        "abstain": 3,
+        "n": 139,
+        "mis_route_rate": 0.2086,
+        "abstain_rate": 0.0216
+      },
+      "gate": {
+        "false_hijack_n": 48,
+        "false_hijack_total": 48,
+        "false_hijack_rate": 1.0,
+        "false_miss_n": 0,
+        "false_miss_total": 174,
+        "false_miss_rate": 0.0
+      },
+      "adult_leak": {
+        "adult_total": 23,
+        "leak_n": 2,
+        "leak_rate": 0.087,
+        "clean_total": 199,
+        "overflag_n": 25,
+        "overflag_rate": 0.1256
+      },
+      "control": {
+        "total": 31,
+        "hit_n": 0,
+        "recall": 0.0
+      },
+      "resolved": {
+        "total": 88,
+        "resolved_n": 43,
+        "rate": 0.4886
+      },
+      "latency": null
+    },
+    "embedding-router:embedding_router": {
+      "status": "available",
+      "reason": "",
+      "n": 222,
+      "mis_route_rate": 0.0,
+      "media_type": {
+        "confident_correct": 0,
+        "confident_wrong": 0,
+        "abstain": 139,
+        "n": 139,
+        "mis_route_rate": 0.0,
+        "abstain_rate": 1.0
+      },
+      "playback_type": {
+        "confident_correct": 0,
+        "confident_wrong": 0,
+        "abstain": 139,
+        "n": 139,
+        "mis_route_rate": 0.0,
+        "abstain_rate": 1.0
+      },
+      "gate": {
+        "false_hijack_n": 0,
+        "false_hijack_total": 48,
+        "false_hijack_rate": 0.0,
+        "false_miss_n": 174,
+        "false_miss_total": 174,
+        "false_miss_rate": 1.0
+      },
+      "adult_leak": {
+        "adult_total": 23,
+        "leak_n": 23,
+        "leak_rate": 1.0,
+        "clean_total": 199,
+        "overflag_n": 0,
+        "overflag_rate": 0.0
+      },
+      "control": {
+        "total": 31,
+        "hit_n": 0,
+        "recall": 0.0
+      },
+      "resolved": {
+        "total": 88,
+        "resolved_n": 0,
+        "rate": 0.0
+      },
+      "latency": null
+    },
+    "hybrid:embedding_router": {
+      "status": "available",
+      "reason": "",
+      "n": 222,
+      "mis_route_rate": 0.0504,
+      "media_type": {
+        "confident_correct": 77,
+        "confident_wrong": 7,
+        "abstain": 55,
+        "n": 139,
+        "mis_route_rate": 0.0504,
+        "abstain_rate": 0.3957
+      },
+      "playback_type": {
+        "confident_correct": 79,
+        "confident_wrong": 4,
+        "abstain": 56,
+        "n": 139,
+        "mis_route_rate": 0.0288,
+        "abstain_rate": 0.4029
+      },
+      "gate": {
+        "false_hijack_n": 10,
+        "false_hijack_total": 48,
+        "false_hijack_rate": 0.2083,
+        "false_miss_n": 18,
+        "false_miss_total": 174,
+        "false_miss_rate": 0.1034
+      },
+      "adult_leak": {
+        "adult_total": 23,
+        "leak_n": 0,
+        "leak_rate": 0.0,
+        "clean_total": 199,
+        "overflag_n": 0,
+        "overflag_rate": 0.0
+      },
+      "control": {
+        "total": 31,
+        "hit_n": 16,
+        "recall": 0.5161
+      },
+      "resolved": {
+        "total": 88,
+        "resolved_n": 28,
+        "rate": 0.3182
+      },
+      "latency": null
+    },
+    "hybrid+gazetteer:embedding_router": {
+      "status": "available",
+      "reason": "",
+      "n": 222,
+      "mis_route_rate": 0.0504,
+      "media_type": {
+        "confident_correct": 96,
+        "confident_wrong": 7,
+        "abstain": 36,
+        "n": 139,
+        "mis_route_rate": 0.0504,
+        "abstain_rate": 0.259
+      },
+      "playback_type": {
+        "confident_correct": 98,
+        "confident_wrong": 4,
+        "abstain": 37,
+        "n": 139,
+        "mis_route_rate": 0.0288,
+        "abstain_rate": 0.2662
+      },
+      "gate": {
+        "false_hijack_n": 10,
+        "false_hijack_total": 48,
+        "false_hijack_rate": 0.2083,
+        "false_miss_n": 18,
+        "false_miss_total": 174,
+        "false_miss_rate": 0.1034
+      },
+      "adult_leak": {
+        "adult_total": 23,
+        "leak_n": 0,
+        "leak_rate": 0.0,
+        "clean_total": 199,
+        "overflag_n": 0,
+        "overflag_rate": 0.0
+      },
+      "control": {
+        "total": 31,
+        "hit_n": 16,
+        "recall": 0.5161
+      },
+      "resolved": {
+        "total": 88,
+        "resolved_n": 47,
+        "rate": 0.5341
+      },
+      "latency": null
+    },
+    "hybrid+inject:embedding_router": {
+      "status": "available",
+      "reason": "",
+      "n": 222,
+      "mis_route_rate": 0.0288,
+      "media_type": {
+        "confident_correct": 103,
+        "confident_wrong": 4,
+        "abstain": 32,
+        "n": 139,
+        "mis_route_rate": 0.0288,
+        "abstain_rate": 0.2302
+      },
+      "playback_type": {
+        "confident_correct": 101,
+        "confident_wrong": 5,
+        "abstain": 33,
+        "n": 139,
+        "mis_route_rate": 0.036,
+        "abstain_rate": 0.2374
+      },
+      "gate": {
+        "false_hijack_n": 10,
+        "false_hijack_total": 48,
+        "false_hijack_rate": 0.2083,
+        "false_miss_n": 18,
+        "false_miss_total": 174,
+        "false_miss_rate": 0.1034
+      },
+      "adult_leak": {
+        "adult_total": 23,
+        "leak_n": 0,
+        "leak_rate": 0.0,
+        "clean_total": 199,
+        "overflag_n": 0,
+        "overflag_rate": 0.0
+      },
+      "control": {
+        "total": 31,
+        "hit_n": 16,
+        "recall": 0.5161
+      },
+      "resolved": {
+        "total": 88,
+        "resolved_n": 55,
+        "rate": 0.625
+      },
+      "latency": null
+    }
+  },
+  "fixes": {
+    "keyword -> hybrid": [],
+    "hybrid -> hybrid+gazetteer": [
+      {
+        "utterance": "put on the matrix",
+        "expected": "movie",
+        "was": "generic",
+        "now": "movie",
+        "category": "media",
+        "note": "bare title after generic put-on verb; GENERIC fine, providers search"
+      },
+      {
+        "utterance": "play some miles davis",
+        "expected": "music",
+        "was": "generic",
+        "now": "music",
+        "category": "media",
+        "note": "artist, no media keyword"
+      },
+      {
+        "utterance": "stick on bluey for the kids",
+        "expected": "episodic_series",
+        "was": "generic",
+        "now": "episodic_series",
+        "category": "media",
+        "note": "kids cartoon series, no keyword"
+      },
+      {
+        "utterance": "throw on breaking bad",
+        "expected": "episodic_series",
+        "was": "generic",
+        "now": "episodic_series",
+        "category": "media",
+        "note": "bare series title"
+      },
+      {
+        "utterance": "can you play the office",
+        "expected": "episodic_series",
+        "was": "generic",
+        "now": "episodic_series",
+        "category": "media",
+        "note": "ambiguous title 'the office'"
+      },
+      {
+        "utterance": "i feel like listening to the beatles",
+        "expected": "music",
+        "was": "generic",
+        "now": "music",
+        "category": "media",
+        "note": "elliptical, audio verb"
+      },
+      {
+        "utterance": "play the joe rogan experience",
+        "expected": "podcast",
+        "was": "generic",
+        "now": "podcast",
+        "category": "media",
+        "note": "podcast by name, no 'podcast' word"
+      },
+      {
+        "utterance": "play frozen for my daughter",
+        "expected": "movie",
+        "was": "generic",
+        "now": "movie",
+        "category": "media",
+        "note": "kids movie title"
+      },
+      {
+        "utterance": "play seinfeld",
+        "expected": "episodic_series",
+        "was": "generic",
+        "now": "episodic_series",
+        "category": "keywordless",
+        "note": "bare sitcom title"
+      },
+      {
+        "utterance": "play interstellar",
+        "expected": "movie",
+        "was": "generic",
+        "now": "movie",
+        "category": "keywordless",
+        "note": "bare film title"
+      },
+      {
+        "utterance": "play radiohead",
+        "expected": "music",
+        "was": "generic",
+        "now": "music",
+        "category": "keywordless",
+        "note": "bare band name"
+      },
+      {
+        "utterance": "play the witcher",
+        "expected": "episodic_series",
+        "was": "generic",
+        "now": "episodic_series",
+        "category": "keywordless",
+        "note": "ambiguous: series or game"
+      },
+      {
+        "utterance": "play sherlock",
+        "expected": "episodic_series",
+        "was": "generic",
+        "now": "episodic_series",
+        "category": "keywordless",
+        "note": "bare series title"
+      },
+      {
+        "utterance": "play stranger things",
+        "expected": "episodic_series",
+        "was": "generic",
+        "now": "episodic_series",
+        "category": "keywordless",
+        "note": "bare series title"
+      },
+      {
+        "utterance": "binge the mandalorian",
+        "expected": "episodic_series",
+        "was": "generic",
+        "now": "episodic_series",
+        "category": "media",
+        "note": "binge verb + series"
+      },
+      {
+        "utterance": "play me something by hans zimmer",
+        "expected": "music",
+        "was": "generic",
+        "now": "music",
+        "category": "media",
+        "note": "composer, music implied"
+      },
+      {
+        "utterance": "can ya throw on the office",
+        "expected": "episodic_series",
+        "was": "generic",
+        "now": "episodic_series",
+        "category": "conversational",
+        "note": "ambiguous bare title 'the office', no punctuation"
+      },
+      {
+        "utterance": "cmon play breaking bad already",
+        "expected": "episodic_series",
+        "was": "generic",
+        "now": "episodic_series",
+        "category": "conversational",
+        "note": "bare series title, impatient filler"
+      },
+      {
+        "utterance": "can you just pop on stranger things",
+        "expected": "episodic_series",
+        "was": "generic",
+        "now": "episodic_series",
+        "category": "conversational",
+        "note": "bare series title, 'pop on'"
+      }
+    ]
+  },
+  "category_slices": {
+    "conversational": {
+      "n_cases": 36,
+      "backends": {
+        "keyword": {
+          "mis_route_rate": 0.12,
+          "confident_wrong": 3,
+          "media_n": 25,
+          "abstain": 6,
+          "resolved_rate": 0.4,
+          "resolved_n": 6,
+          "resolved_total": 15,
+          "adult_leak_rate": 0.0,
+          "adult_leak_n": 0,
+          "adult_total": 2
+        },
+        "onnx:models/context": {
+          "mis_route_rate": 0.24,
+          "confident_wrong": 6,
+          "media_n": 25,
+          "abstain": 3,
+          "resolved_rate": 0.4667,
+          "resolved_n": 7,
+          "resolved_total": 15,
+          "adult_leak_rate": 0.0,
+          "adult_leak_n": 0,
+          "adult_total": 2
+        },
+        "onnx:models/context_ner": {
+          "mis_route_rate": 0.32,
+          "confident_wrong": 8,
+          "media_n": 25,
+          "abstain": 7,
+          "resolved_rate": 0.3333,
+          "resolved_n": 5,
+          "resolved_total": 15,
+          "adult_leak_rate": 0.0,
+          "adult_leak_n": 0,
+          "adult_total": 2
+        },
+        "onnx:models_text/tfidf_char35": {
+          "mis_route_rate": 0.28,
+          "confident_wrong": 7,
+          "media_n": 25,
+          "abstain": 0,
+          "resolved_rate": 0.5333,
+          "resolved_n": 8,
+          "resolved_total": 15,
+          "adult_leak_rate": 0.5,
+          "adult_leak_n": 1,
+          "adult_total": 2
+        },
+        "onnx:models_text/tfidf_word12": {
+          "mis_route_rate": 0.2,
+          "confident_wrong": 5,
+          "media_n": 25,
+          "abstain": 0,
+          "resolved_rate": 0.6667,
+          "resolved_n": 10,
+          "resolved_total": 15,
+          "adult_leak_rate": 0.5,
+          "adult_leak_n": 1,
+          "adult_total": 2
+        },
+        "onnx:models_text/tfidf_word13": {
+          "mis_route_rate": 0.2,
+          "confident_wrong": 5,
+          "media_n": 25,
+          "abstain": 0,
+          "resolved_rate": 0.6667,
+          "resolved_n": 10,
+          "resolved_total": 15,
+          "adult_leak_rate": 1.0,
+          "adult_leak_n": 2,
+          "adult_total": 2
+        },
+        "onnx:models_torch/cat": {
+          "mis_route_rate": 0.28,
+          "confident_wrong": 7,
+          "media_n": 25,
+          "abstain": 0,
+          "resolved_rate": 0.6,
+          "resolved_n": 9,
+          "resolved_total": 15,
+          "adult_leak_rate": 0.0,
+          "adult_leak_n": 0,
+          "adult_total": 2
+        },
+        "onnx:models_torch/cat_all": {
+          "mis_route_rate": 0.2,
+          "confident_wrong": 5,
+          "media_n": 25,
+          "abstain": 0,
+          "resolved_rate": 0.6667,
+          "resolved_n": 10,
+          "resolved_total": 15,
+          "adult_leak_rate": 0.0,
+          "adult_leak_n": 0,
+          "adult_total": 2
+        },
+        "onnx:models_torch/cat_all_deep": {
+          "mis_route_rate": 0.2,
+          "confident_wrong": 5,
+          "media_n": 25,
+          "abstain": 0,
+          "resolved_rate": 0.6667,
+          "resolved_n": 10,
+          "resolved_total": 15,
+          "adult_leak_rate": 0.0,
+          "adult_leak_n": 0,
+          "adult_total": 2
+        },
+        "onnx:models_torch/cat_all_wide": {
+          "mis_route_rate": 0.24,
+          "confident_wrong": 6,
+          "media_n": 25,
+          "abstain": 0,
+          "resolved_rate": 0.6,
+          "resolved_n": 9,
+          "resolved_total": 15,
+          "adult_leak_rate": 0.0,
+          "adult_leak_n": 0,
+          "adult_total": 2
+        },
+        "onnx:models_torch/cat_text": {
+          "mis_route_rate": 0.2,
+          "confident_wrong": 5,
+          "media_n": 25,
+          "abstain": 0,
+          "resolved_rate": 0.6667,
+          "resolved_n": 10,
+          "resolved_total": 15,
+          "adult_leak_rate": 0.0,
+          "adult_leak_n": 0,
+          "adult_total": 2
+        },
+        "onnx:models_torch/cat_wordvec": {
+          "mis_route_rate": 0.2,
+          "confident_wrong": 5,
+          "media_n": 25,
+          "abstain": 0,
+          "resolved_rate": 0.6667,
+          "resolved_n": 10,
+          "resolved_total": 15,
+          "adult_leak_rate": 0.0,
+          "adult_leak_n": 0,
+          "adult_total": 2
+        },
+        "onnx:models_torch/cat_wordvec_cbow": {
+          "mis_route_rate": 0.2,
+          "confident_wrong": 5,
+          "media_n": 25,
+          "abstain": 0,
+          "resolved_rate": 0.6667,
+          "resolved_n": 10,
+          "resolved_total": 15,
+          "adult_leak_rate": 0.0,
+          "adult_leak_n": 0,
+          "adult_total": 2
+        },
+        "embedding-router:embedding_router": {
+          "mis_route_rate": 0.0,
+          "confident_wrong": 0,
+          "media_n": 25,
+          "abstain": 25,
+          "resolved_rate": 0.0,
+          "resolved_n": 0,
+          "resolved_total": 15,
+          "adult_leak_rate": 1.0,
+          "adult_leak_n": 2,
+          "adult_total": 2
+        },
+        "hybrid:embedding_router": {
+          "mis_route_rate": 0.12,
+          "confident_wrong": 3,
+          "media_n": 25,
+          "abstain": 6,
+          "resolved_rate": 0.4,
+          "resolved_n": 6,
+          "resolved_total": 15,
+          "adult_leak_rate": 0.0,
+          "adult_leak_n": 0,
+          "adult_total": 2
+        },
+        "hybrid+gazetteer:embedding_router": {
+          "mis_route_rate": 0.12,
+          "confident_wrong": 3,
+          "media_n": 25,
+          "abstain": 3,
+          "resolved_rate": 0.6,
+          "resolved_n": 9,
+          "resolved_total": 15,
+          "adult_leak_rate": 0.0,
+          "adult_leak_n": 0,
+          "adult_total": 2
+        },
+        "hybrid+inject:embedding_router": {
+          "mis_route_rate": 0.04,
+          "confident_wrong": 1,
+          "media_n": 25,
+          "abstain": 4,
+          "resolved_rate": 0.6667,
+          "resolved_n": 10,
+          "resolved_total": 15,
+          "adult_leak_rate": 0.0,
+          "adult_leak_n": 0,
+          "adult_total": 2
+        }
+      }
+    }
+  }
+}

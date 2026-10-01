@@ -1,0 +1,137 @@
+<lead_watch> {anime_title}
+[hey|ok|please] <lead_watch> {anime_title} [please|for me|right now|thanks]
+<lead_watch> the anime {anime_title}
+[hey|ok|please] <lead_watch> the anime {anime_title} [please|for me|right now|thanks]
+<lead_watch> an episode of {anime_title}
+[hey|ok|please] <lead_watch> an episode of {anime_title} [please|for me|right now|thanks]
+<lead_watch> some anime
+[hey|ok|please] <lead_watch> some anime [please|for me|right now|thanks]
+<lead_watch> anime by {anime_studio}
+[hey|ok|please] <lead_watch> anime by {anime_studio} [please|for me|right now|thanks]
+<lead_watch> a {anime_studio} anime
+[hey|ok|please] <lead_watch> a {anime_studio} anime [please|for me|right now|thanks]
+<lead_watch> the new season of {anime_title}
+[hey|ok|please] <lead_watch> the new season of {anime_title} [please|for me|right now|thanks]
+<lead_watch> the next episode of {anime_title}
+[hey|ok|please] <lead_watch> the next episode of {anime_title} [please|for me|right now|thanks]
+<lead_watch> a {anime_genre} anime
+[hey|ok|please] <lead_watch> a {anime_genre} anime [please|for me|right now|thanks]
+<lead_watch> some {anime_genre} anime
+[hey|ok|please] <lead_watch> some {anime_genre} anime [please|for me|right now|thanks]
+<lead_watch> a good anime
+[hey|ok|please] <lead_watch> a good anime [please|for me|right now|thanks]
+<lead_watch> the {anime_studio} anime {anime_title}
+[hey|ok|please] <lead_watch> the {anime_studio} anime {anime_title} [please|for me|right now|thanks]
+<lead_watch> {anime_title} by {anime_studio}
+[hey|ok|please] <lead_watch> {anime_title} by {anime_studio} [please|for me|right now|thanks]
+<lead_watch> a {anime_genre} anime by {anime_studio}
+[hey|ok|please] <lead_watch> a {anime_genre} anime by {anime_studio} [please|for me|right now|thanks]
+<lead_watch> a {anime_genre} anime from {anime_studio}
+[hey|ok|please] <lead_watch> a {anime_genre} anime from {anime_studio} [please|for me|right now|thanks]
+<lead_watch> {anime_title} from {anime_studio}
+[hey|ok|please] <lead_watch> {anime_title} from {anime_studio} [please|for me|right now|thanks]
+<lead_watch> the {anime_genre} anime {anime_title} by {anime_studio}
+[hey|ok|please] <lead_watch> the {anime_genre} anime {anime_title} by {anime_studio} [please|for me|right now|thanks]
+<lead_watch> do you have any {anime_genre} anime
+[hey|ok|please] <lead_watch> do you have any {anime_genre} anime [please|for me|right now|thanks]
+<lead_watch> got a good {anime_genre} anime
+[hey|ok|please] <lead_watch> got a good {anime_genre} anime [please|for me|right now|thanks]
+<lead_watch> some {anime_genre} anime to binge
+[hey|ok|please] <lead_watch> some {anime_genre} anime to binge [please|for me|right now|thanks]
+<lead_watch> an anime from the {release_decade}
+[hey|ok|please] <lead_watch> an anime from the {release_decade} [please|for me|right now|thanks]
+<lead_watch> an anime from {release_year}
+[hey|ok|please] <lead_watch> an anime from {release_year} [please|for me|right now|thanks]
+{anime_title}, please
+the anime {anime_title}, please
+a {anime_genre} anime, thanks
+{anime_title} — put it on
+the next episode of {anime_title} — let's go
+put on {anime_title}, would you?
+i'm in an {anime_genre} mood
+in the mood for some {anime_genre} anime
+i could go for a {anime_genre} anime
+i'm after a good {anime_genre} anime
+i need a {anime_genre} anime tonight
+what about {anime_title}
+maybe a {anime_genre} anime
+maybe something by {anime_studio}
+we should watch {anime_title}
+something like {anime_title}
+another anime like {anime_title}
+any {anime_genre} anime around?
+what {anime_genre} anime do you have
+is there anything by {anime_studio}
+a {anime_genre} anime to binge tonight
+something from {anime_studio} because i'm bored
+the new season of {anime_title}, please
+<lead_watch> an anime adaptation of {game_title}
+<lead_watch> the anime based on the game {game_title}
+<lead_watch> the {game_title} anime
+<lead_watch> an anime based on the manga {comic_title}
+<lead_watch> the anime adaptation of {comic_title}
+<lead_watch> the {comic_title} anime
+<lead_watch> an anime based on the novel {book_title}
+<lead_watch> the anime adaptation of {book_title}
+<lead_watch> an anime based on the movie {movie_title}
+<lead_watch> an anime based on {comic_title}
+<lead_watch> an anime based on {book_title}
+<lead_watch> an anime based on {game_title}
+<lead_watch> an anime based on {movie_title}
+<lead_watch> an anime adaptation of {comic_title}
+<lead_watch> an anime adaptation of {book_title}
+<lead_watch> an anime adaptation of {movie_title}
+<lead_watch> the anime version of {comic_title}
+<lead_watch> the anime version of {book_title}
+<lead_watch> the anime version of {game_title}
+<lead_watch> the anime version of {movie_title}
+<lead_watch> an anime inspired by {comic_title}
+<lead_watch> an anime inspired by {book_title}
+<lead_watch> an anime inspired by {game_title}
+<lead_watch> an anime inspired by {movie_title}
+<lead_watch> the {book_title} anime
+<lead_watch> the {movie_title} anime
+<lead_watch> the anime adaptation of the manga {comic_title}
+<lead_watch> an anime based on the light novel {book_title}
+<lead_watch> an anime based on the game {game_title}
+<lead_watch> the anime adaptation of the game {game_title}
+um can you put on {anime_title}
+watch the— no the other {anime_title}
+put on {anime_title}, actually no a {anime_genre} one
+hey so put on {anime_title}
+you know what throw on {anime_title}
+wanna watch {anime_title}
+lemme catch up on {anime_title}
+gimme a good {anime_genre} anime
+i could really go for some {anime_title}
+i never finished {anime_title}
+is there a new season of {anime_title}
+got any {anime_genre} anime?
+i'm craving {anime_genre} anime
+[hey] um can i get a {anime_studio} anime
+how about we watch {anime_title} tonight
+gimme that new {anime_genre} anime
+<lead_watch> anime from the {release_decade}s
+lemme watch {anime_title} please
+[please] got any good anime by {anime_studio}
+i wanna see {anime_title}
+<lead_watch> a classic anime from {release_year}
+so um like anime about {anime_genre}
+[hey] lemme find an anime like {game_title}
+can you find me {anime_genre} anime from {release_year}
+<lead_watch> japanese animation
+[ok] lemme catch some anime
+how about that {anime_genre} anime
+<lead_watch> anime that's like {comic_title}
+um do you have {anime_title} available
+gimme an anime from {release_year} please
+[so] <lead_watch> that anime from {release_decade} [you know the one]
+[i'm in the mood for] an anime by {anime_studio} [or something similar]
+<lead_watch> an anime like {movie_title} [but animated]
+[you know what] <lead_watch> {anime_genre} anime [i guess]
+[lemme] <lead_watch> something from {anime_studio} [i trust them]
+<lead_watch> japanese animation from {release_year} [if there is any]
+[ok so] <lead_watch> {anime_genre} stuff [i dunno just pick one]
+[we should] <lead_watch> some {release_decade} anime [old school]
+<lead_watch> that anime {anime_studio} did [the good one]
+[hey um] <lead_watch> {game_title} the anime [if that exists]

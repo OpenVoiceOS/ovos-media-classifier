@@ -1,0 +1,178 @@
+<lead_play_audio> {podcast_title}
+[hey|ok|please] <lead_play_audio> {podcast_title} [please|for me|right now|thanks]
+<lead_play_audio> the {podcast_title} podcast
+<lead_play_audio> an episode of {podcast_title}
+[hey|ok|please] <lead_play_audio> an episode of {podcast_title} [please|for me|right now|thanks]
+<lead_play_audio> the latest {podcast_title} episode
+[hey|ok|please] <lead_play_audio> the latest {podcast_title} episode [please|for me|right now|thanks]
+<lead_play_audio> a {podcast_genre} podcast
+[hey|ok|please] <lead_play_audio> a {podcast_genre} podcast [please|for me|right now|thanks]
+<lead_play_audio> the podcast with {podcast_host}
+[hey|ok|please] <lead_play_audio> the podcast with {podcast_host} [please|for me|right now|thanks]
+<lead_play_audio> {podcast_host}'s podcast
+[hey|ok|please] <lead_play_audio> {podcast_host}'s podcast [please|for me|right now|thanks]
+<lead_play_audio> a podcast about {podcast_genre}
+[hey|ok|please] <lead_play_audio> a podcast about {podcast_genre} [please|for me|right now|thanks]
+<lead_play_audio> the podcast hosted by {podcast_host}
+[hey|ok|please] <lead_play_audio> the podcast hosted by {podcast_host} [please|for me|right now|thanks]
+<lead_play_audio> a good {podcast_genre} podcast
+[hey|ok|please] <lead_play_audio> a good {podcast_genre} podcast [please|for me|right now|thanks]
+<lead_play_audio> {podcast_title} hosted by {podcast_host}
+[hey|ok|please] <lead_play_audio> {podcast_title} hosted by {podcast_host} [please|for me|right now|thanks]
+<lead_play_audio> a {podcast_genre} podcast with {podcast_host}
+[hey|ok|please] <lead_play_audio> a {podcast_genre} podcast with {podcast_host} [please|for me|right now|thanks]
+<lead_play_audio> a {podcast_genre} podcast hosted by {podcast_host}
+[hey|ok|please] <lead_play_audio> a {podcast_genre} podcast hosted by {podcast_host} [please|for me|right now|thanks]
+<lead_play_audio> the {podcast_title} episode with {podcast_host}
+[hey|ok|please] <lead_play_audio> the {podcast_title} episode with {podcast_host} [please|for me|right now|thanks]
+<lead_play_audio> a {podcast_genre} podcast called {podcast_title} with {podcast_host}
+[hey|ok|please] <lead_play_audio> a {podcast_genre} podcast called {podcast_title} with {podcast_host} [please|for me|right now|thanks]
+<lead_play_audio> do you have any {podcast_genre} podcasts
+[hey|ok|please] <lead_play_audio> do you have any {podcast_genre} podcasts [please|for me|right now|thanks]
+<lead_play_audio> got a good {podcast_genre} podcast
+[hey|ok|please] <lead_play_audio> got a good {podcast_genre} podcast [please|for me|right now|thanks]
+<lead_play_audio> a {podcast_genre} podcast for my commute
+[hey|ok|please] <lead_play_audio> a {podcast_genre} podcast for my commute [please|for me|right now|thanks]
+<lead_play_audio> a podcast about {artist_name}
+[hey|ok|please] <lead_play_audio> a podcast about {artist_name} [please|for me|right now|thanks]
+<lead_play_audio> a podcast about {movie_title}
+[hey|ok|please] <lead_play_audio> a podcast about {movie_title} [please|for me|right now|thanks]
+<lead_play_audio> the podcast about {movie_actor}
+[hey|ok|please] <lead_play_audio> the podcast about {movie_actor} [please|for me|right now|thanks]
+{podcast_title}, please
+the {podcast_title} podcast, please
+a {podcast_genre} podcast, thanks
+{podcast_title} — put it on
+the latest {podcast_title} — let's hear it
+that podcast {podcast_title} — start it
+put on {podcast_title}, would you?
+queue up {podcast_host}'s podcast, can you?
+i'm in a {podcast_genre} podcast mood
+in the mood for a {podcast_genre} podcast
+i could go for a {podcast_genre} podcast
+i'm after a good {podcast_genre} podcast
+i need a {podcast_genre} podcast for the drive
+what about {podcast_host}'s podcast
+maybe a {podcast_genre} podcast
+maybe an episode of {podcast_title}
+we should listen to {podcast_title}
+something like {podcast_title}
+another podcast like {podcast_title}
+any {podcast_genre} podcasts around?
+what {podcast_genre} podcasts do you have
+is there a podcast with {podcast_host}
+the newest {podcast_title} episode
+{podcast_host}'s most recent episode
+a {podcast_genre} podcast while i commute
+something with {podcast_host} for the road
+a {podcast_genre} podcast because i'm bored
+<lead_play_audio> a podcast with {movie_actor}
+<lead_play_audio> an interview podcast featuring {movie_actor}
+<lead_play_audio> a podcast episode interviewing {movie_actor}
+<lead_play_audio> a podcast episode about {artist_name}
+<lead_play_audio> a podcast where they interview {artist_name}
+<lead_play_audio> a podcast hosted by {movie_director}
+<lead_play_audio> a podcast interview with the director {movie_director}
+<lead_play_audio> a podcast with the author {book_author}
+<lead_play_audio> a podcast interview with {book_author}
+<lead_play_audio> a podcast discussing the novel {book_title}
+<lead_play_audio> a podcast breaking down the movie {movie_title}
+<lead_play_audio> a podcast reviewing the film {movie_title}
+<lead_play_audio> a podcast about the game {game_title}
+<lead_play_audio> a podcast discussing the album {album_name}
+<lead_play_audio> a podcast about the show {tv_show_title}
+<lead_play_audio> a podcast about {movie_actor}
+<lead_play_audio> a podcast featuring {movie_actor}
+<lead_play_audio> an interview with {movie_actor}
+<lead_play_audio> a podcast interview with {movie_actor}
+<lead_play_audio> a podcast about {movie_director}
+<lead_play_audio> a podcast with {movie_director}
+<lead_play_audio> a podcast featuring {movie_director}
+<lead_play_audio> an interview with {movie_director}
+<lead_play_audio> a podcast interview with {movie_director}
+<lead_play_audio> a podcast episode interviewing {movie_director}
+<lead_play_audio> a podcast with {artist_name}
+<lead_play_audio> a podcast featuring {artist_name}
+<lead_play_audio> an interview with {artist_name}
+<lead_play_audio> a podcast interview with {artist_name}
+<lead_play_audio> a podcast episode interviewing {artist_name}
+<lead_play_audio> a podcast about {book_author}
+<lead_play_audio> a podcast with {book_author}
+<lead_play_audio> a podcast featuring {book_author}
+<lead_play_audio> an interview with {book_author}
+<lead_play_audio> a podcast episode interviewing {book_author}
+<lead_play_audio> a podcast about {movie_writer}
+<lead_play_audio> a podcast with {movie_writer}
+<lead_play_audio> a podcast featuring {movie_writer}
+<lead_play_audio> an interview with {movie_writer}
+<lead_play_audio> a podcast interview with {movie_writer}
+<lead_play_audio> a podcast episode interviewing {movie_writer}
+<lead_play_audio> a podcast about the movie {movie_title}
+<lead_play_audio> a podcast discussing the film {movie_title}
+<lead_play_audio> a podcast recapping {tv_show_title}
+<lead_play_audio> a podcast recapping the show {tv_show_title}
+<lead_play_audio> a podcast about the video game {game_title}
+<lead_play_audio> a podcast about the book {book_title}
+<lead_play_audio> a book club podcast about {book_title}
+<lead_play_audio> a podcast about the album {album_name}
+<lead_play_audio> a podcast about the band {artist_name}
+<lead_play_audio> a podcast about the anime {anime_title}
+<lead_play_audio> a podcast about the comic {comic_title}
+<lead_play_audio> a podcast about {music_genre}
+<lead_play_audio> a podcast about the history of {music_genre}
+<lead_play_audio> a podcast hosted by {movie_actor}
+<lead_play_audio> a true crime podcast about {movie_title}
+um can you put on {podcast_title}
+play {podcast_title}, actually no the one about {music_genre}
+uh maybe that podcast {podcast_title}
+hey so put on {podcast_title}
+you know what throw on {podcast_title}
+wanna listen to {podcast_title}
+lemme catch up on {podcast_title}
+gimme a {podcast_genre} podcast
+ugh long drive ahead put on a podcast
+i'm doing the dishes put on {podcast_title}
+i could really go for a {podcast_genre} podcast
+i never finished that podcast about {music_genre}
+i'm kind of in the mood for {podcast_host}
+is there a new episode of {podcast_title}
+got any podcasts with {podcast_host}?
+how about that podcast {podcast_title}
+anything good from {podcast_host} lately?
+hey <lead_play_audio> that {podcast_title} episode i missed
+so <lead_play_audio> something about {music_genre} podcasts you know
+um can we hear that podcast with {podcast_host} again
+<lead_play_audio> a podcast series hosted by {podcast_host}
+lemme hear the latest episode of {podcast_title}
+<lead_play_audio> a podcast about {movie_title} with the director
+got any good podcasts about {book_title}
+<lead_play_audio> the one where {podcast_host} talks about {tv_show_title}
+hey play that podcast episode about {music_genre} please
+so i wanna hear a podcast interviewing {movie_actor}
+<lead_play_audio> some {podcast_genre} podcast i haven't heard yet
+um what was that podcast called {podcast_title}
+let's listen to a deep dive podcast on {game_title}
+<lead_play_audio> a podcast breaking down {comic_title}
+i never checked out that podcast with {movie_writer}
+<lead_play_audio> a {podcast_genre} show hosted by {podcast_host}
+hey so gimme a good podcast about {anime_title}
+can you play a podcast about {album_name} by {artist_name}
+<lead_play_audio> the podcast where they review {tv_show_title}
+hey so i wanna hear that {podcast_title} podcast with {podcast_host}
+lemme listen to the latest {podcast_title}
+how about we put on a {podcast_genre} podcast
+got any podcasts hosted by {podcast_host}
+i'm feeling like a {podcast_genre} podcast kind of day
+play the podcast where {podcast_host} talks about {movie_title}
+we should check out that {podcast_title} episode
+hey um can you find me a podcast about {tv_show_title}
+what about that podcast with {podcast_host}
+i wanna hear {podcast_host} on a podcast about {game_title}
+so there's this podcast called {podcast_title} play that
+play me a {podcast_genre} podcast i haven't heard yet
+how about a podcast about {book_title} by {book_author}
+i'm in the mood for {podcast_title} right now actually
+hey play that podcast about {anime_title}
+put on a podcast about {movie_director} movies or something
+let's hear what {podcast_host} has to say on {podcast_title}
+so i was thinking a podcast about {tv_show_title} would be great

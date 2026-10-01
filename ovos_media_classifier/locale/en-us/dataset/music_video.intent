@@ -1,0 +1,132 @@
+<lead_watch> the music video for {music_video_title}
+[hey|ok|please] <lead_watch> the music video for {music_video_title} [please|for me|right now|thanks]
+<lead_watch> {music_video_title}
+<lead_watch> the {artist_name} music video
+[hey|ok|please] <lead_watch> the {artist_name} music video [please|for me|right now|thanks]
+<lead_watch> a music video by {artist_name}
+[hey|ok|please] <lead_watch> a music video by {artist_name} [please|for me|right now|thanks]
+<lead_watch> the official video for {music_video_title}
+[hey|ok|please] <lead_watch> the official video for {music_video_title} [please|for me|right now|thanks]
+<lead_watch> {artist_name}'s music video
+[hey|ok|please] <lead_watch> {artist_name}'s music video [please|for me|right now|thanks]
+<lead_watch> the {music_video_title} video
+[hey|ok|please] <lead_watch> the {music_video_title} video [please|for me|right now|thanks]
+<lead_watch> a music video
+[hey|ok|please] <lead_watch> a music video [please|for me|right now|thanks]
+<lead_watch> some music videos
+[hey|ok|please] <lead_watch> some music videos [please|for me|right now|thanks]
+<lead_watch> the latest {artist_name} music video
+[hey|ok|please] <lead_watch> the latest {artist_name} music video [please|for me|right now|thanks]
+<lead_watch> another {artist_name} music video
+[hey|ok|please] <lead_watch> another {artist_name} music video [please|for me|right now|thanks]
+<lead_watch> a {artist_name} video
+[hey|ok|please] <lead_watch> a {artist_name} video [please|for me|right now|thanks]
+<lead_watch> the official {music_video_title} video
+[hey|ok|please] <lead_watch> the official {music_video_title} video [please|for me|right now|thanks]
+<lead_watch> the new music video by {artist_name}
+[hey|ok|please] <lead_watch> the new music video by {artist_name} [please|for me|right now|thanks]
+<lead_watch> some {artist_name} music videos
+[hey|ok|please] <lead_watch> some {artist_name} music videos [please|for me|right now|thanks]
+<lead_watch> a recent music video
+[hey|ok|please] <lead_watch> a recent music video [please|for me|right now|thanks]
+<lead_watch> the {music_video_title} official video
+<lead_watch> the music video {music_video_title}
+[hey|ok|please] <lead_watch> the music video {music_video_title} [please|for me|right now|thanks]
+<lead_watch> the music video for {music_video_title} by {artist_name}
+[hey|ok|please] <lead_watch> the music video for {music_video_title} by {artist_name} [please|for me|right now|thanks]
+<lead_watch> {artist_name}'s music video for {music_video_title}
+[hey|ok|please] <lead_watch> {artist_name}'s music video for {music_video_title} [please|for me|right now|thanks]
+<lead_watch> the official video for {music_video_title} by {artist_name}
+[hey|ok|please] <lead_watch> the official video for {music_video_title} by {artist_name} [please|for me|right now|thanks]
+<lead_watch> do you have the music video for {music_video_title}
+[hey|ok|please] <lead_watch> do you have the music video for {music_video_title} [please|for me|right now|thanks]
+<lead_watch> got any {artist_name} music videos
+[hey|ok|please] <lead_watch> got any {artist_name} music videos [please|for me|right now|thanks]
+<lead_watch> some music videos for the party
+[hey|ok|please] <lead_watch> some music videos for the party [please|for me|right now|thanks]
+<lead_watch> do you have any music videos by {artist_name}
+[hey|ok|please] <lead_watch> do you have any music videos by {artist_name} [please|for me|right now|thanks]
+<lead_watch> a music video to vibe to
+[hey|ok|please] <lead_watch> a music video to vibe to [please|for me|right now|thanks]
+<lead_watch> got the video for {music_video_title}
+[hey|ok|please] <lead_watch> got the video for {music_video_title} [please|for me|right now|thanks]
+<lead_watch> the music video by {artist_name}
+[hey|ok|please] <lead_watch> the music video by {artist_name} [please|for me|right now|thanks]
+<lead_watch> the official video for {track_name}
+[hey|ok|please] <lead_watch> the official video for {track_name} [please|for me|right now|thanks]
+<lead_watch> the {track_name} music video
+[hey|ok|please] <lead_watch> the {track_name} music video [please|for me|right now|thanks]
+the music video for {music_video_title}, please
+{music_video_title}, please
+the {artist_name} music video — put it on
+the official video for {music_video_title} — let's watch it
+put on the {artist_name} music video, would you?
+i could go for some music videos
+i'm after the latest {artist_name} music video
+i need a music video to vibe to
+what about the music video for {music_video_title}
+maybe a {artist_name} music video
+we should watch the {music_video_title} video
+something like {artist_name}'s music videos
+any {artist_name} music videos around?
+the new {artist_name} music video everyone's talking about
+some music videos because it's party time
+the {track_name} music video, please
+<lead_watch> the music video for the song {track_name}
+<lead_watch> the official music video of {track_name}
+<lead_watch> the video clip for {track_name}
+<lead_watch> the music video off the album {album_name}
+<lead_watch> the music video for a song off {album_name}
+<lead_watch> the video for the single {track_name}
+<lead_watch> the lyric video for {track_name}
+<lead_watch> the visualizer for {track_name}
+<lead_watch> the music video featuring {movie_actor}
+<lead_watch> a music video directed by {movie_director}
+um can you put on the {track_name} video
+play the {track_name} video, actually no something by {artist_name}
+hey so put on the video for {track_name}
+you know what throw on a music video by {artist_name}
+wanna watch the {track_name} video
+lemme see the music video for {track_name}
+gimme a music video by {artist_name}
+i could really go for some music videos
+is there a video for {track_name}
+got the music video for {track_name}?
+how about the {artist_name} video
+<lead_watch> the official video for {track_name} by {artist_name}
+hey so i wanna watch the lyric video for {track_name}
+let's check out that vevo video by {artist_name}
+how about we put on a music video from {album_name}
+gimme the official music video for {track_name}
+<lead_watch> that {artist_name} music video from {album_name}
+can we watch a music video featuring {movie_actor}
+[so|um] i heard there's a video clip for {music_video_title}
+you got any video clips by {artist_name}
+<lead_watch> the new {music_video_title} video by {artist_name}
+i wanna see the official video directed by {movie_director}
+maybe play the lyric video for {track_name}
+let's watch a music video with {movie_actor} in it
+<lead_watch> a vevo music video by {artist_name}
+i'm looking for the official music video of {track_name}
+throw on a video clip from {album_name} by {artist_name}
+how about that music video where {movie_director} directed it
+<lead_watch> the {music_video_title} video from {album_name}
+got any official videos for {music_video_title}
+i'm in the mood for a {artist_name} music video
+let's check out the lyric video for {track_name}
+<lead_watch> the vevo video for the song {track_name}
+we should watch the {artist_name} official music video
+feels like a music video night, show me {artist_name}
+i wanna see the official video for {track_name} by {artist_name}
+got any good {artist_name} music videos
+<lead_watch> that new {music_video_title} video
+so um can you play the {artist_name} official music video
+lemme see the video clip for {track_name}
+<lead_watch> a lyric video by {artist_name}
+how about we watch music videos from {artist_name}
+i'd love to see the official music video for {track_name}
+<lead_watch> the {artist_name} video clip
+hey let's watch the official video for {track_name} from the album {album_name}
+show me the vevo video for {music_video_title}
+i'm in the mood for a {artist_name} lyric video
+play the official video for the song {track_name} please

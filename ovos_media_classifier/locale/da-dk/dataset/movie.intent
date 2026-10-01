@@ -1,0 +1,243 @@
+<lead_watch> {movie_title}
+[hej|ok|okay] <lead_watch> {movie_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> filmen {movie_title}
+<lead_watch> filmen {movie_title}
+[hej|ok|okay] <lead_watch> filmen {movie_title} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en {movie_genre} film
+<lead_watch> en {movie_genre} film
+[hej|ok|okay] <lead_watch> en {movie_genre} film [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en {movie_genre} film
+<lead_watch> en gammel {movie_genre} film
+[hej|ok|okay] <lead_watch> en gammel {movie_genre} film [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en klassisk {movie_genre} film
+<lead_watch> en god {movie_genre} film
+[hej|ok|okay] <lead_watch> en god {movie_genre} film [tak|for mig|lige nu|tak skal du have]
+<lead_watch> noget med {movie_actor}
+<lead_watch> en film med {movie_actor}
+[hej|ok|okay] <lead_watch> en film med {movie_actor} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en film med {movie_actor} i hovedrollen
+[hej|ok|okay] <lead_watch> en film med {movie_actor} i hovedrollen [tak|for mig|lige nu|tak skal du have]
+<lead_watch> hvad som helst med {movie_actor}
+<lead_watch> en film instrueret af {movie_director}
+[hej|ok|okay] <lead_watch> en film instrueret af {movie_director} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en film af {movie_director}
+<lead_watch> en film produceret af {movie_producer}
+[hej|ok|okay] <lead_watch> en film produceret af {movie_producer} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en film skrevet af {movie_writer}
+<lead_watch> en film skrevet af {movie_writer}
+[hej|ok|okay] <lead_watch> en film skrevet af {movie_writer} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en film med musik af {movie_composer}
+<lead_watch> en film med musik af {movie_composer}
+[hej|ok|okay] <lead_watch> en film med musik af {movie_composer} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> {movie_title} med {movie_actor}
+[hej|ok|okay] <lead_watch> {movie_title} med {movie_actor} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> {movie_title} med {movie_actor} i hovedrollen
+<lead_watch> {movie_title} instrueret af {movie_director}
+[hej|ok|okay] <lead_watch> {movie_title} instrueret af {movie_director} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> filmen {movie_title} af {movie_director}
+<lead_watch> en {movie_genre} film med {movie_actor}
+[hej|ok|okay] <lead_watch> en {movie_genre} film med {movie_actor} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en {movie_genre} film instrueret af {movie_director}
+<lead_watch> en {movie_genre} film af {movie_director}
+[hej|ok|okay] <lead_watch> en {movie_genre} film af {movie_director} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en film med {movie_actor} instrueret af {movie_director}
+<lead_watch> en film med {movie_actor} og {movie_director} i hovedrollerne
+[hej|ok|okay] <lead_watch> en film med {movie_actor} og {movie_director} i hovedrollerne [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en {movie_genre} film fra {release_year}
+<lead_watch> en {movie_genre} film fra {media_country}
+[hej|ok|okay] <lead_watch> en {movie_genre} film fra {media_country} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en {movie_genre} film instrueret af {movie_director} med {movie_actor}
+[hej|ok|okay] <lead_watch> en {movie_genre} film instrueret af {movie_director} med {movie_actor} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> {movie_title} instrueret af {movie_director} med {movie_actor}
+<lead_watch> en {movie_genre} film med {movie_actor} fra {release_year}
+[hej|ok|okay] <lead_watch> en {movie_genre} film med {movie_actor} fra {release_year} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en film instrueret af {movie_director} skrevet af {movie_writer} med {movie_actor}
+<lead_watch> en {movie_genre} film fra {media_country} med {movie_actor}
+[hej|ok|okay] <lead_watch> en {movie_genre} film fra {media_country} med {movie_actor} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> {movie_title} instrueret af {movie_director} med {movie_actor}, en {movie_genre} film
+<lead_watch> en {movie_genre} film instrueret af {movie_director} med {movie_actor} fra {release_year}
+[hej|ok|okay] <lead_watch> en {movie_genre} film instrueret af {movie_director} med {movie_actor} fra {release_year} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> {movie_title} instrueret af {movie_director} med {movie_actor}, en {movie_genre} film fra {release_year}
+<lead_watch> har du nogen {movie_genre} film
+[hej|ok|okay] <lead_watch> har du nogen {movie_genre} film [tak|for mig|lige nu|tak skal du have]
+<lead_watch> har du en god {movie_genre} film
+[hej|ok|okay] <lead_watch> har du en god {movie_genre} film [tak|for mig|lige nu|tak skal du have]
+<lead_watch> har du noget med {movie_actor}
+<lead_watch> noget {movie_genre} til filmaften
+[hej|ok|okay] <lead_watch> noget {movie_genre} til filmaften [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en {movie_genre} film at se med børnene
+<lead_watch> en film fra {release_year}
+[hej|ok|okay] <lead_watch> en film fra {release_year} [tak|for mig|lige nu|tak skal du have]
+<lead_watch> noget {media_country} film
+<lead_watch> en {media_country} film
+[hej|ok|okay] <lead_watch> en {media_country} film [tak|for mig|lige nu|tak skal du have]
+<lead_watch> en film fra {release_decade}
+<lead_watch> en {movie_genre} film fra {release_decade}
+[hej|ok|okay] <lead_watch> en {movie_genre} film fra {release_decade} [tak|for mig|lige nu|tak skal du have]
+{movie_title}, tak
+filmen {movie_title}, tak
+en {movie_genre} film, tak
+{movie_title} — sæt den på
+{movie_title} — lad os se den
+den film {movie_title} — start den
+sæt {movie_title} på, vil du?
+smid en {movie_genre} film på, kan du?
+jeg er i {movie_genre} humør
+i humør til en {movie_genre} film
+jeg kunne godt bruge en {movie_genre} film
+jeg leder efter en god {movie_genre} film
+jeg skal have en {movie_genre} film i aften
+hvad med {movie_title}
+hvad med en {movie_genre} film med {movie_actor}
+måske en {movie_genre} film
+måske noget med {movie_actor}
+vi burde se {movie_title}
+noget ligesom {movie_title}
+noget i stil med {movie_director}
+endnu en film ligesom {movie_title}
+er der nogen {movie_genre} film
+hvilke {movie_genre} film har du
+er der en film med {movie_actor}
+{movie_director}'s bedste film
+{movie_actor}'s mest berømte film
+den klassiske {movie_genre} film
+en {movie_genre} film til filmaften
+noget med {movie_actor} at slappe af til
+en {movie_genre} film fordi det regner
+den {movie_genre} en instrueret af {movie_director}
+<lead_watch> en film om {book_title}
+<lead_watch> filmatiseringen af {book_title}
+<lead_watch> en film baseret på {book_title}
+<lead_watch> filmen baseret på bogen {book_title}
+<lead_watch> en filmudgave af {book_title}
+<lead_watch> live-action {book_title} filmen
+<lead_watch> en film baseret på romanen {book_title}
+<lead_watch> filmen baseret på en bog af {book_author}
+<lead_watch> en film tilpasset fra en roman af {book_author}
+<lead_watch> en biopic om {book_author}
+<lead_watch> en film baseret på {game_title}
+<lead_watch> filmatiseringen af {game_title}
+<lead_watch> en film baseret på spillet {game_title}
+<lead_watch> live-action {game_title} filmen
+<lead_watch> {tv_show_title} filmen
+<lead_watch> en film baseret på {tv_show_title}
+<lead_watch> film-spinoffet af {tv_show_title}
+<lead_watch> filmudgaven af {tv_show_title}
+<lead_watch> {comic_title} filmen
+<lead_watch> en film baseret på tegneserien {comic_title}
+<lead_watch> filmatiseringen af {comic_title}
+<lead_watch> live-action {anime_title} filmen
+<lead_watch> en film baseret på animeen {anime_title}
+<lead_watch> en biopic om {artist_name}
+<lead_watch> en film om livet af {artist_name}
+<lead_watch> {artist_name} biopicen
+<lead_watch> en film om bandet {artist_name}
+<lead_watch> en film baseret på {comic_title}
+<lead_watch> en film baseret på {anime_title}
+<lead_watch> en film baseret på {book_title}
+<lead_watch> en film baseret på {tv_show_title}
+<lead_watch> en film baseret på {game_title}
+<lead_watch> en film baseret på {comic_title}
+<lead_watch> en film baseret på {anime_title}
+<lead_watch> en film tilpasset fra {book_title}
+<lead_watch> en film tilpasset fra {tv_show_title}
+<lead_watch> en film tilpasset fra {game_title}
+<lead_watch> en film tilpasset fra {comic_title}
+<lead_watch> en film tilpasset fra {anime_title}
+<lead_watch> en filmatisering af {book_title}
+<lead_watch> en filmatisering af {tv_show_title}
+<lead_watch> en filmatisering af {game_title}
+<lead_watch> en filmatisering af {comic_title}
+<lead_watch> en filmatisering af {anime_title}
+<lead_watch> en tilpasning af {book_title}
+<lead_watch> en tilpasning af {tv_show_title}
+<lead_watch> en tilpasning af {game_title}
+<lead_watch> en tilpasning af {comic_title}
+<lead_watch> en tilpasning af {anime_title}
+<lead_watch> filmudgaven af {book_title}
+<lead_watch> filmudgaven af {game_title}
+<lead_watch> filmudgaven af {comic_title}
+<lead_watch> filmudgaven af {anime_title}
+<lead_watch> filmudgaven af {book_title}
+<lead_watch> filmudgaven af {tv_show_title}
+<lead_watch> filmudgaven af {game_title}
+<lead_watch> filmudgaven af {comic_title}
+<lead_watch> filmudgaven af {anime_title}
+<lead_watch> en film inspireret af {book_title}
+<lead_watch> en film inspireret af {tv_show_title}
+<lead_watch> en film inspireret af {game_title}
+<lead_watch> en film inspireret af {comic_title}
+<lead_watch> en film inspireret af {anime_title}
+<lead_watch> en film baseret på bogen {book_title}
+<lead_watch> en film tilpasset fra romanen {book_title}
+<lead_watch> en film baseret på en bog af {book_author}
+<lead_watch> en film baseret på showet {tv_show_title}
+<lead_watch> en filmfortsættelse af {tv_show_title}
+<lead_watch> en film baseret på videospillet {game_title}
+<lead_watch> en film baseret på graphic novellen {comic_title}
+<lead_watch> live-action {comic_title} filmen
+<lead_watch> en filmatisering af mangaen {comic_title}
+<lead_watch> en biopic om {podcast_host}
+<lead_watch> en film om {artist_name}
+<lead_watch> en film om tilblivelsen af {album_name}
+<lead_watch> en film inspireret af sangen {track_name}
+<lead_watch> en film inspireret af virkelige hændelser fra {podcast_title}
+<lead_watch> historien om {artist_name} på lærredet
+øh kan du sætte {movie_title} på
+se den— nej den anden {movie_title}
+spil {movie_title}, faktisk nej lad os se en {movie_genre} film
+sæt {movie_title} på — vent nej noget med {movie_actor}
+øh måske en {movie_genre} film, ja en af dem
+hey så sæt {movie_title} på
+du ved hvad smid en {movie_genre} film på
+har lyst til at se {movie_title}
+lad mig se den {movie_actor} film
+giv mig en god {movie_genre} film
+ugh jeg keder mig så meget sæt en film på
+det er date-aften find os en {movie_genre} film
+børnene er hjemme sæt en {movie_genre} film på
+jeg trænger til at grine sæt en {movie_genre} film på
+det regner lad os se {movie_title}
+jeg kunne virkelig godt bruge en {movie_genre} film i aften
+jeg er sådan set i humør til {movie_actor}
+jeg fik aldrig set {movie_title}
+er der noget godt med {movie_actor}
+har du nogen {movie_genre} film?
+hvad tænker du vi skal se, måske {movie_title}
+så ligesom, <lead_watch> en film med {movie_actor} i eller noget
+hey har du nogen {movie_genre} film med {movie_actor}
+jeg vil gerne se en {movie_genre} film i aften
+lad mig se hvilke {movie_genre} film du har fra {release_decade}
+jeg er i humør til en spillefilm instrueret af {movie_director}
+har du nogen film der kom ud i {release_year}
+jeg har hørt {movie_title} er god, kan du spille den film
+så øh er der en filmudgave af {tv_show_title} jeg kunne tjekke ud
+<lead_watch> en spillefilm produceret af {movie_producer}
+kender du noget godt film af {movie_director}
+hey find mig en {movie_genre} spillefilm fra {media_country}
+jeg vil gerne se den film med {movie_actor} hvor de spiller detektiv eller hvad det nu er
+lad os se en film skrevet af {movie_writer}
+giv mig noget fra {release_decade} ligesom en klassisk film
+så jeg tænkte <lead_watch> en film og øh måske noget af {movie_director}
+spil en film ligesom den der med {movie_actor} du ved actionfilmen
+<lead_watch> en spillefilm med musik af {movie_composer}
+hey, hvad med vi ser {movie_title} i aften
+lad mig se hvilke {movie_genre} film du har
+jeg er i humør til en {movie_genre} film instrueret af {movie_director}
+så jeg tænkte måske vi kunne se {movie_title} med {movie_actor}
+har du nogen gode {movie_genre} film fra {release_decade}
+hvilke {movie_genre} film har du med {movie_actor}
+jeg vil gerne se den nye {movie_genre} spillefilm
+hvad med en {movie_genre} spillefilm fra {release_year}
+det føles som en {movie_genre}-aften — har du noget godt
+vi burde tjekke {movie_title} ud jeg har hørt den er god
+er der en {movie_genre} film instrueret af {movie_director}
+giv mig en {movie_genre} blockbuster med {movie_actor}
+jeg leder efter en film instrueret af {movie_director} fra {release_year}
+lad os sætte en {movie_genre} film på, nogen forslag
+kan du finde {movie_title} med {movie_actor}
+hey så jeg vil have en {movie_genre} film fra {release_decade} med {movie_actor}
+find mig en film produceret af {movie_producer} med {movie_actor}
+hvad er en god {movie_genre} film fra {release_decade}
+har lyst til at se en {movie_genre} film instrueret af {movie_director} med {movie_actor}
+jeg er i humør til en filmklassiker en {movie_genre} film fra {release_year}
