@@ -222,7 +222,7 @@ See [taxonomy.md](taxonomy.md).
 
 `ContentFilter(config=None)` exposes:
 
-- `check(classifier, query, lang="en-us") -> (bool, str)`, classify and apply the
+- `check(classifier, query, lang) -> (bool, str)`, classify and apply the
   policy in one call.
 - `is_blocked(media_type, genres=None) -> (bool, str)`, apply the policy to an
   already-computed result.

@@ -86,7 +86,7 @@ class ContentFilter:
 
         return False, ""
 
-    def check(self, classifier, query: str, lang: str = "en-us") -> Tuple[bool, str]:
+    def check(self, classifier, query: str, lang: str) -> Tuple[bool, str]:
         """Classify *query* with *classifier* and apply the filter.
 
         Convenience wrapper: pulls the media type and the **content-form genre

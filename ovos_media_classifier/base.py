@@ -382,7 +382,7 @@ class AbstractMediaClassifier(ABC):
             "something else", "another one", "different one", "more like this",
             "anything else", "something different"))
 
-    def to_signals(self, query: str, lang: str = "en-us"):
+    def to_signals(self, query: str, lang: str):
         """Build a provider-ready :class:`mediavocab.Signals` from the query.
 
         This is the classifier's primary output for the OCP pipeline: *all* the
